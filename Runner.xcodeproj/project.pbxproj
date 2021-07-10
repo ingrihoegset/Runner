@@ -16,6 +16,8 @@
 		BFFB69BB269A17BD0080DA62 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69BA269A17BD0080DA62 /* LoginViewController.swift */; };
 		BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69BD269A17DA0080DA62 /* RegisterViewController.swift */; };
 		BFFB69C2269A182B0080DA62 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69C1269A182B0080DA62 /* ProfileViewController.swift */; };
+		BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69C6269A2E330080DA62 /* Constants.swift */; };
+		BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69C9269A30000080DA62 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		BFFB69BA269A17BD0080DA62 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		BFFB69BD269A17DA0080DA62 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		BFFB69C1269A182B0080DA62 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		BFFB69C6269A2E330080DA62 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		BFFB69C9269A30000080DA62 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,8 @@
 			children = (
 				BFFB699D269A14E30080DA62 /* AppDelegate.swift */,
 				BFFB699F269A14E30080DA62 /* SceneDelegate.swift */,
+				BFFB69C6269A2E330080DA62 /* Constants.swift */,
+				BFFB69C9269A30000080DA62 /* Extensions.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -108,8 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				BFFB69A1269A14E30080DA62 /* HomeViewController.swift */,
-				BFFB69BA269A17BD0080DA62 /* LoginViewController.swift */,
-				BFFB69BD269A17DA0080DA62 /* RegisterViewController.swift */,
+				BFFB69C4269A195A0080DA62 /* Login */,
 				BFFB69C1269A182B0080DA62 /* ProfileViewController.swift */,
 			);
 			path = Controllers;
@@ -122,6 +127,15 @@
 				BFFB69A8269A14E70080DA62 /* LaunchScreen.storyboard */,
 			);
 			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		BFFB69C4269A195A0080DA62 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				BFFB69BA269A17BD0080DA62 /* LoginViewController.swift */,
+				BFFB69BD269A17DA0080DA62 /* RegisterViewController.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,7 +211,9 @@
 				BFFB69C2269A182B0080DA62 /* ProfileViewController.swift in Sources */,
 				BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
+				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
+				BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */,
 				BFFB69BB269A17BD0080DA62 /* LoginViewController.swift in Sources */,
 				BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */,
 			);
