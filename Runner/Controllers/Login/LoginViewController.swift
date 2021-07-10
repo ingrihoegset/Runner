@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -169,6 +170,18 @@ class LoginViewController: UIViewController {
             alertUserLoginError()
             return
         }
+        
+        // Firebase log in
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { authResult, error in
+            // Checks for error. If error is discover, return.
+            guard let result = authResult, error == nil else {
+                print("Failed to log in user with email: \(email)")
+                return
+            }
+            
+            let user = result.user
+            print("Logged in user: \(user)")
+        })
     }
     
     /// Alerts user if something is wrong with login inputs
