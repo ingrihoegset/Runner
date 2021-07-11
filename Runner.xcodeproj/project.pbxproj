@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		42F7BDED143D2C8C95974173 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56C9FFD69E5722FF9A46B73A /* Pods_Runner.framework */; };
+		BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF48305D269AF90600C8CC6C /* DatabaseManager.swift */; };
+		BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */; };
 		BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699D269A14E30080DA62 /* AppDelegate.swift */; };
 		BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699F269A14E30080DA62 /* SceneDelegate.swift */; };
 		BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69A1269A14E30080DA62 /* HomeViewController.swift */; };
@@ -26,6 +28,8 @@
 		2F89E7C05E720C206EB15048 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		3A8C15B1FEE083B00ACF749F /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		56C9FFD69E5722FF9A46B73A /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF48305D269AF90600C8CC6C /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceAppUser.swift; sourceTree = "<group>"; };
 		BFFB699A269A14E30080DA62 /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFB699D269A14E30080DA62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFB699F269A14E30080DA62 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 				BFFB699F269A14E30080DA62 /* SceneDelegate.swift */,
 				BFFB69C6269A2E330080DA62 /* Constants.swift */,
 				BFFB69C9269A30000080DA62 /* Extensions.swift */,
+				BF48305D269AF90600C8CC6C /* DatabaseManager.swift */,
+				BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -285,9 +291,11 @@
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
+				BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */,
 				BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */,
 				BFFB69BB269A17BD0080DA62 /* LoginViewController.swift in Sources */,
 				BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */,
+				BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

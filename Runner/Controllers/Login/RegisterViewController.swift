@@ -241,23 +241,45 @@ class RegisterViewController: UIViewController {
             return
         }
         
-        /// Firebase log in. Creating a new user in Firebase
-        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { authResult, error in
-            // checks if returns an error, if so return.
-            guard let result = authResult, error == nil else {
-                print("Error creating user")
+        // Firebase Log In
+        
+        /// Check if user already exists. If not, create new user.
+        // Exists is the boolean for our completion handler.
+        DatabaseManager.shared.userExists(with: email, completion: { [weak self] exists in
+            guard let strongSelf = self else {
+                return
+            }
+                
+                // User already exists
+            guard !exists else {
+                strongSelf.alertUserLoginError(message: "Looks like a user account for that email already exists.")
                 return
             }
             
-            let user = result.user
-            print("Created User: \(user)")
+            // User does not already exist
+            /// Firebase log in. Creating a new user in Firebase
+            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { authResult, error in
+                // checks if returns an error, if so return.
+                guard authResult != nil, error == nil else {
+                    print("Error creating user")
+                    return
+                }
+                
+                // Insert user into database with properties given in text fields
+                DatabaseManager.shared.insertUser(with: RaceAppUser(firstName: firstName,
+                                                                    lastName: lastName,
+                                                                    emailAddress: email))
+                
+                // Dissmiss vc if user authentication succeeds
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            })
         })
     }
     
     /// Alerts user if something is wrong with login inputs
-    private func alertUserLoginError() {
+    private func alertUserLoginError(message: String = "Please enter all information to create a new account. Password must be at least 8 characters.") {
         let alert = UIAlertController(title: "Whoops",
-                                      message: "Please enter all information to create a new account. Password must be at least 8 characters.",
+                                      message: message,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss",
                                       style: .cancel,

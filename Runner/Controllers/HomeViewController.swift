@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class HomeViewController: UIViewController {
 
@@ -18,21 +19,21 @@ class HomeViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // For use to check if user is logged in already or not
-        let isLoggedIn = UserDefaults.standard.bool(forKey: "logged_in")
-        
-        // If user is not logged in, send user to log in view controller
-        if !isLoggedIn {
+        // Check if user is logged in already
+        validateAuth()
+    }
+    
+    /// Function checks if user is logged in or not
+    private func validateAuth() {
+        // If there is no current user, send user to log in view controller
+        // Current user is set automatically when you instantiate firebase auth, and log a user in.
+        if FirebaseAuth.Auth.auth().currentUser == nil {
             let vc = LoginViewController()
             let nav = UINavigationController(rootViewController: vc)
-            // Full screen so the user cannot dismiss login page i fnot logged in
+            // Full screen so the user cannot dismiss login page if not logged in
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: false)
         }
     }
-
-    
-
-
 }
 
