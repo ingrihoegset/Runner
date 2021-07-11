@@ -30,9 +30,13 @@ extension DatabaseManager {
     public func userExists(with email: String,
                            completion: @escaping ((Bool) -> Void)) {
         
+        // Get safe email
+        var safeEmail = email.replacingOccurrences(of: ".", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+        
         // Observe value changes on entry related to the specified child you want to observe changes for.
         // We are observing a single event, which means we are asking the database only once.
-        database.child(email).observeSingleEvent(of: .value, with: { snapshot in
+        database.child(safeEmail).observeSingleEvent(of: .value, with: { snapshot in
             guard snapshot.value as? String != nil else {
                 // Called when email does not already exist.
                 completion(false)
@@ -46,7 +50,7 @@ extension DatabaseManager {
     
     /// Insert user into database
     public func insertUser(with user: RaceAppUser) {
-        database.child(user.emailAddress).setValue([
+        database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
             "last_name": user.lastName
         ])
