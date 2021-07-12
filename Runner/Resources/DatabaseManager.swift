@@ -48,11 +48,18 @@ extension DatabaseManager {
         })
     }
     
-    /// Insert user into database
-    public func insertUser(with user: RaceAppUser) {
+    /// Insert user into database. Completion handler in order to alert caller when the function is done. If returns true, then we have successfully created new user and written to database.
+    public func insertUser(with user: RaceAppUser, completion: @escaping (Bool) -> Void) {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
             "last_name": user.lastName
-        ])
+        ], withCompletionBlock: { error, _ in
+            guard error == nil else {
+                print("Failed to write to database")
+                completion(false)
+                return
+            }
+            completion(true)
+        })
     }
 }

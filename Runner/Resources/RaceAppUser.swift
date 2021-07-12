@@ -18,5 +18,8 @@ struct RaceAppUser {
         return safeEmail
     }
     
-    // let profilePictureUrl: String
+    var profilePictureFileName: String {
+        //ingrihoegset-gmail-com_profile_picture.png
+        return "\(safeEmail)_profile_picture.png"
+    }
 }

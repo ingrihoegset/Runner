@@ -7,8 +7,11 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
 
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -105,22 +108,6 @@ class RegisterViewController: UIViewController {
         button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    /*
-    private let fbregisterButton: FBregisterButton = {
-        let button = FBregisterButton()
-        // To override height property inherent in fb button
-        button.removeConstraints(button.constraints)
-        button.permissions = ["public_profile", "email"]
-        return button
-    }()
-    
-    private let googleregisterButton: GIDSignInButton = {
-        let button = GIDSignInButton()
-        // To override height property inherent in fb button
-        button.removeConstraints(button.constraints)
-        return button
-    }()*/
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,14 +133,6 @@ class RegisterViewController: UIViewController {
         scrollView.addSubview(emailField)
         scrollView.addSubview(passwordField)
         scrollView.addSubview(logginButton)
-        
-        /*
-        // Facebook login button
-        scrollView.addSubview(fbregisterButton)
-        
-        // Google login button
-        scrollView.addSubview(googleregisterButton)
-         */
     }
     
     /// Lay out constraints
@@ -192,18 +171,6 @@ class RegisterViewController: UIViewController {
                                  y: passwordField.bottom + 10,
                                  width: scrollView.width - Constants.sideSpacing * 2,
                                  height: Constants.fieldHeight)
-        
-        /*
-        fbregisterButton.frame = CGRect(x: Constants.sideSpacing,
-                                 y: logginButton.bottom + 20,
-                                 width: scrollView.width - Constants.sideSpacing * 2,
-                                 height: Constants.fieldHeight)
-        
-        googleregisterButton.frame = CGRect(x: Constants.sideSpacing,
-                                 y: fbregisterButton.bottom + 10,
-                                 width: scrollView.width - Constants.sideSpacing * 2,
-                                 height: Constants.fieldHeight)
-         */
     }
     
     /// When user taps image view to set profile pic
@@ -241,6 +208,8 @@ class RegisterViewController: UIViewController {
             return
         }
         
+        spinner.show(in: view)
+        
         // Firebase Log In
         
         /// Check if user already exists. If not, create new user.
@@ -248,6 +217,10 @@ class RegisterViewController: UIViewController {
         DatabaseManager.shared.userExists(with: email, completion: { [weak self] exists in
             guard let strongSelf = self else {
                 return
+            }
+            
+            DispatchQueue.main.async {
+                strongSelf.spinner.dismiss()
             }
                 
                 // User already exists
@@ -266,9 +239,30 @@ class RegisterViewController: UIViewController {
                 }
                 
                 // Insert user into database with properties given in text fields
-                DatabaseManager.shared.insertUser(with: RaceAppUser(firstName: firstName,
-                                                                    lastName: lastName,
-                                                                    emailAddress: email))
+                let raceAppUser = RaceAppUser(firstName: firstName,
+                                              lastName: lastName,
+                                              emailAddress: email)
+                DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
+                    if success {
+                        // upload image
+                        guard let image = strongSelf.imageView.image,
+                              let data = image.pngData() else {
+                            return
+                        }
+                        let filename = raceAppUser.profilePictureFileName
+                        
+                        // Upload profile picture to Firebase
+                        StorageManager.shared.uploadProfilPicture(with: data, fileName: filename, completion: { result in
+                            switch result {
+                            case .success(let downloadUrl):
+                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                print(downloadUrl)
+                            case .failure(let error):
+                                print("Storage manager error: \(error)")
+                            }
+                        })
+                    }
+                } )
                 
                 // Dissmiss vc if user authentication succeeds
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
