@@ -15,5 +15,10 @@ pod 'FBSDKLoginKit'
 # Google sign in
 pod 'GoogleSignIn' 
 
+# For downloading and caching images
+pod 'SDWebImage'
+
+# For a nice progress bar
+pod 'JGProgressHUD' 
 
 end
