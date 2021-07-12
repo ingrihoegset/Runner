@@ -4,8 +4,16 @@
 target 'Runner' do
   use_frameworks!
 
+# Firebase
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
+
+# Facebook sign in
+pod 'FBSDKLoginKit'
+
+# Google sign in
+pod 'GoogleSignIn' 
+
 
 end
