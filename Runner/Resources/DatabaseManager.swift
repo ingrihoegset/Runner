@@ -62,4 +62,62 @@ extension DatabaseManager {
             completion(true)
         })
     }
+    
+    /// Register in database that a link with a partner has occured. Must register under both users.
+    // Really just need to hold 1 value in "links". There is no point in storing links that are not the current one.
+    // Thus we can replace the old link when a new link is updated.
+    public func registerLink(with partnerSafeEmail: String, completion: @escaping (Bool) -> Void) {
+        
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when registering link")
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerSafeEmail)
+        
+        // Create path reference for database
+        let reference = database.child("\(userSafeEmail)")
+        
+        reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            guard var userNode = snapshot.value as? [String: Any] else {
+                completion(false)
+                print("User not found when trying to register link to database")
+                return
+            }
+            
+            // Data for insertion for our user
+            let newLinkData: [String: Any] = [
+                "linkID": 123,
+                "other_user_email": partnerSafeEmail
+            ]
+
+            // Register link for our user
+            // Creating links array
+            userNode["links"] = [
+                newLinkData
+            ]
+        
+            reference.setValue(userNode, withCompletionBlock: { error, _ in
+                guard error == nil else {
+                    completion(false)
+                    print("Failed to register first links for current user")
+                    return
+                }
+                completion(true)
+            })
+            
+            // Data for insertion for partner user
+            let partner_newLinkData: [String: Any] = [
+                "linkID": 789,
+                "other_user_email": userSafeEmail
+            ]
+            
+            // Create partner link entry
+            self?.database.child("\(partnerSafeEmail)/links").observeSingleEvent(of: .value, with: { [weak self] snapshot in
+                self?.database.child("\(partnerSafeEmail)/links").setValue([partner_newLinkData])
+            })
+        })
+    }
 }

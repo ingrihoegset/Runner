@@ -14,6 +14,8 @@ import AVFoundation
 // The class dismisses itself and returns the safeemail of the partner so that furter operations can be completed from the home VC.
 class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
+    let LinkViewModel = LinkToPartnerViewModel()
+    
     var video = AVCaptureVideoPreviewLayer()
     
     var completion: ((String) -> (Void))?
@@ -89,8 +91,10 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
                     // We have the data we need, stop the camera from capturing more frames
                     session.stopRunning()
                     
-                    print("linked to partner: ", safePartnerEmail)
-                    //createNewSession(partnerId: safePartnerId, sessionId: sessionId)
+                    print("Found QR-code of partner: ", safePartnerEmail)
+                    
+                    // Call on viewmodel to update database with new link
+                    self.LinkViewModel.createNewLink(safePartnerEmail: safePartnerEmail)
                     
                     // Dismiss this view controller and pass on data to HomeViewController
                     dismiss(animated: true, completion: { [weak self] in
