@@ -86,9 +86,13 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
-            // Get ride of cached values related to user 
+            // Clear any partner link from database
+            strongSelf.profileViewModel.clearPartnerLinkFromDatabase()
+            
+            // Get ride of cached values related to user
             UserDefaults.standard.setValue(nil, forKey: "email")
             UserDefaults.standard.setValue(nil, forKey: "name")
+            UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
             
             // Log Out From Facebook
             FBSDKLoginKit.LoginManager().logOut()

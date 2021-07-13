@@ -56,4 +56,16 @@ class ProfileViewModel {
             self.profileViewModelDelegate?.didFetchProfileImage(image: image)
         }).resume()
     }
+    
+    // Clears link with partner from database upon user log out
+    func clearPartnerLinkFromDatabase() {
+        DatabaseManager.shared.clearLinkFromDatabase(with: { success in
+            if success {
+                print ("Successfully deleted link from database for user and partner")
+            }
+            else {
+                print("Failed to remove link from database.")
+            }
+        })
+    }
 }

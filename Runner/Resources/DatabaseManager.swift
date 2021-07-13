@@ -70,6 +70,7 @@ extension DatabaseManager {
         
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when registering link")
+            completion(false)
             return
         }
         
@@ -95,9 +96,8 @@ extension DatabaseManager {
 
             // Register link for our user
             // Creating links array
-            userNode["links"] = [
-                newLinkData
-            ]
+            userNode["links"] = newLinkData
+            
         
             reference.setValue(userNode, withCompletionBlock: { error, _ in
                 guard error == nil else {
@@ -105,7 +105,6 @@ extension DatabaseManager {
                     print("Failed to register first links for current user")
                     return
                 }
-                completion(true)
             })
             
             // Data for insertion for partner user
@@ -116,8 +115,114 @@ extension DatabaseManager {
             
             // Create partner link entry
             self?.database.child("\(partnerSafeEmail)/links").observeSingleEvent(of: .value, with: { [weak self] snapshot in
-                self?.database.child("\(partnerSafeEmail)/links").setValue([partner_newLinkData])
+                self?.database.child("\(partnerSafeEmail)/links").setValue(partner_newLinkData)
             })
+            completion(true)
         })
     }
+    
+    /// Used to clear the linked from database on close and log out.
+    // We need to check for link. If there is a link, get partner.
+    // Finally, delete link for current user and delete link for partner.
+    func clearLinkFromDatabase(with completion: @escaping (Bool) -> Void) {
+        
+        // First step. Check if there is a link under our user in the database.
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when terminating partner link")
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Checking database for links. If guard statement fails, it means there is no link in database for user.
+        database.child("\(userSafeEmail)/links").observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            guard let link = snapshot.value as? [String: Any] else {
+                print("No link to delete from database")
+                completion(true)
+                return
+            }
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            // Step 2. If guard statement doesnt fail, we need to get the partner email.
+            guard let partnerSafeEmail = link["other_user_email"] as? String else {
+                print("Failed to unwrap partner email")
+                return
+            }
+            
+            // Step 3. Delete link from both our user and partner user.
+            
+            // Remove link from our user in database
+            // Create path reference for database
+            let reference = strongSelf.database.child("\(userSafeEmail)/links")
+            reference.removeValue(completionBlock: { error, _ in
+                guard error == nil else {
+                    print("Error removing link from our user.")
+                    completion(false)
+                    return
+                }
+            })
+            
+            // Remove link from partner user in database
+            strongSelf.database.child("\(partnerSafeEmail)/links").removeValue(completionBlock: { error, _ in
+                guard error == nil else {
+                    print("Error removing link from partner user.")
+                    completion(false)
+                    return
+                }
+            })
+            // Successfully removed link from both our user and partner.
+            completion(true)
+        })
+    }
+    
+    /// Observe if there is a change in users link
+    // We are trying to observe when a link has occured
+    public func observeNewLink(completion: @escaping (Bool) -> Void) {
+        
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No email found for user when trying to listen for links.")
+            completion(false)
+            return
+        }
+        
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: email)
+        
+        let path = database.child("\(userSafeEmail)/links")
+        path.observe(.value, with: { snapshot in
+            guard let value = snapshot.value as? [String: Any] else {
+                print("No value to get when link changed.")
+                completion(false)
+                return
+            }
+            
+            guard let partnerSafeEmail = value["other_user_email"] as? String else {
+                print("Could not unwrap partner email when link updated")
+                completion(false)
+                return
+            }
+            
+            UserDefaults.standard.setValue(partnerSafeEmail, forKey: "partnerEmail")
+            
+            // Successfully listened to update in link
+            completion(true)
+        })
+    }
+    
+    public enum DataBaseErrors: Error {
+        case failedToFetch
+        
+        public var localizedDescription: String {
+            switch self {
+            case .failedToFetch:
+                return "Fail to fetch data from database"
+            }
+        }
+    }
+    
+
+    
 }

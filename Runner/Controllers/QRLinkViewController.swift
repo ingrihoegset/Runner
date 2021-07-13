@@ -55,8 +55,6 @@ class QRLinkViewController: UIViewController {
         
         createUserSpecificQRCodeIImage()
         setConstraints()
-        
-        
     }
     
     private func setConstraints() {
@@ -98,5 +96,4 @@ class QRLinkViewController: UIViewController {
         let qrImage = UIImage(ciImage: (filter?.outputImage)!)
         return qrImage
     }
-
 }

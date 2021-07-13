@@ -65,6 +65,14 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    private let partnerUILabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = Constants.accentColor
+        label.text = "No partner"
+        label.textAlignment = .center
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,10 +83,13 @@ class HomeViewController: UIViewController {
         headerView.addSubview(profileImageView)
         scrollView.addSubview(qrImageView)
         scrollView.addSubview(addSecondGateButton)
+        scrollView.addSubview(partnerUILabel)
         
         setConstraints()
         
         homeViewModel.fetchProfilePic()
+        homeViewModel.clearLinkFromDatabase()
+        homeViewModel.listenForNewLink()
         
         let qrButtonTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapQRButton))
         qrImageView.addGestureRecognizer(qrButtonTapGesture)
@@ -116,6 +127,9 @@ class HomeViewController: UIViewController {
         
         addSecondGateButton.anchor(top: headerView.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
         addSecondGateButton.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.3).isActive = true
+        
+        partnerUILabel.anchor(top: addSecondGateButton.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        partnerUILabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.3).isActive = true
     }
     
     /// Function checks if user is logged in or not
@@ -172,8 +186,10 @@ extension HomeViewController {
     }
     
     // Gets and updates UI elements in accordance with successful link with partner
-    func setUpPartnerDisplay() {
-        
+    func didUpdatePartnerUI(partner: String) {
+        DispatchQueue.main.async {
+            self.partnerUILabel.text = partner
+        }
     }
 }
 

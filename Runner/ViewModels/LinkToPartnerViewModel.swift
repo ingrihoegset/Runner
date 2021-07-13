@@ -19,6 +19,7 @@ class LinkToPartnerViewModel {
         DatabaseManager.shared.registerLink(with: safePartnerEmail, completion: { success in
             if success {
                 print ("New Link created. And database updated for users")
+                UserDefaults.standard.setValue(safePartnerEmail, forKey: "partnerEmail")
             }
             else {
                 print("Failed update database with new Link")

@@ -10,6 +10,7 @@ import UIKit
 
 protocol HomeViewModelDelegate {
     func didFetchProfileImage(image: UIImage)
+    func didUpdatePartnerUI(partner: String)
 }
 
 
@@ -52,8 +53,36 @@ class HomeViewModel {
             guard let image = UIImage(data: data) else {
                 return
             }
-            print("calling delegate")
             self.homeViewModelDelegate?.didFetchProfileImage(image: image)
         }).resume()
+    }
+    
+    // Clears link with partner from database upon app opening from terminate state
+    func clearLinkFromDatabase() {
+        DatabaseManager.shared.clearLinkFromDatabase(with: { success in
+            if success {
+                print ("Successfully deleted link from database for user and partner")
+            }
+            else {
+                print("Failed to remove link from database.")
+            }
+        })
+    }
+    
+    // Start listening for new link
+    func listenForNewLink() {
+        DatabaseManager.shared.observeNewLink(completion: { success in
+            if success {
+                guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
+                    return
+                }
+                self.homeViewModelDelegate?.didUpdatePartnerUI(partner: partnerEmail)
+                print ("Successfully detected update to link")
+            }
+            else {
+                print("No link to detect.")
+                self.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner")
+            }
+        })
     }
 }
