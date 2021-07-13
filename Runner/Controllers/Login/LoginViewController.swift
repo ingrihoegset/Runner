@@ -206,14 +206,20 @@ class LoginViewController: UIViewController {
             DispatchQueue.main.async {
                 strongSelf.spinner.dismiss()
             }
-            
+
             // Checks for error. If error is discover, return.
             guard let result = authResult, error == nil else {
+                
                 print("Failed to log in user with email: \(email)")
                 return
             }
             
             let user = result.user
+            print("result", user)
+            
+            // Saving this users email locally
+            UserDefaults.standard.set(email, forKey: "email")
+            
             print("Logged in user: \(user)")
             
             // Dissmiss vc if user authentication succeeds
@@ -283,6 +289,10 @@ extension LoginViewController: LoginButtonDelegate {
                 print("Failed to get email and name from FB results.")
                 return
             }
+            
+            // Saving this users email locally
+            UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
             
             // Check if the user exists already. If not, we want to register a new user.
             DatabaseManager.shared.userExists(with: email, completion: { exists in

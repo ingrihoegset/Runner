@@ -238,6 +238,10 @@ class RegisterViewController: UIViewController {
                     return
                 }
                 
+                // cache values related to user
+                UserDefaults.standard.setValue(email, forKey: "email")
+                UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+                
                 // Insert user into database with properties given in text fields
                 let raceAppUser = RaceAppUser(firstName: firstName,
                                               lastName: lastName,

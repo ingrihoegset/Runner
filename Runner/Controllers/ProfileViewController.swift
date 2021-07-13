@@ -15,12 +15,47 @@ class ProfileViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     
     let data = ["Log Out"]
+    var profileViewModel = ProfileViewModel()
+    
+    var profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        return imageView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        profileViewModel.profileViewModelDelegate = self
+        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableHeaderView = createTableHeader()
+    }
+    
+    func createTableHeader() -> UIView? {     
+        let headerView = UIView(frame: CGRect(x: 0,
+                                              y: 0,
+                                              width: self.view.width,
+                                              height: 300))
+        
+        headerView.backgroundColor = .link
+        
+        profileImageView = UIImageView(frame: CGRect(x: (headerView.width-150)/2,
+                                                  y: 75,
+                                                  width: 150,
+                                                  height: 150))
+        
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        profileImageView.layer.borderWidth = Constants.borderWidth
+        profileImageView.layer.cornerRadius = profileImageView.width / 2
+        profileImageView.layer.masksToBounds = true
+        headerView.addSubview(profileImageView)
+        
+        profileViewModel.fetchProfilePic()
+        
+        return headerView
     }
 }
 
@@ -51,6 +86,10 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
+            // Get ride of cached values related to user 
+            UserDefaults.standard.setValue(nil, forKey: "email")
+            UserDefaults.standard.setValue(nil, forKey: "name")
+            
             // Log Out From Facebook
             FBSDKLoginKit.LoginManager().logOut()
             
@@ -66,6 +105,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen
                 strongSelf.present(nav, animated: true)
+                
             }
             catch {
                 print("Failed to log out")
@@ -77,7 +117,13 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                                             handler: nil))
         
         present(actionSheet, animated: true)
-        
+    }
+}
 
+extension ProfileViewController: ProfileViewModelDelegate {
+    func didFetchProfileImage(image: UIImage) {
+        DispatchQueue.main.async {
+            self.profileImageView.image = image
+        }
     }
 }

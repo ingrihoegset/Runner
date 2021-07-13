@@ -13,6 +13,10 @@
 		BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830A2269C654A00C8CC6C /* Sender.swift */; };
 		BF4830A6269C658200C8CC6C /* Race.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830A5269C658200C8CC6C /* Race.swift */; };
 		BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C0269C6BD000C8CC6C /* StorageManager.swift */; };
+		BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */; };
+		BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */; };
+		BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */; };
+		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699D269A14E30080DA62 /* AppDelegate.swift */; };
 		BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699F269A14E30080DA62 /* SceneDelegate.swift */; };
 		BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69A1269A14E30080DA62 /* HomeViewController.swift */; };
@@ -36,6 +40,10 @@
 		BF4830A2269C654A00C8CC6C /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
 		BF4830A5269C658200C8CC6C /* Race.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Race.swift; sourceTree = "<group>"; };
 		BF4830C0269C6BD000C8CC6C /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewController.swift; sourceTree = "<group>"; };
+		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BFFB699A269A14E30080DA62 /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFB699D269A14E30080DA62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFB699F269A14E30080DA62 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -123,6 +131,8 @@
 		BFFB69B3269A16710080DA62 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */,
+				BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -157,6 +167,8 @@
 			children = (
 				BFFB69A1269A14E30080DA62 /* HomeViewController.swift */,
 				BFFB69C1269A182B0080DA62 /* ProfileViewController.swift */,
+				BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */,
+				BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
 			);
 			path = Controllers;
@@ -315,16 +327,20 @@
 			files = (
 				BFFB69C2269A182B0080DA62 /* ProfileViewController.swift in Sources */,
 				BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */,
+				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BF4830A6269C658200C8CC6C /* Race.swift in Sources */,
+				BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
+				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,
 				BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */,
 				BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */,
 				BFFB69BB269A17BD0080DA62 /* LoginViewController.swift in Sources */,
 				BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */,
 				BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */,
+				BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */,
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

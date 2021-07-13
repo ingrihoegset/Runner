@@ -13,10 +13,11 @@ struct Constants {
     
     //Text Colors
     static let textColorMain = UIColor.black
+    static let textColorWhite = UIColor.white
     
     //Design dimensions
     static let cornerRadius: CGFloat = 12
-    static let borderWidth: CGFloat = 1
+    static let borderWidth: CGFloat = 3
     static let sideSpacing: CGFloat = 15
     static let verticalSpacing: CGFloat = 20
     static let fieldHeight: CGFloat = 52
@@ -30,6 +31,8 @@ struct Constants {
     static let widthOfDisplay = UIScreen.main.bounds.size.width
     static let heightOfDisplay = UIScreen.main.bounds.size.height
     static let sideMargin = widthOfDisplay * 0.05
+    
+    static let imageSize: CGFloat = 150
     
     // Picker dimensions
     static let widthOfPickerLabel = Constants.widthOfDisplay * 0.2

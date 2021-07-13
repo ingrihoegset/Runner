@@ -69,6 +69,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 return
         }
         
+        // Saving this users email locally
+        UserDefaults.standard.set(email, forKey: "email")
+        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+        
         // Check if email already exists in database. If not, create new user in database.
         DatabaseManager.shared.userExists(with: email, completion: { exists in
             if !exists {
