@@ -8,6 +8,8 @@
 import UIKit
 
 class QRLinkViewController: UIViewController {
+
+    var qrLinkViewModel = QRLinkViewModel()
     
     private let linkToLabel: UILabel = {
         let label = UILabel()
@@ -43,6 +45,8 @@ class QRLinkViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        qrLinkViewModel.qrLinkViewModelDelegate = self
+        
         view.backgroundColor = Constants.accentColorDark
         // Makes navigation bar translucent
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -95,5 +99,12 @@ class QRLinkViewController: UIViewController {
         filter?.setValue(data, forKey: "inputMessage")
         let qrImage = UIImage(ciImage: (filter?.outputImage)!)
         return qrImage
+    }
+}
+
+extension QRLinkViewController: QRLinkViewModelDelegate {
+    // Dismiss this VC when a link has occured. Only checks for all kinds of changes, but should suffice.
+    func didUpdateLink() {
+        dismiss(animated: true, completion: nil)
     }
 }
