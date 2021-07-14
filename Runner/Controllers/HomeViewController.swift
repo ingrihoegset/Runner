@@ -20,10 +20,17 @@ class HomeViewController: UIViewController {
         return scrollView
     }()
     
-    private let headerView: UIView = {
+    private let mainHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .green
+        return view
+    }()
+    
+    private let linkedHeaderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .yellow
         return view
     }()
     
@@ -35,6 +42,29 @@ class HomeViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let linkedProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let partnerProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
 
@@ -78,21 +108,37 @@ class HomeViewController: UIViewController {
         
         homeViewModel.homeViewModelDelegate = self
         
+        if let email = UserDefaults.standard.value(forKey: "email") as? String {
+            homeViewModel.fetchProfilePic(email: email)
+        }
+        else {
+            print("No user email found when trying to initiate profile pic download")
+        }
+
         view.addSubview(scrollView)
-        scrollView.addSubview(headerView)
-        headerView.addSubview(profileImageView)
-        scrollView.addSubview(qrImageView)
+        scrollView.addSubview(mainHeaderView)
+        // Set main header, that is active when not linked
+        mainHeaderView.addSubview(profileImageView)
+        mainHeaderView.addSubview(qrImageView)
+        
+        // Set linked header view, that is active when linked to partner
+        scrollView.addSubview(linkedHeaderView)
+        linkedHeaderView.addSubview(partnerProfileImageView)
+        linkedHeaderView.addSubview(linkedProfileImageView)
+        // Should be hidden on activiation of app, as all links are discarded on opening
+        linkedHeaderView.isHidden = true
+
         scrollView.addSubview(addSecondGateButton)
         scrollView.addSubview(partnerUILabel)
-        
         setConstraints()
         
-        homeViewModel.fetchProfilePic()
         homeViewModel.clearLinkFromDatabase()
-        homeViewModel.listenForNewLink()
         
         let qrButtonTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapQRButton))
         qrImageView.addGestureRecognizer(qrButtonTapGesture)
+        
+        let unlinkFromPartnerTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapToUnlinkFromParnter))
+        partnerProfileImageView.addGestureRecognizer(unlinkFromPartnerTapGesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -108,13 +154,13 @@ class HomeViewController: UIViewController {
         scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
-        headerView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-        headerView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        headerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        headerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        mainHeaderView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        mainHeaderView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        mainHeaderView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        mainHeaderView.heightAnchor.constraint(equalToConstant: 200).isActive = true
         
-        profileImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
-        profileImageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: mainHeaderView.centerYAnchor).isActive = true
+        profileImageView.centerXAnchor.constraint(equalTo: mainHeaderView.centerXAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         profileImageView.layer.cornerRadius = Constants.imageSize / 2
@@ -125,11 +171,28 @@ class HomeViewController: UIViewController {
         qrImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
         qrImageView.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
         
-        addSecondGateButton.anchor(top: headerView.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        addSecondGateButton.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.3).isActive = true
+        linkedHeaderView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        linkedHeaderView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        linkedHeaderView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        linkedHeaderView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        
+        linkedProfileImageView.trailingAnchor.constraint(equalTo: linkedHeaderView.centerXAnchor).isActive = true
+        linkedProfileImageView.centerYAnchor.constraint(equalTo: linkedHeaderView.centerYAnchor).isActive = true
+        linkedProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        linkedProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        linkedProfileImageView.layer.cornerRadius = Constants.imageSize / 2
+        
+        partnerProfileImageView.leadingAnchor.constraint(equalTo: linkedHeaderView.centerXAnchor).isActive = true
+        partnerProfileImageView.centerYAnchor.constraint(equalTo: linkedHeaderView.centerYAnchor).isActive = true
+        partnerProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        partnerProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        partnerProfileImageView.layer.cornerRadius = Constants.imageSize / 2
+        
+        addSecondGateButton.anchor(top: mainHeaderView.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        addSecondGateButton.heightAnchor.constraint(equalTo: mainHeaderView.heightAnchor, multiplier: 0.3).isActive = true
         
         partnerUILabel.anchor(top: addSecondGateButton.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        partnerUILabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.3).isActive = true
+        partnerUILabel.heightAnchor.constraint(equalTo: mainHeaderView.heightAnchor, multiplier: 0.3).isActive = true
     }
     
     /// Function checks if user is logged in or not
@@ -153,12 +216,52 @@ class HomeViewController: UIViewController {
             present(navVC, animated: true)
         }
     }
+    
+    /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
+    @objc func didTapToUnlinkFromParnter(sender: UIGestureRecognizer) {
+        if sender.state == .ended {
+            let actionSheet = UIAlertController(title: "Do you wish to unlink from second gate?",
+                                                message: "",
+                                                preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "Unlink from second gate", style: .destructive, handler: { [weak self] _ in
+                
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                // Clear any partner link from database
+                strongSelf.homeViewModel.clearLinkFromDatabase()
+
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                                style: .cancel,
+                                                handler: nil))
+            
+            present(actionSheet, animated: true)
+        }
+    }
 }
 
 extension HomeViewController: HomeViewModelDelegate {
-    func didFetchProfileImage(image: UIImage) {
+    func didFetchProfileImage(image: UIImage, safeEmail: String) {
+        guard var userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        userEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        // If email used in call doesnt match our users email, then we update partner image.
+        // Otherwise, update our users image.
         DispatchQueue.main.async {
-            self.profileImageView.image = image
+            if safeEmail != userEmail {
+                print("not a match")
+                self.partnerProfileImageView.image = image
+            }
+            else { 
+                print("match")
+                self.profileImageView.image = image
+                self.linkedProfileImageView.image = image
+            }
         }
     }
 }
@@ -167,28 +270,37 @@ extension HomeViewController: HomeViewModelDelegate {
 extension HomeViewController {
 
     @objc private func didTapAddSecondGateButton() {
-        let vc = LinkToPartnerViewController()
+        let vc = LinkToPartnerViewController()/*
         vc.completion = { [weak self] result in
             print("result \(result)")
             self?.goToSetUpWithPartner(partnerSafeEmail: result)
-        }
+        }*/
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
     }
-    
+    /*
     func goToSetUpWithPartner(partnerSafeEmail: String) {
-        /*let vc = RaceTypeViewController()
+        let vc = RaceTypeViewController()
         vc.partnerId = partnerId
         vc.raceId = raceId
         vc.title = "Select Race Type"
         vc.navigationItem.largeTitleDisplayMode = .always
-        navigationController?.pushViewController(vc, animated: true)*/
-    }
+        navigationController?.pushViewController(vc, animated: true)
+    }*/
     
     // Gets and updates UI elements in accordance with successful link with partner
     func didUpdatePartnerUI(partner: String) {
         DispatchQueue.main.async {
-            self.partnerUILabel.text = partner
+            if partner == "No partner" {
+                self.partnerUILabel.text = partner
+                self.linkedHeaderView.isHidden = true
+                self.mainHeaderView.isHidden = false
+            }
+            else {
+                self.partnerUILabel.text = partner
+                self.linkedHeaderView.isHidden = false
+                self.mainHeaderView.isHidden = true
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol HomeViewModelDelegate {
-    func didFetchProfileImage(image: UIImage)
+    func didFetchProfileImage(image: UIImage, safeEmail: String)
     func didUpdatePartnerUI(partner: String)
 }
 
@@ -19,15 +19,13 @@ class HomeViewModel {
     var homeViewModelDelegate: HomeViewModelDelegate?
     
     init() {
-        
+        listenForNewLink()
     }
     
-    func fetchProfilePic() {
-        print("fetching")
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-            print("No email saved to user defaults")
-            return
-        }
+    /// Call on storageManager to fetch profil pic for our uesr
+    func fetchProfilePic(email: String) {
+        print("Fetching a profile pic")
+
         let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
         let filename = safeEmail + "_profile_picture.png"
         let path = "images/"+filename
@@ -36,15 +34,15 @@ class HomeViewModel {
         StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
             switch result {
             case .success(let url):
-                print("success")
-                self?.downloadImage(url: url)
+                print("Successfully downloaded profile url")
+                self?.downloadImage(url: url, safeEmail: safeEmail)
             case .failure(let error):
                 print("Failed to download url: \(error)")
             }
         })
     }
     
-    private func downloadImage(url: URL) {
+    private func downloadImage(url: URL, safeEmail: String) {
         URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
             print("downloading image")
             guard let data = data, error == nil else {
@@ -53,7 +51,7 @@ class HomeViewModel {
             guard let image = UIImage(data: data) else {
                 return
             }
-            self.homeViewModelDelegate?.didFetchProfileImage(image: image)
+            self.homeViewModelDelegate?.didFetchProfileImage(image: image, safeEmail: safeEmail)
         }).resume()
     }
     
@@ -71,12 +69,16 @@ class HomeViewModel {
     
     // Start listening for new link
     func listenForNewLink() {
+        print("started listening")
         DatabaseManager.shared.observeNewLink(completion: { success in
             if success {
                 guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
                     return
                 }
+                // Send partner email to home view as test to update UI. Should really get and send name.
                 self.homeViewModelDelegate?.didUpdatePartnerUI(partner: partnerEmail)
+                // Start fetching partner profile pic
+                self.fetchProfilePic(email: partnerEmail)
                 print ("Successfully detected update to link")
             }
             else {
