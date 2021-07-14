@@ -18,8 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         
-        print("launching")
-        
         FirebaseApp.configure()
           
         ApplicationDelegate.shared.application(

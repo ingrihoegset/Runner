@@ -10,7 +10,7 @@ import UIKit
 
 protocol HomeViewModelDelegate {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
-    func didUpdatePartnerUI(partner: String)
+    func didUpdatePartnerUI(partner: String, gateNumber: Int)
 }
 
 
@@ -22,7 +22,7 @@ class HomeViewModel {
         listenForNewLink()
     }
     
-    /// Call on storageManager to fetch profil pic for our uesr
+    /// Call on storageManager to fetch profil pic for our user
     func fetchProfilePic(email: String) {
         print("Fetching a profile pic")
 
@@ -68,22 +68,36 @@ class HomeViewModel {
     }
     
     // Start listening for new link
+    // When a link is found
     func listenForNewLink() {
-        print("started listening")
-        DatabaseManager.shared.observeNewLink(completion: { success in
-            if success {
+        print("Started listening")
+        DatabaseManager.shared.observeNewLink(completion: { [weak self] result in
+            switch result {
+            
+            // In success case we are returned a gateNumber. Send this to home view to update UI in accordance with correct gate number.
+            case .success(let gateNumber):
+                guard let strongSelf = self else {
+                    return
+                }
+                
                 guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
                     return
                 }
-                // Send partner email to home view as test to update UI. Should really get and send name.
-                self.homeViewModelDelegate?.didUpdatePartnerUI(partner: partnerEmail)
+                // Send partner email to home view as test to update UI. Should really get and send name. Send gate number for UI update.
+                strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: partnerEmail, gateNumber: gateNumber)
+               
                 // Start fetching partner profile pic
-                self.fetchProfilePic(email: partnerEmail)
+                strongSelf.fetchProfilePic(email: partnerEmail)
                 print ("Successfully detected update to link")
-            }
-            else {
+                
+            case .failure(_):
+                guard let strongSelf = self else {
+                    return
+                }
                 print("No link to detect.")
-                self.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner")
+                
+                // Tell home that there is no partner and that it is gate 1.
+                strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner", gateNumber: 1)
             }
         })
     }

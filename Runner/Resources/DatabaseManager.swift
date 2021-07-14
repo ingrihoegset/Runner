@@ -90,7 +90,7 @@ extension DatabaseManager {
             
             // Data for insertion for our user
             let newLinkData: [String: Any] = [
-                "linkID": 123,
+                "gate_number": 1,
                 "other_user_email": partnerSafeEmail
             ]
 
@@ -109,7 +109,7 @@ extension DatabaseManager {
             
             // Data for insertion for partner user
             let partner_newLinkData: [String: Any] = [
-                "linkID": 789,
+                "gate_number": 2,
                 "other_user_email": userSafeEmail
             ]
             
@@ -181,34 +181,47 @@ extension DatabaseManager {
     
     /// Observe if there is a change in users link
     // We are trying to observe when a link has occured
-    public func observeNewLink(completion: @escaping (Bool) -> Void) {
+    // Sending the gate number so that the two phones will know which gate is gate 1 and which is gate 2.
+    public func observeNewLink(completion: @escaping (Result<Int, Error>) -> Void) {
         
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No email found for user when trying to listen for links.")
-            completion(false)
+            // Is it really necessary to call failure here? Call failure in next block when there is no data under links.
+           // completion(.failure(DataBaseErrors.failedToFetch))
             return
         }
         
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: email)
+        print("user email", userSafeEmail)
         
         let path = database.child("\(userSafeEmail)/links")
         path.observe(.value, with: { snapshot in
             guard let value = snapshot.value as? [String: Any] else {
                 print("No value to get when link changed.")
-                completion(false)
+                completion(.failure(DataBaseErrors.failedToFetch))
                 return
             }
+            print("value ", value)
+            
+            print("Observed change in link")
             
             guard let partnerSafeEmail = value["other_user_email"] as? String else {
                 print("Could not unwrap partner email when link updated")
-                completion(false)
                 return
             }
             
+            // Got partner email from database, save the value to userdefaults for access across the app.
             UserDefaults.standard.setValue(partnerSafeEmail, forKey: "partnerEmail")
             
+            // Get gatenumber from snapshot.
+            guard let gateNumber = value["gate_number"] as? Int else {
+                print("Unable to get gateNumber.")
+                completion(.failure(DataBaseErrors.failedToFetch))
+                return
+            }
+            
             // Successfully listened to update in link
-            completion(true)
+            completion(.success(gateNumber))
         })
     }
     
