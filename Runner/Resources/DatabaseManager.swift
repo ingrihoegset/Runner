@@ -11,6 +11,14 @@ import FirebaseDatabase
 // final class so cannot be subclassed
 final class DatabaseManager {
     
+    public static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .long
+        formatter.locale = .current
+        return formatter
+    }()
+    
     // Singelton for easy read and write access. Returns an instance to the database manager.
     static let shared = DatabaseManager()
     
@@ -235,7 +243,92 @@ extension DatabaseManager {
             }
         }
     }
-    
+}
 
+// MARK: - Functions related to manageing runs, runtimes etc.
+
+extension DatabaseManager {
     
+    // Generates unique run ID
+    func createRunID(userSafeEmail: String, partnerSafeEmail: String) -> String {
+        let dateString = Self.dateFormatter.string(from: Date())
+        let identifier = "\(userSafeEmail)_\(partnerSafeEmail)_\(dateString)"
+        return identifier
+    }
+    
+    /// Registers run ID for our user, partner user and creates a seperate run node.
+    func registerCurrentRunToDatabase(with completion: @escaping (Bool) -> Void) {
+        
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to register run ID to database.")
+            completion(false)
+            return
+        }
+        
+        guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
+            print("No partner email found when trying to register run ID to database.")
+            completion(false)
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
+        
+        // Get unique run ID
+        let runID = createRunID(userSafeEmail: userSafeEmail, partnerSafeEmail: partnerSafeEmail)
+        
+        // Set run ID for our user
+        // Create path reference for database
+        let reference = database.child("\(userSafeEmail)")
+        
+        reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            guard var userNode = snapshot.value as? [String: Any] else {
+                completion(false)
+                print("User not found when trying to register current run ID to database")
+                return
+            }
+            
+            // Data for insertion for our use
+            let currentRun: [String: Any] = [
+                "current_run_id": runID,
+                "start_time": 123
+            ]
+
+            userNode["current_run"] = currentRun
+            
+            // Update database
+            reference.setValue(userNode, withCompletionBlock: { error, _ in
+                guard error == nil else {
+                    completion(false)
+                    print("Failed to add run ID to our user in database")
+                    return
+                }
+            })
+        
+            // Set run ID for partner user
+            // Data for insertion for our use
+            let partnerCurrentRun: [String: Any] = [
+                "current_run_id": runID,
+                "start_time": 123
+            ]
+            
+            // Create partner link entry
+            self?.database.child("\(partnerSafeEmail)/current_run").observeSingleEvent(of: .value, with: { [weak self] snapshot in
+                self?.database.child("\(partnerSafeEmail)/current_run").setValue(partnerCurrentRun)
+            })
+            
+            // Create run ID node
+            self?.database.child("run").setValue([
+                "run_id": runID
+            ], withCompletionBlock: { error, _ in
+                guard error == nil else {
+                    print("Failed to add run node to database")
+                    completion(false)
+                    return
+                }
+            })
+            completion(true)
+        })
+    }
 }

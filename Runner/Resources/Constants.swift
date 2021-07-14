@@ -16,6 +16,7 @@ struct Constants {
     static let textColorWhite = UIColor.white
     
     //Design dimensions
+    static let smallCornerRadius: CGFloat = 4
     static let cornerRadius: CGFloat = 12
     static let borderWidth: CGFloat = 3
     static let sideSpacing: CGFloat = 15
@@ -38,4 +39,25 @@ struct Constants {
     static let widthOfPickerLabel = Constants.widthOfDisplay * 0.2
     static let widthOfLengthPicker = widthOfPickerLabel * 3
     static let widthOfDelayPicker = widthOfPickerLabel * 2
+    
+    // Fonts
+        //Light
+    static let mainFontLarge = UIFont(name: "BarlowSemiCondensed-Light", size: 22)
+    static let mainFont = UIFont(name: "BarlowSemiCondensed-Light", size: 18)
+    static let mainFontMedium = UIFont(name: "BarlowSemiCondensed-Light", size: 14)
+    static let mainFontSmall = UIFont(name: "BarlowSemiCondensed-Light", size: 12)
+        //Semi Bold
+    static let mainFontSmallSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 10)
+    static let mainFontMediumSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 14)
+    static let mainFontSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 18)
+    static let mainFontLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 22)
+    static let mainFontXLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 35)
+    static let mainFontXXLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 55)
+    static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 160)
+    
+    // Set race VC texts
+    static let noOfLaps = "Number of laps"
+    static let lengthOfLap = "Distance to gate"
+    static let delayTime = "Seconds count down"
+    static let reactionPeriod = "Reaction period"
 }

@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		42F7BDED143D2C8C95974173 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56C9FFD69E5722FF9A46B73A /* Pods_Runner.framework */; };
 		BF12FF06269E43C800B51370 /* QRLinkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF05269E43C800B51370 /* QRLinkViewModel.swift */; };
+		BF12FF0A269F568400B51370 /* SetUpRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF09269F568400B51370 /* SetUpRunViewController.swift */; };
+		BF12FF0F269F577200B51370 /* MyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF0E269F577200B51370 /* MyPickerView.swift */; };
+		BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF14269F57A500B51370 /* CustomPickerView.swift */; };
+		BF12FF21269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF1E269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf */; };
+		BF12FF22269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF1F269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf */; };
+		BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */; };
+		BF12FF26269F5BAA00B51370 /* StartGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */; };
 		BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF48305D269AF90600C8CC6C /* DatabaseManager.swift */; };
 		BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */; };
 		BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830A2269C654A00C8CC6C /* Sender.swift */; };
@@ -16,6 +23,10 @@
 		BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C0269C6BD000C8CC6C /* StorageManager.swift */; };
 		BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */; };
 		BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */; };
+		BF512AD9269F62AE001C6BF2 /* shortBeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD6269F62AD001C6BF2 /* shortBeep.wav */; };
+		BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD7269F62AD001C6BF2 /* longBeep.wav */; };
+		BF512ADB269F62AE001C6BF2 /* longBeepDeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */; };
+		BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */; };
 		BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
@@ -38,6 +49,13 @@
 		3A8C15B1FEE083B00ACF749F /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		56C9FFD69E5722FF9A46B73A /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF12FF05269E43C800B51370 /* QRLinkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewModel.swift; sourceTree = "<group>"; };
+		BF12FF09269F568400B51370 /* SetUpRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpRunViewController.swift; sourceTree = "<group>"; };
+		BF12FF0E269F577200B51370 /* MyPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPickerView.swift; sourceTree = "<group>"; };
+		BF12FF14269F57A500B51370 /* CustomPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPickerView.swift; sourceTree = "<group>"; };
+		BF12FF1E269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Light.ttf"; sourceTree = "<group>"; };
+		BF12FF1F269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-SemiBold.ttf"; sourceTree = "<group>"; };
+		BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
+		BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartGateViewController.swift; sourceTree = "<group>"; };
 		BF48305D269AF90600C8CC6C /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceAppUser.swift; sourceTree = "<group>"; };
 		BF4830A2269C654A00C8CC6C /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
@@ -45,6 +63,10 @@
 		BF4830C0269C6BD000C8CC6C /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		BF512AD6269F62AD001C6BF2 /* shortBeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = shortBeep.wav; sourceTree = "<group>"; };
+		BF512AD7269F62AD001C6BF2 /* longBeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeep.wav; sourceTree = "<group>"; };
+		BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeepDeep.wav; sourceTree = "<group>"; };
+		BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartGateViewModel.swift; sourceTree = "<group>"; };
 		BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewController.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
@@ -93,6 +115,44 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BF12FF0D269F574D00B51370 /* CustomPicker */ = {
+			isa = PBXGroup;
+			children = (
+				BF12FF0E269F577200B51370 /* MyPickerView.swift */,
+				BF12FF14269F57A500B51370 /* CustomPickerView.swift */,
+			);
+			path = CustomPicker;
+			sourceTree = "<group>";
+		};
+		BF12FF1C269F597B00B51370 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				BF12FF1E269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf */,
+				BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */,
+				BF12FF1F269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		BF12FF28269F5BB700B51370 /* LinkingWithPartner */ = {
+			isa = PBXGroup;
+			children = (
+				BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */,
+				BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */,
+			);
+			path = LinkingWithPartner;
+			sourceTree = "<group>";
+		};
+		BF512AD5269F629F001C6BF2 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				BF512AD7269F62AD001C6BF2 /* longBeep.wav */,
+				BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */,
+				BF512AD6269F62AD001C6BF2 /* shortBeep.wav */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		BFFB6991269A14E30080DA62 = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +199,7 @@
 				BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */,
 				BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */,
 				BF12FF05269E43C800B51370 /* QRLinkViewModel.swift */,
+				BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -155,6 +216,9 @@
 		BFFB69B5269A16800080DA62 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BF512AD5269F629F001C6BF2 /* Sounds */,
+				BF12FF1C269F597B00B51370 /* Font */,
+				BF12FF0D269F574D00B51370 /* CustomPicker */,
 				BFFB699D269A14E30080DA62 /* AppDelegate.swift */,
 				BFFB699F269A14E30080DA62 /* SceneDelegate.swift */,
 				BFFB69C6269A2E330080DA62 /* Constants.swift */,
@@ -171,10 +235,11 @@
 		BFFB69B6269A168C0080DA62 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				BF12FF28269F5BB700B51370 /* LinkingWithPartner */,
 				BFFB69A1269A14E30080DA62 /* HomeViewController.swift */,
 				BFFB69C1269A182B0080DA62 /* ProfileViewController.swift */,
-				BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */,
-				BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */,
+				BF12FF09269F568400B51370 /* SetUpRunViewController.swift */,
+				BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
 			);
 			path = Controllers;
@@ -258,9 +323,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF512ADB269F62AE001C6BF2 /* longBeepDeep.wav in Resources */,
 				BFFB69AA269A14E70080DA62 /* LaunchScreen.storyboard in Resources */,
+				BF12FF21269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf in Resources */,
 				BFFB69DE269A4BE80080DA62 /* GoogleService-Info.plist in Resources */,
+				BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */,
+				BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */,
 				BFFB69A7269A14E70080DA62 /* Assets.xcassets in Resources */,
+				BF512AD9269F62AE001C6BF2 /* shortBeep.wav in Resources */,
+				BF12FF22269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf in Resources */,
 				BFFB69A5269A14E30080DA62 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -331,18 +402,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF12FF0A269F568400B51370 /* SetUpRunViewController.swift in Sources */,
 				BFFB69C2269A182B0080DA62 /* ProfileViewController.swift in Sources */,
 				BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */,
 				BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */,
 				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
+				BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
+				BF12FF26269F5BAA00B51370 /* StartGateViewController.swift in Sources */,
 				BF4830A6269C658200C8CC6C /* Race.swift in Sources */,
 				BF12FF06269E43C800B51370 /* QRLinkViewModel.swift in Sources */,
 				BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,
+				BF12FF0F269F577200B51370 /* MyPickerView.swift in Sources */,
 				BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */,
 				BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */,
 				BFFB69BB269A17BD0080DA62 /* LoginViewController.swift in Sources */,
@@ -350,6 +425,7 @@
 				BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */,
 				BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */,
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
+				BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

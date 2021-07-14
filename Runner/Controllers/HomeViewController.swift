@@ -316,6 +316,7 @@ extension HomeViewController: HomeViewModelDelegate {
     }
     
     // Gets and updates UI elements in accordance with successful link with partner
+    // Is triggered by home view model when a change to link occurs. If a link is found, else is activated, view shows linked view.
     func didUpdatePartnerUI(partner: String, gateNumber: Int) {
         DispatchQueue.main.async {
             print("Updating UI")
@@ -363,8 +364,10 @@ extension HomeViewController {
     
     /// Takes us to new view controller where race can be set up. Only available when linked to partner.
     @objc private func didTapAddSetUpRunWithTwoGates() {
-        
-        
+        let vc = SetUpRunViewController()
+        vc.navigationItem.largeTitleDisplayMode = .always
+        navigationController?.pushViewController(vc, animated: true)
+           
         
     }
     
