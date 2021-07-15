@@ -14,23 +14,31 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     let secondGateViewModel = SecondGateViewModel()
     
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Delegates
+        secondGateViewModel.secondGateViewModelDelegate = self
+        
+        // Set up for camera view
         let previewLayer = secondGateViewModel.previewLayer
         previewLayer.frame = self.view.bounds
-        print(previewLayer)
-
         self.view.layer.addSublayer(previewLayer)
-        
-
-        
-
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        self.secondGateViewModel.captureSession.stopRunning()
+    }
+}
 
+
+extension SecondGateViewController: SecondGateViewModelDelegate {
     
-
+    @objc func runHasEnded() {
+        DispatchQueue.main.async {
+            self.dismiss(animated: true, completion: nil)
+            self.secondGateViewModel.captureSession.stopRunning()
+        }
+    }
 }

@@ -29,6 +29,7 @@
 		BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */; };
 		BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */; };
 		BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */; };
+		BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AF926A0D170001C6BF2 /* BreakObserver.swift */; };
 		BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
@@ -71,6 +72,7 @@
 		BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartGateViewModel.swift; sourceTree = "<group>"; };
 		BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewController.swift; sourceTree = "<group>"; };
 		BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewModel.swift; sourceTree = "<group>"; };
+		BF512AF926A0D170001C6BF2 /* BreakObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakObserver.swift; sourceTree = "<group>"; };
 		BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewController.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				BF4830A2269C654A00C8CC6C /* Sender.swift */,
 				BF4830A5269C658200C8CC6C /* Race.swift */,
 				BF4830C0269C6BD000C8CC6C /* StorageManager.swift */,
+				BF512AF926A0D170001C6BF2 /* BreakObserver.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -415,6 +418,7 @@
 				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
 				BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */,
+				BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* StartGateViewController.swift in Sources */,
