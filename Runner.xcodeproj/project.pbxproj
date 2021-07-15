@@ -27,6 +27,7 @@
 		BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD7269F62AD001C6BF2 /* longBeep.wav */; };
 		BF512ADB269F62AE001C6BF2 /* longBeepDeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */; };
 		BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */; };
+		BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */; };
 		BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
@@ -67,6 +68,7 @@
 		BF512AD7269F62AD001C6BF2 /* longBeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeep.wav; sourceTree = "<group>"; };
 		BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeepDeep.wav; sourceTree = "<group>"; };
 		BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartGateViewModel.swift; sourceTree = "<group>"; };
+		BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewController.swift; sourceTree = "<group>"; };
 		BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewController.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				BFFB69C1269A182B0080DA62 /* ProfileViewController.swift */,
 				BF12FF09269F568400B51370 /* SetUpRunViewController.swift */,
 				BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */,
+				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
 			);
 			path = Controllers;
@@ -410,6 +413,7 @@
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
 				BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
+				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* StartGateViewController.swift in Sources */,
 				BF4830A6269C658200C8CC6C /* Race.swift in Sources */,
 				BF12FF06269E43C800B51370 /* QRLinkViewModel.swift in Sources */,

@@ -98,7 +98,7 @@ class HomeViewModel {
                 
                 // Tell home that there is no partner and that it is gate 1.
                 // Also, if fetch fails in general, show unlinked view on home VC.
-                strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner", gateNumber: 1)
+                strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner", gateNumber: 0)
             }
         })
     }

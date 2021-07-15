@@ -228,6 +228,8 @@ extension DatabaseManager {
                 return
             }
             
+            print(gateNumber)
+            
             // Successfully listened to update in link
             completion(.success(gateNumber))
         })

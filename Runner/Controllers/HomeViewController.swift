@@ -82,7 +82,7 @@ class HomeViewController: UIViewController {
         return label
     }()
     
-    // MARK: - Elements related to linked view
+    // MARK: - Elements related to linked view, first gate
     
     private let partnerView: UIView = {
         let view = UIView()
@@ -138,6 +138,63 @@ class HomeViewController: UIViewController {
         return imageView
     }()
     
+    // MARK: - Elements related to linked view, second gate
+    
+    private let secondGateView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .orange
+        return view
+    }()
+    
+    private let openSecondGatesButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = Constants.accentColor
+        button.setTitle("Open second gate", for: .normal)
+        button.addTarget(self, action: #selector(didSelectOpenSecondGate), for: .touchUpInside)
+        return button
+    }()
+    
+    private let unLinkFromSecondGateButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = Constants.accentColor
+        button.setTitle("Disconnet from second gate", for: .normal)
+        button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
+        return button
+    }()
+    
+    private let secondGateHeaderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .yellow
+        return view
+    }()
+    
+    private let secondGateProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let secondGatePartnerProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -172,6 +229,17 @@ class HomeViewController: UIViewController {
         
         // Should be hidden on activiation of app, as all links are discarded on opening
         partnerView.isHidden = true
+        
+        // Relatd to view show when user is second gate
+        view.addSubview(secondGateView)
+        secondGateView.addSubview(secondGateHeaderView)
+        secondGateHeaderView.addSubview(secondGatePartnerProfileImageView)
+        secondGateHeaderView.addSubview(secondGateProfileImageView)
+        secondGateView.addSubview(openSecondGatesButton)
+        secondGateView.addSubview(unLinkFromSecondGateButton)
+        
+        // Should be hidden on activiation of app, as all links are discarded on opening
+        secondGateView.isHidden = true
         
         setConstraints()
         
@@ -269,6 +337,45 @@ class HomeViewController: UIViewController {
                                                     left: Constants.sideMargin, bottom: 0,
                                                     right: Constants.sideMargin))
         partnerUILabel.heightAnchor.constraint(equalTo: linkedHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        
+        // Elements related to second gate view
+        secondGateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        secondGateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        secondGateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        secondGateView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        secondGateHeaderView.topAnchor.constraint(equalTo: secondGateView.topAnchor).isActive = true
+        secondGateHeaderView.centerXAnchor.constraint(equalTo: secondGateView.centerXAnchor).isActive = true
+        secondGateHeaderView.widthAnchor.constraint(equalTo: secondGateView.widthAnchor).isActive = true
+        secondGateHeaderView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        
+        secondGateProfileImageView.trailingAnchor.constraint(equalTo: secondGateHeaderView.centerXAnchor).isActive = true
+        secondGateProfileImageView.centerYAnchor.constraint(equalTo: secondGateHeaderView.centerYAnchor).isActive = true
+        secondGateProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        secondGateProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        secondGateProfileImageView.layer.cornerRadius = Constants.imageSize / 2
+        
+        secondGatePartnerProfileImageView.leadingAnchor.constraint(equalTo: secondGateHeaderView.centerXAnchor).isActive = true
+        secondGatePartnerProfileImageView.centerYAnchor.constraint(equalTo: secondGateHeaderView.centerYAnchor).isActive = true
+        secondGatePartnerProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        secondGatePartnerProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        secondGatePartnerProfileImageView.layer.cornerRadius = Constants.imageSize / 2
+        
+        openSecondGatesButton.anchor(top: secondGateHeaderView.bottomAnchor,
+                                           leading: secondGateView.leadingAnchor, bottom: nil,
+                                           trailing: secondGateView.trailingAnchor,
+                                           padding: UIEdgeInsets(top: Constants.verticalSpacing,
+                                                                 left: Constants.sideMargin, bottom: 0,
+                                                                 right: Constants.sideMargin))
+        openSecondGatesButton.heightAnchor.constraint(equalTo: secondGateHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        
+        unLinkFromSecondGateButton.anchor(top: openSecondGatesButton.bottomAnchor,
+                              leading: secondGateView.leadingAnchor,
+                              bottom: nil, trailing: secondGateView.trailingAnchor,
+                              padding: UIEdgeInsets(top: Constants.verticalSpacing,
+                                                    left: Constants.sideMargin, bottom: 0,
+                                                    right: Constants.sideMargin))
+        unLinkFromSecondGateButton.heightAnchor.constraint(equalTo: secondGateHeaderView.heightAnchor, multiplier: 0.3).isActive = true
     }
     
     /// Function checks if user is logged in or not
@@ -320,15 +427,27 @@ extension HomeViewController: HomeViewModelDelegate {
     func didUpdatePartnerUI(partner: String, gateNumber: Int) {
         DispatchQueue.main.async {
             print("Updating UI")
-            if partner == "No partner" {
-                self.partnerUILabel.text = partner
-                self.partnerView.isHidden = true
-                self.mainView.isHidden = false
-            }
-            else {
+            print("gate number", gateNumber)
+            // Show connected view, but for first gate
+            if gateNumber == 1 {
                 self.partnerUILabel.text = partner
                 self.partnerView.isHidden = false
                 self.mainView.isHidden = true
+                self.secondGateView.isHidden = true
+            }
+            // Show connected view, but for second gate
+            else if gateNumber == 2 {
+                self.partnerUILabel.text = partner
+                self.secondGateView.isHidden = false
+                self.partnerView.isHidden = true
+                self.mainView.isHidden = true
+            }
+            // Show main view, no connection
+            else {
+                self.partnerUILabel.text = partner
+                self.partnerView.isHidden = true
+                self.secondGateView.isHidden = true
+                self.mainView.isHidden = false
             }
         }
     }
@@ -421,5 +540,10 @@ extension HomeViewController {
     }
     
     
-    
+    // MARK: - Functions related to second gate
+    @objc private func didSelectOpenSecondGate() {
+        let vc = SecondGateViewController()
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true)
+    }
 }
