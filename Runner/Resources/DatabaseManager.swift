@@ -340,7 +340,7 @@ extension DatabaseManager {
         
         // Step 1: Get current run id for user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
-            print("No user email found when trying to register run ID to database.")
+            print("No user email found when trying to register start time database.")
             completion(false)
             return
         }
@@ -374,6 +374,43 @@ extension DatabaseManager {
         })
     }
     
-    
-    
+    /// Send end time of run signalling that someone has passed the gate
+    func sendEndTime(with endTime: Double, completion: @escaping (Bool) -> Void) {
+        
+        // Step 1: Get current run id for user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to register end time to database.")
+            completion(false)
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Create path reference for database
+        let reference = database.child("\(userSafeEmail)/current_run")
+        
+        // Get snapshot of vaue at given path
+        reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            guard let userNode = snapshot.value as? [String: Any] else {
+                completion(false)
+                print("Current run not found when attempting to get run ID")
+                return
+            }
+            
+            // This is the ID for our run node
+            guard let runID = userNode["current_run_id"] as? String else {
+                completion(false)
+                print("Could not unwrap run id to string")
+                return
+            }
+        
+            // Step 2: Set start time under run node
+            self?.database.child(runID).observeSingleEvent(of: .value, with: { [weak self] snapshot in
+                self?.database.child("\(runID)/end_time").setValue(endTime)
+            })
+            completion(true)
+        })
+        
+    } 
 }
