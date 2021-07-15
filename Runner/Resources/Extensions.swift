@@ -87,3 +87,10 @@ extension UIImage {
         return imageWithInsets
     }
 }
+
+/// Is used to get the current time stamp
+extension Date {
+    func currentTimeMillis() -> Double {
+        return self.timeIntervalSince1970
+    }
+}

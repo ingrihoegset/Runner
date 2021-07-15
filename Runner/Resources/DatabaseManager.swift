@@ -249,7 +249,7 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     
-    // Generates unique run ID
+    /// Generates unique run ID
     func createRunID(userSafeEmail: String, partnerSafeEmail: String) -> String {
         let dateString = Self.dateFormatter.string(from: Date())
         let identifier = "\(userSafeEmail)_\(partnerSafeEmail)_\(dateString)"
@@ -310,7 +310,6 @@ extension DatabaseManager {
             // Data for insertion for our use
             let partnerCurrentRun: [String: Any] = [
                 "current_run_id": runID,
-                "start_time": 123
             ]
             
             // Create partner link entry
@@ -319,8 +318,8 @@ extension DatabaseManager {
             })
             
             // Create run ID node
-            self?.database.child("run").setValue([
-                "run_id": runID
+            self?.database.child(runID).setValue([
+                "start_time": ""
             ], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to add run node to database")
@@ -331,4 +330,48 @@ extension DatabaseManager {
             completion(true)
         })
     }
+    
+    /// Sends start time timestamp whn run begins
+    // Function works by getting the current run id from our user and then using this id
+    // to find the correct path to set the start time for the run.
+    func sendStartTime(with startTime: Double, completion: @escaping (Bool) -> Void) {
+        
+        // Step 1: Get current run id for user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to register run ID to database.")
+            completion(false)
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Create path reference for database
+        let reference = database.child("\(userSafeEmail)/current_run")
+        
+        // Get snapshot of vaue at given path
+        reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            guard let userNode = snapshot.value as? [String: Any] else {
+                completion(false)
+                print("Current run not found when attempting to get run ID")
+                return
+            }
+            
+            // This is the ID for our run node
+            guard let runID = userNode["current_run_id"] as? String else {
+                completion(false)
+                print("Could not unwrapp run id to string")
+                return
+            }
+        
+            // Step 2: Set start time under run node
+            self?.database.child(runID).observeSingleEvent(of: .value, with: { [weak self] snapshot in
+                self?.database.child("\(runID)/start_time").setValue(startTime)
+            })
+            completion(true)
+        })
+    }
+    
+    
+    
 }

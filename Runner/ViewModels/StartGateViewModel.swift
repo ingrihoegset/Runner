@@ -67,6 +67,10 @@ class StartGateViewModel {
             timer.invalidate()
             startGateViewModelDelegate?.updateCountDownLabelText(count: "GO!")
             counter = 3
+            
+            // Send start time time stamp to database
+            let startTime = Date().currentTimeMillis()
+            sendStartTime(startTime: startTime)
         }
     }
 
@@ -104,10 +108,22 @@ class StartGateViewModel {
                 completion(true)
             }
             else {
+                // Should show error to user and spinne while waiting!!!!! //
                 completion(false)
             }
         })
         
     }
     
+    private func sendStartTime(startTime: Double) {
+        print("Attempting to send start time")
+        DatabaseManager.shared.sendStartTime(with: startTime, completion: { success in
+            if success {
+                print("Run updated with start time in database")
+            }
+            else {
+                print("Failed to update run in database with start time")
+            }
+        })
+    }
 }
