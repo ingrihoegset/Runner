@@ -451,6 +451,14 @@ extension HomeViewController: HomeViewModelDelegate {
             }
         }
     }
+    
+    func didGetRunTimes(totalSeconds: Double) {
+        let vc = ResultsViewController()
+        vc.times = totalSeconds
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true)
+        
+    }
 }
 
 // MARK: - Functions relating to connecting with second gate

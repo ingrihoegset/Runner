@@ -11,6 +11,7 @@ import UIKit
 protocol HomeViewModelDelegate {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
     func didUpdatePartnerUI(partner: String, gateNumber: Int)
+    func didGetRunTimes(totalSeconds: Double)
 }
 
 
@@ -20,6 +21,7 @@ class HomeViewModel {
     
     init() {
         listenForNewLink()
+        listenForCurrentRunID()
     }
     
     /// Call on storageManager to fetch profil pic for our user
@@ -70,8 +72,8 @@ class HomeViewModel {
     // Start listening for new link
     // When a link is found
     func listenForNewLink() {
-        print("Started listening")
-        DatabaseManager.shared.observeNewLink(completion: { [weak self] result in
+        print("Started listening for link with partner")
+        DatabaseManager.shared.listenForNewLink(completion: { [weak self] result in
             switch result {
             
             // In success case we are returned a gateNumber. Send this to home view to update UI in accordance with correct gate number.
@@ -101,5 +103,32 @@ class HomeViewModel {
                 strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner", gateNumber: 0)
             }
         })
+    }
+    
+    /// Function called on build (?) to set up listener for current race ID
+    // One can question if this is the correct place to call suc essential code...
+    private func listenForCurrentRunID() {
+        DatabaseManager.shared.listenForCurrentRunID(completion: { [weak self] result in
+            switch result {
+                case .success(let times):
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    // Convert times to total time
+                    let totalSeconds = strongSelf.timesToResult(times: times)
+                    // Calls on home VC to open results VC
+                    strongSelf.homeViewModelDelegate?.didGetRunTimes(totalSeconds: totalSeconds)
+                        
+                case .failure(let error):
+                    print(error)
+            }
+        })
+    }
+    
+    private func timesToResult(times: [String: Double]) -> Double {
+        let endTime = times["end_time"] ?? 0.0
+        let startTime = times["start_time"] ?? 0.0
+        let totalSeconds = endTime - startTime
+        return totalSeconds
     }
 }

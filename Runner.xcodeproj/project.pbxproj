@@ -33,6 +33,7 @@
 		BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
+		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
 		BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699D269A14E30080DA62 /* AppDelegate.swift */; };
 		BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699F269A14E30080DA62 /* SceneDelegate.swift */; };
 		BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69A1269A14E30080DA62 /* HomeViewController.swift */; };
@@ -76,6 +77,7 @@
 		BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewController.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
+		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		BFFB699A269A14E30080DA62 /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFB699D269A14E30080DA62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFB699F269A14E30080DA62 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				BF12FF09269F568400B51370 /* SetUpRunViewController.swift */,
 				BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */,
 				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
+				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
 			);
 			path = Controllers;
@@ -414,6 +417,7 @@
 				BF12FF0A269F568400B51370 /* SetUpRunViewController.swift in Sources */,
 				BFFB69C2269A182B0080DA62 /* ProfileViewController.swift in Sources */,
 				BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */,
+				BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */,
 				BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */,
 				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,

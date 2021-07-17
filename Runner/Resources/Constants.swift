@@ -60,4 +60,7 @@ struct Constants {
     static let lengthOfLap = "Distance to gate"
     static let delayTime = "Seconds count down"
     static let reactionPeriod = "Reaction period"
+    
+    // User Default Strings
+    static let currentRunID = "currentRunID"
 }

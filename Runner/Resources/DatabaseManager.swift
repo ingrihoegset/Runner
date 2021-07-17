@@ -190,7 +190,7 @@ extension DatabaseManager {
     /// Observe if there is a change in users link
     // We are trying to observe when a link has occured
     // Sending the gate number so that the two phones will know which gate is gate 1 and which is gate 2.
-    public func observeNewLink(completion: @escaping (Result<Int, Error>) -> Void) {
+    public func listenForNewLink(completion: @escaping (Result<Int, Error>) -> Void) {
         
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No email found for user when trying to listen for links.")
@@ -251,6 +251,7 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     
+    
     /// Generates unique run ID
     func createRunID(userSafeEmail: String, partnerSafeEmail: String) -> String {
         let dateString = Self.dateFormatter.string(from: Date())
@@ -258,6 +259,66 @@ extension DatabaseManager {
         return identifier
     }
     
+    /// Function that listens for the run id. We need it to be able to listen for an end time at the right run node.
+    // At the end of the function we use the run id we got to create a listener on that run id. This so we can observe changes to end time.
+    func listenForCurrentRunID(completion: @escaping (Result<[String: Double], Error>) -> Void)  {
+        
+        // Step 1: Get current run id for user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to register start time database.")
+            completion(.failure(DataBaseErrors.failedToFetch))
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Create path reference for database
+        let reference = database.child("\(userSafeEmail)/current_run")
+        
+        // Get snapshot of vaue at given path
+        // The code that is in this closure is the code that is run whenever the database changes at this path.
+        // Must create a listener on the run id node as well when the closure is called, so that we can listen for updates to end time.
+        reference.observe(.value, with: { [weak self] snapshot in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            guard let currentRun = snapshot.value as? [String: Any] else {
+                completion(.failure(DataBaseErrors.failedToFetch))
+                print("Current run not found when attempting to get run ID")
+                return
+            }
+            
+            // This is the ID for our run node
+            guard let runID = currentRun["current_run_id"] as? String else {
+                completion(.failure(DataBaseErrors.failedToFetch))
+                print("Could not unwrapp run id to string")
+                return
+            }
+            
+            // Create listener to observe changes in the times that are linked to this run ID.
+            strongSelf.listenForEndOfCurrentRun(currentRunID: runID, with: { [weak self] success in
+                if success {
+                    // There was an update in the end time if success. Thus, we can get array of times.
+                    strongSelf.getAllTimes(currentRunID: runID, completion: { result in
+                        switch result {
+                        case .success(let times):
+                            print(times)
+                            completion(.success(times))
+                        case .failure(let error_):
+                            print("Error")
+                        }
+                    })
+                }
+                else {
+                    print("Failed to create listener for end time")
+                    completion(.failure(DataBaseErrors.failedToFetch))
+                }
+            })
+        })
+    }
+
     /// Registers run ID for our user, partner user and creates a seperate run node.
     func registerCurrentRunToDatabase(with completion: @escaping (Bool) -> Void) {
         
@@ -294,7 +355,6 @@ extension DatabaseManager {
             // Data for insertion for our use
             let currentRun: [String: Any] = [
                 "current_run_id": runID,
-                "start_time": 123
             ]
 
             userNode["current_run"] = currentRun
@@ -321,7 +381,7 @@ extension DatabaseManager {
             
             // Create run ID node
             self?.database.child(runID).setValue([
-                "start_time": ""
+                "start_time": 0
             ], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to add run node to database")
@@ -377,7 +437,7 @@ extension DatabaseManager {
     /// Send end time of run signalling that someone has passed the gate
     func sendEndTime(with endTime: Double, completion: @escaping (Bool) -> Void) {
         
-        // Step 1: Get current run id for user
+        // Step 1: Get user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when trying to register end time to database.")
             completion(false)
@@ -411,6 +471,61 @@ extension DatabaseManager {
             })
             completion(true)
         })
+    }
+    
+    /// Function that listens for if an end time has been uploaded to current race.
+    // This listener must be created each time a new run id is created so that it listens to the correct ID.
+    // It only needs to listen once, for when the end time is changed.
+    func listenForEndOfCurrentRun(currentRunID: String, with completion: @ escaping (Bool) -> Void) {
         
-    } 
+        // Step 1: Get recently created run ID, an find end time node.
+        let reference = database.child("\(currentRunID)/end_time")
+        
+        // Step 2: Set opp listener for change in end time
+        reference.observe(.value, with: { [weak self] snapshot in
+            
+            guard snapshot.value as? Double != nil else {
+                print("No end time exists yet.")
+                // This is fine. Should happen every time a new listener is created (each time a new run is created)
+                completion(false)
+                return
+            }
+            
+            // End time value is no-nil, so this mean run has completed
+            guard let endTime = snapshot.value as? Double else {
+                print("Could not unwrap snapshot value to double.")
+                // Something went wrong unwrapping
+                completion(false)
+                return
+            }
+            
+            // Successfully observed an end time.
+            completion(true)
+            print("Successfully observed an end time: ", endTime)
+        })
+    }
+    
+    private func getAllTimes(currentRunID: String, completion: @escaping (Result<[String: Double], Error>) -> Void) {
+        
+        // Step 1: Get current run ID
+        let reference = database.child(currentRunID)
+        
+        reference.observeSingleEvent(of: .value, with: { snapshot in
+            guard snapshot.value as? [String: Double] != nil else {
+                print("No times found")
+               // completion(.failure(DataBaseErrors.failedToFetch))
+                return
+            }
+            
+            guard let times = snapshot.value as? [String: Double] else {
+                print("Failed to unwrap times.")
+                //completion(.failure(DataBaseErrors.failedToFetch))
+                return
+            }
+            
+            print("returning times: ", times)
+            completion(.success(times))
+        })
+    }
+  
 }
