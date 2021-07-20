@@ -28,21 +28,8 @@ class StartGateViewModel {
     // Creates timer object and tells the timer which function to preform for every time interval.
     @objc func startCountDown(countDownTime: Int) {
         
-        // Create race ID and distrbute to database
-        createRaceIDs(with: { [weak self] success in
-            if success {
-                guard let strongSelf = self else {
-                    return
-                }
-                print("Uploading run ids succeeded, activating timer.")
-                strongSelf.timer = Timer.scheduledTimer(timeInterval: 1, target: strongSelf, selector: #selector(strongSelf.countDown), userInfo: nil, repeats: true)
-                strongSelf.counter = countDownTime
-            }
-            else {
-                print("Uploading run ids to database failed. Show fail message to user.")
-            }
-        })
-
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
+        counter = countDownTime
     }
     
     //Is trigger for every timer interval (1 second)
@@ -70,7 +57,19 @@ class StartGateViewModel {
             
             // Send start time time stamp to database
             let startTime = Date().currentTimeMillis()
-            sendStartTime(startTime: startTime)
+            
+            // Create race ID and distrbute to database
+            createRaceIDs(with: { [weak self] success in
+                if success {
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    strongSelf.sendStartTime(startTime: startTime)
+                }
+                else {
+                    print("Uploading run ids to database failed. Show fail message to user.")
+                }
+            })
         }
     }
 
@@ -98,6 +97,30 @@ class StartGateViewModel {
     
     func cancelRun() {
         timer.invalidate()
+        
+        // If run is underway and cancel is selected, show delete entire run
+        if Constants.isRunning == true {
+            // Remove current run id from database
+            DatabaseManager.shared.deleteCurrentRun(completion: { success in
+                if success {
+                    print("Deleted current run")
+                }
+                else {
+                    print("Failed to delete current run")
+                }
+            })
+        }
+        // If run is completed and cancel is selected, should only remove from users, not delete entire run
+        else {
+            DatabaseManager.shared.runIsCompleted(completion: { success in
+                if success {
+                    print("Removed current run from users")
+                }
+                else {
+                    print("Failed to remove current run from users")
+                }
+            })
+        }
     }
     
     func createRaceIDs(with completion: @ escaping (Bool) -> Void) {
@@ -112,7 +135,7 @@ class StartGateViewModel {
                 completion(false)
             }
         })
-        
+
     }
     
     private func sendStartTime(startTime: Double) {

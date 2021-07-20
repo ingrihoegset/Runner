@@ -124,6 +124,7 @@ class StartGateViewController: UIViewController {
         
         // Set tekst in top labels
         setDisplayLabelText()
+        
     }
     
     override func viewDidLayoutSubviews() {

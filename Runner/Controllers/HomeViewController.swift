@@ -457,7 +457,6 @@ extension HomeViewController: HomeViewModelDelegate {
         vc.times = totalSeconds
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
-        
     }
 }
 

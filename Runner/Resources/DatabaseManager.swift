@@ -56,6 +56,17 @@ extension DatabaseManager {
         })
     }
     
+    /// Returns data for a given database path
+    func getDataForPath(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
+        self.database.child("\(path)").observeSingleEvent(of: .value) { snapshot in
+            guard let value = snapshot.value else {
+                completion(.failure(DataBaseErrors.failedToFetch))
+                return
+            }
+            completion(.success(value))
+        }
+    }
+    
     /// Insert user into database. Completion handler in order to alert caller when the function is done. If returns true, then we have successfully created new user and written to database.
     public func insertUser(with user: RaceAppUser, completion: @escaping (Bool) -> Void) {
         database.child(user.safeEmail).setValue([
@@ -209,7 +220,6 @@ extension DatabaseManager {
                 completion(.failure(DataBaseErrors.failedToFetch))
                 return
             }
-            print("value ", value)
             
             print("Observed change in link")
             
@@ -227,8 +237,6 @@ extension DatabaseManager {
                 completion(.failure(DataBaseErrors.failedToFetch))
                 return
             }
-            
-            print(gateNumber)
             
             // Successfully listened to update in link
             completion(.success(gateNumber))
@@ -260,6 +268,7 @@ extension DatabaseManager {
     }
     
     /// Function that listens for the run id. We need it to be able to listen for an end time at the right run node.
+    // Whenever a new run is created, a new current run ID is created. We need to create a listener on the run node with this run id.
     // At the end of the function we use the run id we got to create a listener on that run id. This so we can observe changes to end time.
     func listenForCurrentRunID(completion: @escaping (Result<[String: Double], Error>) -> Void)  {
         
@@ -279,26 +288,29 @@ extension DatabaseManager {
         // Get snapshot of vaue at given path
         // The code that is in this closure is the code that is run whenever the database changes at this path.
         // Must create a listener on the run id node as well when the closure is called, so that we can listen for updates to end time.
+        
+        // Here we are listening to the current run path.
         reference.observe(.value, with: { [weak self] snapshot in
             guard let strongSelf = self else {
                 return
             }
             
+            // When a change occurs, we get the value at the current run path
             guard let currentRun = snapshot.value as? [String: Any] else {
                 completion(.failure(DataBaseErrors.failedToFetch))
                 print("Current run not found when attempting to get run ID")
                 return
             }
             
-            // This is the ID for our run node
+            // Then we retreive the run id for the current run
             guard let runID = currentRun["current_run_id"] as? String else {
                 completion(.failure(DataBaseErrors.failedToFetch))
                 print("Could not unwrapp run id to string")
                 return
             }
             
-            // Create listener to observe changes in the times that are linked to this run ID.
-            strongSelf.listenForEndOfCurrentRun(currentRunID: runID, with: { [weak self] success in
+            // Then we create a listener for this run node. We need to listen to the run node because the start and end times are linked to this node.
+            strongSelf.listenForEndOfCurrentRun(currentRunID: runID, with: { success in
                 if success {
                     // There was an update in the end time if success. Thus, we can get array of times.
                     strongSelf.getAllTimes(currentRunID: runID, completion: { result in
@@ -306,8 +318,8 @@ extension DatabaseManager {
                         case .success(let times):
                             print(times)
                             completion(.success(times))
-                        case .failure(let error_):
-                            print("Error")
+                        case .failure(let error):
+                            print("Error: \(error)")
                         }
                     })
                 }
@@ -381,7 +393,7 @@ extension DatabaseManager {
             
             // Create run ID node
             self?.database.child(runID).setValue([
-                "start_time": 0
+                
             ], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to add run node to database")
@@ -389,11 +401,15 @@ extension DatabaseManager {
                     return
                 }
             })
+            
+            // Registering current run ID to database succeeded, Save run ID locally.
+            UserDefaults.standard.setValue(runID, forKey: Constants.currentRunID)
+            
             completion(true)
         })
     }
     
-    /// Sends start time timestamp whn run begins
+    /// Sends start time timestamp when run begins
     // Function works by getting the current run id from our user and then using this id
     // to find the correct path to set the start time for the run.
     func sendStartTime(with startTime: Double, completion: @escaping (Bool) -> Void) {
@@ -452,6 +468,11 @@ extension DatabaseManager {
         
         // Get snapshot of vaue at given path
         reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            guard let strongSelf = self else {
+                completion(false)
+                return
+            }
+            
             guard let userNode = snapshot.value as? [String: Any] else {
                 completion(false)
                 print("Current run not found when attempting to get run ID")
@@ -465,9 +486,19 @@ extension DatabaseManager {
                 return
             }
         
-            // Step 2: Set start time under run node
-            self?.database.child(runID).observeSingleEvent(of: .value, with: { [weak self] snapshot in
-                self?.database.child("\(runID)/end_time").setValue(endTime)
+            // Step 2: Set end time under run node
+            strongSelf.database.child(runID).observeSingleEvent(of: .value, with: { snapshot in
+                strongSelf.database.child("\(runID)/end_time").setValue(endTime)
+            })
+            
+            // Step 3: Run is completed. Clean up after this run
+            strongSelf.runIsCompleted(completion: { success in
+                if success {
+                    print("Removed current run id after race")
+                }
+                else {
+                    print("Failed to remove current run id after race")
+                }
             })
             completion(true)
         })
@@ -500,11 +531,42 @@ extension DatabaseManager {
             }
             
             // Successfully observed an end time.
-            completion(true)
             print("Successfully observed an end time: ", endTime)
+            completion(true)
         })
     }
     
+    /// Function is intended to check if there is a current race under user node. If there is, the isRunning boolean should be true so that the camera knows it should look for breaks.
+    // If the current run id is nil, the camera should stop looking for breaks.
+    func currentRunOngoing(completion: @escaping (Bool) -> Void) {
+        
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            completion(false)
+            print("Failed to get user email when attempting to listen for whether or not there is a current run")
+            return
+        }
+        
+        let safeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        let reference = database.child("\(safeEmail)/current_run")
+        
+        // This code fires every time reference path changes
+        reference.observe(.value, with: { snapshot in
+            print("current run id child changed")
+            if !snapshot.exists() {
+                print("No current run. Stopped recording")
+                Constants.isRunning = false
+                completion(false)
+                return
+                
+            }
+            else {
+                print("Found current run. Started recording")
+                Constants.isRunning = true
+            }
+        })
+        completion(true)
+    }
     private func getAllTimes(currentRunID: String, completion: @escaping (Result<[String: Double], Error>) -> Void) {
         
         // Step 1: Get current run ID
@@ -527,5 +589,81 @@ extension DatabaseManager {
             completion(.success(times))
         })
     }
-  
+    
+    func deleteCurrentRun(completion: @escaping (Bool) -> Void) {
+        
+        // Remove current run from database
+        guard let currentRunID = UserDefaults.standard.value(forKey: Constants.currentRunID) as? String else {
+            print("No current run found when attempting to remove current run.")
+            completion(false)
+            return
+        }
+        
+        let currentRunIDreference = database.child(currentRunID)
+        
+        // Remove run node from database
+        
+        currentRunIDreference.removeValue()
+        currentRunIDreference.removeAllObservers()
+        
+        // Removes run id from users
+        runIsCompleted(completion: { success in
+            if success {
+                print("Removed current run ID from users")
+            }
+            else {
+                print("Failed to remove run ID from users")
+            }
+        })
+    }
+    
+    /// This function is meant to tidy up after a race has been completed, so that there is no current run id if there is no active run.
+    func runIsCompleted(completion: (Bool) -> Void) {
+        
+        // Step 1: Get user som that we can remove current run from our user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to register end time to database.")
+            completion(false)
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Create path reference for database
+        let reference = database.child("\(userSafeEmail)/current_run")
+        
+        // Remove current run from our user
+        reference.removeValue()
+        
+        // Step 2: Get partner email som that we can remove current run from partner user
+        guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
+            print("No partner email found when trying to remove current run from database")
+            completion(false)
+            return
+        }
+        
+        let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
+        
+        let partnerReference = database.child("\(partnerSafeEmail)/current_run")
+        
+        // Remove current run from partner
+        partnerReference.removeValue()
+        
+        // Step 3: Remove listener from current run
+        guard let currentRunID = UserDefaults.standard.value(forKey: Constants.currentRunID) as? String else {
+            print("No current run found when attempting to remove current run.")
+            completion(false)
+            return
+        }
+        
+        let currentRunIDreference = database.child(currentRunID)
+        
+        // Remove run node from database
+        currentRunIDreference.removeAllObservers()
+        
+        // Step 3: Reset current run id to nil in user defaults
+        UserDefaults.standard.setValue(nil, forKey: Constants.currentRunID)
+        completion(true)
+    }
 }

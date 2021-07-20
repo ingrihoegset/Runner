@@ -22,6 +22,7 @@ class HomeViewModel {
     init() {
         listenForNewLink()
         listenForCurrentRunID()
+        currentRunOngoing()
     }
     
     /// Call on storageManager to fetch profil pic for our user
@@ -121,6 +122,17 @@ class HomeViewModel {
                         
                 case .failure(let error):
                     print(error)
+            }
+        })
+    }
+    
+    private func currentRunOngoing() {
+        DatabaseManager.shared.currentRunOngoing(completion: { success in
+            if success {
+                print("Listening for ongoing race")
+            }
+            else {
+                print("no onging race")
             }
         })
     }

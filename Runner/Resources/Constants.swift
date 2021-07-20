@@ -63,4 +63,7 @@ struct Constants {
     
     // User Default Strings
     static let currentRunID = "currentRunID"
+
+    // Camera uses to know if race has started and whether it should listen for breaks or not
+    static var isRunning = false
 }

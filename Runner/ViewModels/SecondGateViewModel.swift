@@ -55,22 +55,25 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
 
+        print(breakObserver.recentFramesArray)
+        
         //Dont know what this does, but dont move
         CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
 
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        
-        // ("SHOULD only record breaks after the start button has been selected!!!!")
-        
-        // First if is just to give camera time to stabilize  so it doesnt send a break on opening.
-        if counter > 30 {
-            let broken = breakObserver.checkIfBreakHasOccured(cvPixelBuffer: pixelBuffer!)
-            if (broken == true) {
-                print("Break has been detected.")
-                sendEndTime(endTime: endTime)
-                breakObserver.recentFramesArray = []
-                self.secondGateViewModelDelegate?.runHasEnded()
-                counter = 0
+        print(Constants.isRunning)
+        // Will only check for breaks after the run has begun. Is running is set to true after the database has received a start time.
+        if Constants.isRunning == true {
+            // Gives the camera time to stabilize before evaluating.
+            if counter >= 15 {
+                let broken = breakObserver.checkIfBreakHasOccured(cvPixelBuffer: pixelBuffer!)
+                if (broken == true) {
+                    print("Break has been detected.")
+                    sendEndTime(endTime: endTime)
+                    breakObserver.recentFramesArray = []
+                    self.secondGateViewModelDelegate?.runHasEnded()
+                    counter = 0
+                }
             }
         }
     }
