@@ -26,11 +26,17 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         profileViewModel.profileViewModelDelegate = self
+        profileViewModel.fetchProfilePic()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableHeaderView = createTableHeader()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        profileViewModel.fetchProfilePic()
     }
     
     func createTableHeader() -> UIView? {     
@@ -53,7 +59,7 @@ class ProfileViewController: UIViewController {
         profileImageView.layer.masksToBounds = true
         headerView.addSubview(profileImageView)
         
-        profileViewModel.fetchProfilePic()
+        
         
         return headerView
     }
@@ -93,6 +99,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             UserDefaults.standard.setValue(nil, forKey: "email")
             UserDefaults.standard.setValue(nil, forKey: "name")
             UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
+            UserDefaults.standard.setValue(nil, forKey: Constants.profileImageURL)
             
             // Log Out From Facebook
             FBSDKLoginKit.LoginManager().logOut()

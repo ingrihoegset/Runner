@@ -15,9 +15,12 @@ final class StorageManager {
     
     private let storage = Storage.storage().reference()
     
+    static let cache = NSCache<NSString, UIImage>()
+    
     /*
      Filename: /images/ingrihoegset-gmail-com_profile_picture.png
      */
+    
     /// Uploads picture to firebase storage and returns completion with URL string to download. On successful completion returns url as string.
     public func uploadProfilPicture(with data: Data, fileName: String, completion: @escaping (Result<String, Error>) -> Void) {
         storage.child("images/\(fileName)").putData(data, metadata: nil, completion: { metadata, error in
@@ -47,6 +50,15 @@ final class StorageManager {
     }
     
     public func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        
+        // We have saved this url to userdefaults before, thus no need to call download url again
+        if let haveURL = UserDefaults.standard.url(forKey: path) {
+            print("Using already downloaded URL, no need to download again")
+            completion(.success(haveURL))
+            return
+        }
+        
+        print("Downloading URL")
         let reference = storage.child(path)
         
         reference.downloadURL(completion: { url, error in
@@ -55,7 +67,43 @@ final class StorageManager {
                 return
             }
             
+            // Saves a the url for a given path.
+            UserDefaults.standard.set(url, forKey: path)
             completion(.success(url))
         })
+    }
+    
+    static func downloadImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
+        let dataTask = URLSession.shared.dataTask(with: url) { data, responsURL, error in
+            
+            var downloadedImage: UIImage?
+            
+            if let data = data  {
+                downloadedImage = UIImage(data: data)
+            }
+            
+            if downloadedImage != nil {
+                cache.setObject(downloadedImage!, forKey: url.absoluteString as NSString)
+            }
+            
+            DispatchQueue.main.async {
+                completion(downloadedImage)
+            }
+        }
+        dataTask.resume()
+    }
+    
+    // Checks if image is already cached
+    static func getImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
+        // If there is a cached image
+        if let image = cache.object(forKey: url.absoluteString as NSString) {
+            completion(image)
+            print("Getting cached image")
+        }
+        // If no image is cached
+        else {
+            downloadImage(withURL: url, completion: completion)
+            print("downloading image")
+        }
     }
 }

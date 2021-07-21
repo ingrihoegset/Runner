@@ -27,35 +27,28 @@ class HomeViewModel {
     
     /// Call on storageManager to fetch profil pic for our user
     func fetchProfilePic(email: String) {
-        print("Fetching a profile pic")
-
+        
+        print("Fetching picture")
+        
         let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
         let filename = safeEmail + "_profile_picture.png"
-        let path = "images/"+filename
+        let path = "images/" + filename
         print("image path", path)
         
         StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
             switch result {
             case .success(let url):
-                print("Successfully downloaded profile url")
-                self?.downloadImage(url: url, safeEmail: safeEmail)
+                print("Succeed in downloading url")
+
+                StorageManager.getImage(withURL: url, completion: { image in
+                    if let downloadedImage = image {
+                        self?.homeViewModelDelegate?.didFetchProfileImage(image: downloadedImage, safeEmail: safeEmail)
+                    }
+                })
             case .failure(let error):
                 print("Failed to download url: \(error)")
             }
         })
-    }
-    
-    private func downloadImage(url: URL, safeEmail: String) {
-        URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
-            print("downloading image")
-            guard let data = data, error == nil else {
-                return
-            }
-            guard let image = UIImage(data: data) else {
-                return
-            }
-            self.homeViewModelDelegate?.didFetchProfileImage(image: image, safeEmail: safeEmail)
-        }).resume()
     }
     
     // Clears link with partner from database upon app opening from terminate state

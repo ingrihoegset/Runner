@@ -22,39 +22,31 @@ class ProfileViewModel {
     }
     
     func fetchProfilePic() {
-        print("fetching")
+        print("Fetching picture")
+
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No email saved to user defaults")
             return
         }
         let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
         let filename = safeEmail + "_profile_picture.png"
-        let path = "images/"+filename
+        let path = "images/" + filename
         print("image path", path)
         
         StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
             switch result {
             case .success(let url):
-                print("success")
-                self?.downloadImage(url: url)
+                print("Succeed in downloading url")
+                StorageManager.getImage(withURL: url, completion: { image in
+                    if let downloadedImage = image {
+                        self?.profileViewModelDelegate?.didFetchProfileImage(image: downloadedImage)
+                    }
+                })
+                
             case .failure(let error):
                 print("Failed to download url: \(error)")
             }
         })
-    }
-    
-    private func downloadImage(url: URL) {
-        URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
-            print("downloading image")
-            guard let data = data, error == nil else {
-                return
-            }
-            guard let image = UIImage(data: data) else {
-                return
-            }
-            print("calling delegate")
-            self.profileViewModelDelegate?.didFetchProfileImage(image: image)
-        }).resume()
     }
     
     // Clears link with partner from database upon user log out

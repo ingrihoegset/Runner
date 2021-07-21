@@ -198,8 +198,6 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        print("Drawing Home page")
         homeViewModel.homeViewModelDelegate = self
         
         if let email = UserDefaults.standard.value(forKey: "email") as? String {
@@ -257,6 +255,13 @@ class HomeViewController: UIViewController {
     
         // Check if user is logged in already
         validateAuth()
+        
+        if let email = UserDefaults.standard.value(forKey: "email") as? String {
+            homeViewModel.fetchProfilePic(email: email)
+        }
+        else {
+            print("No user email found when trying to initiate profile pic download")
+        }
     }
     
     func setConstraints() {
@@ -413,11 +418,13 @@ extension HomeViewController: HomeViewModelDelegate {
             if safeEmail != userEmail {
                 print("not a match")
                 self.partnerProfileImageView.image = image
+                self.secondGatePartnerProfileImageView.image = image
             }
             else { 
                 print("match")
                 self.profileImageView.image = image
                 self.linkedProfileImageView.image = image
+                self.secondGateProfileImageView.image = image
             }
         }
     }
@@ -536,7 +543,6 @@ extension HomeViewController {
             
             // Clear any partner link from database
             strongSelf.homeViewModel.clearLinkFromDatabase()
-
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Cancel",
