@@ -541,7 +541,7 @@ extension HomeViewController {
     
     /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
     private func alertThatPartnerHasDisconnected() {
-        let actionSheet = UIAlertController(title: "You've been disconnected from second gate.",
+        let actionSheet = UIAlertController(title: "You've been partner has disconnected from you.",
                                             message: "",
                                             preferredStyle: .alert)
         
