@@ -77,6 +77,7 @@ class HomeViewModel {
                 }
                 
                 guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
+                    print("")
                     return
                 }
                 // Send partner email to home view as test to update UI. Should really get and send name. Send gate number for UI update.
@@ -100,7 +101,7 @@ class HomeViewModel {
     }
     
     /// Function called on build (?) to set up listener for current race ID
-    // One can question if this is the correct place to call suc essential code...
+    // One can question if this is the correct place to call such essential code...
     private func listenForCurrentRunID() {
         DatabaseManager.shared.listenForCurrentRunID(completion: { [weak self] result in
             switch result {

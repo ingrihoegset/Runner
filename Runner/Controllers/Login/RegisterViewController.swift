@@ -114,11 +114,6 @@ class RegisterViewController: UIViewController {
         title = "Create Account"
         view.backgroundColor = .link
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register",
-                                                            style: .done,
-                                                            target: self,
-                                                            action: #selector(didTapRegister))
-        
         emailField.delegate = self
         passwordField.delegate = self
         
@@ -176,12 +171,6 @@ class RegisterViewController: UIViewController {
     /// When user taps image view to set profile pic
     @objc private func didTapChangeProfilePic() {
         presentPhotoActionSheet()
-    }
-    
-    /// When user taps to register new user, send user to register view controller
-    @objc private func didTapRegister() {
-        let vc = RegisterViewController()
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     /// When user taps log in button
@@ -267,6 +256,11 @@ class RegisterViewController: UIViewController {
                         })
                     }
                 } )
+                
+                // Makes sure that home ta is shown on login in
+                if let tabBar = self?.presentingViewController as? UITabBarController {
+                    tabBar.selectedIndex = 0
+                }
                 
                 // Dissmiss vc if user authentication succeeds
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)

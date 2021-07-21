@@ -61,6 +61,7 @@ final class StorageManager {
         print("Downloading URL")
         let reference = storage.child(path)
         
+        // Firebase function
         reference.downloadURL(completion: { url, error in
             guard let url = url, error == nil else {
                 completion(.failure(StorageErrors.failedToGetDownloadURL))

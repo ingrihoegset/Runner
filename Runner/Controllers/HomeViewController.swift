@@ -455,6 +455,7 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.partnerView.isHidden = true
                 self.secondGateView.isHidden = true
                 self.mainView.isHidden = false
+                self.alertThatPartnerHasDisconnected()
             }
         }
     }
@@ -471,24 +472,10 @@ extension HomeViewController: HomeViewModelDelegate {
 extension HomeViewController {
 
     @objc private func didTapAddSecondGateButton() {
-        let vc = LinkToPartnerViewController()/*
-        vc.completion = { [weak self] result in
-            print("result \(result)")
-            self?.goToSetUpWithPartner(partnerSafeEmail: result)
-        }*/
+        let vc = LinkToPartnerViewController()
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
     }
-    /*
-    func goToSetUpWithPartner(partnerSafeEmail: String) {
-        let vc = RaceTypeViewController()
-        vc.partnerId = partnerId
-        vc.raceId = raceId
-        vc.title = "Select Race Type"
-        vc.navigationItem.largeTitleDisplayMode = .always
-        navigationController?.pushViewController(vc, animated: true)
-    }*/
-
 }
 
 
@@ -549,6 +536,21 @@ extension HomeViewController {
                                             style: .cancel,
                                             handler: nil))
         
+        present(actionSheet, animated: true)
+    }
+    
+    /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
+    private func alertThatPartnerHasDisconnected() {
+        let actionSheet = UIAlertController(title: "You've been disconnected from second gate.",
+                                            message: "",
+                                            preferredStyle: .alert)
+        
+        actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.popToRootViewController(animated: true)
+        }))
         present(actionSheet, animated: true)
     }
     

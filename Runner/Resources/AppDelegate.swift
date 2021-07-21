@@ -9,9 +9,12 @@ import UIKit
 import Firebase
 import FBSDKCoreKit
 import GoogleSignIn
+import FirebaseAuth
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+    
+    var tabBarController: UITabBarController?
     
     func application(
         _ application: UIApplication,
@@ -135,6 +138,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     // Called when user logs out
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+        
     }
 }
     

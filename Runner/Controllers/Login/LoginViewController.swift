@@ -100,6 +100,10 @@ class LoginViewController: UIViewController {
                                                                         guard let strongSelf = self else {
                                                                             return
                                                                         }
+                                                                        // Makes sure that home ta is shown on login in
+                                                                        if let tabBar = self?.presentingViewController as? UITabBarController {
+                                                                            tabBar.selectedIndex = 0
+                                                                        }
                                                                         
                                                                         strongSelf.navigationController?.dismiss(animated: true, completion: nil)
                                                                      })
@@ -238,8 +242,16 @@ class LoginViewController: UIViewController {
             
             print("Logged in user: \(user)")
             
+            // Makes sure that home ta is shown on login in
+            if let tabBar = self?.presentingViewController as? UITabBarController {
+                tabBar.selectedIndex = 0
+            }
+            
             // Dissmiss vc if user authentication succeeds
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            
+
+            
         })
     }
     

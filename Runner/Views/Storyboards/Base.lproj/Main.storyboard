@@ -28,7 +28,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="Lh8-QM-OAL">
             <objects>
-                <tabBarController id="PKv-j5-yuI" sceneMemberID="viewController">
+                <tabBarController id="PKv-j5-yuI" customClass="TabBarController" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Gpd-Za-94m">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
