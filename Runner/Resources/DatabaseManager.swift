@@ -194,6 +194,7 @@ extension DatabaseManager {
                 }
             })
             // Successfully removed link from both our user and partner.
+            
             completion(true)
         })
     }

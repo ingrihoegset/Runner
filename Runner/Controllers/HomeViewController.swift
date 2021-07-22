@@ -17,14 +17,14 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .orange
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
     private let mainHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .green
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -41,7 +41,7 @@ class HomeViewController: UIViewController {
 
     private let qrImageView: UIImageView = {
         let qrImageView = UIImageView()
-        qrImageView.backgroundColor = .red
+        qrImageView.backgroundColor = Constants.mainColor
         qrImageView.translatesAutoresizingMaskIntoConstraints = false
         qrImageView.contentMode = .scaleAspectFill
         qrImageView.layer.borderColor = Constants.accentColorDark?.cgColor
@@ -88,7 +88,7 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .orange
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -111,7 +111,7 @@ class HomeViewController: UIViewController {
     private let linkedHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .yellow
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -144,7 +144,7 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .orange
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -167,7 +167,7 @@ class HomeViewController: UIViewController {
     private let secondGateHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .yellow
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     

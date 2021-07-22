@@ -30,6 +30,8 @@
 		BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */; };
 		BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */; };
 		BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AF926A0D170001C6BF2 /* BreakObserver.swift */; };
+		BF6E058D26A98F1C0028C0AF /* ResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E058C26A98F1C0028C0AF /* ResultsViewModel.swift */; };
+		BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E058F26A999670028C0AF /* StatisticsViewController.swift */; };
 		BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
@@ -74,6 +76,8 @@
 		BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewController.swift; sourceTree = "<group>"; };
 		BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewModel.swift; sourceTree = "<group>"; };
 		BF512AF926A0D170001C6BF2 /* BreakObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakObserver.swift; sourceTree = "<group>"; };
+		BF6E058C26A98F1C0028C0AF /* ResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewModel.swift; sourceTree = "<group>"; };
+		BF6E058F26A999670028C0AF /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewController.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 				BF12FF05269E43C800B51370 /* QRLinkViewModel.swift */,
 				BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */,
 				BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */,
+				BF6E058C26A98F1C0028C0AF /* ResultsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -253,6 +258,7 @@
 				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
 				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
+				BF6E058F26A999670028C0AF /* StatisticsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -432,8 +438,10 @@
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,
+				BF6E058D26A98F1C0028C0AF /* ResultsViewModel.swift in Sources */,
 				BF12FF0F269F577200B51370 /* MyPickerView.swift in Sources */,
 				BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */,
+				BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */,
 				BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */,
 				BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */,
 				BFFB69BB269A17BD0080DA62 /* LoginViewController.swift in Sources */,

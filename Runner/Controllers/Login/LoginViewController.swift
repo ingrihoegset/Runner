@@ -269,19 +269,24 @@ class LoginViewController: UIViewController {
     /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
     private func prepareTabBar() {
         let tabBarVC = UITabBarController()
-        let tabButtonImages = ["house", "person.circle"]
+        let tabButtonImages = ["house", "chart.bar.xaxis" ,"person.circle"]
         
         let home = HomeViewController()
         home.title = "Home"
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
         
+        let stats = StatisticsViewController()
+        stats.title = "My Runs"
+        let navVCStats = UINavigationController(rootViewController: stats)
+        navVCStats.navigationBar.prefersLargeTitles = true
+        
         let profile = ProfileViewController()
         profile.title = "Profile"
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
         
-        tabBarVC.setViewControllers([navVC, navVCProfile], animated: false)
+        tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
         
         guard let items = tabBarVC.tabBar.items else {
             return

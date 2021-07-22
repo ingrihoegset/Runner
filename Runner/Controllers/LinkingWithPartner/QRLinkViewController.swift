@@ -32,7 +32,7 @@ class QRLinkViewController: UIViewController {
     
     private let qrImageView: UIImageView = {
         let qrImageView = UIImageView()
-        qrImageView.backgroundColor = .red
+        qrImageView.backgroundColor = Constants.accentColorDark
         qrImageView.translatesAutoresizingMaskIntoConstraints = false
         qrImageView.contentMode = .scaleAspectFill
         qrImageView.layer.masksToBounds = true
