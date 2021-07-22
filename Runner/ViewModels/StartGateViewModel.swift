@@ -14,6 +14,18 @@ protocol StartGateViewModelDelegate: AnyObject {
 
 class StartGateViewModel {
     
+    public static let dateFormatterShort: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        formatter.locale = .none
+        return formatter
+    }()
+    
+    /// Objects that are selected by user for transmittion to database
+    var userSelectedLength = 60
+    var userSelectedType = "Speed"
+    
     /// Objects related to countdown
     var timer = Timer()
     var audioPlayer: AVAudioPlayer?
@@ -126,7 +138,9 @@ class StartGateViewModel {
     func createRaceIDs(with completion: @ escaping (Bool) -> Void) {
         print("Creating race IDs")
         
-        DatabaseManager.shared.registerCurrentRunToDatabase(with: { success in
+        let date = StartGateViewModel.dateFormatterShort.string(from: Date())
+        
+        DatabaseManager.shared.registerCurrentRunToDatabase(runType: userSelectedType, runDate: date, runDistance: userSelectedLength, with: { success in
             if success  {
                 completion(true)
             }

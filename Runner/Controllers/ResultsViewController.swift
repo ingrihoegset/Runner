@@ -325,8 +325,8 @@ class ResultsViewController: UIViewController {
         raceTimeHundreths.text = result.hundreths
         raceTimeMinutes.text = result.minutes
         raceTimeSeconds.text = result.seconds
-        racelengthResult.text = "60"
-        raceSpeedResult.text = "30.04"
+        racelengthResult.text = String(result.distance)
+        raceSpeedResult.text = String(format: "%.2f", result.averageSpeed)
     }
     
 

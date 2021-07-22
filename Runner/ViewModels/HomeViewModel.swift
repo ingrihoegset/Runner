@@ -132,23 +132,52 @@ class HomeViewModel {
         })
     }
     
-    private func timesToResult(times: [String: Double]) -> RunResults {
-        let endTime = times["end_time"] ?? 0.0
-        let startTime = times["start_time"] ?? 0.0
-        let totalSeconds = endTime - startTime
+    private func timesToResult(times: [String: Any]) -> RunResults {
+        if let endTime = times["end_time"] as? Double,
+           let startTime = times["start_time"] as? Double,
+           let distance = times["run_distance"] as? Int {
+            
+            // Get total race time in seconds
+            let totalSeconds = endTime - startTime
+            
+            // Find average time
+            let hours = totalSeconds / 3600
+            let kilometers = Double(distance) / 1000
+            
+            print(hours, kilometers)
+            
+            let averageSpeed = kilometers / hours
+            
+            // Find times in min, sec and hundreths
+            let milliseconds = totalSeconds * 100
+            let millisecondsInt = Int(milliseconds)
+            
+            let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisecondsInt)
+            
+            let raceTimeHundreths = String(format: "%02d", hundreths)
+            let raceTimeSeconds = String(format: "%02d", seconds)
+            let raceTimeMinutes = String(format: "%02d", minutes)
+            
+            // Create run result with data
+            let runResult = RunResults(minutes: raceTimeMinutes,
+                                       seconds: raceTimeSeconds,
+                                       hundreths: raceTimeHundreths,
+                                       distance: distance,
+                                       averageSpeed:averageSpeed)
+            
+            return runResult
+        }
         
-        let milliseconds = totalSeconds * 100
-        let millisecondsInt = Int(milliseconds)
+        // If something went wrong when converting data
+        else {
+            print("Something went wrong converting data from run results to a run result object.")
+            return RunResults(minutes: "00",
+                              seconds: "00",
+                              hundreths: "00",
+                              distance: 00,
+                              averageSpeed: 00)
+        }
         
-        let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisecondsInt)
-        
-        let raceTimeHundreths = String(format: "%02d", hundreths)
-        let raceTimeSeconds = String(format: "%02d", seconds)
-        let raceTimeMinutes = String(format: "%02d", minutes)
-        
-        let runResult = RunResults(minutes: raceTimeMinutes, seconds: raceTimeSeconds, hundreths: raceTimeHundreths)
-        
-        return runResult
     }
     
     func milliSecondsToMinutesSecondsHundreths (milliseconds : Int) -> (Int, Int, Int) {

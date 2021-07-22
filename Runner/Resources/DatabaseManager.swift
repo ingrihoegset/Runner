@@ -273,7 +273,7 @@ extension DatabaseManager {
     /// Function that listens for the run id. We need it to be able to listen for an end time at the right run node.
     // Whenever a new run is created, a new current run ID is created. We need to create a listener on the run node with this run id.
     // At the end of the function we use the run id we got to create a listener on that run id. This so we can observe changes to end time.
-    func listenForCurrentRunID(completion: @escaping (Result<[String: Double], Error>) -> Void)  {
+    func listenForCurrentRunID(completion: @escaping (Result<[String: Any], Error>) -> Void)  {
         
         // Step 1: Get current run id for user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -335,7 +335,7 @@ extension DatabaseManager {
     }
 
     /// Registers run ID for our user, partner user and creates a seperate run node.
-    func registerCurrentRunToDatabase(with completion: @escaping (Bool) -> Void) {
+    func registerCurrentRunToDatabase(runType: String, runDate: String, runDistance: Int, with completion: @escaping (Bool) -> Void) {
         
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when trying to register run ID to database.")
@@ -394,9 +394,11 @@ extension DatabaseManager {
                 self?.database.child("\(partnerSafeEmail)/current_run").setValue(partnerCurrentRun)
             })
             
-            // Create run ID node
+            // Create run ID node. And set 
             self?.database.child(runID).setValue([
-                
+                "run_type": runType,
+                "run_date": runDate,
+                "run_distance": runDistance
             ], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Failed to add run node to database")
@@ -570,19 +572,19 @@ extension DatabaseManager {
         })
         completion(true)
     }
-    private func getAllTimes(currentRunID: String, completion: @escaping (Result<[String: Double], Error>) -> Void) {
+    private func getAllTimes(currentRunID: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
         
         // Step 1: Get current run ID
         let reference = database.child(currentRunID)
         
         reference.observeSingleEvent(of: .value, with: { snapshot in
-            guard snapshot.value as? [String: Double] != nil else {
+            guard snapshot.value as? [String: Any] != nil else {
                 print("No times found")
                // completion(.failure(DataBaseErrors.failedToFetch))
                 return
             }
             
-            guard let times = snapshot.value as? [String: Double] else {
+            guard let times = snapshot.value as? [String: Any] else {
                 print("Failed to unwrap times.")
                 //completion(.failure(DataBaseErrors.failedToFetch))
                 return

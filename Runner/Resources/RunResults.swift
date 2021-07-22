@@ -11,4 +11,6 @@ struct RunResults {
     var minutes: String
     var seconds: String
     var hundreths: String
+    var distance: Int
+    var averageSpeed: Double
 }

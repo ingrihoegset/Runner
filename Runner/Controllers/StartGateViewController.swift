@@ -15,6 +15,7 @@ class StartGateViewController: UIViewController {
     /// User selected race details
     var userSelectedLength = 100
     var userSelectedDelay = 10
+    var userSelectedType = "Speed"
 
     /// Objects related to countdown
     var timer = Timer()
@@ -114,6 +115,8 @@ class StartGateViewController: UIViewController {
         
         // Subscribe to delegate
         startGateViewModel.startGateViewModelDelegate = self
+        startGateViewModel.userSelectedLength = userSelectedLength
+        startGateViewModel.userSelectedType = userSelectedType
         
         // Add top displays
         view.addSubview(displayView)
