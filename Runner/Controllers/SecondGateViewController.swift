@@ -30,6 +30,11 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         super.viewDidDisappear(true)
         self.secondGateViewModel.captureSession.stopRunning()
     }
+    
+    
+    deinit {
+        print("DESTROYED SECOND GATE")
+    }
 }
 
 

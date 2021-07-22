@@ -12,8 +12,6 @@ import GoogleSignIn
 
 class ProfileViewController: UIViewController {
     
-    @IBOutlet var tableView: UITableView!
-    
     let data = ["Log Out"]
     var profileViewModel = ProfileViewModel()
     
@@ -21,12 +19,23 @@ class ProfileViewController: UIViewController {
         let imageView = UIImageView()
         return imageView
     }()
+    
+    var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Profile"
+        view.backgroundColor = Constants.mainColor
+        
         profileViewModel.profileViewModelDelegate = self
         profileViewModel.fetchProfilePic()
+        
+        view.addSubview(tableView)
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
@@ -43,12 +52,12 @@ class ProfileViewController: UIViewController {
         let headerView = UIView(frame: CGRect(x: 0,
                                               y: 0,
                                               width: self.view.width,
-                                              height: 300))
+                                              height: 200))
         
         headerView.backgroundColor = .link
         
         profileImageView = UIImageView(frame: CGRect(x: (headerView.width-150)/2,
-                                                  y: 75,
+                                                  y: 25,
                                                   width: 150,
                                                   height: 150))
         
@@ -62,6 +71,19 @@ class ProfileViewController: UIViewController {
         
         
         return headerView
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+    }
+    
+    deinit {
+        print("DESTROYED PROFIL")
     }
 }
 
@@ -110,12 +132,9 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
             // Log out of Firebase session
             do {
                 try FirebaseAuth.Auth.auth().signOut()
-                
-                // If succesfully logged out, show log in page.
-                let vc = LoginViewController()
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                strongSelf.present(nav, animated: true)
+
+                // Dismisses and destroys all view controllers as long as no memory cycle. Can se if VC are destroyed by checking that "deinit" is called.
+                self?.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                 
             }
             catch {

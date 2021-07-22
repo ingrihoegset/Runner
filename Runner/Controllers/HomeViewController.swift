@@ -198,7 +198,11 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Home"
+        view.backgroundColor = Constants.mainColor
+        
         homeViewModel.homeViewModelDelegate = self
+        
         
         if let email = UserDefaults.standard.value(forKey: "email") as? String {
             homeViewModel.fetchProfilePic(email: email)
@@ -262,6 +266,10 @@ class HomeViewController: UIViewController {
         else {
             print("No user email found when trying to initiate profile pic download")
         }
+    }
+    
+    deinit {
+        print("DESTROYING")
     }
     
     func setConstraints() {

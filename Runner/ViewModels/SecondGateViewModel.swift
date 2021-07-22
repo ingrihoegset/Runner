@@ -8,13 +8,13 @@
 import Foundation
 import AVFoundation
 
-protocol SecondGateViewModelDelegate {
+protocol SecondGateViewModelDelegate: AnyObject {
     func runHasEnded()
 }
 
 class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate  {
     
-    var secondGateViewModelDelegate: SecondGateViewModelDelegate?
+    weak var secondGateViewModelDelegate: SecondGateViewModelDelegate?
     
     // In order to set up camera
     let captureSession = AVCaptureSession()

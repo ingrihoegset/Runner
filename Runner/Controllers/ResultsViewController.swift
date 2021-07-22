@@ -28,6 +28,11 @@ class ResultsViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    
+    deinit {
+        print("DESTROYED RESULT PAGE")
+    }
+    
     override func viewDidLayoutSubviews() {
         resultsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         resultsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true

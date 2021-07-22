@@ -212,13 +212,13 @@ class RegisterViewController: UIViewController {
                 strongSelf.spinner.dismiss()
             }
                 
-                // User already exists
+            // CASE: User already exists
             guard !exists else {
                 strongSelf.alertUserLoginError(message: "Looks like a user account for that email already exists.")
                 return
             }
             
-            // User does not already exist
+            // CASE: User does not already exist
             /// Firebase log in. Creating a new user in Firebase
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { authResult, error in
                 // checks if returns an error, if so return.
@@ -255,18 +255,48 @@ class RegisterViewController: UIViewController {
                             }
                         })
                     }
-                } )
+                })
                 
                 // Makes sure that home ta is shown on login in
                 if let tabBar = self?.presentingViewController as? UITabBarController {
                     tabBar.selectedIndex = 0
                 }
                 
-                // Dissmiss vc if user authentication succeeds
-                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                // Open tabbar if all succeeds.
+                strongSelf.prepareTabBar()
             })
         })
     }
+    
+    /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
+    private func prepareTabBar() {
+        let tabBarVC = UITabBarController()
+        let tabButtonImages = ["house", "person.circle"]
+        
+        let home = HomeViewController()
+        home.title = "Home"
+        let navVC = UINavigationController(rootViewController: home)
+        navVC.navigationBar.prefersLargeTitles = true
+        
+        let profile = ProfileViewController()
+        profile.title = "Profile"
+        let navVCProfile = UINavigationController(rootViewController: profile)
+        navVCProfile.navigationBar.prefersLargeTitles = true
+        
+        tabBarVC.setViewControllers([navVC, navVCProfile], animated: false)
+        
+        guard let items = tabBarVC.tabBar.items else {
+            return
+        }
+        
+        for x in 0..<items.count {
+            items[x].image = UIImage(systemName: tabButtonImages[x])
+        }
+        
+        tabBarVC.modalPresentationStyle = .fullScreen
+        self.present(tabBarVC, animated: false)
+    }
+    
     
     /// Alerts user if something is wrong with login inputs
     private func alertUserLoginError(message: String = "Please enter all information to create a new account. Password must be at least 8 characters.") {

@@ -49,6 +49,11 @@ class SetUpRunViewController: UIViewController {
         view.addSubview(newRaceButton)
     }
     
+    
+    deinit {
+        print("DESTROYED SETUPRUN")
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

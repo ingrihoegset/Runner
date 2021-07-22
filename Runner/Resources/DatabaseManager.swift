@@ -45,7 +45,7 @@ extension DatabaseManager {
         // Observe value changes on entry related to the specified child you want to observe changes for.
         // We are observing a single event, which means we are asking the database only once.
         database.child(safeEmail).observeSingleEvent(of: .value, with: { snapshot in
-            guard snapshot.value as? String != nil else {
+            guard snapshot.value as? [String: Any] != nil else {
                 // Called when email does not already exist.
                 completion(false)
                 return

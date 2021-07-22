@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol HomeViewModelDelegate {
+protocol HomeViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
     func didUpdatePartnerUI(partner: String, gateNumber: Int)
     func didGetRunTimes(totalSeconds: Double)
@@ -17,6 +17,7 @@ protocol HomeViewModelDelegate {
 
 class HomeViewModel {
     
+    weak
     var homeViewModelDelegate: HomeViewModelDelegate?
     
     init() {

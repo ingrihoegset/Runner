@@ -8,7 +8,7 @@
 import Foundation
 import AVFoundation
 
-protocol StartGateViewModelDelegate {
+protocol StartGateViewModelDelegate: AnyObject {
     func updateCountDownLabelText(count: String)
 }
 
@@ -19,7 +19,7 @@ class StartGateViewModel {
     var audioPlayer: AVAudioPlayer?
     var counter = 3
     
-    var startGateViewModelDelegate: StartGateViewModelDelegate?
+    weak var startGateViewModelDelegate: StartGateViewModelDelegate?
         
     init() {
 

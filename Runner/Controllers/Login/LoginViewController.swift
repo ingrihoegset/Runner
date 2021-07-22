@@ -101,7 +101,7 @@ class LoginViewController: UIViewController {
                                                                             return
                                                                         }
                                                                         
-                                                                        strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                                                                        strongSelf.prepareTabBar()
                                                                      })
         
         GIDSignIn.sharedInstance()?.presentingViewController = self
@@ -130,6 +130,13 @@ class LoginViewController: UIViewController {
         
         // Google login button
         scrollView.addSubview(googleLoginButton)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    
+        // Check if user is logged in already
+        validateAuth()
     }
     
     /// Removes login observer after login notification has fired. Just in order to save som memory.
@@ -238,15 +245,13 @@ class LoginViewController: UIViewController {
             
             print("Logged in user: \(user)")
             
-            if let tabBar = self?.presentingViewController as? UITabBarController {
-                tabBar.selectedIndex = 1
-            }
             
+            /*
             // Dissmiss vc if user authentication succeeds
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            */
             
-
-            
+            self?.prepareTabBar()
         })
     }
     
@@ -259,6 +264,44 @@ class LoginViewController: UIViewController {
                                       style: .cancel,
                                       handler: nil))
         present(alert, animated: true)
+    }
+    
+    /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
+    private func prepareTabBar() {
+        let tabBarVC = UITabBarController()
+        let tabButtonImages = ["house", "person.circle"]
+        
+        let home = HomeViewController()
+        home.title = "Home"
+        let navVC = UINavigationController(rootViewController: home)
+        navVC.navigationBar.prefersLargeTitles = true
+        
+        let profile = ProfileViewController()
+        profile.title = "Profile"
+        let navVCProfile = UINavigationController(rootViewController: profile)
+        navVCProfile.navigationBar.prefersLargeTitles = true
+        
+        tabBarVC.setViewControllers([navVC, navVCProfile], animated: false)
+        
+        guard let items = tabBarVC.tabBar.items else {
+            return
+        }
+        
+        for x in 0..<items.count {
+            items[x].image = UIImage(systemName: tabButtonImages[x])
+        }
+        
+        tabBarVC.modalPresentationStyle = .fullScreen
+        self.present(tabBarVC, animated: false)
+    }
+    
+    /// Function checks if user is logged in or not
+    private func validateAuth() {
+        // If there is no current user, send user to log in view controller
+        // Current user is set automatically when you instantiate firebase auth, and log a user in.
+        if FirebaseAuth.Auth.auth().currentUser != nil {
+            self.prepareTabBar()
+        }
     }
 }
 

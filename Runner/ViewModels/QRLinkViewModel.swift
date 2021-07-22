@@ -7,13 +7,13 @@
 
 import Foundation
 
-protocol QRLinkViewModelDelegate {
+protocol QRLinkViewModelDelegate: AnyObject {
     func didUpdateLink()
 }
 
 class QRLinkViewModel {
     
-    var qrLinkViewModelDelegate: QRLinkViewModelDelegate?
+    weak var qrLinkViewModelDelegate: QRLinkViewModelDelegate?
     
     init() {
         listenForNewLink()

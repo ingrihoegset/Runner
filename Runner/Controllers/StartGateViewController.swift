@@ -101,8 +101,11 @@ class StartGateViewController: UIViewController {
         button.addTarget(self, action: #selector(cancelRun), for: .touchUpInside)
         return button
     }()
-
-
+    
+    
+    deinit {
+        print("DESTROYED START GATE")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

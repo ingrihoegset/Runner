@@ -8,14 +8,14 @@
 import Foundation
 import UIKit
 
-protocol ProfileViewModelDelegate {
+protocol ProfileViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage)
 }
 
 
 class ProfileViewModel {
     
-    var profileViewModelDelegate: ProfileViewModelDelegate?
+    weak var profileViewModelDelegate: ProfileViewModelDelegate?
     
     init() {
         
