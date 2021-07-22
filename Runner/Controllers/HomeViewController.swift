@@ -468,9 +468,9 @@ extension HomeViewController: HomeViewModelDelegate {
         }
     }
     
-    func didGetRunTimes(totalSeconds: Double) {
+    func didGetRunResult(result: RunResults) {
         let vc = ResultsViewController()
-        vc.times = totalSeconds
+        vc.result = result
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
     }

@@ -9,12 +9,8 @@ import UIKit
 
 class ResultsViewController: UIViewController {
     
-    var times: Double = 0.0
+    var result: RunResults?
     let viewModel = ResultsViewModel()
-    var lapTimes: [Double] = [0]
-    var hidden = true
-    var totalLaps = 1
-    var totalTime = 0
     
     deinit {
         print("DESTROYED RESULT PAGE")
@@ -317,9 +313,18 @@ class ResultsViewController: UIViewController {
     }
     
     private func setResults() {
-        raceTimeHundreths.text = "96"
-        raceTimeMinutes.text = "00"
-        raceTimeSeconds.text = "01"
+        guard let result = result else {
+            raceTimeHundreths.text = "00"
+            raceTimeMinutes.text = "00"
+            raceTimeSeconds.text = "00"
+            racelengthResult.text = "00"
+            raceSpeedResult.text = "00"
+            return
+        }
+        
+        raceTimeHundreths.text = result.hundreths
+        raceTimeMinutes.text = result.minutes
+        raceTimeSeconds.text = result.seconds
         racelengthResult.text = "60"
         raceSpeedResult.text = "30.04"
     }

@@ -11,7 +11,7 @@ import UIKit
 protocol HomeViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
     func didUpdatePartnerUI(partner: String, gateNumber: Int)
-    func didGetRunTimes(totalSeconds: Double)
+    func didGetRunResult(result: RunResults)
 }
 
 
@@ -111,9 +111,9 @@ class HomeViewModel {
                         return
                     }
                     // Convert times to total time
-                    let totalSeconds = strongSelf.timesToResult(times: times)
+                    let runResult = strongSelf.timesToResult(times: times)
                     // Calls on home VC to open results VC
-                    strongSelf.homeViewModelDelegate?.didGetRunTimes(totalSeconds: totalSeconds)
+                    strongSelf.homeViewModelDelegate?.didGetRunResult(result: runResult)
                         
                 case .failure(let error):
                     print(error)
@@ -132,10 +132,27 @@ class HomeViewModel {
         })
     }
     
-    private func timesToResult(times: [String: Double]) -> Double {
+    private func timesToResult(times: [String: Double]) -> RunResults {
         let endTime = times["end_time"] ?? 0.0
         let startTime = times["start_time"] ?? 0.0
         let totalSeconds = endTime - startTime
-        return totalSeconds
+        
+        let milliseconds = totalSeconds * 100
+        let millisecondsInt = Int(milliseconds)
+        
+        let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisecondsInt)
+        
+        let raceTimeHundreths = String(format: "%02d", hundreths)
+        let raceTimeSeconds = String(format: "%02d", seconds)
+        let raceTimeMinutes = String(format: "%02d", minutes)
+        
+        let runResult = RunResults(minutes: raceTimeMinutes, seconds: raceTimeSeconds, hundreths: raceTimeHundreths)
+        
+        return runResult
     }
+    
+    func milliSecondsToMinutesSecondsHundreths (milliseconds : Int) -> (Int, Int, Int) {
+      return (milliseconds / 6000, (milliseconds % 6000) / 100, (milliseconds % 60000) % 100)
+    }
+    
 }
