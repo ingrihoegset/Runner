@@ -69,7 +69,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                 let broken = breakObserver.checkIfBreakHasOccured(cvPixelBuffer: pixelBuffer!)
                 if (broken == true) {
                     print("Break has been detected.")
-                    sendEndTime(endTime: endTime)
+                    endRun(endTime: endTime)
                     breakObserver.recentFramesArray = []
                     self.secondGateViewModelDelegate?.runHasEnded()
                     counter = 0
@@ -78,11 +78,14 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         }
     }
     
-    private func sendEndTime(endTime: Double) {
+    private func endRun(endTime: Double) {
         print("Attempting to send end time.")
         DatabaseManager.shared.sendEndTime(with: endTime, completion: { success in
             if success {
-                print("Run updated with end time in database")
+                print("End time successfully sent to database")
+                DatabaseManager.shared.runCompleted(completion: { success in
+                    
+                })
             }
             else {
                 print("Failed to update run in database with end time")

@@ -270,6 +270,42 @@ extension DatabaseManager {
         return identifier
     }
     
+    func getCurrentRunID(completion: @escaping (String?) -> Void) {
+        
+        // Step 1: Get current run id for user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to get current run id.")
+            completion(nil)
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Create path reference for database
+        let reference = database.child("\(userSafeEmail)/current_run")
+        
+        reference.observeSingleEvent(of: .value, with: { snapshot in
+            print(snapshot)
+            
+            guard let currentRun = snapshot.value as? [String: Any] else {
+                completion(nil)
+                print("Failed to get current run ID")
+                return
+            }
+            print("Successfully got current run id")
+            
+            if let currentRunID = currentRun["current_run_id"] as? String {
+                print(currentRunID)
+                completion(currentRunID)
+                return
+            }
+            else {
+                completion(nil)
+            }
+        })
+    }
+    
     /// Function that listens for the run id. We need it to be able to listen for an end time at the right run node.
     // Whenever a new run is created, a new current run ID is created. We need to create a listener on the run node with this run id.
     // At the end of the function we use the run id we got to create a listener on that run id. This so we can observe changes to end time.
@@ -410,6 +446,8 @@ extension DatabaseManager {
             // Registering current run ID to database succeeded, Save run ID locally.
             UserDefaults.standard.setValue(runID, forKey: Constants.currentRunID)
             
+            print("CURRID",  UserDefaults.standard.value(forKey: Constants.currentRunID))
+            
             completion(true)
         })
     }
@@ -458,6 +496,8 @@ extension DatabaseManager {
     /// Send end time of run signalling that someone has passed the gate
     func sendEndTime(with endTime: Double, completion: @escaping (Bool) -> Void) {
         
+        print("Sending an end time")
+        
         // Step 1: Get user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when trying to register end time to database.")
@@ -496,15 +536,6 @@ extension DatabaseManager {
                 strongSelf.database.child("\(runID)/end_time").setValue(endTime)
             })
             
-            // Step 3: Run is completed. Clean up after this run
-            strongSelf.runIsCompleted(completion: { success in
-                if success {
-                    print("Removed current run id after race")
-                }
-                else {
-                    print("Failed to remove current run id after race")
-                }
-            })
             completion(true)
         })
     }
@@ -538,6 +569,166 @@ extension DatabaseManager {
             // Successfully observed an end time.
             print("Successfully observed an end time: ", endTime)
             completion(true)
+        })
+    }
+    
+    func runCompleted(completion: @escaping (Bool) -> Void) {
+       
+        // Getting current run ID
+        getCurrentRunID(completion: { [weak self] success in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            // If there is a current run id..
+            if let currentRunID = success {
+                // Save this to run array
+                strongSelf.saveCompletedRun(currentRunID: currentRunID, completion: { success in
+                    if success {
+                        print("Successfully saved run to arrays.")
+                        // When run saved to array, remove run id from current run
+                        strongSelf.removeFromCurrentRun(currentRunID: currentRunID, completion: { success in
+                            if success {
+                                print("Successfully removed current run from users.")
+                                completion(true)
+                            }
+                            else {
+                                print("Failed to remove current run from users.")
+                                completion(false)
+                            }
+                        })
+                    }
+                    else {
+                        print("Failed to save run to arrays.")
+                        completion(false)
+                    }
+                })
+            }
+            
+            // If there is no current run id
+            else {
+                print("No current id found.")
+                completion(false)
+            }
+        })
+    }
+    
+    
+    private func saveCompletedRun(currentRunID: String, completion: @ escaping (Bool) -> Void) {
+        
+        // Step 1: Get user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to save run to users array of runs.")
+            completion(false)
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Create path reference for database
+        let reference = database.child(userSafeEmail)
+        
+        reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
+            
+            guard let strongSelf = self else {
+                print("Something went wrong")
+                completion(false)
+                return
+            }
+            
+            guard var userNode = snapshot.value as? [String: Any] else {
+                completion(false)
+                print("Something went wrong when trying to save ended race.")
+                return
+            }
+            
+            // Step 2: Update run array
+            // If true - means that array of runs already exists - append to array
+            if var completedRuns = userNode["completed_runs"] as? [String] {
+                
+                completedRuns.append(currentRunID)
+                
+                userNode["completed_runs"] = completedRuns
+                reference.setValue(userNode, withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed when updating array of runs for our user.")
+                        completion(false)
+                        return
+                    }
+                })
+            }
+            // Array of runs does not exists already
+            else {
+                userNode["completed_runs"] = [
+                    currentRunID
+                ]
+                
+                reference.setValue(userNode, withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        print("Failed to set completed run array first time.")
+                        completion(false)
+                        return
+                    }
+                })
+            }
+            
+            //Step 3: Update run array for partner user.
+            guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
+                print("No user email found when trying to save run to partner user array of runs.")
+                completion(false)
+                return
+            }
+            
+            // Get safe email version of emails.
+            let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
+            
+            let partnerReference = strongSelf.database.child(partnerSafeEmail)
+            
+            partnerReference.observeSingleEvent(of: .value, with: { snapshot in
+                print(snapshot)
+                guard var partnerUserNode = snapshot.value as? [String: Any] else {
+                    completion(false)
+                    print("Something went wrong when trying to save ended run for partner.")
+                    return
+                }
+                
+                print(partnerUserNode["completed_runs"])
+                
+                // If true - array of runs already exists - append
+                if var completeRunsPartner = partnerUserNode["completed_runs"] as? [String] {
+                    // append
+
+                    completeRunsPartner.append(currentRunID)
+                    
+                    print(completeRunsPartner)
+                    partnerUserNode["completed_runs"] = completeRunsPartner
+                    print("Appended")
+                    strongSelf.database.child(partnerSafeEmail).setValue(partnerUserNode, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Failed when updating array of runs for partner user.")
+                            completion(false)
+                            return
+                        }
+                    })
+                }
+                else {
+                    // create
+                    print("CREATED")
+                    partnerUserNode["completed_runs"] = [
+                        currentRunID
+                    ]
+                    
+                    partnerReference.setValue(partnerUserNode, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Failed to set completed run array first time for partner.")
+                            completion(false)
+                            return
+                        }
+                    })
+                }
+                completion(true)
+            })
         })
     }
     
@@ -595,24 +786,16 @@ extension DatabaseManager {
         })
     }
     
-    func deleteCurrentRun(completion: @escaping (Bool) -> Void) {
-        
-        // Remove current run from database
-        guard let currentRunID = UserDefaults.standard.value(forKey: Constants.currentRunID) as? String else {
-            print("No current run found when attempting to remove current run.")
-            completion(false)
-            return
-        }
-        
+    private func deleteCurrentRun(currentRunID: String, completion: @escaping (Bool) -> Void) {
+               
         let currentRunIDreference = database.child(currentRunID)
         
         // Remove run node from database
-        
         currentRunIDreference.removeValue()
         currentRunIDreference.removeAllObservers()
         
         // Removes run id from users
-        runIsCompleted(completion: { success in
+        removeFromCurrentRun(currentRunID: currentRunID, completion: { success in
             if success {
                 print("Removed current run ID from users")
             }
@@ -623,7 +806,9 @@ extension DatabaseManager {
     }
     
     /// This function is meant to tidy up after a race has been completed, so that there is no current run id if there is no active run.
-    func runIsCompleted(completion: (Bool) -> Void) {
+    private func removeFromCurrentRun(currentRunID: String, completion: (Bool) -> Void) {
+        
+        print("RUNNING RUN IS COMPLETETD")
         
         // Step 1: Get user som that we can remove current run from our user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -656,12 +841,6 @@ extension DatabaseManager {
         partnerReference.removeValue()
         
         // Step 3: Remove listener from current run
-        guard let currentRunID = UserDefaults.standard.value(forKey: Constants.currentRunID) as? String else {
-            print("No current run found when attempting to remove current run.")
-            completion(false)
-            return
-        }
-        
         let currentRunIDreference = database.child(currentRunID)
         
         // Remove run node from database

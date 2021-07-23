@@ -109,9 +109,10 @@ class StartGateViewModel {
     
     func cancelRun() {
         timer.invalidate()
-        
+        /*
         // If run is underway and cancel is selected, show delete entire run
         if Constants.isRunning == true {
+            
             // Remove current run id from database
             DatabaseManager.shared.deleteCurrentRun(completion: { success in
                 if success {
@@ -132,7 +133,7 @@ class StartGateViewModel {
                     print("Failed to remove current run from users")
                 }
             })
-        }
+        }*/
     }
     
     func createRaceIDs(with completion: @ escaping (Bool) -> Void) {
