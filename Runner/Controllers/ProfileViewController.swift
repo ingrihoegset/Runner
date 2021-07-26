@@ -15,11 +15,24 @@ class ProfileViewController: UIViewController {
     let data = ["Log Out"]
     var profileViewModel = ProfileViewModel()
     
-    var profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
+    let headerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.accentColor
+        return view
     }()
     
+    var profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = Constants.imageSize / 2
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderWidth = Constants.borderWidth
+        return imageView
+    }()
+
     var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -30,17 +43,26 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Profile"
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.accentColor
+        
+        // Makes navigation like rest of panel
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+
+        navigationController?.navigationBar.barTintColor = Constants.accentColor
         
         profileViewModel.profileViewModelDelegate = self
         profileViewModel.fetchProfilePic()
         
+        view.addSubview(headerView)
+        headerView.addSubview(profileImageView)
         view.addSubview(tableView)
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.tableHeaderView = createTableHeader()
+        // To make line separator go edge to egde
+        tableView.layoutMargins = UIEdgeInsets.zero
+        tableView.separatorInset = UIEdgeInsets.zero
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -48,35 +70,20 @@ class ProfileViewController: UIViewController {
         profileViewModel.fetchProfilePic()
     }
     
-    func createTableHeader() -> UIView? {     
-        let headerView = UIView(frame: CGRect(x: 0,
-                                              y: 0,
-                                              width: self.view.width,
-                                              height: 200))
-        
-        headerView.backgroundColor = .link
-        
-        profileImageView = UIImageView(frame: CGRect(x: (headerView.width-150)/2,
-                                                  y: 25,
-                                                  width: 150,
-                                                  height: 150))
-        
-        profileImageView.contentMode = .scaleAspectFill
-        profileImageView.layer.borderColor = Constants.accentColorDark?.cgColor
-        profileImageView.layer.borderWidth = Constants.borderWidth
-        profileImageView.layer.cornerRadius = profileImageView.width / 2
-        profileImageView.layer.masksToBounds = true
-        headerView.addSubview(profileImageView)
-        
-        
-        
-        return headerView
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        profileImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+        profileImageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -95,6 +102,8 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        // To make cell divider lines to from edge to edge
+        cell.layoutMargins = UIEdgeInsets.zero
         cell.textLabel?.text = data[indexPath.row]
         cell.textLabel?.textAlignment = .center
         cell.textLabel?.textColor = .red
@@ -147,6 +156,10 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                                             handler: nil))
         
         present(actionSheet, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }
 

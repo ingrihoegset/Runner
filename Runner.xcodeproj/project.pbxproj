@@ -34,7 +34,6 @@
 		BF6E059426A9A7600028C0AF /* RunResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059326A9A7600028C0AF /* RunResults.swift */; };
 		BF6E059726AAC0F50028C0AF /* RunTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */; };
 		BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */; };
-		BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
 		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
@@ -82,7 +81,6 @@
 		BF6E059326A9A7600028C0AF /* RunResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunResults.swift; sourceTree = "<group>"; };
 		BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunTableViewCell.swift; sourceTree = "<group>"; };
 		BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
-		BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRLinkViewController.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
 		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
@@ -153,7 +151,6 @@
 		BF12FF28269F5BB700B51370 /* LinkingWithPartner */ = {
 			isa = PBXGroup;
 			children = (
-				BF711FE7269DA1AC00144DA4 /* QRLinkViewController.swift */,
 				BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */,
 			);
 			path = LinkingWithPartner;
@@ -442,7 +439,6 @@
 				BF12FF26269F5BAA00B51370 /* StartGateViewController.swift in Sources */,
 				BF4830A6269C658200C8CC6C /* Race.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,
-				BF711FE8269DA1AC00144DA4 /* QRLinkViewController.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,

@@ -26,13 +26,16 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statisticsViewModel.getCompletedRuns()
         
         title = "My Runs"
-        view.backgroundColor = .green
+        view.backgroundColor = Constants.mainColor
         
         view.addSubview(tableView)
         
         tableView.register(RunTableViewCell.self, forCellReuseIdentifier: RunTableViewCell.identifier)
         tableView.delegate = self
         tableView.dataSource = self
+        // So that cell separation line will go edge to edge
+        tableView.layoutMargins = UIEdgeInsets.zero
+        tableView.separatorInset = UIEdgeInsets.zero
     }
     
     override func viewDidLayoutSubviews() {
@@ -65,6 +68,8 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = runs[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: RunTableViewCell.identifier, for: indexPath) as! RunTableViewCell
+        // So that cell separator goes edge to edge
+        cell.layoutMargins = UIEdgeInsets.zero
         cell.configure(with: model)
         return cell
     }

@@ -137,9 +137,6 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
 
         segmentControl(segmentControl.self)
 
-
-        
-        
         // Create details to indicate QR-scanning to user
         let x: CGFloat = 60
         let widthOfSquare: CGFloat = view.frame.width - x*2
