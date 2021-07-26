@@ -62,14 +62,30 @@ class HomeViewController: UIViewController {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
         button.setTitle("Add Second Gate", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapAddSecondGateButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         return button
     }()
+    
+    @objc func holdDown(sender:UIButton)
+    {
+        sender.backgroundColor = Constants.accentColorDark
+    }
+    
+    @objc func release(sender:UIButton)
+    {
+        sender.backgroundColor = Constants.accentColor
+    }
 
     private let runWithOneGateButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
         button.setTitle("Run with One gate", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         //button.addTarget(self, action: #selector(didTapAddSecondGateButton), for: .touchUpInside)
         return button
     }()
@@ -96,7 +112,10 @@ class HomeViewController: UIViewController {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
         button.setTitle("Set up run", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapAddSetUpRunWithTwoGates), for: .touchUpInside)
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -104,7 +123,10 @@ class HomeViewController: UIViewController {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
         button.setTitle("Remove second gate", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -152,7 +174,10 @@ class HomeViewController: UIViewController {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
         button.setTitle("Open second gate", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didSelectOpenSecondGate), for: .touchUpInside)
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -160,7 +185,10 @@ class HomeViewController: UIViewController {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
         button.setTitle("Disconnet from second gate", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -405,12 +433,11 @@ class HomeViewController: UIViewController {
     }
     
     /// QR-button is tapped. It should reveal the users QR-code for scanning.
-    @objc func didTapQRButton(sender: UIGestureRecognizer) {
-        if sender.state == .ended {
-            let vc = QRLinkViewController()
-            let navVC = UINavigationController(rootViewController: vc)
-            present(navVC, animated: true)
-        }
+    @objc func didTapQRButton() {
+        let vc = LinkToPartnerViewController()
+        vc.startControlSegment = 1
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true)
     }
 }
 
@@ -479,9 +506,10 @@ extension HomeViewController: HomeViewModelDelegate {
 // MARK: - Functions relating to connecting with second gate
 extension HomeViewController {
 
-    @objc private func didTapAddSecondGateButton() {
+    @objc private func didTapAddSecondGateButton(sender: UIButton) {
         let vc = LinkToPartnerViewController()
         let navVC = UINavigationController(rootViewController: vc)
+        vc.startControlSegment = 0
         present(navVC, animated: true)
     }
 }
@@ -564,9 +592,18 @@ extension HomeViewController {
     
     
     // MARK: - Functions related to second gate
-    @objc private func didSelectOpenSecondGate() {
+    @objc private func didSelectOpenSecondGate(sender: UIButton) {
+        sender.blink()
         let vc = SecondGateViewController()
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
+    }
+}
+
+extension UIView {
+    func blink(duration: TimeInterval = 0.5, delay: TimeInterval = 0.0, alpha: CGFloat = 0.0) {
+        UIView.animate(withDuration: 0.5, delay: delay, options: [.curveEaseInOut, .repeat, .autoreverse], animations: {
+            self.alpha = alpha
+        })
     }
 }

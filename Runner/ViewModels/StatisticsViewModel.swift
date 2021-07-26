@@ -77,6 +77,7 @@ class StatisticsViewModel {
             print(hours, kilometers)
             
             let averageSpeed = kilometers / hours
+            let averageSpeedInDecimals = String(format: "%.2f", averageSpeed)
             
             // Find times in min, sec and hundreths
             let milliseconds = totalSeconds * 100
@@ -94,7 +95,7 @@ class StatisticsViewModel {
                                        seconds: raceTimeSeconds,
                                        hundreths: raceTimeHundreths,
                                        distance: distance,
-                                       averageSpeed:averageSpeed)
+                                       averageSpeed: averageSpeedInDecimals)
             
             return runResult
         }
@@ -106,7 +107,7 @@ class StatisticsViewModel {
                               seconds: "00",
                               hundreths: "00",
                               distance: 00,
-                              averageSpeed: 00)
+                              averageSpeed: "00")
         }
         
     }

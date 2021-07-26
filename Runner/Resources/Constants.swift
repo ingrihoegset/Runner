@@ -10,17 +10,17 @@ struct Constants {
     static let whiteColor = UIColor(named: "WhiteColor")
     static let contrastColor = UIColor(named: "ContrastColor")
     
-    
     //Text Colors
     static let textColorMain = UIColor.black
     static let textColorWhite = UIColor.white
     
     //Design dimensions
     static let smallCornerRadius: CGFloat = 4
-    static let cornerRadius: CGFloat = 12
+    static let cornerRadius: CGFloat = 16
     static let borderWidth: CGFloat = 3
     static let sideSpacing: CGFloat = 15
     static let verticalSpacing: CGFloat = 20
+    static let largeVerticalSpacing: CGFloat = UIScreen.main.bounds.size.height * 0.1
     static let fieldHeight: CGFloat = 52
     static let fieldHeightLarge: CGFloat = fieldHeight * 3
     
