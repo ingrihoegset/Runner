@@ -17,8 +17,7 @@ protocol HomeViewModelDelegate: AnyObject {
 
 class HomeViewModel {
     
-    weak
-    var homeViewModelDelegate: HomeViewModelDelegate?
+    weak var homeViewModelDelegate: HomeViewModelDelegate?
     
     init() {
         listenForNewLink()

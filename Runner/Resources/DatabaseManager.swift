@@ -851,3 +851,50 @@ extension DatabaseManager {
         completion(true)
     }
 }
+
+
+// MARK: - Functions related to statistics
+
+extension DatabaseManager {
+    
+    public func getAllCompletedRuns(for email: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        
+        database.child("\(email)/completed_runs").observeSingleEvent(of: .value, with: { snapshot in
+            
+            guard let completedRun = snapshot.value as? [String] else {
+                completion(.failure(DataBaseErrors.failedToFetch))
+                return
+            }
+            completion(.success(completedRun))
+            return
+        })
+    }
+    
+    // Gets all completed runs for user
+    public func getRunResult(for completedRunIDArray: [String], completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
+        
+        var counter = completedRunIDArray.count
+        var runResults = [[String: Any]]()
+        
+        for ID in completedRunIDArray {
+            database.child(ID).observeSingleEvent(of: .value, with: { snapshot in
+                print(snapshot)
+                guard let completedRun = snapshot.value as? [String: Any] else {
+                    completion(.failure(DataBaseErrors.failedToFetch))
+                    return
+                }
+
+                runResults.append(completedRun)
+                counter = counter - 1
+                
+                // So that completion isnt called untill for loop is finished
+                if counter == 0 {
+                    completion(.success(runResults))
+                }
+            })
+        }
+        
+
+    }
+}
+

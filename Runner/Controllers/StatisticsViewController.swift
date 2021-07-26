@@ -7,9 +7,11 @@
 
 import UIKit
 
-class StatisticsViewController: UIViewController {
+class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
-    let data = ["Run 1", "Run 2", "Run 3"]
+    private var runs = [RunResults]()
+    
+    let statisticsViewModel = StatisticsViewModel()
     
     var tableView: UITableView = {
         let tableView = UITableView()
@@ -20,12 +22,15 @@ class StatisticsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        statisticsViewModel.statisticsViewModelDelegate = self
+        statisticsViewModel.getCompletedRuns()
+        
         title = "My Runs"
         view.backgroundColor = .green
         
         view.addSubview(tableView)
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(RunTableViewCell.self, forCellReuseIdentifier: RunTableViewCell.identifier)
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -41,24 +46,36 @@ class StatisticsViewController: UIViewController {
     deinit {
         print("DESTROYED STATSPAGE")
     }
+    
+    func reloadTableView(completedRunsArray: [RunResults]) {
+        runs = completedRunsArray
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
 }
+
 
 extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return runs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = data[indexPath.row]
-        cell.textLabel?.textAlignment = .center
-        cell.textLabel?.textColor = .red
+        let model = runs[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: RunTableViewCell.identifier, for: indexPath) as! RunTableViewCell
+        cell.configure(with: model)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let model = runs[indexPath.row]
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }
 
