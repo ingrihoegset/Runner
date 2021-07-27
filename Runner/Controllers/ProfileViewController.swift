@@ -45,11 +45,6 @@ class ProfileViewController: UIViewController {
         title = "Profile"
         view.backgroundColor = Constants.accentColor
         
-        // Makes navigation like rest of panel
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-
-        navigationController?.navigationBar.barTintColor = Constants.accentColor
-        
         profileViewModel.profileViewModelDelegate = self
         profileViewModel.fetchProfilePic()
         

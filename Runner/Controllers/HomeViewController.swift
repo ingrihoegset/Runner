@@ -61,11 +61,12 @@ class HomeViewController: UIViewController {
     private let addSecondGateButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
-        button.setTitle("Add Second Gate", for: .normal)
+        button.setTitle("Run with two gates", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapAddSecondGateButton), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
@@ -82,10 +83,11 @@ class HomeViewController: UIViewController {
     private let runWithOneGateButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
-        button.setTitle("Run with One gate", for: .normal)
+        button.setTitle("Run with one gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         //button.addTarget(self, action: #selector(didTapAddSecondGateButton), for: .touchUpInside)
         return button
     }()
@@ -116,6 +118,7 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapAddSetUpRunWithTwoGates), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
@@ -127,6 +130,7 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
@@ -178,6 +182,7 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(didSelectOpenSecondGate), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
@@ -189,6 +194,7 @@ class HomeViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
@@ -231,7 +237,6 @@ class HomeViewController: UIViewController {
         
         homeViewModel.homeViewModelDelegate = self
         
-        
         if let email = UserDefaults.standard.value(forKey: "email") as? String {
             homeViewModel.fetchProfilePic(email: email)
         }
@@ -271,8 +276,6 @@ class HomeViewController: UIViewController {
         // Should be hidden on activiation of app, as all links are discarded on opening
         secondGateView.isHidden = true
         
-        setConstraints()
-        
         homeViewModel.clearLinkFromDatabase()
         
         let qrButtonTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapQRButton))
@@ -300,7 +303,8 @@ class HomeViewController: UIViewController {
         print("DESTROYING")
     }
     
-    func setConstraints() {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
         // Elements related to main view
         mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -325,11 +329,11 @@ class HomeViewController: UIViewController {
         qrImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
         qrImageView.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
 
-        addSecondGateButton.anchor(top: mainHeaderView.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        addSecondGateButton.heightAnchor.constraint(equalTo: mainHeaderView.heightAnchor, multiplier: 0.3).isActive = true
-        
-        runWithOneGateButton.anchor(top: addSecondGateButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        runWithOneGateButton.anchor(top: mainHeaderView.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
         runWithOneGateButton.heightAnchor.constraint(equalTo: mainHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        
+        addSecondGateButton.anchor(top: runWithOneGateButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        addSecondGateButton.heightAnchor.constraint(equalTo: mainHeaderView.heightAnchor, multiplier: 0.3).isActive = true
         
 
         // Elements related to linked view
@@ -593,17 +597,8 @@ extension HomeViewController {
     
     // MARK: - Functions related to second gate
     @objc private func didSelectOpenSecondGate(sender: UIButton) {
-        sender.blink()
         let vc = SecondGateViewController()
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
-    }
-}
-
-extension UIView {
-    func blink(duration: TimeInterval = 0.5, delay: TimeInterval = 0.0, alpha: CGFloat = 0.0) {
-        UIView.animate(withDuration: 0.5, delay: delay, options: [.curveEaseInOut, .repeat, .autoreverse], animations: {
-            self.alpha = alpha
-        })
     }
 }
