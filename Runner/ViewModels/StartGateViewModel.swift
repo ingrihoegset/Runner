@@ -76,23 +76,9 @@ class StartGateViewModel {
             timer.invalidate()
             startGateViewModelDelegate?.updateCountDownLabelText(count: "GO!")
             counter = 3
-            
-            // Create start time time stamp
-            let startTime = Date().currentTimeMillis()
-            
+                        
             // Create race ID and distrbute to database
-            createRaceIDs(with: { [weak self] success in
-                if success {
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    // Send start time time stamp to database
-                    strongSelf.sendStartTime(startTime: startTime)
-                }
-                else {
-                    print("Uploading run ids to database failed. Show fail message to user.")
-                }
-            })
+            createRun()
         }
     }
 
@@ -120,58 +106,32 @@ class StartGateViewModel {
     
     func cancelRun() {
         timer.invalidate()
-        /*
-        // If run is underway and cancel is selected, show delete entire run
-        if Constants.isRunning == true {
-            
-            // Remove current run id from database
-            DatabaseManager.shared.deleteCurrentRun(completion: { success in
-                if success {
-                    print("Deleted current run")
-                }
-                else {
-                    print("Failed to delete current run")
-                }
-            })
-        }
-        // If run is completed and cancel is selected, should only remove from users, not delete entire run
-        else {
-            DatabaseManager.shared.runIsCompleted(completion: { success in
-                if success {
-                    print("Removed current run from users")
-                }
-                else {
-                    print("Failed to remove current run from users")
-                }
-            })
-        }*/
+        
+        // Remove current run id from database
+        DatabaseManager.shared.removeCurrentRun(completion: { success in
+            if success {
+                print("Removed current run")
+            }
+            else {
+                print("Failed to remove current run")
+            }
+        })
     }
     
-    func createRaceIDs(with completion: @ escaping (Bool) -> Void) {
+    func createRun() {
         print("Creating race IDs")
         
+        // Create data to include in run node
+        let startTime = Date().currentTimeMillis()
         let date = StartGateViewModel.dateFormatterShort.string(from: Date())
+        let type = userSelectedType
+        let distance = userSelectedLength
         
-        DatabaseManager.shared.registerCurrentRunToDatabase(runType: userSelectedType, runDate: date, runDistance: userSelectedLength, with: { success in
+        DatabaseManager.shared.registerCurrentRunToDatabase(time: startTime, runType: type, runDate: date, runDistance: distance, with: { success in
             if success  {
-                completion(true)
             }
             else {
                 // Should show error to user!!! //
-                completion(false)
-            }
-        })
-
-    }
-    
-    private func sendStartTime(startTime: Double) {
-        print("Attempting to send start time")
-        DatabaseManager.shared.sendStartTime(with: startTime, completion: { success in
-            if success {
-                print("Run updated with start time in database")
-            }
-            else {
-                print("Failed to update run in database with start time")
             }
         })
     }

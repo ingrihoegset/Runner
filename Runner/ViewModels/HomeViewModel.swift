@@ -21,7 +21,7 @@ class HomeViewModel {
     
     init() {
         listenForNewLink()
-        listenForCurrentRunID()
+        listenForEndOfCurrentRun()
         currentRunOngoing()
     }
     
@@ -100,22 +100,47 @@ class HomeViewModel {
         })
     }
     
-    /// Function called on build (?) to set up listener for current race ID
-    // One can question if this is the correct place to call such essential code...
-    private func listenForCurrentRunID() {
-        DatabaseManager.shared.listenForCurrentRunID(completion: { [weak self] result in
-            switch result {
-                case .success(let times):
-                    guard let strongSelf = self else {
-                        return
+    private func listenForEndOfCurrentRun() {
+        DatabaseManager.shared.listenForEndOfCurrentRun(completion: { [weak self] success in
+            if success {
+                print("listned for end")
+                DatabaseManager.shared.getCurrentRunData(completion: { [weak self] result in
+                    switch result {
+                        case .success(let runData):
+                            guard let strongSelf = self else {
+                                return
+                            }
+                            // Convert times to total time
+                            let runResult = strongSelf.timesToResult(times: runData)
+                            
+                            // Calls on home VC to open results VC
+                            strongSelf.homeViewModelDelegate?.didGetRunResult(result: runResult)
+                            
+                            // Clean up after completed run
+                            DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { success in
+                                
+                            })
+                            
+                            //Notify UI that race was completed so UI can be reset
+                            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
+                                
+                        case .failure(let error):
+                            print(error)
+                            // Should show error to user!!!
+                            // Clean up after completed run regardless of success or not
+                            DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { success in
+                                
+                            })
+                            // Notify UI that race was completed so UI can be reset
+                            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
                     }
-                    // Convert times to total time
-                    let runResult = strongSelf.timesToResult(times: times)
-                    // Calls on home VC to open results VC
-                    strongSelf.homeViewModelDelegate?.didGetRunResult(result: runResult)
-                        
-                case .failure(let error):
-                    print(error)
+                })
+            }
+            else {
+                // Removes a current run if one exists when app is opened
+                DatabaseManager.shared.removeCurrentRun(completion: { success in
+                    
+                })
             }
         })
     }

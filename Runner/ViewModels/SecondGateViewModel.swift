@@ -23,7 +23,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     
     // Breakobserver that helps us detect whether or not break has occured.
     let breakObserver = BreakObserver()
-    var endTime: Double = 0
+    var breakTime: Double = 0
     var counter = 0
     
     override init() {
@@ -51,7 +51,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         
         counter = counter + 1
         
-        endTime = Date().currentTimeMillis()
+        breakTime = Date().currentTimeMillis()
         
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
 
@@ -69,7 +69,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                 let broken = breakObserver.checkIfBreakHasOccured(cvPixelBuffer: pixelBuffer!)
                 if (broken == true) {
                     print("Break has been detected.")
-                    endRun(endTime: endTime)
+                    sendTime(time: breakTime, endTime: true)
                     breakObserver.recentFramesArray = []
                     self.secondGateViewModelDelegate?.runHasEnded()
                     counter = 0
@@ -78,17 +78,16 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         }
     }
     
-    private func endRun(endTime: Double) {
+    
+    private func sendTime(time: Double, endTime: Bool) {
         print("Attempting to send end time.")
-        DatabaseManager.shared.sendEndTime(with: endTime, completion: { success in
+        DatabaseManager.shared.sendTime(time: time, endTime: endTime, completion: { success in
             if success {
-                print("End time successfully sent to database")
-                DatabaseManager.shared.runCompleted(completion: { success in
-                    
-                })
+
+                
             }
             else {
-                print("Failed to update run in database with end time")
+                
             }
         })
     }
