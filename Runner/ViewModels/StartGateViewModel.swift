@@ -10,6 +10,7 @@ import AVFoundation
 
 protocol StartGateViewModelDelegate: AnyObject {
     func updateCountDownLabelText(count: String)
+    func resetUIOnRunEnd()
 }
 
 class StartGateViewModel {
@@ -34,7 +35,14 @@ class StartGateViewModel {
     weak var startGateViewModelDelegate: StartGateViewModelDelegate?
         
     init() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reset), name: NSNotification.Name(rawValue: "reset"), object: nil)
 
+    }
+    
+    // Resets UI from cancel to start run when runs is completed
+    @objc func reset() {
+        startGateViewModelDelegate?.resetUIOnRunEnd()
     }
     
     // Creates timer object and tells the timer which function to preform for every time interval.
@@ -46,7 +54,8 @@ class StartGateViewModel {
     
     //Is trigger for every timer interval (1 second)
     @objc func countDown() {
-
+        
+        //Updates count down label in start VC
         let count = String(counter)
         startGateViewModelDelegate?.updateCountDownLabelText(count: count)
 
@@ -63,11 +72,12 @@ class StartGateViewModel {
         }
         else {
             playSound(filename: "longBeep")
+            // Stop timer
             timer.invalidate()
             startGateViewModelDelegate?.updateCountDownLabelText(count: "GO!")
             counter = 3
             
-            // Send start time time stamp to database
+            // Create start time time stamp
             let startTime = Date().currentTimeMillis()
             
             // Create race ID and distrbute to database
@@ -76,6 +86,7 @@ class StartGateViewModel {
                     guard let strongSelf = self else {
                         return
                     }
+                    // Send start time time stamp to database
                     strongSelf.sendStartTime(startTime: startTime)
                 }
                 else {
@@ -146,7 +157,7 @@ class StartGateViewModel {
                 completion(true)
             }
             else {
-                // Should show error to user and spinne while waiting!!!!! //
+                // Should show error to user!!! //
                 completion(false)
             }
         })

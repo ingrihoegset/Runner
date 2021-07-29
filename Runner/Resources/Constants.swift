@@ -20,6 +20,7 @@ struct Constants {
     static let borderWidth: CGFloat = 3
     static let sideSpacing: CGFloat = 15
     static let verticalSpacing: CGFloat = 20
+    static let verticalSpacingSmall: CGFloat = 10
     static let largeVerticalSpacing: CGFloat = UIScreen.main.bounds.size.height * 0.1
     static let fieldHeight: CGFloat = 52
     static let fieldHeightLarge: CGFloat = fieldHeight * 3
@@ -33,7 +34,9 @@ struct Constants {
     static let heightOfDisplay = UIScreen.main.bounds.size.height
     static let sideMargin = widthOfDisplay * 0.05
     
-    static let imageSize: CGFloat = 150
+    static let imageSize: CGFloat = 130
+    static let headerSize: CGFloat = 140
+    static let mainButtonSize: CGFloat = 60
     
     // Picker dimensions
     static let widthOfPickerLabel = Constants.widthOfDisplay * 0.2

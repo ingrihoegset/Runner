@@ -22,15 +22,38 @@ class ProfileViewController: UIViewController {
         return view
     }()
     
+    let detailHelperView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        return view
+    }()
+    
     var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = Constants.imageSize / 2
-        imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.tintColor = Constants.accentColorDark
+        imageView.contentMode = .scaleAspectFill
+        imageView.isUserInteractionEnabled = true
+        imageView.layer.masksToBounds = true
+        imageView.backgroundColor = Constants.mainColor
+        imageView.layer.borderColor = Constants.mainColor?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
+        imageView.layer.cornerRadius = Constants.imageSize / 2
         return imageView
+    }()
+    
+    private let userNameLabel: UILabel = {
+        let label = UILabel()
+        let name = UserDefaults.standard.value(forKey: "name") as? String
+        label.text = name
+        label.textAlignment = .center
+        label.textColor = Constants.textColorMain
+        label.backgroundColor = Constants.mainColor
+        label.font = Constants.mainFontLargeSB
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
 
     var tableView: UITableView = {
@@ -49,7 +72,9 @@ class ProfileViewController: UIViewController {
         profileViewModel.fetchProfilePic()
         
         view.addSubview(headerView)
+        headerView.addSubview(detailHelperView)
         headerView.addSubview(profileImageView)
+        view.addSubview(userNameLabel)
         view.addSubview(tableView)
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -69,16 +94,26 @@ class ProfileViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        headerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        detailHelperView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+        detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
+        detailHelperView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
+        detailHelperView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
         
         profileImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
         profileImageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         
-        tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+        userNameLabel.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+        userNameLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        userNameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        userNameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true

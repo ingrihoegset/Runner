@@ -67,6 +67,22 @@ extension DatabaseManager {
         }
     }
     
+    ///Delete value at a given database path
+    func deleteAllValueAtPath(path: String, completion: @escaping (Bool) -> Void) {
+        
+        let reference = database.child(path)
+        reference.removeValue(completionBlock: { error, _ in
+            if let error = error {
+                print("Failed to remove value from database \(error)")
+                completion(false)
+            }
+            else {
+                print("Successfully removed value from database")
+                completion(true)
+            }
+        })
+    }
+    
     /// Insert user into database. Completion handler in order to alert caller when the function is done. If returns true, then we have successfully created new user and written to database.
     public func insertUser(with user: RaceAppUser, completion: @escaping (Bool) -> Void) {
         database.child(user.safeEmail).setValue([
@@ -568,6 +584,11 @@ extension DatabaseManager {
             
             // Successfully observed an end time.
             print("Successfully observed an end time: ", endTime)
+            
+            //Notify UI that race was completed so UI can be reset
+            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
+            
+            
             completion(true)
         })
     }
@@ -763,6 +784,7 @@ extension DatabaseManager {
         })
         completion(true)
     }
+    
     private func getAllTimes(currentRunID: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
         
         // Step 1: Get current run ID

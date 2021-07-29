@@ -15,27 +15,21 @@ class LoginViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
     
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.clipsToBounds = true
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.backgroundColor = .orange
-        return scrollView
-    }()
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .gray
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private let emailField: UITextField = {
         let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .continue
-        field.layer.cornerRadius = Constants.cornerRadius
+        field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
         field.placeholder = "Email Address..."
@@ -48,10 +42,11 @@ class LoginViewController: UIViewController {
     
     private let passwordField: UITextField = {
         let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .done
-        field.layer.cornerRadius = Constants.cornerRadius
+        field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
         field.placeholder = "Password..."
@@ -65,16 +60,21 @@ class LoginViewController: UIViewController {
     
     private let logginButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Log In", for: .normal)
         button.backgroundColor = Constants.accentColor
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = Constants.cornerRadius
+        button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
     private let fbLoginButton: FBLoginButton = {
         let button = FBLoginButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         // To override height property inherent in fb button
         button.removeConstraints(button.constraints)
         button.permissions = ["public_profile", "email"]
@@ -83,6 +83,7 @@ class LoginViewController: UIViewController {
     
     private let googleLoginButton: GIDSignInButton = {
         let button = GIDSignInButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         // To override height property inherent in fb button
         button.removeConstraints(button.constraints)
         return button
@@ -92,6 +93,10 @@ class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Makes the nav bar blend in with the background
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.shadowImage = UIImage()
         
         googleLoginObserver = NotificationCenter.default.addObserver(forName: .didGoogleLoginNotification,
                                                                      object: nil,
@@ -107,7 +112,7 @@ class LoginViewController: UIViewController {
         GIDSignIn.sharedInstance()?.presentingViewController = self
         
         title = "Log in"
-        view.backgroundColor = .link
+        view.backgroundColor = Constants.mainColor
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register",
                                                             style: .done,
@@ -119,17 +124,16 @@ class LoginViewController: UIViewController {
         fbLoginButton.delegate = self
         
         /// Adding subviews
-        view.addSubview(scrollView)
-        scrollView.addSubview(imageView)
-        scrollView.addSubview(emailField)
-        scrollView.addSubview(passwordField)
-        scrollView.addSubview(logginButton)
+        view.addSubview(imageView)
+        view.addSubview(emailField)
+        view.addSubview(passwordField)
+        view.addSubview(logginButton)
         
         // Facebook login button
-        scrollView.addSubview(fbLoginButton)
+        view.addSubview(fbLoginButton)
         
         // Google login button
-        scrollView.addSubview(googleLoginButton)
+        view.addSubview(googleLoginButton)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -149,38 +153,45 @@ class LoginViewController: UIViewController {
     /// Lay out constraints
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollView.frame = view.bounds
         
-        let size = scrollView.width / 3
-        imageView.frame = CGRect(x: (scrollView.width - size)/2,
-                                  y: 20,
-                                  width: size,
-                                  height: size)
+        imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
+        imageView.layer.cornerRadius = Constants.widthOfDisplay * 0.3 / 2
         
-        emailField.frame = CGRect(x: 30,
-                                  y: imageView.bottom+10,
-                                  width: scrollView.width-60,
-                                  height: Constants.fieldHeight)
+        emailField.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        emailField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        passwordField.frame = CGRect(x: 30,
-                                  y: emailField.bottom+10,
-                                  width: scrollView.width-60,
-                                  height: Constants.fieldHeight)
+        passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        passwordField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        logginButton.frame = CGRect(x: Constants.sideSpacing,
-                                 y: passwordField.bottom + 10,
-                                 width: scrollView.width - Constants.sideSpacing * 2,
-                                 height: Constants.fieldHeight)
+        logginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        logginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        logginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        fbLoginButton.frame = CGRect(x: Constants.sideSpacing,
-                                 y: logginButton.bottom + 20,
-                                 width: scrollView.width - Constants.sideSpacing * 2,
-                                 height: Constants.fieldHeight)
+        fbLoginButton.topAnchor.constraint(equalTo: logginButton.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        fbLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        fbLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        fbLoginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        googleLoginButton.frame = CGRect(x: Constants.sideSpacing,
-                                 y: fbLoginButton.bottom + 10,
-                                 width: scrollView.width - Constants.sideSpacing * 2,
-                                 height: Constants.fieldHeight)
+        googleLoginButton.topAnchor.constraint(equalTo: fbLoginButton.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        googleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        googleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+    }
+    
+    /// Makes Buttons blink dark blue on click
+    @objc func holdDown(sender:UIButton){
+        sender.backgroundColor = Constants.accentColorDark
+    }
+    
+    @objc func release(sender:UIButton){
+        sender.backgroundColor = Constants.accentColor
     }
     
     /// When user taps to register new user, send user to register view controller
@@ -210,13 +221,11 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            DispatchQueue.main.async {
-                strongSelf.spinner.dismiss()
-            }
+            // Saving this users email locally
+            UserDefaults.standard.set(email, forKey: "email")
 
-            // Checks for error. If error is discover, return.
+            // Checking for error during login. If error is discover, return.
             guard let result = authResult, error == nil else {
-                
                 print("Failed to log in user with email: \(email)")
                 return
             }
@@ -227,31 +236,34 @@ class LoginViewController: UIViewController {
             let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
             DatabaseManager.shared.getDataForPath(path: safeEmail, completion: { [weak self] result in
                 switch result {
+                // Succeeded in getting user name. Proceed to generate views
                 case .success(let data):
                     guard let userData = data as? [String: Any],
                     let firstName = userData["first_name"] as? String,
                     let lastName = userData["last_name"] as? String else {
-                    return
+                        return
                     }
-                    UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                    UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+                    print("Logged in user: \(user)")
+                    // Stopping spinner
+                    DispatchQueue.main.async {
+                        strongSelf.spinner.dismiss()
+                    }
+                    self?.prepareTabBar()
+                    self?.clearTextFields()
+                // Failed to get user name. Proceed to generate views with empty name.
                 case .failure(let error):
                     print("Failed to get user firstname and lastname with error \(error)")
+                    UserDefaults.standard.setValue("No username found", forKey: "name")
+                    print("Logged in user: \(user)")
+                    // Stopping spinner
+                    DispatchQueue.main.async {
+                        strongSelf.spinner.dismiss()
+                    }
+                    self?.prepareTabBar()
+                    self?.clearTextFields()
                 }
             })
-            
-            // Saving this users email locally
-            UserDefaults.standard.set(email, forKey: "email")
-            
-            
-            print("Logged in user: \(user)")
-            
-            
-            /*
-            // Dissmiss vc if user authentication succeeds
-            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
-            */
-            
-            self?.prepareTabBar()
         })
     }
     
@@ -259,6 +271,17 @@ class LoginViewController: UIViewController {
     private func alertUserLoginError() {
         let alert = UIAlertController(title: "Whoops",
                                       message: "Please enter all information to log in. Password must be at least 8 characters.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss",
+                                      style: .cancel,
+                                      handler: nil))
+        present(alert, animated: true)
+    }
+    
+    /// Alerts user if something is wrong with login inputs
+    private func alertFBLoginError() {
+        let alert = UIAlertController(title: "Whoops",
+                                      message: "Something went wrong when attempting to log in with Facebook.",
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss",
                                       style: .cancel,
@@ -325,11 +348,14 @@ extension LoginViewController: UITextFieldDelegate {
     }
 }
 
-
+// Related to Facebook Login
 extension LoginViewController: LoginButtonDelegate {
     
-    // What happens when log in button with facebook is tapped
+    /// What happens when log in button with facebook is tapped
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        
+        spinner.show(in: view)
+        
         // Getting token from Facebook
         guard let token = result?.token?.tokenString else {
             print("User failed to log in with facebook")
@@ -420,12 +446,24 @@ extension LoginViewController: LoginButtonDelegate {
                 
                 guard authresult != nil, error == nil else {
                     print("Facebook credential login failed, MFA may be required.")
+                    // Stopping spinner
+                    DispatchQueue.main.async {
+                        strongSelf.spinner.dismiss()
+                    }
+                    self?.alertFBLoginError()
                     return
                 }
                 
                 print("Successfully logged user in.")
-                // Dismiss navigation controller to lead us to main page
-                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                
+                // Stopping spinner
+                DispatchQueue.main.async {
+                    strongSelf.spinner.dismiss()
+                }
+                
+                // Create tab navigation and go to tab bar
+                strongSelf.prepareTabBar()
+                strongSelf.clearTextFields()
             })
         })
     }
@@ -434,5 +472,8 @@ extension LoginViewController: LoginButtonDelegate {
         // No operation
     }
     
-    
+    private func clearTextFields() {
+        emailField.text?.removeAll()
+        passwordField.text?.removeAll()
+    }
 }

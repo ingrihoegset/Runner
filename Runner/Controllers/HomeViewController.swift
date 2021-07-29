@@ -70,16 +70,6 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    @objc func holdDown(sender:UIButton)
-    {
-        sender.backgroundColor = Constants.accentColorDark
-    }
-    
-    @objc func release(sender:UIButton)
-    {
-        sender.backgroundColor = Constants.accentColor
-    }
-
     private let runWithOneGateButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
@@ -125,7 +115,7 @@ class HomeViewController: UIViewController {
     private let unLinkFromPartnerButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
-        button.setTitle("Remove second gate", for: .normal)
+        button.setTitle("Disconnect from end gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
@@ -177,7 +167,7 @@ class HomeViewController: UIViewController {
     private let openSecondGatesButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
-        button.setTitle("Open second gate", for: .normal)
+        button.setTitle("Open end gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didSelectOpenSecondGate), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
@@ -189,7 +179,7 @@ class HomeViewController: UIViewController {
     private let unLinkFromSecondGateButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
-        button.setTitle("Disconnet from second gate", for: .normal)
+        button.setTitle("Disconnect from end gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
@@ -315,7 +305,7 @@ class HomeViewController: UIViewController {
         mainHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
         mainHeaderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         mainHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
-        mainHeaderView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        mainHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
         profileImageView.centerYAnchor.constraint(equalTo: mainHeaderView.centerYAnchor).isActive = true
         profileImageView.centerXAnchor.constraint(equalTo: mainHeaderView.centerXAnchor).isActive = true
@@ -330,10 +320,10 @@ class HomeViewController: UIViewController {
         qrImageView.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
 
         runWithOneGateButton.anchor(top: mainHeaderView.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        runWithOneGateButton.heightAnchor.constraint(equalTo: mainHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        runWithOneGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         addSecondGateButton.anchor(top: runWithOneGateButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        addSecondGateButton.heightAnchor.constraint(equalTo: mainHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        addSecondGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
 
         // Elements related to linked view
@@ -345,7 +335,7 @@ class HomeViewController: UIViewController {
         linkedHeaderView.topAnchor.constraint(equalTo: partnerView.topAnchor).isActive = true
         linkedHeaderView.centerXAnchor.constraint(equalTo: partnerView.centerXAnchor).isActive = true
         linkedHeaderView.widthAnchor.constraint(equalTo: partnerView.widthAnchor).isActive = true
-        linkedHeaderView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        linkedHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
         linkedProfileImageView.trailingAnchor.constraint(equalTo: linkedHeaderView.centerXAnchor).isActive = true
         linkedProfileImageView.centerYAnchor.constraint(equalTo: linkedHeaderView.centerYAnchor).isActive = true
@@ -365,7 +355,7 @@ class HomeViewController: UIViewController {
                                            padding: UIEdgeInsets(top: Constants.verticalSpacing,
                                                                  left: Constants.sideMargin, bottom: 0,
                                                                  right: Constants.sideMargin))
-        setUpRaceWithTwoGatesButton.heightAnchor.constraint(equalTo: linkedHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        setUpRaceWithTwoGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         unLinkFromPartnerButton.anchor(top: setUpRaceWithTwoGatesButton.bottomAnchor,
                               leading: partnerView.leadingAnchor,
@@ -373,7 +363,7 @@ class HomeViewController: UIViewController {
                               padding: UIEdgeInsets(top: Constants.verticalSpacing,
                                                     left: Constants.sideMargin, bottom: 0,
                                                     right: Constants.sideMargin))
-        unLinkFromPartnerButton.heightAnchor.constraint(equalTo: linkedHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        unLinkFromPartnerButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         partnerUILabel.anchor(top: unLinkFromPartnerButton.bottomAnchor,
                               leading: partnerView.leadingAnchor,
@@ -381,7 +371,7 @@ class HomeViewController: UIViewController {
                               padding: UIEdgeInsets(top: Constants.verticalSpacing,
                                                     left: Constants.sideMargin, bottom: 0,
                                                     right: Constants.sideMargin))
-        partnerUILabel.heightAnchor.constraint(equalTo: linkedHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        partnerUILabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         // Elements related to second gate view
         secondGateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -392,7 +382,7 @@ class HomeViewController: UIViewController {
         secondGateHeaderView.topAnchor.constraint(equalTo: secondGateView.topAnchor).isActive = true
         secondGateHeaderView.centerXAnchor.constraint(equalTo: secondGateView.centerXAnchor).isActive = true
         secondGateHeaderView.widthAnchor.constraint(equalTo: secondGateView.widthAnchor).isActive = true
-        secondGateHeaderView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        secondGateHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
         secondGateProfileImageView.trailingAnchor.constraint(equalTo: secondGateHeaderView.centerXAnchor).isActive = true
         secondGateProfileImageView.centerYAnchor.constraint(equalTo: secondGateHeaderView.centerYAnchor).isActive = true
@@ -412,7 +402,7 @@ class HomeViewController: UIViewController {
                                            padding: UIEdgeInsets(top: Constants.verticalSpacing,
                                                                  left: Constants.sideMargin, bottom: 0,
                                                                  right: Constants.sideMargin))
-        openSecondGatesButton.heightAnchor.constraint(equalTo: secondGateHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         unLinkFromSecondGateButton.anchor(top: openSecondGatesButton.bottomAnchor,
                               leading: secondGateView.leadingAnchor,
@@ -420,8 +410,18 @@ class HomeViewController: UIViewController {
                               padding: UIEdgeInsets(top: Constants.verticalSpacing,
                                                     left: Constants.sideMargin, bottom: 0,
                                                     right: Constants.sideMargin))
-        unLinkFromSecondGateButton.heightAnchor.constraint(equalTo: secondGateHeaderView.heightAnchor, multiplier: 0.3).isActive = true
+        unLinkFromSecondGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
     }
+    
+    /// Makes Buttons blink dark blue on click
+    @objc func holdDown(sender:UIButton){
+        sender.backgroundColor = Constants.accentColorDark
+    }
+    
+    @objc func release(sender:UIButton){
+        sender.backgroundColor = Constants.accentColor
+    }
+
     
     /// Function checks if user is logged in or not
     private func validateAuth() {

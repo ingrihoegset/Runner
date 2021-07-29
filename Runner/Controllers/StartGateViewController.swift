@@ -130,7 +130,6 @@ class StartGateViewController: UIViewController {
         
         // Set tekst in top labels
         setDisplayLabelText()
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -245,5 +244,9 @@ extension StartGateViewController: StartGateViewModelDelegate {
         DispatchQueue.main.async {
             self.countDownLabel.text = count
         }
+    }
+    
+    func resetUIOnRunEnd() {
+        cancelRun()
     }
 }

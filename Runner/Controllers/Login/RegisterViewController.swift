@@ -17,18 +17,19 @@ class RegisterViewController: UIViewController {
         let scrollView = UIScrollView()
         scrollView.clipsToBounds = true
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.backgroundColor = .orange
+        scrollView.backgroundColor = Constants.mainColor
         return scrollView
     }()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "person.circle")
         imageView.tintColor = Constants.accentColorDark
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true
         imageView.layer.masksToBounds = true
-        imageView.backgroundColor = .lightGray
+        imageView.backgroundColor = Constants.mainColor
         imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         return imageView
@@ -36,10 +37,11 @@ class RegisterViewController: UIViewController {
     
     private let emailField: UITextField = {
         let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .continue
-        field.layer.cornerRadius = Constants.cornerRadius
+        field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
         field.placeholder = "Email Address..."
@@ -52,10 +54,11 @@ class RegisterViewController: UIViewController {
     
     private let firstNameField: UITextField = {
         let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .continue
-        field.layer.cornerRadius = Constants.cornerRadius
+        field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
         field.placeholder = "First name..."
@@ -68,10 +71,11 @@ class RegisterViewController: UIViewController {
     
     private let lastNameField: UITextField = {
         let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .continue
-        field.layer.cornerRadius = Constants.cornerRadius
+        field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
         field.placeholder = "Last name..."
@@ -84,10 +88,11 @@ class RegisterViewController: UIViewController {
     
     private let passwordField: UITextField = {
         let field = UITextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .done
-        field.layer.cornerRadius = Constants.cornerRadius
+        field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
         field.placeholder = "Password..."
@@ -101,18 +106,26 @@ class RegisterViewController: UIViewController {
     
     private let logginButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Register", for: .normal)
         button.backgroundColor = Constants.accentColor
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = Constants.cornerRadius
+        button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Create Account"
-        view.backgroundColor = .link
+        view.backgroundColor = Constants.mainColor
+        
+        // Makes the nav bar blend in with the background
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.shadowImage = UIImage()
         
         emailField.delegate = self
         passwordField.delegate = self
@@ -133,39 +146,55 @@ class RegisterViewController: UIViewController {
     /// Lay out constraints
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
         scrollView.frame = view.bounds
         
-        let size = scrollView.width / 3
-        imageView.frame = CGRect(x: (scrollView.width - size)/2,
-                                  y: 20,
-                                  width: size,
-                                  height: size)
-        imageView.layer.cornerRadius = imageView.width / 2.0
+        imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
+        imageView.layer.cornerRadius = Constants.widthOfDisplay * 0.3 / 2
         
-        firstNameField.frame = CGRect(x: 30,
-                                  y: imageView.bottom+10,
-                                  width: scrollView.width-60,
-                                  height: Constants.fieldHeight)
+        firstNameField.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        firstNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        firstNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        firstNameField.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        lastNameField.frame = CGRect(x: 30,
-                                  y: firstNameField.bottom+10,
-                                  width: scrollView.width-60,
-                                  height: Constants.fieldHeight)
+        lastNameField.topAnchor.constraint(equalTo: firstNameField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        lastNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        lastNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        lastNameField.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        emailField.frame = CGRect(x: 30,
-                                  y: lastNameField.bottom+10,
-                                  width: scrollView.width-60,
-                                  height: Constants.fieldHeight)
+        emailField.topAnchor.constraint(equalTo: lastNameField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        emailField.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        passwordField.frame = CGRect(x: 30,
-                                  y: emailField.bottom+10,
-                                  width: scrollView.width-60,
-                                  height: Constants.fieldHeight)
+        passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        passwordField.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        logginButton.frame = CGRect(x: Constants.sideSpacing,
-                                 y: passwordField.bottom + 10,
-                                 width: scrollView.width - Constants.sideSpacing * 2,
-                                 height: Constants.fieldHeight)
+        logginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        logginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        logginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }
+    
+    private func clearTextFields() {
+        firstNameField.text?.removeAll()
+        lastNameField.text?.removeAll()
+        emailField.text?.removeAll()
+        passwordField.text?.removeAll()
+    }
+    
+    /// Makes Buttons blink dark blue on click
+    @objc func holdDown(sender:UIButton){
+        sender.backgroundColor = Constants.accentColorDark
+    }
+    
+    @objc func release(sender:UIButton){
+        sender.backgroundColor = Constants.accentColor
     }
     
     /// When user taps image view to set profile pic
@@ -208,13 +237,14 @@ class RegisterViewController: UIViewController {
                 return
             }
             
-            DispatchQueue.main.async {
-                strongSelf.spinner.dismiss()
-            }
+
                 
             // CASE: User already exists
             guard !exists else {
                 strongSelf.alertUserLoginError(message: "Looks like a user account for that email already exists.")
+                DispatchQueue.main.async {
+                    strongSelf.spinner.dismiss()
+                }
                 return
             }
             
@@ -249,16 +279,24 @@ class RegisterViewController: UIViewController {
                             switch result {
                             case .success(let downloadUrl):
                                 UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                print(downloadUrl)
+                                // Open tabbar if all succeeds.
+                                strongSelf.prepareTabBar()
+                                strongSelf.clearTextFields()
+                                DispatchQueue.main.async {
+                                    strongSelf.spinner.dismiss()
+                                }
                             case .failure(let error):
                                 print("Storage manager error: \(error)")
+                                // Open tabbar even if image upload fails
+                                strongSelf.prepareTabBar()
+                                strongSelf.clearTextFields()
+                                DispatchQueue.main.async {
+                                    strongSelf.spinner.dismiss()
+                                }
                             }
                         })
                     }
                 })
-                
-                // Open tabbar if all succeeds.
-                strongSelf.prepareTabBar()
             })
         })
     }
