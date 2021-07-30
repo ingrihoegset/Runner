@@ -14,7 +14,7 @@
 		BF12FF21269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF1E269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf */; };
 		BF12FF22269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF1F269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf */; };
 		BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */; };
-		BF12FF26269F5BAA00B51370 /* StartGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */; };
+		BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */; };
 		BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF48305D269AF90600C8CC6C /* DatabaseManager.swift */; };
 		BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */; };
 		BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830A2269C654A00C8CC6C /* Sender.swift */; };
@@ -25,7 +25,7 @@
 		BF512AD9269F62AE001C6BF2 /* shortBeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD6269F62AD001C6BF2 /* shortBeep.wav */; };
 		BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD7269F62AD001C6BF2 /* longBeep.wav */; };
 		BF512ADB269F62AE001C6BF2 /* longBeepDeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */; };
-		BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */; };
+		BF512ADE269F631F001C6BF2 /* FirstGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512ADD269F631F001C6BF2 /* FirstGateViewModel.swift */; };
 		BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */; };
 		BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */; };
 		BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AF926A0D170001C6BF2 /* BreakObserver.swift */; };
@@ -37,6 +37,7 @@
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
 		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
+		BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */; };
 		BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699D269A14E30080DA62 /* AppDelegate.swift */; };
 		BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699F269A14E30080DA62 /* SceneDelegate.swift */; };
 		BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69A1269A14E30080DA62 /* HomeViewController.swift */; };
@@ -61,7 +62,7 @@
 		BF12FF1E269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Light.ttf"; sourceTree = "<group>"; };
 		BF12FF1F269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-SemiBold.ttf"; sourceTree = "<group>"; };
 		BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
-		BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartGateViewController.swift; sourceTree = "<group>"; };
+		BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstGateViewController.swift; sourceTree = "<group>"; };
 		BF48305D269AF90600C8CC6C /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceAppUser.swift; sourceTree = "<group>"; };
 		BF4830A2269C654A00C8CC6C /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
@@ -72,7 +73,7 @@
 		BF512AD6269F62AD001C6BF2 /* shortBeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = shortBeep.wav; sourceTree = "<group>"; };
 		BF512AD7269F62AD001C6BF2 /* longBeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeep.wav; sourceTree = "<group>"; };
 		BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeepDeep.wav; sourceTree = "<group>"; };
-		BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartGateViewModel.swift; sourceTree = "<group>"; };
+		BF512ADD269F631F001C6BF2 /* FirstGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstGateViewModel.swift; sourceTree = "<group>"; };
 		BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewController.swift; sourceTree = "<group>"; };
 		BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewModel.swift; sourceTree = "<group>"; };
 		BF512AF926A0D170001C6BF2 /* BreakObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakObserver.swift; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
 		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
+		BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRunSelections.swift; sourceTree = "<group>"; };
 		BFFB699A269A14E30080DA62 /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFB699D269A14E30080DA62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFB699F269A14E30080DA62 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -211,7 +213,7 @@
 				BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */,
 				BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */,
 				BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */,
-				BF512ADD269F631F001C6BF2 /* StartGateViewModel.swift */,
+				BF512ADD269F631F001C6BF2 /* FirstGateViewModel.swift */,
 				BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */,
 				BF6E058C26A98F1C0028C0AF /* ResultsViewModel.swift */,
 				BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */,
@@ -246,6 +248,7 @@
 				BF4830C0269C6BD000C8CC6C /* StorageManager.swift */,
 				BF512AF926A0D170001C6BF2 /* BreakObserver.swift */,
 				BF6E059326A9A7600028C0AF /* RunResults.swift */,
+				BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -257,7 +260,7 @@
 				BFFB69A1269A14E30080DA62 /* HomeViewController.swift */,
 				BFFB69C1269A182B0080DA62 /* ProfileViewController.swift */,
 				BF12FF09269F568400B51370 /* SetUpRunViewController.swift */,
-				BF12FF25269F5BAA00B51370 /* StartGateViewController.swift */,
+				BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */,
 				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
 				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
 				BF6E058F26A999670028C0AF /* StatisticsViewController.swift */,
@@ -430,13 +433,13 @@
 				BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */,
 				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
-				BF512ADE269F631F001C6BF2 /* StartGateViewModel.swift in Sources */,
+				BF512ADE269F631F001C6BF2 /* FirstGateViewModel.swift in Sources */,
 				BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */,
 				BF6E059726AAC0F50028C0AF /* RunTableViewCell.swift in Sources */,
 				BF6E059426A9A7600028C0AF /* RunResults.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
-				BF12FF26269F5BAA00B51370 /* StartGateViewController.swift in Sources */,
+				BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */,
 				BF4830A6269C658200C8CC6C /* Race.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
@@ -454,6 +457,7 @@
 				BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */,
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
 				BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */,
+				BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

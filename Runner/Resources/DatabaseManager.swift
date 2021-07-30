@@ -490,6 +490,8 @@ extension DatabaseManager {
     /// Function saves current run to completed run and deletes current run from current run
     func cleanUpAfterRunCompleted(completion: @ escaping (Bool) -> Void) {
         
+        print("Cleaning")
+        
         // Step 1: Get user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when trying to save run to users array of runs.")
@@ -518,6 +520,7 @@ extension DatabaseManager {
             }
             
             guard let currentRun = userNode["current_run"] as? [String: Any] else {
+                print("Counldnt get current run")
                 completion(false)
                 return
             }
@@ -535,11 +538,14 @@ extension DatabaseManager {
                 ]
             }
             
+            print("Made it")
+            
             // Step 3: Delete current run
             userNode["current_run"] = nil
             
             // Update database with changes
             reference.setValue(userNode, withCompletionBlock: { error, _ in
+                print("setting user values in completed")
                 guard error == nil else {
                     print("Failed to set completed run array first time.")
                     completion(false)
@@ -602,6 +608,7 @@ extension DatabaseManager {
                     completion(true)
                 })
             })
+        completion(true)
         })
     }
     

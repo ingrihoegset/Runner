@@ -291,6 +291,8 @@ class LoginViewController: UIViewController {
     
     /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
     private func prepareTabBar() {
+        print("Preparing Tab Bar")
+        
         let tabBarVC = UITabBarController()
         let tabButtonImages = ["house", "chart.bar.xaxis" ,"person.circle"]
         

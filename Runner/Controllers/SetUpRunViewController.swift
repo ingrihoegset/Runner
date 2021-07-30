@@ -73,23 +73,25 @@ class SetUpRunViewController: UIViewController {
         newRaceButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
     }
     
-    /// Takes us to Start Gate View Contoller and sends run selections to Start Gate
+    /// Takes us to Start Gate View Contoller and sends run selections to User selections
     @objc private func didTapNewRace() {
         
-        let destinationController = StartGateViewController()
-
-        // Sets start gate length selection variable
-        destinationController.userSelectedLength = lengthPicker.userSelectedNumber
+        // Sets length selection variable
+        UserRunSelections.shared.setUserSelectedLength(length: lengthPicker.userSelectedNumber)
         if (lengthPicker.userSelectedNumber == 0) {
-            destinationController.userSelectedLength = Int(60)
+            UserRunSelections.shared.setUserSelectedLength(length: 60)
         }
         
-        // Sets start gate delay selection variable
-        destinationController.userSelectedDelay = delayPicker.userSelectedNumber
+        // Sets delay selection variable
+        UserRunSelections.shared.setUserSelectedDelay(delay: delayPicker.userSelectedNumber)
         if (delayPicker.userSelectedNumber == 0) {
-            destinationController.userSelectedDelay = Int(10)
+            UserRunSelections.shared.setUserSelectedDelay(delay: 3)
         }
+        
+        print(UserRunSelections.shared.getUserSelectedLength())
+        print(UserRunSelections.shared.getUserSelectedDelay())
 
+        let destinationController = FirstGateViewController()
         navigationController?.pushViewController(destinationController, animated: false)
     }
 }

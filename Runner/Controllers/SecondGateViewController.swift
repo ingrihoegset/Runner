@@ -17,6 +17,17 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "End Gate"
+        
+        self.navigationController?.navigationBar.backgroundColor = Constants.mainColor
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
+                                                            style: .done,
+                                                            target: self,
+                                                            action: #selector(dismissSelf))
+        
         // Delegates
         secondGateViewModel.secondGateViewModelDelegate = self
         
@@ -34,6 +45,11 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     deinit {
         print("DESTROYED SECOND GATE")
+    }
+    
+    @objc private func dismissSelf() {
+        dismiss(animated: true, completion: nil)
+        self.secondGateViewModel.captureSession.stopRunning()
     }
 }
 

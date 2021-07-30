@@ -117,22 +117,19 @@ class HomeViewModel {
                             strongSelf.homeViewModelDelegate?.didGetRunResult(result: runResult)
                             
                             // Clean up after completed run
-                            DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { success in
-                                
+                            DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { _ in
+                                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
                             })
                             
-                            //Notify UI that race was completed so UI can be reset
-                            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
+                            
                                 
                         case .failure(let error):
                             print(error)
                             // Should show error to user!!!
                             // Clean up after completed run regardless of success or not
-                            DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { success in
-                                
+                            DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { _ in
+                                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
                             })
-                            // Notify UI that race was completed so UI can be reset
-                            NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
                     }
                 })
             }

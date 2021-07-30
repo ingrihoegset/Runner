@@ -1,5 +1,5 @@
 //
-//  StartGateViewController.swift
+//  FirstGateViewController.swift
 //  Runner
 //
 //  Created by Ingrid on 14/07/2021.
@@ -8,14 +8,9 @@
 import UIKit
 import AVFoundation
 
-class StartGateViewController: UIViewController {
+class FirstGateViewController: UIViewController {
     
-    var startGateViewModel = StartGateViewModel()
-    
-    /// User selected race details
-    var userSelectedLength = 100
-    var userSelectedDelay = 10
-    var userSelectedType = "Speed"
+    var firstGateViewModel = FirstGateViewModel()
 
     /// Objects related to countdown
     var timer = Timer()
@@ -26,7 +21,7 @@ class StartGateViewController: UIViewController {
     let displayView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColorDark
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -105,18 +100,29 @@ class StartGateViewController: UIViewController {
     
     
     deinit {
-        print("DESTROYED START GATE")
+        print("DESTROYED FIRST GATE")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Start Gate"
-        view.backgroundColor = Constants.whiteColor
+        view.backgroundColor = Constants.mainColor
+        
+        // Tells Gate whether user is running with one or two gates
+        let runningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
+        if runningWithOneGate == true {
+            title = "End Gate"
+        }
+        else {
+            title = "Start Gate"
+        }
         
         // Subscribe to delegate
-        startGateViewModel.startGateViewModelDelegate = self
-        startGateViewModel.userSelectedLength = userSelectedLength
-        startGateViewModel.userSelectedType = userSelectedType
+        firstGateViewModel.firstGateViewModelDelegate = self
+        
+        // Set up for camera view
+        let previewLayer = firstGateViewModel.previewLayer
+        previewLayer.frame = self.view.bounds
+        self.view.layer.addSublayer(previewLayer)
         
         // Add top displays
         view.addSubview(displayView)
@@ -130,6 +136,11 @@ class StartGateViewController: UIViewController {
         
         // Set tekst in top labels
         setDisplayLabelText()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        self.firstGateViewModel.captureSession.stopRunning()
     }
     
     override func viewDidLayoutSubviews() {
@@ -169,8 +180,8 @@ class StartGateViewController: UIViewController {
     /// Set text in top labels
     func setDisplayLabelText() {
         DispatchQueue.main.async {
-            let countDown = "Count Down: " + String(self.userSelectedDelay)
-            let distance = "Distance: " + String(self.userSelectedLength)
+            let countDown = "Count Down: " + String(self.firstGateViewModel.userSelectedDelay)
+            let distance = "Distance: " + String(self.firstGateViewModel.userSelectedLength)
             self.displayLabel1.text = countDown
             self.displayLabel2.text = distance
         }
@@ -178,7 +189,7 @@ class StartGateViewController: UIViewController {
     
     /// Activates Count down When user taps to start run
     @objc func startCountDown() {
-        startGateViewModel.startCountDown(countDownTime: userSelectedDelay)
+        firstGateViewModel.startCountDown(countDownTime: self.firstGateViewModel.userSelectedDelay)
         
         // Start showin count down label
         countDownLabel.alpha = 1
@@ -206,7 +217,12 @@ class StartGateViewController: UIViewController {
     }
     
     @objc private func cancelRun() {
-        startGateViewModel.cancelRun()
+        firstGateViewModel.cancelRun()
+        animateCancel()
+    }
+    
+    
+    private func animateCancel() {
         
         // Show start run button when run is cancelled.
         UIView.animate(withDuration: 0.5, animations: {
@@ -235,10 +251,11 @@ class StartGateViewController: UIViewController {
                 self.countDownLabel.text = ""
             }
         )
+        
     }
 }
 
-extension StartGateViewController: StartGateViewModelDelegate {
+extension FirstGateViewController: FirstGateViewModelDelegate {
     
     func updateCountDownLabelText(count: String) {
         DispatchQueue.main.async {
@@ -247,6 +264,6 @@ extension StartGateViewController: StartGateViewModelDelegate {
     }
     
     func resetUIOnRunEnd() {
-        cancelRun()
+        animateCancel()
     }
 }

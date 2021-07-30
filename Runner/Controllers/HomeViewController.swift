@@ -75,10 +75,11 @@ class HomeViewController: UIViewController {
         button.backgroundColor = Constants.accentColor
         button.setTitle("Run with one gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
+        button.tag = 1
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
-        //button.addTarget(self, action: #selector(didTapAddSecondGateButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapSetUpRun(sender:)), for: .touchUpInside)
         return button
     }()
     
@@ -105,7 +106,8 @@ class HomeViewController: UIViewController {
         button.backgroundColor = Constants.accentColor
         button.setTitle("Set up run", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.addTarget(self, action: #selector(didTapAddSetUpRunWithTwoGates), for: .touchUpInside)
+        button.tag = 2
+        button.addTarget(self, action: #selector(didTapSetUpRun(sender:)), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
@@ -224,6 +226,7 @@ class HomeViewController: UIViewController {
         
         title = "Home"
         view.backgroundColor = Constants.mainColor
+        self.navigationController?.navigationBar.backgroundColor = Constants.mainColor
         
         homeViewModel.homeViewModelDelegate = self
         
@@ -522,13 +525,18 @@ extension HomeViewController {
 // MARK: - Functions relating to view when linked to partner
 extension HomeViewController {
     
-    /// Takes us to new view controller where race can be set up. Only available when linked to partner.
-    @objc private func didTapAddSetUpRunWithTwoGates() {
+    /// Takes us to new view controller where race can be set up.
+    @objc private func didTapSetUpRun(sender: UIButton) {
         let vc = SetUpRunViewController()
+        // If tag is 2 then user selected to run with two gates
+        if sender.tag == 2 {
+            UserRunSelections.shared.setIsRunningWithOneGate(bool: false)
+        }
+        else {
+            UserRunSelections.shared.setIsRunningWithOneGate(bool: true)
+        }
         vc.navigationItem.largeTitleDisplayMode = .always
         navigationController?.pushViewController(vc, animated: true)
-           
-        
     }
     
     /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
