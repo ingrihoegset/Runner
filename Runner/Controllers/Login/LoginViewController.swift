@@ -331,6 +331,8 @@ class LoginViewController: UIViewController {
         // Current user is set automatically when you instantiate firebase auth, and log a user in.
         if FirebaseAuth.Auth.auth().currentUser != nil {
             self.prepareTabBar()
+            // Make sure there is no lingering partner email
+            UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
         }
     }
 }

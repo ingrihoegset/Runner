@@ -186,6 +186,7 @@ extension DatabaseManager {
                 }
             })
             // Successfully removed link from both our user and partner.
+            UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
             
             completion(true)
         })
@@ -230,8 +231,6 @@ extension DatabaseManager {
                 completion(.failure(DataBaseErrors.failedToFetch))
                 return
             }
-            
-            print("gatenumber", gateNumber)
             
             // Successfully listened to update in link
             completion(.success(gateNumber))
@@ -280,13 +279,6 @@ extension DatabaseManager {
             }
         })
     }
-    
-    /// Generates unique run ID
-    func createRunID(userSafeEmail: String, partnerSafeEmail: String) -> String {
-        let dateString = Self.dateFormatter.string(from: Date())
-        let identifier = "\(userSafeEmail)_\(partnerSafeEmail)_\(dateString)"
-        return identifier
-    }
 
     /// Registers current run to user and partner user
     func registerCurrentRunToDatabase(time: Double, runType: String, runDate: String, runDistance: Int, with completion: @escaping (Bool) -> Void) {
@@ -297,18 +289,9 @@ extension DatabaseManager {
             return
         }
         
-        guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
-            print("No partner email found when trying to register run ID to database.")
-            completion(false)
-            return
-        }
-        
         // Get safe email version of emails.
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
-        let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
-        
-        // Get unique run ID
-        let runID = createRunID(userSafeEmail: userSafeEmail, partnerSafeEmail: partnerSafeEmail)
+
         
         // Set run ID for our user
         // Create path reference for database
@@ -323,7 +306,6 @@ extension DatabaseManager {
             
             // Data for insertion for our use
             let currentRun: [String: Any] = [
-                "current_run_id": runID,
                 "start_time": time,
                 "run_type": runType,
                 "run_date": runDate,
@@ -340,22 +322,30 @@ extension DatabaseManager {
                     return
                 }
             })
-        
-            // Set run ID for partner user
-            // Data for insertion for our use
-            let partnerCurrentRun: [String: Any] = [
-                "current_run_id": runID,
-                "start_time": time,
-                "run_type": runType,
-                "run_date": runDate,
-                "run_distance": runDistance
-            ]
             
-            // Create partner link entry
-            self?.database.child("\(partnerSafeEmail)/current_run").observeSingleEvent(of: .value, with: { [weak self] snapshot in
-                self?.database.child("\(partnerSafeEmail)/current_run").setValue(partnerCurrentRun)
-            })
-            completion(true)
+            // If there is a partner user, update current run in database for partner user
+            if let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String {
+                
+                let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
+            
+                // Data for insertion for partner user
+                let partnerCurrentRun: [String: Any] = [
+                    "start_time": time,
+                    "run_type": runType,
+                    "run_date": runDate,
+                    "run_distance": runDistance
+                ]
+                
+                // Create partner link entry
+                self?.database.child("\(partnerSafeEmail)/current_run").observeSingleEvent(of: .value, with: { [weak self] snapshot in
+                    self?.database.child("\(partnerSafeEmail)/current_run").setValue(partnerCurrentRun)
+                })
+                completion(true)
+            }
+            // No partner, complete task
+            else {
+                completion(true)
+            }
         })
     }
     
@@ -403,48 +393,46 @@ extension DatabaseManager {
                 }
             })
             
-            // Step 2: Get current run id for partner user
-            guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
-                print("No user email found when trying to register start time database.")
-                completion(false)
-                return
-            }
-            
-            // Get safe email version of emails.
-            let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
-            
-            // Create path reference for database
-            let partnerReference = strongSelf.database.child("\(partnerSafeEmail)/current_run")
-            
-            partnerReference.observeSingleEvent(of: .value, with: { snapshot in
+            // Step 2: If there is a partner user, update en time for partner user current run
+            if let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String {
+                
+                // Get safe email version of emails.
+                let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
+                
+                // Create path reference for database
+                let partnerReference = strongSelf.database.child("\(partnerSafeEmail)/current_run")
+                
+                partnerReference.observeSingleEvent(of: .value, with: { snapshot in
 
-                // Get current run node for user
-                guard var partnerCurrentRunNode = snapshot.value as? [String: Any] else {
-                    completion(false)
-                    print("Current run not found when attempting to get run ID")
-                    return
-                }
-                
-                // Append end time
-                partnerCurrentRunNode["end_time"] = time
-                
-                // Save updated node to database
-                partnerReference.setValue(partnerCurrentRunNode, withCompletionBlock: { error, _ in
-                    guard error == nil else {
-                        print("Failed when updating array of runs for our user.")
+                    // Get current run node for user
+                    guard var partnerCurrentRunNode = snapshot.value as? [String: Any] else {
                         completion(false)
+                        print("Current run not found when attempting to get run ID")
                         return
                     }
-                    completion(true)
+                    
+                    // Append end time
+                    partnerCurrentRunNode["end_time"] = time
+                    
+                    // Save updated node to database
+                    partnerReference.setValue(partnerCurrentRunNode, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Failed when updating array of runs for our user.")
+                            completion(false)
+                            return
+                        }
+                        completion(true)
+                    })
                 })
-            })
-            completion(true)
+            }
+            // No partner, complete task
+            else {
+                completion(true)
+            }
         })
     }
     
     /// Function that listens for if an end time has been uploaded to current race.
-    // This listener must be created each time a new run id is created so that it listens to the correct ID.
-    // It only needs to listen once, for when the end time is changed.
     func listenForEndOfCurrentRun(completion: @ escaping (Bool) -> Void) {
         
         print("listening for end time")
@@ -488,6 +476,8 @@ extension DatabaseManager {
     }
     
     /// Function saves current run to completed run and deletes current run from current run
+    // Only needs to clean up after user because function is called when a race end time is observed. Both user and partner
+    // have functions in place that listen for an end time.
     func cleanUpAfterRunCompleted(completion: @ escaping (Bool) -> Void) {
         
         print("Cleaning")
@@ -506,12 +496,6 @@ extension DatabaseManager {
         let reference = database.child(userSafeEmail)
         
         reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
-            
-            guard let strongSelf = self else {
-                print("Something went wrong")
-                completion(false)
-                return
-            }
             
             guard var userNode = snapshot.value as? [String: Any] else {
                 print("Something went wrong when trying to save ended race.")
@@ -538,8 +522,6 @@ extension DatabaseManager {
                 ]
             }
             
-            print("Made it")
-            
             // Step 3: Delete current run
             userNode["current_run"] = nil
             
@@ -551,64 +533,8 @@ extension DatabaseManager {
                     completion(false)
                     return
                 }
+                completion(true)
             })
-            
-            
-            // Step 4: Do the same process for partner runner
-            
-            // Get partner user
-            guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
-                print("No user email found when trying to save run to users array of runs.")
-                completion(false)
-                return
-            }
-            
-            // Get safe partner email version of emails.
-            let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
-            
-            // Create path reference for database
-            let partnerReference = strongSelf.database.child(partnerSafeEmail)
-            
-            partnerReference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
-                
-                guard var partnerUserNode = snapshot.value as? [String: Any] else {
-                    print("Something went wrong when trying to save ended race.")
-                    completion(false)
-                    return
-                }
-                
-                guard let currentRun = partnerUserNode["current_run"] as? [String: Any] else {
-                    completion(false)
-                    return
-                }
-
-                // Step 2: Update completed runs array
-                // If true - means that array of runs already exists - append to array
-                if var completedRuns = partnerUserNode["completed_runs"] as? [[String: Any]] {
-                    completedRuns.append(currentRun)
-                    partnerUserNode["completed_runs"] = completedRuns
-                }
-                // Else, there is no existing completed runs array, so create one
-                else {
-                    partnerUserNode["completed_runs"] = [
-                        currentRun
-                    ]
-                }
-                
-                // Step 3: Delete current run
-                partnerUserNode["current_run"] = nil
-                
-                // Update database with changes
-                partnerReference.setValue(partnerUserNode, withCompletionBlock: { error, _ in
-                    guard error == nil else {
-                        print("Failed to set completed run array first time.")
-                        completion(false)
-                        return
-                    }
-                    completion(true)
-                })
-            })
-        completion(true)
         })
     }
     
@@ -624,7 +550,7 @@ extension DatabaseManager {
         
         let safeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
         
-        let reference = database.child("\(safeEmail)/current_run")
+        let reference = database.child("\(safeEmail)/current_run/start_time")
         
         // This code fires every time reference path changes
         reference.observe(.value, with: { snapshot in
@@ -671,14 +597,15 @@ extension DatabaseManager {
                 //completion(.failure(DataBaseErrors.failedToFetch))
                 return
             }
-            
-            print("returning times: ", runData)
+
             completion(.success(runData))
         })
     }
     
     /// This function removes the current run node from both users
     func removeCurrentRun(completion: (Bool) -> Void) {
+        
+        print("removing run")
 
         // Step 1: Get user som that we can remove current run from our user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {

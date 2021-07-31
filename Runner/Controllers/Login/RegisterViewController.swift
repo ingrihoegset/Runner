@@ -260,6 +260,8 @@ class RegisterViewController: UIViewController {
                 // cache values related to user
                 UserDefaults.standard.setValue(email, forKey: "email")
                 UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+                // Make sure there is no lingering partner email
+                UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
                 
                 // Insert user into database with properties given in text fields
                 let raceAppUser = RaceAppUser(firstName: firstName,

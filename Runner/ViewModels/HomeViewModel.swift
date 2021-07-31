@@ -21,7 +21,9 @@ class HomeViewModel {
     
     init() {
         listenForNewLink()
+        // Used to trigger certain functions when end of run is detected.
         listenForEndOfCurrentRun()
+        // Used to determine when camera should be looking for a break time.
         currentRunOngoing()
     }
     
@@ -134,10 +136,7 @@ class HomeViewModel {
                 })
             }
             else {
-                // Removes a current run if one exists when app is opened
-                DatabaseManager.shared.removeCurrentRun(completion: { success in
-                    
-                })
+
             }
         })
     }
