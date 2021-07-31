@@ -308,20 +308,28 @@ class RegisterViewController: UIViewController {
         let tabBarVC = UITabBarController()
         let tabButtonImages = ["house", "chart.bar.xaxis" ,"person.circle"]
         
+        tabBarVC.tabBar.barTintColor = Constants.accentColorDark
+        tabBarVC.tabBar.isTranslucent = false
+        tabBarVC.tabBar.tintColor = Constants.contrastColor
+        tabBarVC.tabBar.unselectedItemTintColor = Constants.accentColor
+        
         let home = HomeViewController()
         home.title = "Home"
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
+        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
         
         let stats = StatisticsViewController()
         stats.title = "My Runs"
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
+        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
         
         let profile = ProfileViewController()
         profile.title = "Profile"
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
+        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
         

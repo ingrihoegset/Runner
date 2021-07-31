@@ -82,6 +82,10 @@ class HomeViewModel {
                     print("")
                     return
                 }
+                
+                // If there is a link, update user selections
+                UserRunSelections.shared.setIsRunningWithOneGate(bool: false)
+                
                 // Send partner email to home view as test to update UI. Should really get and send name. Send gate number for UI update.
                 strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: partnerEmail, gateNumber: gateNumber)
                
@@ -94,6 +98,9 @@ class HomeViewModel {
                     return
                 }
                 print("No link to detect.")
+                
+                // If there is no link, update user selections
+                UserRunSelections.shared.setIsRunningWithOneGate(bool: true)
                 
                 // Tell home that there is no partner and that it is gate 1.
                 // Also, if fetch fails in general, show unlinked view on home VC.

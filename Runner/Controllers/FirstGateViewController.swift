@@ -49,6 +49,13 @@ class FirstGateViewController: UIViewController {
         return label
     }()
     
+    let cameraView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
     let startButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -119,15 +126,11 @@ class FirstGateViewController: UIViewController {
         // Subscribe to delegate
         firstGateViewModel.firstGateViewModelDelegate = self
         
-        // Set up for camera view
-        let previewLayer = firstGateViewModel.previewLayer
-        previewLayer.frame = self.view.bounds
-        self.view.layer.addSublayer(previewLayer)
-        
         // Add top displays
         view.addSubview(displayView)
         displayView.addSubview(displayLabel1)
         displayView.addSubview(displayLabel2)
+        view.addSubview(cameraView)
         
         // Add other elements to view
         view.addSubview(startButton)
@@ -161,6 +164,11 @@ class FirstGateViewController: UIViewController {
         displayLabel2.widthAnchor.constraint(equalTo: displayView.widthAnchor, multiplier: 0.4).isActive = true
         displayLabel2.heightAnchor.constraint(equalTo: displayView.heightAnchor, multiplier: 0.65).isActive = true
         
+        cameraView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
+        cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
         startButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         startButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
@@ -175,6 +183,14 @@ class FirstGateViewController: UIViewController {
         cancelRaceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         cancelRaceButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
         cancelRaceButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
+        
+        DispatchQueue.main.async {
+            // Set up for camera view. Has to happen after constraints are set.
+            let previewLayer = self.firstGateViewModel.previewLayer
+            previewLayer.frame = self.cameraView.bounds
+            self.cameraView.layer.addSublayer(previewLayer)
+        }
+
     }
     
     /// Set text in top labels

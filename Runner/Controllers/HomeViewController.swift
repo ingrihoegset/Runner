@@ -24,14 +24,31 @@ class HomeViewController: UIViewController {
     private let mainHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.accentColor
         return view
     }()
     
-    private let profileImageView: UIImageView = {
+    let detailHelperView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        return view
+    }()
+   
+    
+    // MARK: - Elements related to unconnected user
+    private let unconnectedHeaderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    private let unconnectedprofileImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderColor = Constants.mainColor?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -44,7 +61,7 @@ class HomeViewController: UIViewController {
         qrImageView.backgroundColor = Constants.mainColor
         qrImageView.translatesAutoresizingMaskIntoConstraints = false
         qrImageView.contentMode = .scaleAspectFill
-        qrImageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        qrImageView.layer.borderColor = Constants.accentColor?.cgColor
         qrImageView.layer.borderWidth = Constants.borderWidth
         qrImageView.layer.masksToBounds = true
         let image = UIImage(systemName: "qrcode")
@@ -58,85 +75,52 @@ class HomeViewController: UIViewController {
         return qrImage
     }()
     
-    private let addSecondGateButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = Constants.accentColor
-        button.setTitle("Run with two gates", for: .normal)
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        button.addTarget(self, action: #selector(didTapAddSecondGateButton), for: .touchUpInside)
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
-        return button
-    }()
-    
-    private let runWithOneGateButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = Constants.accentColor
-        button.setTitle("Run with one gate", for: .normal)
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        button.tag = 1
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
-        button.addTarget(self, action: #selector(didTapSetUpRun(sender:)), for: .touchUpInside)
-        return button
-    }()
-    
-    private let partnerUILabel: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = Constants.accentColor
-        label.text = "No partner"
-        label.textAlignment = .center
-        return label
-    }()
-    
-    // MARK: - Elements related to linked view, first gate
-    
-    private let partnerView: UIView = {
+    let unconnectedView: UIView = {
         let view = UIView()
-        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = .clear
         return view
     }()
     
-    private let setUpRaceWithTwoGatesButton: UIButton = {
+    private let setUpSprintButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.accentColor
-        button.setTitle("Set up run", for: .normal)
+        button.setTitle("Sprint", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.tag = 2
-        button.addTarget(self, action: #selector(didTapSetUpRun(sender:)), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         return button
     }()
     
-    private let unLinkFromPartnerButton: UIButton = {
+    private let setUpReactionButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = Constants.accentColor
-        button.setTitle("Disconnect from end gate", for: .normal)
+        button.backgroundColor = .lightGray
+        button.setTitle("Reaction Run", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        /*button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)*/
         return button
     }()
+
     
+    // MARK: - Elements related to linked view, first gate
     private let linkedHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = .clear
+        view.isHidden = true
         return view
     }()
     
     private let linkedProfileImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderColor = Constants.accentColor?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -147,7 +131,8 @@ class HomeViewController: UIViewController {
     private let partnerProfileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.backgroundColor = Constants.mainColor
+        imageView.layer.borderColor = Constants.accentColor?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -156,18 +141,83 @@ class HomeViewController: UIViewController {
         return imageView
     }()
     
+    let linkedView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.isHidden = true
+        return view
+    }()
+    
+    private let setUpSprintButtonTwoGates: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = Constants.accentColor
+        button.setTitle("Sprint", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
+        return button
+    }()
+    
+    private let setUpReactionButtonTwoGates: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .lightGray
+        button.setTitle("Reaction Run", for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        /*button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)*/
+        return button
+    }()
+    
     // MARK: - Elements related to linked view, second gate
+    private let secondGateHeaderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.isHidden = true
+        return view
+    }()
+    
+    private let secondGateProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = Constants.mainColor
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderColor = Constants.mainColor?.cgColor
+        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private let secondGatePartnerProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.borderColor = Constants.mainColor?.cgColor
+        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.backgroundColor = Constants.mainColor
+        imageView.layer.masksToBounds = true
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
     
     private let secondGateView: UIView = {
         let view = UIView()
-        view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = .clear
+        view.isHidden = true
         return view
     }()
     
     private let openSecondGatesButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColor
         button.setTitle("Open end gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -180,6 +230,7 @@ class HomeViewController: UIViewController {
     
     private let unLinkFromSecondGateButton: UIButton = {
         let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColor
         button.setTitle("Disconnect from end gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -190,43 +241,30 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    private let secondGateHeaderView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
-        return view
+    let segmentControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: ["One Gate","Two Gates"])
+        control.translatesAutoresizingMaskIntoConstraints = false
+        control.backgroundColor = Constants.mainColor
+        control.selectedSegmentIndex = 0
+        control.selectedSegmentTintColor = Constants.accentColor
+        let normalTextAttributes: [NSObject : AnyObject] = [
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorMain,
+            NSAttributedString.Key.font as NSObject : Constants.mainFontSB!
+        ]
+        control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
+        let selectedAttributes: [NSObject : AnyObject] = [
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorWhite,
+        ]
+        control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
+        control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
+        return control
     }()
-    
-    private let secondGateProfileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
-        imageView.layer.borderWidth = Constants.borderWidth
-        imageView.layer.masksToBounds = true
-        imageView.image = UIImage(systemName: "person.circle")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let secondGatePartnerProfileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
-        imageView.layer.borderWidth = Constants.borderWidth
-        imageView.layer.masksToBounds = true
-        imageView.image = UIImage(systemName: "person.circle")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.isUserInteractionEnabled = true
-        return imageView
-    }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Home"
-        view.backgroundColor = Constants.mainColor
-        self.navigationController?.navigationBar.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.accentColor
         
         homeViewModel.homeViewModelDelegate = self
         
@@ -240,35 +278,40 @@ class HomeViewController: UIViewController {
         // Related to main view
         view.addSubview(mainView)
         mainView.addSubview(mainHeaderView)
-        // Set main header, that is active when not linked
-        mainHeaderView.addSubview(profileImageView)
-        mainHeaderView.addSubview(qrImageView)
-        mainView.addSubview(addSecondGateButton)
-        mainView.addSubview(runWithOneGateButton)
-
-        // Related to view shown when linked to a partner
-        view.addSubview(partnerView)
-        partnerView.addSubview(linkedHeaderView)
+        mainHeaderView.addSubview(detailHelperView)
+        
+        // Set profile header, that is active when not linked
+        mainView.addSubview(unconnectedHeaderView)
+        unconnectedHeaderView.addSubview(unconnectedprofileImageView)
+        unconnectedHeaderView.addSubview(qrImageView)
+        
+        // Header when user is first gate
+        mainView.addSubview(linkedHeaderView)
         linkedHeaderView.addSubview(partnerProfileImageView)
         linkedHeaderView.addSubview(linkedProfileImageView)
-        partnerView.addSubview(setUpRaceWithTwoGatesButton)
-        partnerView.addSubview(unLinkFromPartnerButton)
-        partnerView.addSubview(partnerUILabel)
         
-        // Should be hidden on activiation of app, as all links are discarded on opening
-        partnerView.isHidden = true
-        
-        // Relatd to view show when user is second gate
-        view.addSubview(secondGateView)
-        secondGateView.addSubview(secondGateHeaderView)
+        // Header when user is second gate
+        mainView.addSubview(secondGateHeaderView)
         secondGateHeaderView.addSubview(secondGatePartnerProfileImageView)
         secondGateHeaderView.addSubview(secondGateProfileImageView)
+        
+        // Controller used to switch between two gate and  one gate
+        mainView.addSubview(segmentControl)
+        
+        mainView.addSubview(unconnectedView)
+        unconnectedView.addSubview(setUpSprintButton)
+        unconnectedView.addSubview(setUpReactionButton)
+
+        // Related to view shown when linked to a partner as first gate
+        mainView.addSubview(linkedView)
+        linkedView.addSubview(setUpSprintButtonTwoGates)
+        linkedView.addSubview(setUpReactionButtonTwoGates)
+        
+        // Related to view show when user is second gate
+        mainView.addSubview(secondGateView)
         secondGateView.addSubview(openSecondGatesButton)
         secondGateView.addSubview(unLinkFromSecondGateButton)
-        
-        // Should be hidden on activiation of app, as all links are discarded on opening
-        secondGateView.isHidden = true
-        
+
         homeViewModel.clearLinkFromDatabase()
         
         let qrButtonTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapQRButton))
@@ -310,34 +353,33 @@ class HomeViewController: UIViewController {
         mainHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
         mainHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
-        profileImageView.centerYAnchor.constraint(equalTo: mainHeaderView.centerYAnchor).isActive = true
-        profileImageView.centerXAnchor.constraint(equalTo: mainHeaderView.centerXAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
-        profileImageView.layer.cornerRadius = Constants.imageSize / 2
+        detailHelperView.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor).isActive = true
+        detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
+        detailHelperView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor).isActive = true
+        detailHelperView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor).isActive = true
+        
+        // Unlinked header
+        unconnectedHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
+        unconnectedHeaderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+        unconnectedHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
+        unconnectedHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
+        
+        unconnectedprofileImageView.centerYAnchor.constraint(equalTo: unconnectedHeaderView.centerYAnchor).isActive = true
+        unconnectedprofileImageView.centerXAnchor.constraint(equalTo: unconnectedHeaderView.centerXAnchor).isActive = true
+        unconnectedprofileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        unconnectedprofileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        unconnectedprofileImageView.layer.cornerRadius = Constants.imageSize / 2
     
-        qrImageView.leadingAnchor.constraint(equalTo: profileImageView.centerXAnchor, constant: 20).isActive = true
-        qrImageView.topAnchor.constraint(equalTo: profileImageView.centerYAnchor, constant: 5).isActive = true
+        qrImageView.leadingAnchor.constraint(equalTo: unconnectedprofileImageView.trailingAnchor).isActive = true
+        qrImageView.centerYAnchor.constraint(equalTo: unconnectedprofileImageView.centerYAnchor).isActive = true
         qrImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
         qrImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
         qrImageView.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
-
-        runWithOneGateButton.anchor(top: mainHeaderView.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        runWithOneGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        addSecondGateButton.anchor(top: runWithOneGateButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        addSecondGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-
-        // Elements related to linked view
-        partnerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        partnerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        partnerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        partnerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        
-        linkedHeaderView.topAnchor.constraint(equalTo: partnerView.topAnchor).isActive = true
-        linkedHeaderView.centerXAnchor.constraint(equalTo: partnerView.centerXAnchor).isActive = true
-        linkedHeaderView.widthAnchor.constraint(equalTo: partnerView.widthAnchor).isActive = true
+        // Linked header first gate
+        linkedHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
+        linkedHeaderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+        linkedHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
         linkedHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
         linkedProfileImageView.trailingAnchor.constraint(equalTo: linkedHeaderView.centerXAnchor).isActive = true
@@ -352,39 +394,10 @@ class HomeViewController: UIViewController {
         partnerProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         partnerProfileImageView.layer.cornerRadius = Constants.imageSize / 2
         
-        setUpRaceWithTwoGatesButton.anchor(top: linkedHeaderView.bottomAnchor,
-                                           leading: partnerView.leadingAnchor, bottom: nil,
-                                           trailing: partnerView.trailingAnchor,
-                                           padding: UIEdgeInsets(top: Constants.verticalSpacing,
-                                                                 left: Constants.sideMargin, bottom: 0,
-                                                                 right: Constants.sideMargin))
-        setUpRaceWithTwoGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        unLinkFromPartnerButton.anchor(top: setUpRaceWithTwoGatesButton.bottomAnchor,
-                              leading: partnerView.leadingAnchor,
-                              bottom: nil, trailing: partnerView.trailingAnchor,
-                              padding: UIEdgeInsets(top: Constants.verticalSpacing,
-                                                    left: Constants.sideMargin, bottom: 0,
-                                                    right: Constants.sideMargin))
-        unLinkFromPartnerButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        partnerUILabel.anchor(top: unLinkFromPartnerButton.bottomAnchor,
-                              leading: partnerView.leadingAnchor,
-                              bottom: nil, trailing: partnerView.trailingAnchor,
-                              padding: UIEdgeInsets(top: Constants.verticalSpacing,
-                                                    left: Constants.sideMargin, bottom: 0,
-                                                    right: Constants.sideMargin))
-        partnerUILabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        // Elements related to second gate view
-        secondGateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        secondGateView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        secondGateView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        secondGateView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        
-        secondGateHeaderView.topAnchor.constraint(equalTo: secondGateView.topAnchor).isActive = true
-        secondGateHeaderView.centerXAnchor.constraint(equalTo: secondGateView.centerXAnchor).isActive = true
-        secondGateHeaderView.widthAnchor.constraint(equalTo: secondGateView.widthAnchor).isActive = true
+        // Linked header second gate
+        secondGateHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
+        secondGateHeaderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
+        secondGateHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
         secondGateHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
         secondGateProfileImageView.trailingAnchor.constraint(equalTo: secondGateHeaderView.centerXAnchor).isActive = true
@@ -399,20 +412,50 @@ class HomeViewController: UIViewController {
         secondGatePartnerProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         secondGatePartnerProfileImageView.layer.cornerRadius = Constants.imageSize / 2
         
-        openSecondGatesButton.anchor(top: secondGateHeaderView.bottomAnchor,
-                                           leading: secondGateView.leadingAnchor, bottom: nil,
-                                           trailing: secondGateView.trailingAnchor,
-                                           padding: UIEdgeInsets(top: Constants.verticalSpacing,
-                                                                 left: Constants.sideMargin, bottom: 0,
-                                                                 right: Constants.sideMargin))
+        // Segment control, common to all states / views
+        segmentControl.topAnchor.constraint(equalTo: mainHeaderView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        segmentControl.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        segmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        segmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        
+        // Selections shown when no link
+        unconnectedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
+        unconnectedView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
+        unconnectedView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor).isActive = true
+        unconnectedView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
+
+        setUpSprintButton.anchor(top: unconnectedView.topAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        setUpSprintButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        setUpReactionButton.anchor(top: setUpSprintButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        setUpReactionButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+
+        // Elements related to linked view
+        linkedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
+        linkedView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor).isActive = true
+        linkedView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
+        linkedView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
+        
+        setUpSprintButtonTwoGates.anchor(top: linkedView.topAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        setUpSprintButtonTwoGates.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        setUpReactionButtonTwoGates.anchor(top: setUpSprintButtonTwoGates.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
+        setUpReactionButtonTwoGates.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        // Elements related to second gate view
+        secondGateView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
+        secondGateView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor).isActive = true
+        secondGateView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
+        secondGateView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
+        
+        openSecondGatesButton.topAnchor.constraint(equalTo: secondGateView.topAnchor, constant: Constants.verticalSpacing).isActive = true
+        openSecondGatesButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        openSecondGatesButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        unLinkFromSecondGateButton.anchor(top: openSecondGatesButton.bottomAnchor,
-                              leading: secondGateView.leadingAnchor,
-                              bottom: nil, trailing: secondGateView.trailingAnchor,
-                              padding: UIEdgeInsets(top: Constants.verticalSpacing,
-                                                    left: Constants.sideMargin, bottom: 0,
-                                                    right: Constants.sideMargin))
+        unLinkFromSecondGateButton.topAnchor.constraint(equalTo: openSecondGatesButton.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        unLinkFromSecondGateButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        unLinkFromSecondGateButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         unLinkFromSecondGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
     }
     
@@ -464,7 +507,7 @@ extension HomeViewController: HomeViewModelDelegate {
             }
             else { 
                 print("match")
-                self.profileImageView.image = image
+                self.unconnectedprofileImageView.image = image
                 self.linkedProfileImageView.image = image
                 self.secondGateProfileImageView.image = image
             }
@@ -479,25 +522,47 @@ extension HomeViewController: HomeViewModelDelegate {
             print("gate number", gateNumber)
             // Show connected view, but for first gate
             if gateNumber == 1 {
-                self.partnerUILabel.text = partner
-                self.partnerView.isHidden = false
-                self.mainView.isHidden = true
+                // Show
+                self.linkedHeaderView.isHidden = false
+                self.linkedView.isHidden = false
+                
+                // Hide
+                self.unconnectedHeaderView.isHidden = true
+                self.secondGateHeaderView.isHidden = true
+                self.unconnectedView.isHidden = true
                 self.secondGateView.isHidden = true
+                
+                // Update segment Controller as well
+                self.segmentControl.selectedSegmentIndex = 1
             }
             // Show connected view, but for second gate
             else if gateNumber == 2 {
-                self.partnerUILabel.text = partner
+                // Show
+                self.secondGateHeaderView.isHidden = false
                 self.secondGateView.isHidden = false
-                self.partnerView.isHidden = true
-                self.mainView.isHidden = true
+                // Hide
+                self.unconnectedHeaderView.isHidden = true
+                self.linkedHeaderView.isHidden = true
+                self.unconnectedView.isHidden = true
+                self.linkedView.isHidden = true
+
+                // Update segment Controller as well
+                self.segmentControl.selectedSegmentIndex = 1
             }
             // Show main view, no connection
             else {
-                self.partnerUILabel.text = partner
-                self.partnerView.isHidden = true
+                // Show
+                self.unconnectedHeaderView.isHidden = false
+                self.unconnectedView.isHidden = false
+                // Hide
+                self.linkedHeaderView.isHidden = true
+                self.secondGateHeaderView.isHidden = true
+                self.linkedView.isHidden = true
                 self.secondGateView.isHidden = true
-                self.mainView.isHidden = false
+                // Alert
                 self.alertThatPartnerHasDisconnected()
+                // Update segment Controller as well
+                self.segmentControl.selectedSegmentIndex = 0
             }
         }
     }
@@ -513,11 +578,44 @@ extension HomeViewController: HomeViewModelDelegate {
 // MARK: - Functions relating to connecting with second gate
 extension HomeViewController {
 
-    @objc private func didTapAddSecondGateButton(sender: UIButton) {
+    @objc private func didTapAddSecondGate() {
         let vc = LinkToPartnerViewController()
-        let navVC = UINavigationController(rootViewController: vc)
+
         vc.startControlSegment = 0
+        vc.onDoneBlock = { [weak self] success in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if success {
+                // Nothing happens here, set up to two gates is fine
+            }
+            else {
+                // Failed to set up second gate, show user a warning and revert to on gate selection
+                strongSelf.didNotFindPartnerToLinkTo()
+            }
+        }
+        let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
+    }
+    
+    @objc func segmentControl(_ segmentedControl: UISegmentedControl) {
+       switch (segmentedControl.selectedSegmentIndex) {
+          case 0:
+            revertToOneGate()
+            print("0", UserRunSelections.shared.getIsRunningWithOneGate())
+
+          break
+          case 1:
+            didTapAddSecondGate()
+            print("1", UserRunSelections.shared.getIsRunningWithOneGate())
+
+          break
+          default:
+            print("DEFAULT", UserRunSelections.shared.getIsRunningWithOneGate())
+          break
+       }
     }
 }
 
@@ -528,13 +626,6 @@ extension HomeViewController {
     /// Takes us to new view controller where race can be set up.
     @objc private func didTapSetUpRun(sender: UIButton) {
         let vc = SetUpRunViewController()
-        // If tag is 2 then user selected to run with two gates
-        if sender.tag == 2 {
-            UserRunSelections.shared.setIsRunningWithOneGate(bool: false)
-        }
-        else {
-            UserRunSelections.shared.setIsRunningWithOneGate(bool: true)
-        }
         vc.navigationItem.largeTitleDisplayMode = .always
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -587,9 +678,60 @@ extension HomeViewController {
         present(actionSheet, animated: true)
     }
     
+    @objc func didNotFindPartnerToLinkTo() {
+        let actionSheet = UIAlertController(title: "Couldn't to find partner to link to.",
+                                            message: "",
+                                            preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Run with one gate",
+                                            style: .destructive,
+                                            handler: { [weak self] _ in
+                                                
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                
+                                                DispatchQueue.main.async {
+                                                    strongSelf.segmentControl.selectedSegmentIndex = 0
+                                                }
+                                            }))
+        
+        present(actionSheet, animated: true)
+    }
+    
+    @objc func revertToOneGate() {
+        let actionSheet = UIAlertController(title: "Do you wish to unlink from second gate?",
+                                            message: "",
+                                            preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Unlink from second gate", style: .destructive, handler: { [weak self] _ in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            // Clear any partner link from database
+            strongSelf.homeViewModel.clearLinkFromDatabase()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                            style: .cancel,
+                                            handler: { [weak self] _ in
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                
+                                                DispatchQueue.main.async {
+                                                    strongSelf.segmentControl.selectedSegmentIndex = 1
+                                                }
+                                            }))
+        
+        present(actionSheet, animated: true)
+    }
+    
     /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
     private func alertThatPartnerHasDisconnected() {
-        let actionSheet = UIAlertController(title: "You've been partner has disconnected from you.",
+        let actionSheet = UIAlertController(title: "You've been disconnected from partner.",
                                             message: "",
                                             preferredStyle: .alert)
         

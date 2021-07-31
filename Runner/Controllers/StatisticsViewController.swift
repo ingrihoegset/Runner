@@ -13,9 +13,24 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     let statisticsViewModel = StatisticsViewModel()
     
+    let headerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.accentColor
+        return view
+    }()
+    
+    let statsHeaderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.accentColorDark
+        return view
+    }()
+    
     var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = Constants.mainColor
         return tableView
     }()
 
@@ -26,8 +41,10 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statisticsViewModel.getCompletedRuns()
         
         title = "My Runs"
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.accentColor
         
+        view.addSubview(headerView)
+        view.addSubview(statsHeaderView)
         view.addSubview(tableView)
         
         tableView.register(RunTableViewCell.self, forCellReuseIdentifier: RunTableViewCell.identifier)
@@ -40,7 +57,18 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        
+        headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
+        headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        statsHeaderView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+        statsHeaderView.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.75).isActive = true
+        statsHeaderView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        statsHeaderView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        tableView.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true

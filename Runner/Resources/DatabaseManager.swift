@@ -646,42 +646,27 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     
-    public func getAllCompletedRuns(for email: String, completion: @escaping (Result<[String], Error>) -> Void) {
+    public func getAllCompletedRuns(completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
         
-        database.child("\(email)/completed_runs").observeSingleEvent(of: .value, with: { snapshot in
+        // Step 1: Get user som that we can remove current run from our user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to register end time to database.")
+            completion(.failure(DataBaseErrors.failedToFetch))
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        database.child("\(userSafeEmail)/completed_runs").observeSingleEvent(of: .value, with: { snapshot in
             
-            guard let completedRun = snapshot.value as? [String] else {
+            guard let completedRuns = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DataBaseErrors.failedToFetch))
                 return
             }
-            completion(.success(completedRun))
+            completion(.success(completedRuns))
             return
         })
-    }
-    
-    // Gets all completed runs for user
-    public func getRunResult(for completedRunIDArray: [String], completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
-        
-        var counter = completedRunIDArray.count
-        var runResults = [[String: Any]]()
-        
-        for ID in completedRunIDArray {
-            database.child(ID).observeSingleEvent(of: .value, with: { snapshot in
-                print(snapshot)
-                guard let completedRun = snapshot.value as? [String: Any] else {
-                    completion(.failure(DataBaseErrors.failedToFetch))
-                    return
-                }
-
-                runResults.append(completedRun)
-                counter = counter - 1
-                
-                // So that completion isnt called untill for loop is finished
-                if counter == 0 {
-                    completion(.success(runResults))
-                }
-            })
-        }
     }
 }
 

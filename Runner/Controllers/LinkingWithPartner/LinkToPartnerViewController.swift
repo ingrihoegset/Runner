@@ -12,7 +12,7 @@ import AVFoundation
 // This class is tasked with presenting the camera that allows the user to scan a partners QR-code.
 // When a QR-code is successfully scanned, we are provided with the partners email.
 // The class dismisses itself and returns the safeemail of the partner so that furter operations can be completed from the home VC.
-class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UIAdaptivePresentationControllerDelegate {
     
 // MARK:- Views related to scanning partner QR code
     
@@ -23,6 +23,10 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     var video = AVCaptureVideoPreviewLayer()
     
     var completion: ((String) -> (Void))?
+    
+    var onDoneBlock: ((Bool) -> (Void))?
+    
+    var linked = false
     
     var overlay: UIView = UIView()
     
@@ -172,6 +176,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
         session.stopRunning()
+        onDoneBlock?(linked)
     }
     
     override func viewDidLayoutSubviews() {
@@ -322,11 +327,11 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
                     
                     // Call on viewmodel to update database with new link
                     self.linkViewModel.createNewLink(safePartnerEmail: safePartnerEmail)
-                    
+                    /*
                     // Dismiss this view controller and pass on data to HomeViewController
                     dismiss(animated: true, completion: { [weak self] in
                         self?.completion?(safePartnerEmail)
-                    })
+                    })*/
                 }
             }
         }
@@ -426,6 +431,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
 extension LinkToPartnerViewController: LinkViewModelDelegate {
     // Dismiss this VC when a link has occured. Only checks for all kinds of changes, but should suffice.
     func didUpdateLink() {
+        linked = true
         dismiss(animated: true, completion: nil)
     }
     
