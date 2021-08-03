@@ -7,9 +7,11 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 
 protocol SecondGateViewModelDelegate: AnyObject {
     func runHasEnded()
+    func updateRunningAnimtion(color: CGColor, label: String)
 }
 
 class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate  {
@@ -29,6 +31,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     override init() {
         super.init()
         cameraSetup()
+        currentRunOngoing()
     }
     
     func getVideoOutput() {
@@ -88,6 +91,23 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
             }
             else {
                 
+            }
+        })
+    }
+    
+    /// Checks if race ongoing, updates UI on true / false
+    private func currentRunOngoing() {
+        DatabaseManager.shared.currentRunOngoing(completion: { [weak self] success in
+            guard let strongSelf = self else {
+                return
+            }
+            if success {
+                print("ongoing")
+                strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: UIColor.green.cgColor, label: "Run ongoing")
+            }
+            else {
+                print("waiting")
+                strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: UIColor.red.cgColor, label: "Waiting for run to start")
             }
         })
     }

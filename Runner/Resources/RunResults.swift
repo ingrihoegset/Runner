@@ -14,6 +14,7 @@ struct RunResults {
     var hundreths: String
     var distance: Int
     var averageSpeed: String
-    var type: String?
+    var type: String
     var laps: Int?
+    var date: String
 }

@@ -13,7 +13,7 @@ class SetUpRunViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
-        button.setTitle("New Race", for: .normal)
+        button.setTitle("New Run", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(#colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), for: .selected)
         button.titleLabel?.font = Constants.mainFontLargeSB
@@ -58,7 +58,7 @@ class SetUpRunViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         delayPicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        delayPicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin).isActive = true
+        delayPicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         delayPicker.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235).isActive = true
         delayPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
@@ -92,6 +92,6 @@ class SetUpRunViewController: UIViewController {
         print(UserRunSelections.shared.getUserSelectedDelay())
 
         let destinationController = FirstGateViewController()
-        navigationController?.pushViewController(destinationController, animated: false)
+        navigationController?.pushViewController(destinationController, animated: true)
     }
 }

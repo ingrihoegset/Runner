@@ -38,7 +38,7 @@ class ResultsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
-        label.text = "Race time "
+        label.text = "Run time"
         label.font = Constants.mainFontLargeSB
         return label
     }()
@@ -166,17 +166,6 @@ class ResultsViewController: UIViewController {
         label.font = Constants.mainFontXLargeSB
         return label
     }()
-    
-    let saveRaceButton: UIButton = {
-         let button = UIButton()
-         button.translatesAutoresizingMaskIntoConstraints = false
-         button.backgroundColor = Constants.accentColor
-         button.setTitle("Save race", for: .normal)
-         button.setTitleColor(.white, for: .normal)
-         button.setTitleColor(#colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), for: .selected)
-         button.addTarget(self, action: #selector(saveRace), for: .touchUpInside)
-         return button
-    }()
 
     let detailComponent1: UIView = {
         let view = UIView()
@@ -211,6 +200,14 @@ class ResultsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Navigation bar appearance
+        title = "Run Completed!"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
+                                                            style: .done,
+                                                            target: self,
+                                                            action: #selector(dismissSelf))
+
         setResults()
         
         // Makes navigation bar translucent
@@ -329,11 +326,8 @@ class ResultsViewController: UIViewController {
         raceSpeedResult.text = result.averageSpeed
     }
     
-
-    
-    @objc private func saveRace() {
-        print("'saving'")
+    @objc private func dismissSelf() {
+        dismiss(animated: true, completion: nil)
     }
-
 }
 

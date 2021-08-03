@@ -162,7 +162,9 @@ class HomeViewModel {
     private func timesToResult(times: [String: Any]) -> RunResults {
         if let endTime = times["end_time"] as? Double,
            let startTime = times["start_time"] as? Double,
-           let distance = times["run_distance"] as? Int {
+           let distance = times["run_distance"] as? Int,
+           let type = times["run_type"] as? String,
+           let date = times["run_date"] as? String {
             
             // Get total race time in seconds
             let totalSeconds = endTime - startTime
@@ -191,7 +193,9 @@ class HomeViewModel {
                                        seconds: raceTimeSeconds,
                                        hundreths: raceTimeHundreths,
                                        distance: distance,
-                                       averageSpeed: averageSpeedInDecimals)
+                                       averageSpeed: averageSpeedInDecimals,
+                                       type: type,
+                                       date: date)
             
             return runResult
         }
@@ -203,7 +207,9 @@ class HomeViewModel {
                               seconds: "00",
                               hundreths: "00",
                               distance: 00,
-                              averageSpeed: "00")
+                              averageSpeed: "00",
+                              type: "Speed",
+                              date: "01.01.1900")
         }
         
     }

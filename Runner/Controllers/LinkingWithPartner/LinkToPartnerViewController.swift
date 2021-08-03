@@ -424,7 +424,6 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         overlay.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         overlay.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         overlay.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
     }
 }
 

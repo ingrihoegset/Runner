@@ -565,9 +565,9 @@ extension DatabaseManager {
             else {
                 print("Found current run. Started recording")
                 Constants.isRunning = true
+                completion(true)
             }
         })
-        completion(true)
     }
     
     func getCurrentRunData(completion: @escaping (Result<[String: Any], Error>) -> Void) {

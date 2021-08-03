@@ -33,10 +33,13 @@ struct Constants {
     static let widthOfDisplay = UIScreen.main.bounds.size.width
     static let heightOfDisplay = UIScreen.main.bounds.size.height
     static let sideMargin = widthOfDisplay * 0.05
+    static let displayViewHeight: CGFloat = 100
+    static let displayButtonHeight: CGFloat = 40
     
     static let imageSize: CGFloat = 130
     static let headerSize: CGFloat = 140
     static let mainButtonSize: CGFloat = 60
+    static let sorterButtonWidth = (Constants.widthOfDisplay - (Constants.sideMargin * 2) - (Constants.verticalSpacingSmall * 4)) / 5
     
     // Picker dimensions
     static let widthOfPickerLabel = Constants.widthOfDisplay * 0.2

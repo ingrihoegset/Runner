@@ -14,11 +14,36 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     let secondGateViewModel = SecondGateViewModel()
     
+    let displayView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        return view
+    }()
+    
+    let pulsingView: PulsingAnimationView = {
+        let view = PulsingAnimationView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let pulsingLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .clear
+        label.text = "Waiting for run to start"
+        label.font = Constants.mainFontLargeSB
+        label.clipsToBounds = true
+        label.textColor = Constants.textColorMain
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Navigation bar appearance
         title = "End Gate"
-        
         self.navigationController?.navigationBar.backgroundColor = Constants.mainColor
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -35,6 +60,11 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         let previewLayer = secondGateViewModel.previewLayer
         previewLayer.frame = self.view.bounds
         self.view.layer.addSublayer(previewLayer)
+
+        // Top View
+        view.addSubview(displayView)
+        displayView.addSubview(pulsingView)
+        displayView.addSubview(pulsingLabel)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -42,6 +72,24 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         self.secondGateViewModel.captureSession.stopRunning()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        displayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        displayView.heightAnchor.constraint(equalToConstant: Constants.displayViewHeight / 2).isActive = true
+        displayView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+
+        pulsingView.leadingAnchor.constraint(equalTo: displayView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        pulsingView.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
+        pulsingView.widthAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        pulsingView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        
+        pulsingLabel.centerYAnchor.constraint(equalTo: pulsingView.centerYAnchor).isActive = true
+        pulsingLabel.leadingAnchor.constraint(equalTo: pulsingView.trailingAnchor, constant: Constants.sideMargin / 2).isActive = true
+        pulsingLabel.trailingAnchor.constraint(equalTo: displayView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        pulsingLabel.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+    }
     
     deinit {
         print("DESTROYED SECOND GATE")
@@ -60,6 +108,13 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
         DispatchQueue.main.async {
             self.dismiss(animated: true, completion: nil)
             self.secondGateViewModel.captureSession.stopRunning()
+        }
+    }
+    
+    func updateRunningAnimtion(color: CGColor, label: String) {
+        DispatchQueue.main.async {
+            self.pulsingLabel.text = label
+            self.pulsingView.setColor(color: color)
         }
     }
 }

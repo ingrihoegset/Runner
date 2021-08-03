@@ -11,7 +11,31 @@ class RunTableViewCell: UITableViewCell {
     
     static let identifier = "RunTableViewCell"
     
+    public static let dateFormatterShort: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        formatter.locale = .none
+        return formatter
+    }()
+    
+    let cellView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.mainColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        return view
+    }()
+    
     private let runTypeImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    
+    private let runTypeImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
@@ -65,17 +89,20 @@ class RunTableViewCell: UITableViewCell {
         label.numberOfLines = 1
         label.font = Constants.mainFontSmall
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(runTypeImageView)
-        contentView.addSubview(runLapsLabel)
-        contentView.addSubview(runTimeLabel)
-        contentView.addSubview(runDistanceLabel)
-        contentView.addSubview(runSpeedLabel)
-        contentView.addSubview(runDateLabel)
+        contentView.addSubview(cellView)
+        cellView.addSubview(runTypeImageView)
+        runTypeImageView.addSubview(runTypeImage)
+        cellView.addSubview(runLapsLabel)
+        cellView.addSubview(runTimeLabel)
+        cellView.addSubview(runDistanceLabel)
+        cellView.addSubview(runSpeedLabel)
+        runTimeLabel.addSubview(runDateLabel)
     }
     
     required init?(coder: NSCoder) {
@@ -85,10 +112,20 @@ class RunTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        cellView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.5).isActive = true
+        cellView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+        cellView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+        cellView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2.5).isActive = true
+        
         runTypeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        runTypeImageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        runTypeImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        runTypeImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        runTypeImageView.heightAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.15).isActive = true
         runTypeImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.15).isActive = true
+        
+        runTypeImage.centerYAnchor.constraint(equalTo: runTypeImageView.centerYAnchor).isActive = true
+        runTypeImage.centerXAnchor.constraint(equalTo: runTypeImageView.centerXAnchor).isActive = true
+        runTypeImage.widthAnchor.constraint(equalTo: runTypeImageView.widthAnchor, multiplier: 0.55).isActive = true
+        runTypeImage.heightAnchor.constraint(equalTo: runTypeImageView.heightAnchor, multiplier: 0.55).isActive = true
         
         runLapsLabel.leadingAnchor.constraint(equalTo: runTypeImageView.trailingAnchor).isActive = true
         runLapsLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
@@ -120,5 +157,10 @@ class RunTableViewCell: UITableViewCell {
         runTimeLabel.text = model.time
         runDistanceLabel.text = String(model.distance)
         runSpeedLabel.text = String(model.averageSpeed)
+        runDateLabel.text = model.date
+        if model.type == "Speed" {
+            runTypeImage.image = UIImage(systemName: "bolt.fill")
+            runTypeImage.tintColor = Constants.contrastColor
+        }
     }
 }

@@ -7,10 +7,12 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 
 protocol FirstGateViewModelDelegate: AnyObject {
     func updateCountDownLabelText(count: String)
     func resetUIOnRunEnd()
+    func updateRunningAnimtion(color: CGColor, label: String)
 }
 
 class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -49,6 +51,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         super.init()
         // Listens for canceled or completed run so that UI is reset for user
         NotificationCenter.default.addObserver(self, selector: #selector(reset), name: NSNotification.Name(rawValue: "reset"), object: nil)
+        
+        currentRunOngoing()
         
         // Starts Camera if User has selected to run with one gate only
         let isRunningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
@@ -171,6 +175,24 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         })
     }
     
+    
+    /// Checks if race ongoing, updates UI on true / false
+    private func currentRunOngoing() {
+        DatabaseManager.shared.currentRunOngoing(completion: { [weak self] success in
+            guard let strongSelf = self else {
+                return
+            }
+            if success {
+                print("ongoing")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: UIColor.green.cgColor, label: "Run ongoing")
+            }
+            else {
+                print("waiting")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: UIColor.red.cgColor, label: "Waiting for run to start")
+            }
+        })
+    }
+    
     func getVideoOutput() {
         let videoOutput = AVCaptureVideoDataOutput()
         videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: Int(kCVPixelFormatType_32BGRA)]
@@ -193,14 +215,11 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         breakTime = Date().currentTimeMillis()
         
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-
-        print(breakObserver.recentFramesArray)
         
         //Dont know what this does, but dont move
         CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
 
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        print(Constants.isRunning)
         // Will only check for breaks after the run has begun. Is running is set to true after the database has received a start time.
         if Constants.isRunning == true {
             // Gives the camera time to stabilize before evaluating.

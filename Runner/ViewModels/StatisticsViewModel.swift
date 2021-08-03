@@ -17,6 +17,7 @@ protocol StatisticsViewModelDelegate: AnyObject {
 class StatisticsViewModel {
     
     weak var statisticsViewModelDelegate: StatisticsViewModelDelegate?
+
     
     init() {
 
@@ -51,7 +52,9 @@ class StatisticsViewModel {
         for x in 0..<times.count {
             if let endTime = times[x]["end_time"] as? Double,
                let startTime = times[x]["start_time"] as? Double,
-               let distance = times[x]["run_distance"] as? Int {
+               let distance = times[x]["run_distance"] as? Int,
+               let type = times[x]["run_type"] as? String,
+               let date = times[x]["run_date"] as? String {
 
                 // Get total race time in seconds
                 let totalSeconds = endTime - startTime
@@ -60,8 +63,6 @@ class StatisticsViewModel {
                 // Find average time
                 let hours = totalSeconds / 3600
                 let kilometers = Double(distance) / 1000
-                
-                print(hours, kilometers)
                 
                 let averageSpeed = kilometers / hours
                 let averageSpeedInDecimals = String(format: "%.2f", averageSpeed)
@@ -82,7 +83,9 @@ class StatisticsViewModel {
                                            seconds: raceTimeSeconds,
                                            hundreths: raceTimeHundreths,
                                            distance: distance,
-                                           averageSpeed: averageSpeedInDecimals)
+                                           averageSpeed: averageSpeedInDecimals,
+                                           type: type,
+                                           date: date)
                 
                 runResults.append(runResult)
             }
@@ -94,7 +97,9 @@ class StatisticsViewModel {
                                   seconds: "00",
                                   hundreths: "00",
                                   distance: 00,
-                                  averageSpeed: "00")
+                                  averageSpeed: "00",
+                                  type: "Speed",
+                                  date: "01.01.1900")
                 runResults.append(runresult)
             }
         }

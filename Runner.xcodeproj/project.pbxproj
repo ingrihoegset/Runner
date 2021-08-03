@@ -18,7 +18,6 @@
 		BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF48305D269AF90600C8CC6C /* DatabaseManager.swift */; };
 		BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */; };
 		BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830A2269C654A00C8CC6C /* Sender.swift */; };
-		BF4830A6269C658200C8CC6C /* Race.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830A5269C658200C8CC6C /* Race.swift */; };
 		BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C0269C6BD000C8CC6C /* StorageManager.swift */; };
 		BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */; };
 		BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */; };
@@ -38,6 +37,7 @@
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
 		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
 		BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */; };
+		BFF7A93426B9995B0037F4AF /* PulsingAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */; };
 		BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699D269A14E30080DA62 /* AppDelegate.swift */; };
 		BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699F269A14E30080DA62 /* SceneDelegate.swift */; };
 		BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB69A1269A14E30080DA62 /* HomeViewController.swift */; };
@@ -66,7 +66,6 @@
 		BF48305D269AF90600C8CC6C /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceAppUser.swift; sourceTree = "<group>"; };
 		BF4830A2269C654A00C8CC6C /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
-		BF4830A5269C658200C8CC6C /* Race.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Race.swift; sourceTree = "<group>"; };
 		BF4830C0269C6BD000C8CC6C /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -86,6 +85,7 @@
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
 		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRunSelections.swift; sourceTree = "<group>"; };
+		BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulsingAnimationView.swift; sourceTree = "<group>"; };
 		BFFB699A269A14E30080DA62 /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFB699D269A14E30080DA62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BFFB699F269A14E30080DA62 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -244,11 +244,11 @@
 				BF48305D269AF90600C8CC6C /* DatabaseManager.swift */,
 				BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */,
 				BF4830A2269C654A00C8CC6C /* Sender.swift */,
-				BF4830A5269C658200C8CC6C /* Race.swift */,
 				BF4830C0269C6BD000C8CC6C /* StorageManager.swift */,
 				BF512AF926A0D170001C6BF2 /* BreakObserver.swift */,
 				BF6E059326A9A7600028C0AF /* RunResults.swift */,
 				BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */,
+				BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -440,11 +440,11 @@
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */,
-				BF4830A6269C658200C8CC6C /* Race.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,
+				BFF7A93426B9995B0037F4AF /* PulsingAnimationView.swift in Sources */,
 				BF6E058D26A98F1C0028C0AF /* ResultsViewModel.swift in Sources */,
 				BF12FF0F269F577200B51370 /* MyPickerView.swift in Sources */,
 				BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */,
