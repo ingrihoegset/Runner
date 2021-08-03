@@ -32,7 +32,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.backgroundColor = Constants.mainColor
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.sorterButtonWidth / 2
-        button.setImage(UIImage(systemName: ""), for: .normal)
+        button.setImage(UIImage(systemName: "bolt"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFill
         button.tintColor = Constants.accentColorDark
         return button
@@ -59,6 +59,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.layer.cornerRadius = Constants.sorterButtonWidth / 2
         button.imageView?.contentMode = .scaleAspectFill
         button.tintColor = Constants.accentColorDark
+        button.setTitle("m", for: .normal)
         button.addTarget(self, action: #selector(sortByDistance), for: .touchUpInside)
         return button
     }()
@@ -72,6 +73,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.setImage(UIImage(systemName: "timer"), for: .normal)
         button.imageView?.contentMode = .scaleAspectFill
         button.tintColor = Constants.accentColorDark
+        button.addTarget(self, action: #selector(sortByTime), for: .touchUpInside)
         return button
     }()
     
@@ -82,9 +84,9 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.sorterButtonWidth / 2
         button.setImage(UIImage(systemName: "speedometer"), for: .normal)
-        button.addTarget(self, action: #selector(sortBySpeed), for: .touchUpInside)
         button.imageView?.contentMode = .scaleAspectFill
         button.tintColor = Constants.accentColorDark
+        button.addTarget(self, action: #selector(sortBySpeed), for: .touchUpInside)
         return button
     }()
     
@@ -374,6 +376,31 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
                 self.tableView.reloadData()
                 self.sortLabelDate.backgroundColor = Constants.contrastColor
                 self.sortLabelDate.tintColor = Constants.mainColor
+            }
+        }
+    }
+    
+    @objc func sortByTime() {
+        if sortTimeClicked == true {
+            sortTimeClicked = false
+            runs.sort {
+                $0.time > $1.time
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.sortLabelTime.backgroundColor = Constants.mainColor
+                self.sortLabelTime.tintColor = Constants.accentColorDark
+            }
+        }
+        else {
+            sortTimeClicked = true
+            runs.sort {
+                $0.time < $1.time
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.sortLabelTime.backgroundColor = Constants.contrastColor
+                self.sortLabelTime.tintColor = Constants.mainColor
             }
         }
     }

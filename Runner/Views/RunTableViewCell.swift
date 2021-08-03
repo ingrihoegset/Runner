@@ -124,8 +124,8 @@ class RunTableViewCell: UITableViewCell {
         
         runTypeImage.centerYAnchor.constraint(equalTo: runTypeImageView.centerYAnchor).isActive = true
         runTypeImage.centerXAnchor.constraint(equalTo: runTypeImageView.centerXAnchor).isActive = true
-        runTypeImage.widthAnchor.constraint(equalTo: runTypeImageView.widthAnchor, multiplier: 0.55).isActive = true
-        runTypeImage.heightAnchor.constraint(equalTo: runTypeImageView.heightAnchor, multiplier: 0.55).isActive = true
+        runTypeImage.widthAnchor.constraint(equalTo: runTypeImageView.widthAnchor, multiplier: 0.45).isActive = true
+        runTypeImage.heightAnchor.constraint(equalTo: runTypeImageView.heightAnchor, multiplier: 0.45).isActive = true
         
         runLapsLabel.leadingAnchor.constraint(equalTo: runTypeImageView.trailingAnchor).isActive = true
         runLapsLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
@@ -149,12 +149,12 @@ class RunTableViewCell: UITableViewCell {
         
         runDateLabel.leadingAnchor.constraint(equalTo: runTimeLabel.leadingAnchor).isActive = true
         runDateLabel.topAnchor.constraint(equalTo: runTimeLabel.topAnchor).isActive = true
-        runDateLabel.heightAnchor.constraint(equalTo: runTimeLabel.heightAnchor, multiplier: 0.2).isActive = true
+        runDateLabel.heightAnchor.constraint(equalTo: runTimeLabel.heightAnchor, multiplier: 0.3).isActive = true
         runDateLabel.trailingAnchor.constraint(equalTo: runTimeLabel.trailingAnchor, constant: -5).isActive = true
     }
     
     public func configure(with model: RunResults) {
-        runTimeLabel.text = model.time
+        runTimeLabel.text = String(model.time)
         runDistanceLabel.text = String(model.distance)
         runSpeedLabel.text = String(model.averageSpeed)
         runDateLabel.text = model.date

@@ -168,6 +168,7 @@ class HomeViewModel {
             
             // Get total race time in seconds
             let totalSeconds = endTime - startTime
+            let timeInDecimals = totalSeconds.round(to: 2)
             
             // Find average time
             let hours = totalSeconds / 3600
@@ -176,7 +177,7 @@ class HomeViewModel {
             print(hours, kilometers)
             
             let averageSpeed = kilometers / hours
-            let averageSpeedInDecimals = String(format: "%.2f", averageSpeed)
+            let averageSpeedInDecimals = averageSpeed.round(to: 2)
             
             // Find times in min, sec and hundreths
             let milliseconds = totalSeconds * 100
@@ -189,7 +190,8 @@ class HomeViewModel {
             let raceTimeMinutes = String(format: "%02d", minutes)
             
             // Create run result with data
-            let runResult = RunResults(minutes: raceTimeMinutes,
+            let runResult = RunResults(time: timeInDecimals,
+                                       minutes: raceTimeMinutes,
                                        seconds: raceTimeSeconds,
                                        hundreths: raceTimeHundreths,
                                        distance: distance,
@@ -203,11 +205,12 @@ class HomeViewModel {
         // If something went wrong when converting data
         else {
             print("Something went wrong converting data from run results to a run result object.")
-            return RunResults(minutes: "00",
+            return RunResults(time: 0.00,
+                              minutes: "00",
                               seconds: "00",
                               hundreths: "00",
                               distance: 00,
-                              averageSpeed: "00",
+                              averageSpeed: 0.00,
                               type: "Speed",
                               date: "01.01.1900")
         }
@@ -217,5 +220,11 @@ class HomeViewModel {
     func milliSecondsToMinutesSecondsHundreths (milliseconds : Int) -> (Int, Int, Int) {
       return (milliseconds / 6000, (milliseconds % 6000) / 100, (milliseconds % 60000) % 100)
     }
-    
+}
+
+extension Double {
+    func round(to places: Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
 }

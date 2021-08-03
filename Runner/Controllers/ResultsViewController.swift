@@ -239,7 +239,7 @@ class ResultsViewController: UIViewController {
     private func setConstraints() {
         
         resultContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        resultContainer.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: -25).isActive = true
+        resultContainer.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: 25).isActive = true
         resultContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin).isActive = true
         resultContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         
@@ -323,7 +323,7 @@ class ResultsViewController: UIViewController {
         raceTimeMinutes.text = result.minutes
         raceTimeSeconds.text = result.seconds
         racelengthResult.text = String(result.distance)
-        raceSpeedResult.text = result.averageSpeed
+        raceSpeedResult.text = String(result.averageSpeed)
     }
     
     @objc private func dismissSelf() {

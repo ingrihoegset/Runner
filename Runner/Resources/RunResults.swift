@@ -8,12 +8,12 @@
 import Foundation
 
 struct RunResults {
-    var time: String?
+    var time: Double
     var minutes: String
     var seconds: String
     var hundreths: String
     var distance: Int
-    var averageSpeed: String
+    var averageSpeed: Double
     var type: String
     var laps: Int?
     var date: String
