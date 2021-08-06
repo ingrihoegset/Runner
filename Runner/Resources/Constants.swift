@@ -59,7 +59,7 @@ struct Constants {
     static let mainFontLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 22)
     static let mainFontXLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 35)
     static let mainFontXXLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 55)
-    static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 160)
+    static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 120)
     static let resultFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 70)
     static let resultFontSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 40)
     

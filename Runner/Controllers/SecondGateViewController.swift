@@ -39,6 +39,16 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         return label
     }()
     
+    // Represents part of view that is analyze in breakobserver
+    let focusView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor?.withAlphaComponent(0.3)
+        view.layer.borderWidth = Constants.borderWidth
+        view.layer.borderColor = Constants.contrastColor?.cgColor
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,6 +70,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         let previewLayer = secondGateViewModel.previewLayer
         previewLayer.frame = self.view.bounds
         self.view.layer.addSublayer(previewLayer)
+        self.view.addSubview(focusView)
 
         // Top View
         view.addSubview(displayView)
@@ -89,6 +100,15 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         pulsingLabel.leadingAnchor.constraint(equalTo: pulsingView.trailingAnchor, constant: Constants.sideMargin / 2).isActive = true
         pulsingLabel.trailingAnchor.constraint(equalTo: displayView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         pulsingLabel.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        
+        // Must match size of focus frame in breakobserver
+        let width = Constants.widthOfDisplay / 6
+
+        focusView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        focusView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        focusView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
+        focusView.layer.cornerRadius = width / 2
     }
     
     deinit {

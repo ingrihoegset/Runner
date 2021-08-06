@@ -13,6 +13,7 @@ protocol FirstGateViewModelDelegate: AnyObject {
     func updateCountDownLabelText(count: String)
     func resetUIOnRunEnd()
     func updateRunningAnimtion(color: CGColor, label: String)
+    func removeCountDownLabel()
 }
 
 class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -101,6 +102,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             // Stop timer
             timer.invalidate()
             firstGateViewModelDelegate?.updateCountDownLabelText(count: "GO!")
+            firstGateViewModelDelegate?.removeCountDownLabel()
             counter = 3
                         
             // Create race ID and distrbute to database
@@ -184,11 +186,11 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             }
             if success {
                 print("ongoing")
-                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: UIColor.green.cgColor, label: "Run ongoing")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColor!.cgColor, label: "Run ongoing")
             }
             else {
                 print("waiting")
-                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: UIColor.red.cgColor, label: "Waiting for run to start")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.contrastColor!.cgColor, label: "Waiting for run to start")
             }
         })
     }
@@ -220,6 +222,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
 
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        
         // Will only check for breaks after the run has begun. Is running is set to true after the database has received a start time.
         if Constants.isRunning == true {
             // Gives the camera time to stabilize before evaluating.

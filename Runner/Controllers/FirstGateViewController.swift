@@ -74,6 +74,22 @@ class FirstGateViewController: UIViewController {
         return view
     }()
     
+    // Represents part of view that is analyze in breakobserver
+    let focusView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor?.withAlphaComponent(0.3)
+        view.layer.borderWidth = Constants.borderWidth
+        view.layer.borderColor = Constants.contrastColor?.cgColor
+        if UserRunSelections.shared.getIsRunningWithOneGate() == true {
+            view.isHidden = false
+        }
+        else {
+            view.isHidden = true
+        }
+        return view
+    }()
+    
     let startButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -151,6 +167,7 @@ class FirstGateViewController: UIViewController {
         displayView.addSubview(pulsingView)
         displayView.addSubview(pulsingLabel)
         view.addSubview(cameraView)
+        cameraView.addSubview(focusView)
         
         // Add other elements to view
         view.addSubview(startButton)
@@ -199,6 +216,15 @@ class FirstGateViewController: UIViewController {
         cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
+        // Must match size of focus frame in breakobserver
+        let width = Constants.widthOfDisplay / 6
+
+        focusView.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor).isActive = true
+        focusView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
+        focusView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
+        focusView.layer.cornerRadius = width / 2
+        
         startButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         startButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
@@ -206,8 +232,9 @@ class FirstGateViewController: UIViewController {
         
         countDownLabel.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
         countDownLabel.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor, constant: -Constants.sideMargin).isActive = true
-        countDownLabel.heightAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.65).isActive = true
-        countDownLabel.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.65).isActive = true
+        countDownLabel.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
+        countDownLabel.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
+        countDownLabel.layer.cornerRadius = Constants.widthOfDisplay * 0.3
         
         cancelRaceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         cancelRaceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -219,6 +246,7 @@ class FirstGateViewController: UIViewController {
             let previewLayer = self.firstGateViewModel.previewLayer
             previewLayer.frame = self.cameraView.bounds
             self.cameraView.layer.addSublayer(previewLayer)
+            self.cameraView.bringSubviewToFront(self.focusView)
         }
     }
     
@@ -239,8 +267,8 @@ class FirstGateViewController: UIViewController {
         // Start showin count down label
         countDownLabel.alpha = 1
         countDownLabel.backgroundColor = UIColor(white: 1, alpha: 0.5)
-        if let color = Constants.accentColor {
-            countDownLabel.backgroundColor = color.withAlphaComponent(0.5)
+        if let color = Constants.contrastColor {
+            countDownLabel.backgroundColor = color
         }
         else {
             countDownLabel.backgroundColor = UIColor(named: "AccentColor")?.withAlphaComponent(0.5)
@@ -316,5 +344,22 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
             self.pulsingLabel.text = label
             self.pulsingView.setColor(color: color)
         }
+    }
+    
+    func removeCountDownLabel() {
+        
+        // Hide count down label when count down complete
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.0,
+            options: .beginFromCurrentState,
+            animations: {
+                self.countDownLabel.alpha = 0
+                
+            },
+            completion: { _ in
+                self.countDownLabel.text = ""
+            }
+        )
     }
 }

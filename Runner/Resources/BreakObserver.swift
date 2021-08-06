@@ -15,7 +15,7 @@ class BreakObserver {
     
     var recentFramesArray = [CGFloat]()
     private let numberOfFramesForAnalysis = 12
-    private let sensitivity: CGFloat = 0.2
+    private let sensitivity: CGFloat = 0.4
     var currentTime: String
 
     init() {
@@ -23,22 +23,28 @@ class BreakObserver {
     }
     
     /// Uses current frame to check for a break by comparing to average of last frames.
-    // Function first adds the current frame to an array of recent frames.
+    // Function first adds the average color of current frame to an array of recent frames.
     // Then, the average color of the frames in the array is calculated.
     // Then, check if current frame is sufficiently different from recent frames.
     // If so, conclude that a break has occured and return TRUE.
     
-    func checkIfBreakHasOccured(cvPixelBuffer: CVImageBuffer) -> Bool {
+    func checkIfBreakHasOccured(cvPixelBuffer: CVPixelBuffer) -> Bool {
         let currentFrame = CIImage(cvPixelBuffer: cvPixelBuffer)
-        
-        
-        addCurrentFrameToArray(currentFrame: currentFrame)
-        
+
+        // Crop outputted data to the focus area that will be analyzed
+        let croppedimage = convertCIImageToCGImage(inputImage: currentFrame)
+        let focusimage = CIImage(cgImage: croppedimage)
+
+        // Get average color of focus frame
+        let averageColorCurrentFocusFrame = focusimage.averageColor
+       
+        addCurrentFrameToArray(averageColorCurrentFocusFrame: averageColorCurrentFocusFrame)
+
         // When the analysis array is full, calculate if break has occured.
         if recentFramesArray.count >= numberOfFramesForAnalysis {
             let averageColorOfArray = findAverageColorOfRecentFramesArray(realTimeArray: recentFramesArray)
-            let hasBroken = checkForBreak(average: averageColorOfArray, currentObservation: currentFrame.averageColor)
-            print("ACA ", averageColorOfArray, "arraycount ", recentFramesArray.count , "ACCF ",currentFrame.averageColor)
+            let hasBroken = checkForBreak(average: averageColorOfArray, currentObservation: averageColorCurrentFocusFrame)
+           // print("ACA ", averageColorOfArray, "arraycount ", recentFramesArray.count , "ACCF ",focusimage.averageColor)
             if (hasBroken == true) {
                 print("Break has been detected")
                 return true
@@ -47,15 +53,15 @@ class BreakObserver {
         return false
     }
     
-    /// Adds current frame to an array of most recent frames
-    private func addCurrentFrameToArray(currentFrame: CIImage) {
+    /// Adds color of current frame to an array of most recent frames
+    private func addCurrentFrameToArray(averageColorCurrentFocusFrame: CGFloat) {
         // Removes the oldest input from the matrix when the matrix reaches a certain size
         if(recentFramesArray.count >= numberOfFramesForAnalysis) {
             recentFramesArray.removeFirst(1)
         }
         
-        // Appends current frame to back of data array
-        recentFramesArray.append(currentFrame.averageColor)
+        // Appends color of current frame to back of data array
+        recentFramesArray.append(averageColorCurrentFocusFrame)
     }
           
     /// Returns average color of the recent frames that are being analyzed
@@ -81,6 +87,19 @@ class BreakObserver {
             return false
         }
     }
+    
+    /// Convert to CGI so that we can crop image before being analyzed
+    func convertCIImageToCGImage(inputImage: CIImage) -> CGImage {
+        let context = CIContext(options: nil)
+        
+        let width = inputImage.extent.width / 6
+        let height = inputImage.extent.width / 6
+        let x = inputImage.extent.width / 2 - width / 2
+        let y = inputImage.extent.height / 2 - height / 2
+
+        return context.createCGImage(inputImage, from: CGRect(x: x, y: y, width: width, height: height))!
+
+    }
 }
 
 //This extension reads in the source image and creates an extent for the full image.
@@ -88,6 +107,7 @@ class BreakObserver {
 //Finally, it reads each of the color values into a UIColor, and sends it back.
 extension CIImage {
     var averageColor: CGFloat {
+   
         let extentVector = CIVector(x: self.extent.origin.x, y: self.extent.origin.y, z: self.extent.size.width, w: self.extent.size.height)
 
         let filter = CIFilter(name: "CIAreaAverage", parameters: [kCIInputImageKey: self, kCIInputExtentKey: extentVector])
