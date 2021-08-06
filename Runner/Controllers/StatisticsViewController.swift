@@ -26,67 +26,29 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         return view
     }()
     
-    let sortLabelType: UIButton = {
+    let sortTypeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
         button.clipsToBounds = true
-        button.layer.cornerRadius = Constants.sorterButtonWidth / 2
-        button.setImage(UIImage(systemName: "bolt"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.tintColor = Constants.accentColorDark
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.setTitle("Run Type", for: .normal)
+        button.setTitleColor(Constants.textColorMain, for: .normal)
+        button.titleLabel?.font = Constants.mainFontSB
+        button.addTarget(self, action: #selector(presentSortType), for: .touchUpInside)
         return button
     }()
     
-    let sortLabelDate: UIButton = {
+    let sortDateButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
         button.clipsToBounds = true
-        button.layer.cornerRadius = Constants.sorterButtonWidth / 2
-        button.setImage(UIImage(systemName: "calendar.circle"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.tintColor = Constants.accentColorDark
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.setTitle("Date", for: .normal)
+        button.setTitleColor(Constants.textColorMain, for: .normal)
         button.addTarget(self, action: #selector(sortByDate), for: .touchUpInside)
-        return button
-    }()
-    
-    let sortLabelDistance: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.mainColor
-        button.clipsToBounds = true
-        button.layer.cornerRadius = Constants.sorterButtonWidth / 2
-        button.imageView?.contentMode = .scaleAspectFill
-        button.tintColor = Constants.accentColorDark
-        button.setTitle("m", for: .normal)
-        button.addTarget(self, action: #selector(sortByDistance), for: .touchUpInside)
-        return button
-    }()
-    
-    let sortLabelTime: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.mainColor
-        button.clipsToBounds = true
-        button.layer.cornerRadius = Constants.sorterButtonWidth / 2
-        button.setImage(UIImage(systemName: "timer"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.tintColor = Constants.accentColorDark
-        button.addTarget(self, action: #selector(sortByTime), for: .touchUpInside)
-        return button
-    }()
-    
-    let sortLabelSpeed: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.mainColor
-        button.clipsToBounds = true
-        button.layer.cornerRadius = Constants.sorterButtonWidth / 2
-        button.setImage(UIImage(systemName: "speedometer"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.tintColor = Constants.accentColorDark
-        button.addTarget(self, action: #selector(sortBySpeed), for: .touchUpInside)
+        button.titleLabel?.font = Constants.mainFontSB
         return button
     }()
     
@@ -106,7 +68,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         label.font = Constants.mainFontSB
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = Constants.textColorWhite
-        label.text = "Run type"
+        label.text = ""
         return label
     }()
     
@@ -122,40 +84,43 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         return label
     }()
     
-    private let runTimeLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.backgroundColor = .clear
-        label.numberOfLines = 1
-        label.font = Constants.mainFontSB
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = Constants.textColorWhite
-        label.text = "Time"
-        return label
+    /// Labels for header of stats tabel view
+    private let runTimeButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Time", for: .normal)
+        button.backgroundColor = Constants.accentColor
+        button.titleLabel?.font = Constants.mainFontSB
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.addTarget(self, action: #selector(sortByTime), for: .touchUpInside)
+        return button
     }()
     
-    private let runDistanceLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.backgroundColor = .clear
-        label.numberOfLines = 1
-        label.font = Constants.mainFontSB
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = Constants.textColorWhite
-        label.text = "Distance"
-        return label
+    /// Labels for header of stats tabel view
+    private let runDistanceButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Distance", for: .normal)
+        button.backgroundColor = Constants.accentColor
+        button.titleLabel?.font = Constants.mainFontSB
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.addTarget(self, action: #selector(sortByDistance), for: .touchUpInside)
+        return button
     }()
     
-    private let runSpeedLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.backgroundColor = .clear
-        label.numberOfLines = 1
-        label.font = Constants.mainFontSB
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = Constants.textColorWhite
-        label.text = "Speed"
-        return label
+    /// Labels for header of stats tabel view
+    private let runSpeedButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Speed", for: .normal)
+        button.backgroundColor = Constants.accentColor
+        button.titleLabel?.font = Constants.mainFontSB
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.addTarget(self, action: #selector(sortBySpeed), for: .touchUpInside)
+        return button
     }()
     
     var tableView: UITableView = {
@@ -175,17 +140,14 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         view.backgroundColor = Constants.accentColor
         
         view.addSubview(headerView)
-        headerView.addSubview(sortLabelType)
-        headerView.addSubview(sortLabelDate)
-        headerView.addSubview(sortLabelDistance)
-        headerView.addSubview(sortLabelSpeed)
-        headerView.addSubview(sortLabelTime)
+        headerView.addSubview(sortTypeButton)
+        headerView.addSubview(sortDateButton)
         view.addSubview(statsHeaderView)
         statsHeaderView.addSubview(runTypeLabel)
         statsHeaderView.addSubview(runLapsLabel)
-        statsHeaderView.addSubview(runDistanceLabel)
-        statsHeaderView.addSubview(runSpeedLabel)
-        statsHeaderView.addSubview(runTimeLabel)
+        statsHeaderView.addSubview(runDistanceButton)
+        statsHeaderView.addSubview(runSpeedButton)
+        statsHeaderView.addSubview(runTimeButton)
         view.addSubview(tableView)
         
         tableView.register(RunTableViewCell.self, forCellReuseIdentifier: RunTableViewCell.identifier)
@@ -204,30 +166,15 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
-        sortLabelType.widthAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        sortLabelType.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        sortLabelType.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
-        sortLabelType.heightAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
+        sortTypeButton.trailingAnchor.constraint(equalTo: headerView.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        sortTypeButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        sortTypeButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -Constants.verticalSpacing).isActive = true
+        sortTypeButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
-        sortLabelDate.widthAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        sortLabelDate.leadingAnchor.constraint(equalTo: sortLabelType.trailingAnchor, constant: Constants.verticalSpacingSmall).isActive = true
-        sortLabelDate.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
-        sortLabelDate.heightAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        
-        sortLabelDistance.widthAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        sortLabelDistance.leadingAnchor.constraint(equalTo: sortLabelDate.trailingAnchor, constant: Constants.verticalSpacingSmall).isActive = true
-        sortLabelDistance.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
-        sortLabelDistance.heightAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        
-        sortLabelSpeed.widthAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        sortLabelSpeed.leadingAnchor.constraint(equalTo: sortLabelDistance.trailingAnchor, constant: Constants.verticalSpacingSmall).isActive = true
-        sortLabelSpeed.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
-        sortLabelSpeed.heightAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        
-        sortLabelTime.widthAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
-        sortLabelTime.leadingAnchor.constraint(equalTo: sortLabelSpeed.trailingAnchor, constant: Constants.verticalSpacingSmall).isActive = true
-        sortLabelTime.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
-        sortLabelTime.heightAnchor.constraint(equalToConstant: Constants.sorterButtonWidth).isActive = true
+        sortDateButton.leadingAnchor.constraint(equalTo: headerView.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
+        sortDateButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -Constants.verticalSpacing).isActive = true
+        sortDateButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        sortDateButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         // Header for table view
         statsHeaderView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
@@ -245,20 +192,21 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         runLapsLabel.bottomAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
         runLapsLabel.widthAnchor.constraint(equalTo: statsHeaderView.widthAnchor, multiplier: 0.1).isActive = true
 
-        runDistanceLabel.leadingAnchor.constraint(equalTo: runLapsLabel.trailingAnchor).isActive = true
-        runDistanceLabel.topAnchor.constraint(equalTo: statsHeaderView.topAnchor).isActive = true
-        runDistanceLabel.bottomAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
-        runDistanceLabel.widthAnchor.constraint(equalTo: statsHeaderView.widthAnchor, multiplier: 0.25).isActive = true
+        let sortButtonWidth = Constants.widthOfDisplay * 0.25 - Constants.sideMargin
+        runDistanceButton.leadingAnchor.constraint(equalTo: runLapsLabel.trailingAnchor, constant: Constants.sideMargin / 2).isActive = true
+        runDistanceButton.widthAnchor.constraint(equalToConstant: sortButtonWidth).isActive = true
+        runDistanceButton.centerYAnchor.constraint(equalTo: statsHeaderView.centerYAnchor).isActive = true
+        runDistanceButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
-        runSpeedLabel.leadingAnchor.constraint(equalTo: runDistanceLabel.trailingAnchor).isActive = true
-        runSpeedLabel.topAnchor.constraint(equalTo: statsHeaderView.topAnchor).isActive = true
-        runSpeedLabel.bottomAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
-        runSpeedLabel.widthAnchor.constraint(equalTo: statsHeaderView.widthAnchor, multiplier: 0.250).isActive = true
+        runSpeedButton.leadingAnchor.constraint(equalTo: runDistanceButton.trailingAnchor, constant: Constants.sideMargin).isActive = true
+        runSpeedButton.widthAnchor.constraint(equalToConstant: sortButtonWidth).isActive = true
+        runSpeedButton.centerYAnchor.constraint(equalTo: statsHeaderView.centerYAnchor).isActive = true
+        runSpeedButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
-        runTimeLabel.leadingAnchor.constraint(equalTo: runSpeedLabel.trailingAnchor).isActive = true
-        runTimeLabel.topAnchor.constraint(equalTo: statsHeaderView.topAnchor).isActive = true
-        runTimeLabel.bottomAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
-        runTimeLabel.trailingAnchor.constraint(equalTo: statsHeaderView.trailingAnchor).isActive = true
+        runTimeButton.leadingAnchor.constraint(equalTo: runSpeedButton.trailingAnchor, constant: Constants.sideMargin).isActive = true
+        runTimeButton.widthAnchor.constraint(equalToConstant: sortButtonWidth).isActive = true
+        runTimeButton.centerYAnchor.constraint(equalTo: statsHeaderView.centerYAnchor).isActive = true
+        runTimeButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         tableView.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
@@ -303,6 +251,12 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         return 60
     }
     
+    @objc func presentSortType() {
+        let vc = SortViewController()
+        vc.modalPresentationStyle = .custom
+        present(vc, animated: true, completion: nil)
+    }
+    
     @objc func sortByDistance() {
         if sortDistanceClicked == true {
             sortDistanceClicked = false
@@ -311,8 +265,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelDistance.backgroundColor = Constants.mainColor
-                self.sortLabelDistance.tintColor = Constants.accentColorDark
+                self.runDistanceButton.backgroundColor = Constants.accentColor
             }
         }
         else {
@@ -322,8 +275,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelDistance.backgroundColor = Constants.contrastColor
-                self.sortLabelDistance.tintColor = Constants.mainColor
+                self.runDistanceButton.backgroundColor = Constants.contrastColor
             }
 
         }
@@ -333,23 +285,21 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         if sortSpeedClicked == true {
             sortSpeedClicked = false
             runs.sort {
-                $0.averageSpeed > $1.averageSpeed
+                $0.averageSpeed < $1.averageSpeed
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelSpeed.backgroundColor = Constants.mainColor
-                self.sortLabelSpeed.tintColor = Constants.accentColorDark
+                self.runSpeedButton.backgroundColor = Constants.accentColor
             }
         }
         else {
             sortSpeedClicked = true
             runs.sort {
-                $0.averageSpeed < $1.averageSpeed
+                $0.averageSpeed > $1.averageSpeed
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelSpeed.backgroundColor = Constants.contrastColor
-                self.sortLabelSpeed.tintColor = Constants.mainColor
+                self.runSpeedButton.backgroundColor = Constants.contrastColor
             }
         }
     }
@@ -359,23 +309,21 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         if sortDateClicked == true {
             sortDateClicked = false
             runs.sort {
-                $0.date > $1.date
+                $0.date < $1.date
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelDate.backgroundColor = Constants.mainColor
-                self.sortLabelDate.tintColor = Constants.accentColorDark
+                self.sortDateButton.backgroundColor = Constants.mainColor
             }
         }
         else {
             sortDateClicked = true
             runs.sort {
-                $0.date < $1.date
+                $0.date > $1.date
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelDate.backgroundColor = Constants.contrastColor
-                self.sortLabelDate.tintColor = Constants.mainColor
+                self.sortDateButton.backgroundColor = Constants.contrastColor
             }
         }
     }
@@ -388,8 +336,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelTime.backgroundColor = Constants.mainColor
-                self.sortLabelTime.tintColor = Constants.accentColorDark
+                self.runTimeButton.backgroundColor = Constants.accentColor
             }
         }
         else {
@@ -399,8 +346,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortLabelTime.backgroundColor = Constants.contrastColor
-                self.sortLabelTime.tintColor = Constants.mainColor
+                self.runTimeButton.backgroundColor = Constants.contrastColor
             }
         }
     }

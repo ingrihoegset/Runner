@@ -77,17 +77,31 @@ class StatisticsViewModel {
                 let raceTimeSeconds = String(format: "%02d", seconds)
                 let raceTimeMinutes = String(format: "%02d", minutes)
                 
-                // Create run result with data
-                let runResult = RunResults(time: timeInDecimals,
-                                           minutes: raceTimeMinutes,
-                                           seconds: raceTimeSeconds,
-                                           hundreths: raceTimeHundreths,
-                                           distance: distance,
-                                           averageSpeed: averageSpeedInDecimals,
-                                           type: type,
-                                           date: date)
-                
-                runResults.append(runResult)
+                if let dateAsDate = FirstGateViewModel.dateFormatterShort.date(from: date) {
+
+                    // Create run result with data
+                    let runResult = RunResults(time: timeInDecimals,
+                                               minutes: raceTimeMinutes,
+                                               seconds: raceTimeSeconds,
+                                               hundreths: raceTimeHundreths,
+                                               distance: distance,
+                                               averageSpeed: averageSpeedInDecimals,
+                                               type: type,
+                                               date: dateAsDate)
+                    runResults.append(runResult)
+                }
+                else {
+                    // Create run result with data
+                    let runResult = RunResults(time: timeInDecimals,
+                                               minutes: raceTimeMinutes,
+                                               seconds: raceTimeSeconds,
+                                               hundreths: raceTimeHundreths,
+                                               distance: distance,
+                                               averageSpeed: averageSpeedInDecimals,
+                                               type: type,
+                                               date: Date())
+                    runResults.append(runResult)
+                }
             }
             
             // If something went wrong when converting data
@@ -100,7 +114,7 @@ class StatisticsViewModel {
                                            distance: 00,
                                            averageSpeed: 00.00,
                                            type: "Speed",
-                                           date: "01.01.1900")
+                                           date: Date())
                 runResults.append(runresult)
             }
         }

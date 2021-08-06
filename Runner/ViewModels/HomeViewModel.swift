@@ -174,6 +174,8 @@ class HomeViewModel {
             let hours = totalSeconds / 3600
             let kilometers = Double(distance) / 1000
             
+
+
             print(hours, kilometers)
             
             let averageSpeed = kilometers / hours
@@ -189,17 +191,31 @@ class HomeViewModel {
             let raceTimeSeconds = String(format: "%02d", seconds)
             let raceTimeMinutes = String(format: "%02d", minutes)
             
-            // Create run result with data
-            let runResult = RunResults(time: timeInDecimals,
-                                       minutes: raceTimeMinutes,
-                                       seconds: raceTimeSeconds,
-                                       hundreths: raceTimeHundreths,
-                                       distance: distance,
-                                       averageSpeed: averageSpeedInDecimals,
-                                       type: type,
-                                       date: date)
-            
-            return runResult
+            if let dateAsDate = FirstGateViewModel.dateFormatterShort.date(from: date) {
+
+                // Create run result with data
+                let runResult = RunResults(time: timeInDecimals,
+                                           minutes: raceTimeMinutes,
+                                           seconds: raceTimeSeconds,
+                                           hundreths: raceTimeHundreths,
+                                           distance: distance,
+                                           averageSpeed: averageSpeedInDecimals,
+                                           type: type,
+                                           date: dateAsDate)
+                return runResult
+            }
+            else {
+                // Create run result with data
+                let runResult = RunResults(time: timeInDecimals,
+                                           minutes: raceTimeMinutes,
+                                           seconds: raceTimeSeconds,
+                                           hundreths: raceTimeHundreths,
+                                           distance: distance,
+                                           averageSpeed: averageSpeedInDecimals,
+                                           type: type,
+                                           date: Date())
+                return runResult
+            }
         }
         
         // If something went wrong when converting data
@@ -212,7 +228,7 @@ class HomeViewModel {
                               distance: 00,
                               averageSpeed: 0.00,
                               type: "Speed",
-                              date: "01.01.1900")
+                              date: Date())
         }
         
     }

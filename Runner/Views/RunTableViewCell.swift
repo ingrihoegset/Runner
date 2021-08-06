@@ -11,14 +11,6 @@ class RunTableViewCell: UITableViewCell {
     
     static let identifier = "RunTableViewCell"
     
-    public static let dateFormatterShort: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        formatter.locale = .none
-        return formatter
-    }()
-    
     let cellView: UIView = {
         let view = UIView()
         view.backgroundColor = Constants.mainColor
@@ -157,7 +149,7 @@ class RunTableViewCell: UITableViewCell {
         runTimeLabel.text = String(model.time)
         runDistanceLabel.text = String(model.distance)
         runSpeedLabel.text = String(model.averageSpeed)
-        runDateLabel.text = model.date
+        runDateLabel.text = FirstGateViewModel.dateFormatterShort.string(from: model.date)
         if model.type == "Speed" {
             runTypeImage.image = UIImage(systemName: "bolt.fill")
             runTypeImage.tintColor = Constants.contrastColor

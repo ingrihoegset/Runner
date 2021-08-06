@@ -16,5 +16,5 @@ struct RunResults {
     var averageSpeed: Double
     var type: String
     var laps: Int?
-    var date: String
+    var date: Date
 }
