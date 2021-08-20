@@ -199,8 +199,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statsHeaderView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         statsHeaderView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
 
-        let sortButtonWidth = Constants.widthOfDisplay * 0.25 - Constants.sideMargin
-        editButton.leadingAnchor.constraint(equalTo: statsHeaderView.leadingAnchor, constant: Constants.sideMargin / 2).isActive = true
+        let sortButtonWidth = (Constants.widthOfDisplay - 5 * Constants.sideMargin) * 0.25
+        editButton.leadingAnchor.constraint(equalTo: statsHeaderView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         editButton.widthAnchor.constraint(equalToConstant: sortButtonWidth).isActive = true
         editButton.centerYAnchor.constraint(equalTo: statsHeaderView.centerYAnchor).isActive = true
         editButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
@@ -283,10 +283,16 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = runs[indexPath.row]
+        
+        let destinationController = ResultDetailsViewController()
+        destinationController.type = model.type
+        destinationController.distance = model.distance
+
+        navigationController?.pushViewController(destinationController, animated: false)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return Constants.mainButtonSize
     }
     
     // What happens when edit is selected

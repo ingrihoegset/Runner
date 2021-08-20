@@ -733,5 +733,29 @@ extension DatabaseManager {
             }
         })
     }
+    
+    public func getAllSimilarRuns(completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        
+        let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
+        
+        print("Getting all runs on type")
+        
+        // Get all runs for current user
+        // Sort out runs of identical type
+        // Put these in an array for presentation
+        
+        let ref = database.child("\(safeEmail)/completed_runs")
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            if var runs = snapshot.value as? [[String: Any]] {
+                completion(.success(runs))
+            }
+            else {
+                completion(.failure(DataBaseErrors.failedToFetch))
+            }
+        })
+    }
 }
 

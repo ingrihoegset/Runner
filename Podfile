@@ -22,4 +22,7 @@ pod 'SDWebImage'
 # For a nice progress bar
 pod 'JGProgressHUD' 
 
+# For charts
+pod 'Charts' 
+
 end

@@ -16,7 +16,6 @@ class RunTableViewCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = Constants.mainColor
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -105,15 +104,18 @@ class RunTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        let widthSides = (Constants.widthOfDisplay - 5 * Constants.sideMargin) * 0.25 + Constants.sideMargin * 1.5
+        let widthMid = (Constants.widthOfDisplay - 5 * Constants.sideMargin) * 0.25 + Constants.sideMargin
+        
         cellView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.5).isActive = true
         cellView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
         cellView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
         cellView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2.5).isActive = true
         
-        runTypeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        runTypeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Constants.sideMargin/2).isActive = true
         runTypeImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         runTypeImageView.heightAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.15).isActive = true
-        runTypeImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.15).isActive = true
+        runTypeImageView.widthAnchor.constraint(equalToConstant: widthMid * 0.5).isActive = true
         
         runTypeImage.centerYAnchor.constraint(equalTo: runTypeImageView.centerYAnchor).isActive = true
         runTypeImage.centerXAnchor.constraint(equalTo: runTypeImageView.centerXAnchor).isActive = true
@@ -123,22 +125,22 @@ class RunTableViewCell: UITableViewCell {
         runLapsLabel.leadingAnchor.constraint(equalTo: runTypeImageView.trailingAnchor).isActive = true
         runLapsLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         runLapsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        runLapsLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.1).isActive = true
+        runLapsLabel.widthAnchor.constraint(equalToConstant: widthMid * 0.5).isActive = true
 
         runDistanceLabel.leadingAnchor.constraint(equalTo: runLapsLabel.trailingAnchor).isActive = true
         runDistanceLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         runDistanceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        runDistanceLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.25).isActive = true
+        runDistanceLabel.widthAnchor.constraint(equalToConstant: widthMid).isActive = true
         
         runSpeedLabel.leadingAnchor.constraint(equalTo: runDistanceLabel.trailingAnchor).isActive = true
         runSpeedLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         runSpeedLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        runSpeedLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.250).isActive = true
+        runSpeedLabel.widthAnchor.constraint(equalToConstant: widthMid).isActive = true
         
         runTimeLabel.leadingAnchor.constraint(equalTo: runSpeedLabel.trailingAnchor).isActive = true
         runTimeLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         runTimeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        runTimeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        runTimeLabel.widthAnchor.constraint(equalToConstant: widthMid).isActive = true
         
         runDateLabel.leadingAnchor.constraint(equalTo: runTimeLabel.leadingAnchor).isActive = true
         runDateLabel.topAnchor.constraint(equalTo: runTimeLabel.topAnchor).isActive = true

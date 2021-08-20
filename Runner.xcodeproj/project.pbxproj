@@ -34,6 +34,9 @@
 		BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
+		BFC4AE1626D02DD300912F79 /* ResultDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */; };
+		BFC4AE3226D02FA400912F79 /* DetailRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3126D02FA400912F79 /* DetailRow.swift */; };
+		BFC4AE3526D0410400912F79 /* ResultDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */; };
 		BFC86A9F26BDED84006E320F /* SortTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */; };
 		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
 		BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */; };
@@ -82,6 +85,9 @@
 		BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
+		BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewController.swift; sourceTree = "<group>"; };
+		BFC4AE3126D02FA400912F79 /* DetailRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRow.swift; sourceTree = "<group>"; };
+		BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewModel.swift; sourceTree = "<group>"; };
 		BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTypeViewController.swift; sourceTree = "<group>"; };
 		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRunSelections.swift; sourceTree = "<group>"; };
@@ -173,6 +179,7 @@
 			children = (
 				BF6E058F26A999670028C0AF /* StatisticsViewController.swift */,
 				BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */,
+				BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */,
 			);
 			name = Statistics;
 			sourceTree = "<group>";
@@ -225,6 +232,7 @@
 				BF512ADD269F631F001C6BF2 /* FirstGateViewModel.swift */,
 				BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */,
 				BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */,
+				BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -235,6 +243,7 @@
 				BFFB69B8269A16D60080DA62 /* Storyboards */,
 				BFFB69A6269A14E70080DA62 /* Assets.xcassets */,
 				BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */,
+				BFC4AE3126D02FA400912F79 /* DetailRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -437,12 +446,14 @@
 				BF12FF0A269F568400B51370 /* SetUpRunViewController.swift in Sources */,
 				BFFB69C2269A182B0080DA62 /* ProfileViewController.swift in Sources */,
 				BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */,
+				BFC4AE3526D0410400912F79 /* ResultDetailsViewModel.swift in Sources */,
 				BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */,
 				BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */,
 				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
 				BF512ADE269F631F001C6BF2 /* FirstGateViewModel.swift in Sources */,
 				BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */,
+				BFC4AE1626D02DD300912F79 /* ResultDetailsViewController.swift in Sources */,
 				BF6E059726AAC0F50028C0AF /* RunTableViewCell.swift in Sources */,
 				BF6E059426A9A7600028C0AF /* RunResults.swift in Sources */,
 				BFC86A9F26BDED84006E320F /* SortTypeViewController.swift in Sources */,
@@ -454,6 +465,7 @@
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,
 				BFF7A93426B9995B0037F4AF /* PulsingAnimationView.swift in Sources */,
+				BFC4AE3226D02FA400912F79 /* DetailRow.swift in Sources */,
 				BF12FF0F269F577200B51370 /* MyPickerView.swift in Sources */,
 				BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */,
 				BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */,
