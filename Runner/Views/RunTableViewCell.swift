@@ -10,6 +10,7 @@ import UIKit
 class RunTableViewCell: UITableViewCell {
     
     static let identifier = "RunTableViewCell"
+    var runID = ""
     
     let cellView: UIView = {
         let view = UIView()

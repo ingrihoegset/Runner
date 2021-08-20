@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import JGProgressHUD
 
 class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     private var runs: [RunResults] = [RunResults]()
     
@@ -18,6 +21,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     var sortDateClicked = false
     var sortSpeedClicked = false
     var sortTypeClicked = false
+    var sortEditClicked = false
     
     let headerView: UIView = {
         let view = UIView()
@@ -57,6 +61,18 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColorDark
         return view
+    }()
+    
+    let editButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editTable), for: .touchUpInside)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.setTitle("Edit", for: .normal)
+        button.backgroundColor = Constants.accentColor
+        button.titleLabel?.font = Constants.mainFontSB
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        return button
     }()
     
     /// Labels for header of stats tabel view
@@ -126,12 +142,14 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = Constants.accentColorDark
+        tableView.backgroundColor = Constants.mainColor
         return tableView
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        spinner.show(in: view)
         
         statisticsViewModel.statisticsViewModelDelegate = self
         statisticsViewModel.getCompletedRuns()
@@ -143,8 +161,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         headerView.addSubview(sortTypeButton)
         headerView.addSubview(sortDateButton)
         view.addSubview(statsHeaderView)
-        statsHeaderView.addSubview(runTypeLabel)
-        statsHeaderView.addSubview(runLapsLabel)
+        statsHeaderView.addSubview(editButton)
         statsHeaderView.addSubview(runDistanceButton)
         statsHeaderView.addSubview(runSpeedButton)
         statsHeaderView.addSubview(runTimeButton)
@@ -181,19 +198,14 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statsHeaderView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         statsHeaderView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         statsHeaderView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        
-        runTypeLabel.leadingAnchor.constraint(equalTo: statsHeaderView.leadingAnchor).isActive = true
-        runTypeLabel.topAnchor.constraint(equalTo: statsHeaderView.topAnchor).isActive = true
-        runTypeLabel.bottomAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
-        runTypeLabel.widthAnchor.constraint(equalTo: statsHeaderView.widthAnchor, multiplier: 0.15).isActive = true
-        
-        runLapsLabel.leadingAnchor.constraint(equalTo: runTypeLabel.trailingAnchor).isActive = true
-        runLapsLabel.topAnchor.constraint(equalTo: statsHeaderView.topAnchor).isActive = true
-        runLapsLabel.bottomAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
-        runLapsLabel.widthAnchor.constraint(equalTo: statsHeaderView.widthAnchor, multiplier: 0.1).isActive = true
 
         let sortButtonWidth = Constants.widthOfDisplay * 0.25 - Constants.sideMargin
-        runDistanceButton.leadingAnchor.constraint(equalTo: runLapsLabel.trailingAnchor, constant: Constants.sideMargin / 2).isActive = true
+        editButton.leadingAnchor.constraint(equalTo: statsHeaderView.leadingAnchor, constant: Constants.sideMargin / 2).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: sortButtonWidth).isActive = true
+        editButton.centerYAnchor.constraint(equalTo: statsHeaderView.centerYAnchor).isActive = true
+        editButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        
+        runDistanceButton.leadingAnchor.constraint(equalTo: editButton.trailingAnchor, constant: Constants.sideMargin).isActive = true
         runDistanceButton.widthAnchor.constraint(equalToConstant: sortButtonWidth).isActive = true
         runDistanceButton.centerYAnchor.constraint(equalTo: statsHeaderView.centerYAnchor).isActive = true
         runDistanceButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
@@ -224,6 +236,32 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
             self.tableView.reloadData()
         }
     }
+    
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func stopSpinner() {
+        DispatchQueue.main.async {
+            self.spinner.dismiss()
+        }
+    }
+    
+    private func alertThatRunDeletionFailed() {
+        let actionSheet = UIAlertController(title: "Failed to delete run. Try again later.",
+                                            message: "",
+                                            preferredStyle: .alert)
+        
+        actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.popToRootViewController(animated: true)
+        }))
+        present(actionSheet, animated: true)
+    }
 }
 
 
@@ -249,6 +287,49 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
+    }
+    
+    // What happens when edit is selected
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            
+            // Begin delete
+            let runID = runs[indexPath.row].runID
+            tableView.beginUpdates()
+            
+            self.statisticsViewModel.deleteRun(runID: runID, completion: { [weak self] success in
+                if success {
+                    self?.runs.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .left)
+                }
+                else {
+                    self?.alertThatRunDeletionFailed()
+                }
+            })
+            
+            tableView.endUpdates()
+        }
+    }
+    
+    @objc func editTable(_ sender: UIButton) {
+        self.tableView.isEditing = !self.tableView.isEditing
+        
+        if sortEditClicked == true {
+            sortEditClicked = false
+            DispatchQueue.main.async {
+                self.editButton.backgroundColor = Constants.accentColor
+            }
+        }
+        else {
+            sortEditClicked = true
+            DispatchQueue.main.async {
+                self.editButton.backgroundColor = Constants.contrastColor
+            }
+        }
+        
+        
+        //let title = (self.statsTableView.isEditing) ? "Done" : "Edit"
+        //sender.setTitle(title, for: .normal)
     }
     
     @objc func presentSortType() {
@@ -304,7 +385,6 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    /* OBS! NOT SORT CORRECTLY! Becuase sorting as string instead of date*/
     @objc func sortByDate() {
         if sortDateClicked == true {
             sortDateClicked = false

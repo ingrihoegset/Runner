@@ -17,4 +17,5 @@ struct RunResults {
     var type: String
     var laps: Int?
     var date: Date
+    var runID: String
 }

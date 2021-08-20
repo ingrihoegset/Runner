@@ -10,7 +10,6 @@ import UIKit
 class ResultsViewController: UIViewController {
     
     var result: RunResults?
-    let viewModel = ResultsViewModel()
     
     deinit {
         print("DESTROYED RESULT PAGE")

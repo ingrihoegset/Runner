@@ -28,7 +28,6 @@
 		BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */; };
 		BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */; };
 		BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AF926A0D170001C6BF2 /* BreakObserver.swift */; };
-		BF6E058D26A98F1C0028C0AF /* ResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E058C26A98F1C0028C0AF /* ResultsViewModel.swift */; };
 		BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E058F26A999670028C0AF /* StatisticsViewController.swift */; };
 		BF6E059426A9A7600028C0AF /* RunResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059326A9A7600028C0AF /* RunResults.swift */; };
 		BF6E059726AAC0F50028C0AF /* RunTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */; };
@@ -77,7 +76,6 @@
 		BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewController.swift; sourceTree = "<group>"; };
 		BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondGateViewModel.swift; sourceTree = "<group>"; };
 		BF512AF926A0D170001C6BF2 /* BreakObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakObserver.swift; sourceTree = "<group>"; };
-		BF6E058C26A98F1C0028C0AF /* ResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewModel.swift; sourceTree = "<group>"; };
 		BF6E058F26A999670028C0AF /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		BF6E059326A9A7600028C0AF /* RunResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunResults.swift; sourceTree = "<group>"; };
 		BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunTableViewCell.swift; sourceTree = "<group>"; };
@@ -226,7 +224,6 @@
 				BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */,
 				BF512ADD269F631F001C6BF2 /* FirstGateViewModel.swift */,
 				BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */,
-				BF6E058C26A98F1C0028C0AF /* ResultsViewModel.swift */,
 				BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */,
 			);
 			path = ViewModels;
@@ -457,7 +454,6 @@
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,
 				BFF7A93426B9995B0037F4AF /* PulsingAnimationView.swift in Sources */,
-				BF6E058D26A98F1C0028C0AF /* ResultsViewModel.swift in Sources */,
 				BF12FF0F269F577200B51370 /* MyPickerView.swift in Sources */,
 				BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */,
 				BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */,

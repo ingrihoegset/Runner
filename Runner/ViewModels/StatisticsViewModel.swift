@@ -12,20 +12,20 @@ import UIKit
 
 protocol StatisticsViewModelDelegate: AnyObject {
     func reloadTableView(completedRunsArray: [RunResults])
+    func reloadTableView()
+    func stopSpinner()
 }
 
 class StatisticsViewModel {
     
     weak var statisticsViewModelDelegate: StatisticsViewModelDelegate?
 
-    
     init() {
 
     }
     
     // Get all completed runs from database
     func getCompletedRuns() {
-
         
         // Gets all completed run ids saved under user
         DatabaseManager.shared.getAllCompletedRuns(completion: { [weak self] result in
@@ -34,11 +34,28 @@ class StatisticsViewModel {
                 guard let strongSelf = self else {
                     return
                 }
-                let transformedRunData = strongSelf.dataToResults(times: runsData)
+                var transformedRunData = strongSelf.dataToResults(times: runsData)
+                // Present newest runs first
+                transformedRunData.sort {
+                    $0.date > $1.date
+                }
                 strongSelf.statisticsViewModelDelegate?.reloadTableView(completedRunsArray: transformedRunData)
+                strongSelf.statisticsViewModelDelegate?.stopSpinner()
 
             case .failure(let error):
                 print(error)
+            }
+        })
+    }
+    
+    // Deletes a saved and completed run from the database.
+    func deleteRun(runID: String, completion: @escaping (Bool) -> Void) {
+        DatabaseManager.shared.deleteRun(runID: runID, completion: { success in
+            if success {
+                completion(true)
+            }
+            else {
+                completion(false)
             }
         })
     }
@@ -54,7 +71,8 @@ class StatisticsViewModel {
                let startTime = times[x]["start_time"] as? Double,
                let distance = times[x]["run_distance"] as? Int,
                let type = times[x]["run_type"] as? String,
-               let date = times[x]["run_date"] as? String {
+               let date = times[x]["run_date"] as? String,
+               let runID = times[x]["run_id"] as? String {
 
                 // Get total race time in seconds
                 let totalSeconds = endTime - startTime
@@ -87,10 +105,12 @@ class StatisticsViewModel {
                                                distance: distance,
                                                averageSpeed: averageSpeedInDecimals,
                                                type: type,
-                                               date: dateAsDate)
+                                               date: dateAsDate,
+                                               runID: runID)
                     runResults.append(runResult)
                 }
                 else {
+                    
                     // Create run result with data
                     let runResult = RunResults(time: timeInDecimals,
                                                minutes: raceTimeMinutes,
@@ -99,7 +119,8 @@ class StatisticsViewModel {
                                                distance: distance,
                                                averageSpeed: averageSpeedInDecimals,
                                                type: type,
-                                               date: Date())
+                                               date: Date(),
+                                               runID: runID)
                     runResults.append(runResult)
                 }
             }
@@ -114,7 +135,8 @@ class StatisticsViewModel {
                                            distance: 00,
                                            averageSpeed: 00.00,
                                            type: "Speed",
-                                           date: Date())
+                                           date: Date(),
+                                           runID: "00")
                 runResults.append(runresult)
             }
         }

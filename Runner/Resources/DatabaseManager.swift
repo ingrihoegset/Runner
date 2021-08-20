@@ -289,6 +289,9 @@ extension DatabaseManager {
             return
         }
         
+        // Create run ID
+        let runID = createRunID()
+        
         // Get safe email version of emails.
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
 
@@ -306,6 +309,7 @@ extension DatabaseManager {
             
             // Data for insertion for our use
             let currentRun: [String: Any] = [
+                "run_id": runID,
                 "start_time": time,
                 "run_type": runType,
                 "run_date": runDate,
@@ -330,6 +334,7 @@ extension DatabaseManager {
             
                 // Data for insertion for partner user
                 let partnerCurrentRun: [String: Any] = [
+                    "run_id": runID,
                     "start_time": time,
                     "run_type": runType,
                     "run_date": runDate,
@@ -347,6 +352,21 @@ extension DatabaseManager {
                 completion(true)
             }
         })
+    }
+    
+    /// Creates run ID
+    func createRunID() -> String {
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            let dateString = Self.dateFormatter.string(from: Date())
+            let identifier = "\(dateString)"
+            return identifier
+        }
+        
+        let safeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        let dateString = Self.dateFormatter.string(from: Date())
+        let identifier = "\(safeEmail)_\(dateString)"
+        
+        return identifier
     }
     
     /// Sends time timestamp (MUST IMPLEMENT LOGIC FOR BOOL)
@@ -480,8 +500,6 @@ extension DatabaseManager {
     // have functions in place that listen for an end time.
     func cleanUpAfterRunCompleted(completion: @ escaping (Bool) -> Void) {
         
-        print("Cleaning")
-        
         // Step 1: Get user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when trying to save run to users array of runs.")
@@ -495,6 +513,9 @@ extension DatabaseManager {
         // Create path reference for database
         let reference = database.child(userSafeEmail)
         
+        // Create Run ID
+        let runID = createRunID()
+        
         reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
             
             guard var userNode = snapshot.value as? [String: Any] else {
@@ -504,7 +525,7 @@ extension DatabaseManager {
             }
             
             guard let currentRun = userNode["current_run"] as? [String: Any] else {
-                print("Counldnt get current run")
+                print("Couldnt get current run")
                 completion(false)
                 return
             }
@@ -524,6 +545,10 @@ extension DatabaseManager {
             
             // Step 3: Delete current run
             userNode["current_run"] = nil
+            
+            /*
+            self?.database.child("\(userSafeEmail)/completed_runs/\(runID)").setValue(currentRun)
+             */
             
             // Update database with changes
             reference.setValue(userNode, withCompletionBlock: { error, _ in
@@ -666,6 +691,46 @@ extension DatabaseManager {
             }
             completion(.success(completedRuns))
             return
+        })
+    }
+    
+    public func deleteRun(runID: String, completion: @escaping (Bool) -> Void) {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        
+        let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
+        
+        print("Deleting conversation with id: \(runID)")
+        
+        // Get all runs for current user
+        // Delete the conversation with the given run ID
+        // Reset the runs for the user
+        
+        let ref = database.child("\(safeEmail)/completed_runs")
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            if var runs = snapshot.value as? [[String: Any]] {
+                var positionToRemove = 0
+                for run in runs {
+                    if let id = run["run_id"] as? String,
+                       id == runID {
+                        print("Found run to delete.")
+                        break
+                    }
+                    positionToRemove += 1
+                }
+                
+                runs.remove(at: positionToRemove)
+                ref.setValue(runs, withCompletionBlock: { error, _ in
+                    guard error == nil else {
+                        completion(false)
+                        print("Failed to write new run array")
+                        return
+                    }
+                    print("Deleted run")
+                    completion(true)
+                })
+            }
         })
     }
 }

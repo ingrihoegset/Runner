@@ -129,8 +129,6 @@ class HomeViewModel {
                             DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { _ in
                                 NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reset"), object: nil)
                             })
-                            
-                            
                                 
                         case .failure(let error):
                             print(error)
@@ -164,7 +162,8 @@ class HomeViewModel {
            let startTime = times["start_time"] as? Double,
            let distance = times["run_distance"] as? Int,
            let type = times["run_type"] as? String,
-           let date = times["run_date"] as? String {
+           let date = times["run_date"] as? String,
+           let runID = times["run_id"] as? String {
             
             // Get total race time in seconds
             let totalSeconds = endTime - startTime
@@ -173,8 +172,6 @@ class HomeViewModel {
             // Find average time
             let hours = totalSeconds / 3600
             let kilometers = Double(distance) / 1000
-            
-
 
             print(hours, kilometers)
             
@@ -192,7 +189,7 @@ class HomeViewModel {
             let raceTimeMinutes = String(format: "%02d", minutes)
             
             if let dateAsDate = FirstGateViewModel.dateFormatterShort.date(from: date) {
-
+                
                 // Create run result with data
                 let runResult = RunResults(time: timeInDecimals,
                                            minutes: raceTimeMinutes,
@@ -201,7 +198,8 @@ class HomeViewModel {
                                            distance: distance,
                                            averageSpeed: averageSpeedInDecimals,
                                            type: type,
-                                           date: dateAsDate)
+                                           date: dateAsDate,
+                                           runID: runID)
                 return runResult
             }
             else {
@@ -213,7 +211,8 @@ class HomeViewModel {
                                            distance: distance,
                                            averageSpeed: averageSpeedInDecimals,
                                            type: type,
-                                           date: Date())
+                                           date: Date(),
+                                           runID: runID)
                 return runResult
             }
         }
@@ -228,7 +227,8 @@ class HomeViewModel {
                               distance: 00,
                               averageSpeed: 0.00,
                               type: "Speed",
-                              date: Date())
+                              date: Date(),
+                              runID: "00")
         }
         
     }
