@@ -34,7 +34,7 @@ class ResultDetailsViewController: UIViewController {
         return view
     }()
     
-    let detailRowType: DetailRow = {
+    let detailRowDate: DetailRow = {
         let view = DetailRow(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -61,7 +61,7 @@ class ResultDetailsViewController: UIViewController {
     let lapsView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColorDark
+        view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
         return view
@@ -70,7 +70,7 @@ class ResultDetailsViewController: UIViewController {
     let tabGraphLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColorDark
+        label.backgroundColor = Constants.accentColor
         label.text = "Identical Runs"
         label.textAlignment = .center
         label.layer.cornerRadius = Constants.smallCornerRadius
@@ -146,21 +146,21 @@ class ResultDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Run Stats"
+        title =  type + " Stats"
         
         resultDetailsViewModel.resultsViewModelDelegate = self
         
         view.backgroundColor = Constants.mainColor
         view.addSubview(summaryView)
-        
-        summaryView.addSubview(detailRowType)
+
+        summaryView.addSubview(detailRowDate)
         summaryView.addSubview(detailRowTime)
         summaryView.addSubview(detailRowDistance)
         summaryView.addSubview(detailRowSpeed)
         
-        detailRowType.setProperties(title: "Run Type", unit: "", detail: type)
+        detailRowDate.setProperties(title: "Run Date", unit: "", detail: date)
         detailRowTime.setProperties(title: "Time", unit: "s", detail: time)
-        detailRowDistance.setProperties(title: "Total Distance", unit: "m", detail: String(lapLength * laps))
+        detailRowDistance.setProperties(title: "Total Distance", unit: "m", detail: String(distance))
         detailRowSpeed.setProperties(title: "Average Speed", unit: "km/h", detail: averageSpeed)
 
         view.addSubview(lapsView)
@@ -181,17 +181,17 @@ class ResultDetailsViewController: UIViewController {
     
     func setConstraints() {
         
-        summaryView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin).isActive = true
+        summaryView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         summaryView.bottomAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         summaryView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         summaryView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        detailRowType.topAnchor.constraint(equalTo: summaryView.topAnchor).isActive = true
-        detailRowType.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 1/4).isActive = true
-        detailRowType.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        detailRowType.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        detailRowDate.topAnchor.constraint(equalTo: summaryView.topAnchor).isActive = true
+        detailRowDate.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 1/4).isActive = true
+        detailRowDate.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        detailRowDate.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        detailRowTime.topAnchor.constraint(equalTo: detailRowType.bottomAnchor).isActive = true
+        detailRowTime.topAnchor.constraint(equalTo: detailRowDate.bottomAnchor).isActive = true
         detailRowTime.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 1/4).isActive = true
         detailRowTime.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         detailRowTime.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor, constant: -Constants.sideMargin).isActive = true

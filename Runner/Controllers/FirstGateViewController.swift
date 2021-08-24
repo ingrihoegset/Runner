@@ -31,7 +31,7 @@ class FirstGateViewController: UIViewController {
         label.backgroundColor = Constants.accentColor
         label.layer.cornerRadius = Constants.smallCornerRadius
         label.textAlignment = .center
-        label.font = Constants.mainFontLarge
+        label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
         label.textColor = .white
         return label
@@ -43,7 +43,7 @@ class FirstGateViewController: UIViewController {
         label.backgroundColor = Constants.accentColor
         label.layer.cornerRadius = Constants.smallCornerRadius
         label.textAlignment = .center
-        label.font = Constants.mainFontLarge
+        label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
         label.textColor = .white
         return label
@@ -90,6 +90,20 @@ class FirstGateViewController: UIViewController {
         return view
     }()
     
+    let focusImageView: UIImageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.image = UIImage(named: "Focus")
+        if UserRunSelections.shared.getIsRunningWithOneGate() == true {
+            view.isHidden = false
+        }
+        else {
+            view.isHidden = true
+        }
+        return view
+    }()
+    
     let startButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -99,10 +113,6 @@ class FirstGateViewController: UIViewController {
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(startCountDown), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        button.layer.shadowRadius = 2.0
-        button.layer.shadowOpacity = 0.5
         button.layer.masksToBounds = false
         return button
      }()
@@ -124,16 +134,12 @@ class FirstGateViewController: UIViewController {
     let cancelRaceButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .red
+        button.backgroundColor = Constants.contrastColor
         button.alpha = 0
         button.setTitle("Cancel", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        button.layer.shadowRadius = 2.0
-        button.layer.shadowOpacity = 0.5
         button.layer.masksToBounds = false
         button.addTarget(self, action: #selector(cancelRun), for: .touchUpInside)
         return button
@@ -168,6 +174,7 @@ class FirstGateViewController: UIViewController {
         displayView.addSubview(pulsingLabel)
         view.addSubview(cameraView)
         cameraView.addSubview(focusView)
+        focusView.addSubview(focusImageView)
         
         // Add other elements to view
         view.addSubview(startButton)
@@ -225,6 +232,11 @@ class FirstGateViewController: UIViewController {
         focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
         focusView.layer.cornerRadius = width / 2
         
+        focusImageView.centerYAnchor.constraint(equalTo: focusView.centerYAnchor).isActive = true
+        focusImageView.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
+        focusImageView.widthAnchor.constraint(equalTo: focusView.widthAnchor).isActive = true
+        focusImageView.heightAnchor.constraint(equalTo: focusView.heightAnchor).isActive = true
+        
         startButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         startButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
@@ -267,7 +279,7 @@ class FirstGateViewController: UIViewController {
         // Start showin count down label
         countDownLabel.alpha = 1
         countDownLabel.backgroundColor = UIColor(white: 1, alpha: 0.5)
-        if let color = Constants.contrastColor {
+        if let color = Constants.accentColor {
             countDownLabel.backgroundColor = color
         }
         else {

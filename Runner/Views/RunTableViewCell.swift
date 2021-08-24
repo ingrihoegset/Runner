@@ -153,7 +153,7 @@ class RunTableViewCell: UITableViewCell {
         runDistanceLabel.text = String(model.distance)
         runSpeedLabel.text = String(model.averageSpeed)
         runDateLabel.text = FirstGateViewModel.dateFormatterShort.string(from: model.date)
-        if model.type == "Speed" {
+        if model.type == "Sprint" {
             runTypeImage.image = UIImage(systemName: "bolt.fill")
             runTypeImage.tintColor = Constants.contrastColor
         }

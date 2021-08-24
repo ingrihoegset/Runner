@@ -683,7 +683,7 @@ extension DatabaseManager {
         // Get safe email version of emails.
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
         
-        database.child("\(userSafeEmail)/completed_runs").observeSingleEvent(of: .value, with: { snapshot in
+        database.child("\(userSafeEmail)/completed_runs").observe( .value, with: { snapshot in
             
             guard let completedRuns = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DataBaseErrors.failedToFetch))

@@ -40,7 +40,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     
     // Objects that are selected by user for transmittion to database
     var userSelectedLength = 60
-    var userSelectedType = "Speed"
+    var userSelectedType = "Sprint"
     var userSelectedDelay = 3
     
     // Objects related to countdown

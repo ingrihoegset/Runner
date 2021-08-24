@@ -13,7 +13,7 @@ final class UserRunSelections {
     static let shared = UserRunSelections()
     
     var isRunningWithOneGate = true
-    var userSelectedType = "Speed"
+    var userSelectedType = "Sprint"
     var userSelectedLength = 60
     var userSelectedDelay = 3
     

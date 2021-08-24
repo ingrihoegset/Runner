@@ -84,9 +84,10 @@ class HomeViewController: UIViewController {
     
     private let setUpSprintButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.accentColorDark
         button.setTitle("Sprint", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
+        button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
@@ -96,8 +97,9 @@ class HomeViewController: UIViewController {
     
     private let setUpReactionButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .lightGray
+        button.backgroundColor = Constants.accentColorDark
         button.setTitle("Reaction Run", for: .normal)
+        button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
         /*button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
@@ -151,7 +153,7 @@ class HomeViewController: UIViewController {
     
     private let setUpSprintButtonTwoGates: UIButton = {
         let button = UIButton()
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.accentColorDark
         button.setTitle("Sprint", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
@@ -163,7 +165,7 @@ class HomeViewController: UIViewController {
     
     private let setUpReactionButtonTwoGates: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .lightGray
+        button.backgroundColor = Constants.accentColorDark
         button.setTitle("Reaction Run", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         /*button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
@@ -231,7 +233,7 @@ class HomeViewController: UIViewController {
     private let unLinkFromSecondGateButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.accentColorDark
         button.setTitle("Disconnect from end gate", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
@@ -241,15 +243,15 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    let segmentControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["One Gate","Two Gates"])
+    let segmentControl: RoundedSegmentedControl = {
+        let control = RoundedSegmentedControl(items: ["One Gate","Two Gates"])
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.mainColor
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColor
+        control.selectedSegmentTintColor = Constants.accentColorDark
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorMain,
-            NSAttributedString.Key.font as NSObject : Constants.mainFontSB!
+            NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
@@ -461,11 +463,11 @@ class HomeViewController: UIViewController {
     
     /// Makes Buttons blink dark blue on click
     @objc func holdDown(sender:UIButton){
-        sender.backgroundColor = Constants.accentColorDark
+        sender.backgroundColor = Constants.accentColor
     }
     
     @objc func release(sender:UIButton){
-        sender.backgroundColor = Constants.accentColor
+        sender.backgroundColor = Constants.accentColorDark
     }
 
     

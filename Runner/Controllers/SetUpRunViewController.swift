@@ -15,15 +15,13 @@ class SetUpRunViewController: UIViewController {
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("New Run", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(#colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), for: .selected)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(didTapNewRace), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        button.layer.shadowRadius = 2.0
-        button.layer.shadowOpacity = 0.5
         button.layer.masksToBounds = false
+        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
+        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
@@ -49,7 +47,6 @@ class SetUpRunViewController: UIViewController {
         view.addSubview(newRaceButton)
     }
     
-    
     deinit {
         print("DESTROYED SETUPRUN")
     }
@@ -71,6 +68,15 @@ class SetUpRunViewController: UIViewController {
         newRaceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         newRaceButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
         newRaceButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
+    }
+    
+    /// Makes Buttons blink dark blue on click
+    @objc func holdDown(sender:UIButton){
+        sender.backgroundColor = Constants.accentColor
+    }
+    
+    @objc func release(sender:UIButton){
+        sender.backgroundColor = Constants.accentColorDark
     }
     
     /// Takes us to Start Gate View Contoller and sends run selections to User selections

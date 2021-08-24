@@ -31,10 +31,6 @@ class CustomPickerView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        view.layer.shadowRadius = 2.0
-        view.layer.shadowOpacity = 0.5
         view.layer.masksToBounds = false
         return view
     }()

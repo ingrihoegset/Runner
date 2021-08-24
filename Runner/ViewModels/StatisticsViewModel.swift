@@ -13,19 +13,26 @@ import UIKit
 protocol StatisticsViewModelDelegate: AnyObject {
     func reloadTableView(completedRunsArray: [RunResults])
     func reloadTableView()
+    func loadYears(years: [String])
     func stopSpinner()
 }
 
 class StatisticsViewModel {
     
     weak var statisticsViewModelDelegate: StatisticsViewModelDelegate?
+    
+    public static let dateFormatterYear: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy"
+        return formatter
+    }()
 
     init() {
 
     }
     
-    // Get all completed runs from database
-    func getCompletedRuns() {
+    // Listen for update to completed runs
+    func listenForCompletedRuns() {
         
         // Gets all completed run ids saved under user
         DatabaseManager.shared.getAllCompletedRuns(completion: { [weak self] result in
@@ -35,11 +42,14 @@ class StatisticsViewModel {
                     return
                 }
                 var transformedRunData = strongSelf.dataToResults(times: runsData)
+                // Get all years for runs (for Date sorting function)
+                let years = strongSelf.createDatesForSorter(runs: transformedRunData)
                 // Present newest runs first
                 transformedRunData.sort {
                     $0.date > $1.date
                 }
                 strongSelf.statisticsViewModelDelegate?.reloadTableView(completedRunsArray: transformedRunData)
+                strongSelf.statisticsViewModelDelegate?.loadYears(years: years)
                 strongSelf.statisticsViewModelDelegate?.stopSpinner()
 
             case .failure(let error):
@@ -134,13 +144,28 @@ class StatisticsViewModel {
                                            hundreths: "00",
                                            distance: 00,
                                            averageSpeed: 00.00,
-                                           type: "Speed",
+                                           type: "Sprint",
                                            date: Date(),
                                            runID: "00")
                 runResults.append(runresult)
             }
         }
         return runResults
+    }
+    
+    private func createDatesForSorter(runs: [RunResults]) -> [String] {
+        var years = [String]()
+        for run in runs {
+            let yearString = StatisticsViewModel.dateFormatterYear.string(from: run.date)
+
+            if years.contains(yearString) {
+                // Do nothing
+            }
+            else {
+                years.append(yearString)
+            }
+        }
+        return years
     }
     
     func milliSecondsToMinutesSecondsHundreths (milliseconds : Int) -> (Int, Int, Int) {

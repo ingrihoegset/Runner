@@ -9,6 +9,14 @@ import UIKit
 import JGProgressHUD
 import AVFoundation
 
+class RoundedSegmentedControl: UISegmentedControl {
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = Constants.smallCornerRadius
+    }
+}
+
 // This class is tasked with presenting the camera that allows the user to scan a partners QR-code.
 // When a QR-code is successfully scanned, we are provided with the partners email.
 // The class dismisses itself and returns the safeemail of the partner so that furter operations can be completed from the home VC.
@@ -42,12 +50,12 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         return view
     }()
     
-    let segmentControl: UISegmentedControl = {
-        let control = UISegmentedControl(items: ["Scan Partner QR","My QR Code"])
+    let segmentControl: RoundedSegmentedControl = {
+        let control = RoundedSegmentedControl(items: ["Scan Partner QR","My QR Code"])
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.mainColor
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColor
+        control.selectedSegmentTintColor = Constants.accentColorDark
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorMain,
             NSAttributedString.Key.font as NSObject : Constants.mainFontSB!
@@ -85,7 +93,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.mainColor
-        view.layer.cornerRadius = Constants.cornerRadius
+        view.layer.cornerRadius = Constants.smallCornerRadius
         return view
     }()
     

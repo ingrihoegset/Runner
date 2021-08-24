@@ -19,12 +19,8 @@ class ResultsViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColor
-        view.layer.cornerRadius = Constants.cornerRadius
+        view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        view.layer.shadowRadius = 2.0
-        view.layer.shadowOpacity = 0.5
         view.layer.masksToBounds = false
         return view
     }()
@@ -171,12 +167,8 @@ class ResultsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColorDark
         view.isUserInteractionEnabled = false
-        view.layer.cornerRadius = Constants.cornerRadius
+        view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        view.layer.shadowRadius = 2.0
-        view.layer.shadowOpacity = 0.5
         view.layer.masksToBounds = false
         return view
     }()
@@ -186,12 +178,8 @@ class ResultsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColorDark
         view.isUserInteractionEnabled = false
-        view.layer.cornerRadius = Constants.cornerRadius
+        view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        view.layer.shadowRadius = 2.0
-        view.layer.shadowOpacity = 0.5
         view.layer.masksToBounds = false
         return view
     }()

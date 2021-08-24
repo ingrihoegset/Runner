@@ -1,36 +1,27 @@
 //
-//  SortTypeViewController.swift
+//  DateSortViewController.swift
 //  Runner
 //
-//  Created by Ingrid on 07/08/2021.
+//  Created by Ingrid on 24/08/2021.
 //
 
 import UIKit
 
-protocol SortTypeDelegate: AnyObject {
-    func sortBySelectedType(types: [String])
+
+protocol SortDateDelegate: AnyObject {
+    func sortBySelectedDate(dates: [String])
 }
 
-class SortTypeViewController: UIViewController {
+class SortDateViewController: UIViewController {
     
-    var sortTableViewData = ["Sprint", "Reaction Run", "Speed"]
+    var hiddenSections = Set<Int>()
+    var sortTableViewData = [[""]]
+    
     let cellReuseIdentifier = "sortCell"
-    var selectedTypes: [String] = []
+    var allRunYears = [""]
+    var selectedDates: [String] = []
     
-    weak var sortTypeDelegate: SortTypeDelegate?
-    
-    let sortHeader: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
-        label.text = "Select Run Type"
-        label.textColor = Constants.textColorWhite
-        label.layer.masksToBounds = true
-        label.textAlignment = .center
-        label.font = Constants.mainFontSB
-        label.clipsToBounds = true
-        return label
-    }()
+    weak var sortDateDelegate: SortDateDelegate?
     
     let sortTableView: UITableView = {
         let tableView = UITableView()
@@ -48,7 +39,7 @@ class SortTypeViewController: UIViewController {
          button.backgroundColor = Constants.accentColorDark
          button.setTitle("Select", for: .normal)
          button.setTitleColor(.white, for: .normal)
-         button.addTarget(self, action: #selector(selectSort), for: .touchUpInside)
+         button.addTarget(self, action: #selector(selectDate), for: .touchUpInside)
          button.isUserInteractionEnabled = true
          button.tag = 1
          button.layer.cornerRadius = Constants.smallCornerRadius
@@ -73,7 +64,7 @@ class SortTypeViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.mainColor
         
-        title = "Select Run Type"
+        title = "Select Dates"
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.accentColor]
         
@@ -123,34 +114,87 @@ class SortTypeViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func selectSort() {
+    @objc func selectDate() {
         dismiss(animated: true, completion: {
             // Calls delegate function on Statistics VC
-            self.sortTypeDelegate?.sortBySelectedType(types: self.selectedTypes)
+            self.sortDateDelegate?.sortBySelectedDate(dates: self.selectedDates)
         })
     }
 }
 
-extension SortTypeViewController: UITableViewDelegate {
+extension SortDateViewController: UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return self.allRunYears.count
     }
 }
 
-extension SortTypeViewController: UITableViewDataSource {
+extension SortDateViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.hiddenSections.contains(section) {
+            return 0
+        }
+        
+        return self.sortTableViewData[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let sectionHeader = UIButton(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 60))
+        sectionHeader.titleLabel?.font = Constants.mainFontLargeSB
+        sectionHeader.titleLabel?.textColor = Constants.textColorMain
+        sectionHeader.backgroundColor = Constants.accentColorDark
+        sectionHeader.tag = section
+        sectionHeader.addTarget(self,
+                                action: #selector(self.hideSection(sender:)),
+                                for: .touchUpInside)
+        sectionHeader.setTitle(allRunYears[section], for: .normal)
+
+        return sectionHeader
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60 // my custom height
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return allRunYears[section]
+    }
+
+
+    
+    @objc private func hideSection(sender: UIButton) {
+        let section = sender.tag
+        
+        func indexPathsForSection() -> [IndexPath] {
+            var indexPaths = [IndexPath]()
+            
+            for row in 0..<self.sortTableViewData[section].count {
+                indexPaths.append(IndexPath(row: row,
+                                            section: section))
+            }
+            
+            return indexPaths
+        }
+        
+        if self.hiddenSections.contains(section) {
+            self.hiddenSections.remove(section)
+            self.sortTableView.insertRows(at: indexPathsForSection(),
+                                      with: .fade)
+        } else {
+            self.hiddenSections.insert(section)
+            self.sortTableView.deleteRows(at: indexPathsForSection(),
+                                      with: .fade)
+        }
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         cell.preservesSuperviewLayoutMargins = false
         cell.separatorInset = UIEdgeInsets.zero
         cell.layoutMargins = UIEdgeInsets.init(top: 0, left: Constants.sideMargin, bottom: 0, right: 0)
-        cell.textLabel?.text = self.sortTableViewData[indexPath.row]
+        cell.textLabel?.text = self.sortTableViewData[indexPath.section][indexPath.row]
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.sortTableViewData.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -158,12 +202,16 @@ extension SortTypeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedType = sortTableViewData[indexPath.row]
-        selectedTypes.append(selectedType)
+        if let selectedYear = self.tableView(tableView, titleForHeaderInSection: indexPath.section) {
+            let selectedDate = sortTableViewData[indexPath.section][indexPath.row]
+            selectedDates.append("\(selectedYear)/\(selectedDate)")
+        }
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let selectedType = sortTableViewData[indexPath.row]
-        selectedTypes.removeAll{$0 == selectedType}
+        if let selectedYear = self.tableView(tableView, titleForHeaderInSection: indexPath.section) {
+            let selectedDate = sortTableViewData[indexPath.section][indexPath.row]
+            selectedDates.removeAll{$0 == ("\(selectedYear)/\(selectedDate)")}
+        }
     }
 }

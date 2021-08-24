@@ -12,7 +12,21 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     private let spinner = JGProgressHUD(style: .dark)
     
+    public static let dateFormatterMonth: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "LLLL"
+        return formatter
+    }()
+    
+    public static let dateFormatterYear: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy"
+        return formatter
+    }()
+    
     private var runs: [RunResults] = [RunResults]()
+    private var allRuns: [RunResults] = [RunResults]()
+    private var allRunYears: [String] = [""]
     
     let statisticsViewModel = StatisticsViewModel()
     
@@ -22,6 +36,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     var sortSpeedClicked = false
     var sortTypeClicked = false
     var sortEditClicked = false
+    var selectedTypes: [String] = []
     
     let headerView: UIView = {
         let view = UIView()
@@ -33,11 +48,11 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let sortTypeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.mainColor
+        button.backgroundColor = Constants.accentColorDark
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.setTitle("Run Type", for: .normal)
-        button.setTitleColor(Constants.textColorMain, for: .normal)
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.titleLabel?.font = Constants.mainFontSB
         button.addTarget(self, action: #selector(presentSortType), for: .touchUpInside)
         return button
@@ -46,12 +61,12 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let sortDateButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.mainColor
+        button.backgroundColor = Constants.accentColorDark
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.setTitle("Date", for: .normal)
-        button.setTitleColor(Constants.textColorMain, for: .normal)
-        button.addTarget(self, action: #selector(sortByDate), for: .touchUpInside)
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        button.addTarget(self, action: #selector(presentDateType), for: .touchUpInside)
         button.titleLabel?.font = Constants.mainFontSB
         return button
     }()
@@ -152,7 +167,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         spinner.show(in: view)
         
         statisticsViewModel.statisticsViewModelDelegate = self
-        statisticsViewModel.getCompletedRuns()
+        statisticsViewModel.listenForCompletedRuns()
         
         title = "My Runs"
         view.backgroundColor = Constants.accentColor
@@ -232,6 +247,18 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     func reloadTableView(completedRunsArray: [RunResults]) {
         runs = completedRunsArray
+        allRuns = completedRunsArray
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func loadYears(years: [String]) {
+        allRunYears = years
+    }
+    
+    func reloadTableView(sortedTypeRunsArray: [RunResults]) {
+        runs = sortedTypeRunsArray
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -264,6 +291,49 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     }
 }
 
+extension StatisticsViewController: SortTypeDelegate {
+    func sortBySelectedType(types: [String]) {
+        var sortedRuns = [RunResults]()
+        for run in allRuns {
+            if types.contains(run.type) {
+                sortedRuns.append(run)
+            }
+        }
+        DispatchQueue.main.async {
+            self.reloadTableView(sortedTypeRunsArray: sortedRuns)
+        }
+    }
+}
+
+extension StatisticsViewController: SortDateDelegate {
+    func sortBySelectedDate(dates: [String]) {
+        // If dates is not empty, the user selected at least one month.
+        if !dates.isEmpty {
+            var sortedRuns = [RunResults]()
+            // Find month and year for each run. If this combination is in selected dates ("yyyy/month") the run is appended to sortedruns.
+            for run in allRuns {
+
+                let monthString = StatisticsViewController.dateFormatterMonth.string(from: run.date)
+                let yearString = StatisticsViewController.dateFormatterYear.string(from: run.date)
+
+                if dates.contains("\(yearString)/\(monthString)") {
+                    sortedRuns.append(run)
+                }
+            }
+            DispatchQueue.main.async {
+                self.reloadTableView(sortedTypeRunsArray: sortedRuns)
+            }
+        }
+        // If dates is empty the user push "select" without selecting anything. Simply reload everything.
+        else {
+            DispatchQueue.main.async {
+                self.reloadTableView(sortedTypeRunsArray: self.allRuns)
+            }
+        }
+
+    }
+}
+
 
 extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -287,6 +357,10 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         let destinationController = ResultDetailsViewController()
         destinationController.type = model.type
         destinationController.distance = model.distance
+        destinationController.averageSpeed = String(model.averageSpeed)
+        destinationController.date = FirstGateViewModel.dateFormatterShort.string(from: model.date)
+        destinationController.distance = model.distance
+        destinationController.time = String(model.time)
 
         navigationController?.pushViewController(destinationController, animated: false)
     }
@@ -339,9 +413,48 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func presentSortType() {
-        let vc = SortViewController()
-        vc.modalPresentationStyle = .custom
-        present(vc, animated: true, completion: nil)
+        let vc = SortTypeViewController()
+        vc.sortTypeDelegate = self
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true, completion: {
+            self.unselectAllButtons()
+        })
+    }
+    
+    @objc func presentDateType() {
+        let vc = SortDateViewController()
+        vc.sortDateDelegate = self
+        // Generate month data for the number of years of data
+        var sortTableViewData = [[String]]()
+        for year in allRunYears {
+            sortTableViewData.append(["January","February","March","April","May","June","July","August","September","October","November","December"])
+        }
+        // Make sure years are sorted so that newest runs are first
+        allRunYears.sort {
+            $0 > $1
+        }
+        // Assign tableview data
+        vc.allRunYears = allRunYears
+        vc.sortTableViewData = sortTableViewData
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true, completion: {
+            self.unselectAllButtons()
+        })
+    }
+    
+    private func unselectAllButtons() {
+        sortDistanceClicked = false
+        sortTimeClicked = false
+        sortDateClicked = false
+        sortSpeedClicked = false
+        sortEditClicked = false
+        sortTypeClicked = false
+        runTimeButton.backgroundColor = Constants.accentColor
+        runDistanceButton.backgroundColor = Constants.accentColor
+        runSpeedButton.backgroundColor = Constants.accentColor
+        editButton.backgroundColor = Constants.accentColor
+        sortTypeButton.backgroundColor = Constants.accentColorDark
+        sortDateButton.backgroundColor = Constants.accentColorDark
     }
     
     @objc func sortByDistance() {
@@ -399,7 +512,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.sortDateButton.backgroundColor = Constants.mainColor
+                self.sortDateButton.backgroundColor = Constants.accentColorDark
             }
         }
         else {

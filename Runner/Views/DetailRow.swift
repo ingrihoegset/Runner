@@ -68,12 +68,12 @@ class DetailRow: UIView {
         titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        titleLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 9/16).isActive = true
+        titleLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 7/16).isActive = true
         
         detailLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
         detailLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         detailLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        detailLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 4/16).isActive = true
+        detailLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 6/16).isActive = true
         
         unitLabel.leadingAnchor.constraint(equalTo: detailLabel.trailingAnchor).isActive = true
         unitLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true

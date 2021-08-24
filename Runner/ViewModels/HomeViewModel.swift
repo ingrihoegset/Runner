@@ -226,7 +226,7 @@ class HomeViewModel {
                               hundreths: "00",
                               distance: 00,
                               averageSpeed: 0.00,
-                              type: "Speed",
+                              type: "Sprint",
                               date: Date(),
                               runID: "00")
         }

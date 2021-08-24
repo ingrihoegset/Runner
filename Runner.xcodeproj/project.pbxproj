@@ -21,6 +21,7 @@
 		BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C0269C6BD000C8CC6C /* StorageManager.swift */; };
 		BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */; };
 		BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */; };
+		BF4FF85226D57294005D6920 /* DateSortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4FF85126D57294005D6920 /* DateSortViewController.swift */; };
 		BF512AD9269F62AE001C6BF2 /* shortBeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD6269F62AD001C6BF2 /* shortBeep.wav */; };
 		BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD7269F62AD001C6BF2 /* longBeep.wav */; };
 		BF512ADB269F62AE001C6BF2 /* longBeepDeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */; };
@@ -72,6 +73,7 @@
 		BF4830C0269C6BD000C8CC6C /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		BF4830C3269CBB0500C8CC6C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		BF4830C6269CE1AF00C8CC6C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		BF4FF85126D57294005D6920 /* DateSortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateSortViewController.swift; sourceTree = "<group>"; };
 		BF512AD6269F62AD001C6BF2 /* shortBeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = shortBeep.wav; sourceTree = "<group>"; };
 		BF512AD7269F62AD001C6BF2 /* longBeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeep.wav; sourceTree = "<group>"; };
 		BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = longBeepDeep.wav; sourceTree = "<group>"; };
@@ -178,8 +180,9 @@
 			isa = PBXGroup;
 			children = (
 				BF6E058F26A999670028C0AF /* StatisticsViewController.swift */,
-				BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */,
 				BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */,
+				BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */,
+				BF4FF85126D57294005D6920 /* DateSortViewController.swift */,
 			);
 			name = Statistics;
 			sourceTree = "<group>";
@@ -459,6 +462,7 @@
 				BFC86A9F26BDED84006E320F /* SortTypeViewController.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
+				BF4FF85226D57294005D6920 /* DateSortViewController.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
