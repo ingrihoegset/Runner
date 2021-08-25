@@ -10,7 +10,7 @@ import AVFoundation
 import UIKit
 
 protocol FirstGateViewModelDelegate: AnyObject {
-    func updateCountDownLabelText(count: String)
+    func updateCountDownLabelText(firstCount: String, secondCount: String)
     func resetUIOnRunEnd()
     func updateRunningAnimtion(color: CGColor, label: String)
     func removeCountDownLabel()
@@ -84,7 +84,17 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         
         //Updates count down label in start VC
         let count = String(counter)
-        firstGateViewModelDelegate?.updateCountDownLabelText(count: count)
+        var first = "0"
+        var second = "0"
+        if count.count == 2 {
+            first = count[0]
+            second = count[1]
+        }
+        else {
+            first = "0"
+            second = count
+        }
+        firstGateViewModelDelegate?.updateCountDownLabelText(firstCount: first, secondCount: second)
 
         if (counter % 10 == 0 && counter > 0) {
             playSound(filename: "shortBeep")
@@ -101,7 +111,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             playSound(filename: "longBeep")
             // Stop timer
             timer.invalidate()
-            firstGateViewModelDelegate?.updateCountDownLabelText(count: "GO!")
+            firstGateViewModelDelegate?.updateCountDownLabelText(firstCount: "0", secondCount: "0")
             firstGateViewModelDelegate?.removeCountDownLabel()
             counter = 3
                         

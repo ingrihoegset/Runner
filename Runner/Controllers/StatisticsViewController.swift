@@ -293,14 +293,21 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
 
 extension StatisticsViewController: SortTypeDelegate {
     func sortBySelectedType(types: [String]) {
-        var sortedRuns = [RunResults]()
-        for run in allRuns {
-            if types.contains(run.type) {
-                sortedRuns.append(run)
+        if !types.isEmpty {
+            var sortedRuns = [RunResults]()
+            for run in allRuns {
+                if types.contains(run.type) {
+                    sortedRuns.append(run)
+                }
+            }
+            DispatchQueue.main.async {
+                self.reloadTableView(sortedTypeRunsArray: sortedRuns)
             }
         }
-        DispatchQueue.main.async {
-            self.reloadTableView(sortedTypeRunsArray: sortedRuns)
+        else {
+            DispatchQueue.main.async {
+                self.reloadTableView(sortedTypeRunsArray: self.allRuns)
+            }
         }
     }
 }

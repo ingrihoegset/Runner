@@ -117,20 +117,6 @@ class FirstGateViewController: UIViewController {
         return button
      }()
     
-    let countDownLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = Constants.whiteColor
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = .clear
-        label.isUserInteractionEnabled = false
-        label.font = Constants.countDownFont
-        label.layer.cornerRadius = Constants.cornerRadius
-        label.layer.masksToBounds = true
-        return label
-    }()
-    
     let cancelRaceButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -145,6 +131,12 @@ class FirstGateViewController: UIViewController {
         return button
     }()
     
+    let countDownPickerView: CountDownPicker = {
+        let picker = CountDownPicker()
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.alpha = 0
+        return picker
+    }()
     
     deinit {
         print("DESTROYED FIRST GATE")
@@ -178,8 +170,8 @@ class FirstGateViewController: UIViewController {
         
         // Add other elements to view
         view.addSubview(startButton)
-        view.addSubview(countDownLabel)
         view.addSubview(cancelRaceButton)
+        view.addSubview(countDownPickerView)
         
         // Set tekst in top labels
         setDisplayLabelText()
@@ -242,11 +234,10 @@ class FirstGateViewController: UIViewController {
         startButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
         startButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         
-        countDownLabel.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
-        countDownLabel.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor, constant: -Constants.sideMargin).isActive = true
-        countDownLabel.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
-        countDownLabel.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
-        countDownLabel.layer.cornerRadius = Constants.widthOfDisplay * 0.3
+        countDownPickerView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
+        countDownPickerView.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor, constant: -Constants.sideMargin).isActive = true
+        countDownPickerView.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
+        countDownPickerView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
         
         cancelRaceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         cancelRaceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -276,26 +267,21 @@ class FirstGateViewController: UIViewController {
     @objc func startCountDown() {
         firstGateViewModel.startCountDown(countDownTime: self.firstGateViewModel.userSelectedDelay)
         
-        // Start showin count down label
-        countDownLabel.alpha = 1
-        countDownLabel.backgroundColor = UIColor(white: 1, alpha: 0.5)
-        if let color = Constants.accentColor {
-            countDownLabel.backgroundColor = color
-        }
-        else {
-            countDownLabel.backgroundColor = UIColor(named: "AccentColor")?.withAlphaComponent(0.5)
-        }
-
-        // Show cancel button when start is clicked
+        // Show cancel button and countdown label when start is clicked
         UIView.animate(withDuration: 0.5, animations: {
+
             self.startButton.alpha = 0
             self.startButton.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         }) { (_) in
             self.cancelRaceButton.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
             self.cancelRaceButton.alpha = 0
+            self.countDownPickerView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+            self.countDownPickerView.alpha = 0
             UIView.animate(withDuration: 0.5) {
                 self.cancelRaceButton.alpha = 1
                 self.cancelRaceButton.transform = CGAffineTransform.identity
+                self.countDownPickerView.alpha = 1
+                self.countDownPickerView.transform = CGAffineTransform.identity
             }
         }
     }
@@ -328,11 +314,12 @@ class FirstGateViewController: UIViewController {
             delay: 0.0,
             options: .beginFromCurrentState,
             animations: {
-                self.countDownLabel.alpha = 0
+                self.countDownPickerView.alpha = 0
                 
             },
             completion: { _ in
-                self.countDownLabel.text = ""
+                self.countDownPickerView.detail1.text = ""
+                self.countDownPickerView.detail2.text = ""
             }
         )
         
@@ -341,9 +328,10 @@ class FirstGateViewController: UIViewController {
 
 extension FirstGateViewController: FirstGateViewModelDelegate {
     
-    func updateCountDownLabelText(count: String) {
+    func updateCountDownLabelText(firstCount: String, secondCount: String) {
         DispatchQueue.main.async {
-            self.countDownLabel.text = count
+            self.countDownPickerView.detail1.text = firstCount
+            self.countDownPickerView.detail2.text = secondCount
         }
     }
     
@@ -366,11 +354,12 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
             delay: 0.0,
             options: .beginFromCurrentState,
             animations: {
-                self.countDownLabel.alpha = 0
+                self.countDownPickerView.alpha = 0
                 
             },
             completion: { _ in
-                self.countDownLabel.text = ""
+                self.countDownPickerView.detail1.text = ""
+                self.countDownPickerView.detail2.text = ""
             }
         )
     }
