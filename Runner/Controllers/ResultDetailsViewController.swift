@@ -230,13 +230,13 @@ class ResultDetailsViewController: UIViewController {
             entries.append(entry)
         }
         let set = LineChartDataSet(entries: entries)
-        set.colors = [UIColor.white]
         set.mode = .linear
         set.drawCirclesEnabled = true
-        set.circleColors = [.white]
-        set.lineWidth = 3
-        set.setColor(.white)
-        set.fill = Fill(color: UIColor.clear)
+        set.circleColors = [Constants.mainColor ?? UIColor.white]
+        set.lineWidth = Constants.borderWidth
+        set.circleRadius = 5
+        set.setColor(Constants.mainColor ?? UIColor.white)
+        set.fill = Fill(color: Constants.accentColorDark ?? UIColor.clear)
         set.fillAlpha = 1
         set.drawFilledEnabled = true
         set.highlightEnabled = false

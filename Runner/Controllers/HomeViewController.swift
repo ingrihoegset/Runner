@@ -48,7 +48,7 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.mainColor?.cgColor
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -61,7 +61,7 @@ class HomeViewController: UIViewController {
         qrImageView.backgroundColor = Constants.mainColor
         qrImageView.translatesAutoresizingMaskIntoConstraints = false
         qrImageView.contentMode = .scaleAspectFill
-        qrImageView.layer.borderColor = Constants.accentColor?.cgColor
+        qrImageView.layer.borderColor = Constants.accentColorDark?.cgColor
         qrImageView.layer.borderWidth = Constants.borderWidth
         qrImageView.layer.masksToBounds = true
         let image = UIImage(systemName: "qrcode")
@@ -122,7 +122,7 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColor?.cgColor
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -134,7 +134,7 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = Constants.mainColor
-        imageView.layer.borderColor = Constants.accentColor?.cgColor
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -156,6 +156,7 @@ class HomeViewController: UIViewController {
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Sprint", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
+        button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
@@ -168,6 +169,7 @@ class HomeViewController: UIViewController {
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Reaction Run", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
+        button.titleLabel?.font = Constants.mainFontLargeSB
         /*button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
@@ -188,7 +190,7 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.mainColor?.cgColor
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -199,7 +201,7 @@ class HomeViewController: UIViewController {
     private let secondGatePartnerProfileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.mainColor?.cgColor
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.backgroundColor = Constants.mainColor
         imageView.layer.masksToBounds = true
@@ -220,8 +222,9 @@ class HomeViewController: UIViewController {
     private let openSecondGatesButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.accentColorDark
         button.setTitle("Open end gate", for: .normal)
+        button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didSelectOpenSecondGate), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
@@ -235,6 +238,7 @@ class HomeViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Disconnect from end gate", for: .normal)
+        button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
@@ -359,6 +363,7 @@ class HomeViewController: UIViewController {
         detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
         detailHelperView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor).isActive = true
         detailHelperView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor).isActive = true
+        detailHelperView.addTopBorder()
         
         // Unlinked header
         unconnectedHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
@@ -372,7 +377,7 @@ class HomeViewController: UIViewController {
         unconnectedprofileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         unconnectedprofileImageView.layer.cornerRadius = Constants.imageSize / 2
     
-        qrImageView.leadingAnchor.constraint(equalTo: unconnectedprofileImageView.trailingAnchor).isActive = true
+        qrImageView.leadingAnchor.constraint(equalTo: unconnectedprofileImageView.trailingAnchor, constant: -Constants.borderWidth).isActive = true
         qrImageView.centerYAnchor.constraint(equalTo: unconnectedprofileImageView.centerYAnchor).isActive = true
         qrImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
         qrImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true

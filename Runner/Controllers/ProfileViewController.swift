@@ -38,7 +38,7 @@ class ProfileViewController: UIViewController {
         imageView.isUserInteractionEnabled = true
         imageView.layer.masksToBounds = true
         imageView.backgroundColor = Constants.mainColor
-        imageView.layer.borderColor = Constants.mainColor?.cgColor
+        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.cornerRadius = Constants.imageSize / 2
         return imageView
@@ -83,6 +83,10 @@ class ProfileViewController: UIViewController {
         // To make line separator go edge to egde
         tableView.layoutMargins = UIEdgeInsets.zero
         tableView.separatorInset = UIEdgeInsets.zero
+        
+        // Add gesture to profile image
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(presentPhotoActionSheet))
+        profileImageView.addGestureRecognizer(gesture)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -102,6 +106,7 @@ class ProfileViewController: UIViewController {
         detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
         detailHelperView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
         detailHelperView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
+        detailHelperView.addTopBorder()
         
         profileImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
         profileImageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
@@ -200,3 +205,100 @@ extension ProfileViewController: ProfileViewModelDelegate {
         }
     }
 }
+
+
+/// All code assosiated with selecting a profile picture
+extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    /// Called when user cancels the taking of a picture
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    /// Called when user takes a photo or selects a photo
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        
+        guard let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
+            return
+        }
+        
+        // Upload Image
+        guard let data = selectedImage.pngData() else {
+            return
+        }
+        
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        
+        let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
+        let filename = "\(safeEmail)_profile_picture.png"
+        
+        profileViewModel.uploadNewProfilePhoto(data: data, filename: filename, completion: { [weak self] success in
+            if success {
+                self?.profileImageView.image = selectedImage
+            }
+            else {
+                self?.alertThatProfilePictureUpdateFailed()
+            }
+        })
+    }
+    
+    /// Alert that profile picture fail to update.
+    private func alertThatProfilePictureUpdateFailed() {
+        let actionSheet = UIAlertController(title: "Failed to update profile picture.",
+                                            message: "",
+                                            preferredStyle: .alert)
+        
+        actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.popToRootViewController(animated: true)
+        }))
+        present(actionSheet, animated: true)
+    }
+    
+    /// Creates an action sheet that allows the user to pick whether to take a photo or select a photo from library
+    @objc func presentPhotoActionSheet() {
+        let actionSheet = UIAlertController(title: "Update Profile Picture",
+                                            message: "How would you like to select a picture for your profile?",
+                                            preferredStyle: .actionSheet)
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                            style: .default,
+                                            handler: nil))
+        
+        actionSheet.addAction(UIAlertAction(title: "Take Photo",
+                                            style: .cancel,
+                                            handler: { [weak self] _ in
+                                                self?.presentCamera()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Choose Photo",
+                                            style: .default,
+                                            handler: { [weak self] _ in
+                                                self?.presentPhotoPicker()
+        }))
+        
+        present(actionSheet, animated: true)
+    }
+    
+    func presentCamera() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+    }
+    
+    func presentPhotoPicker() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+    }
+}
+

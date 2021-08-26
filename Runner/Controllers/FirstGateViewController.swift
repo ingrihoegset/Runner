@@ -269,7 +269,8 @@ class FirstGateViewController: UIViewController {
         
         // Show cancel button and countdown label when start is clicked
         UIView.animate(withDuration: 0.5, animations: {
-
+            self.focusView.alpha = 0
+            self.focusView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
             self.startButton.alpha = 0
             self.startButton.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
         }) { (_) in
@@ -305,6 +306,8 @@ class FirstGateViewController: UIViewController {
             UIView.animate(withDuration: 0.5) {
                 self.startButton.alpha = 1
                 self.startButton.transform = CGAffineTransform.identity
+                self.focusView.alpha = 1
+                self.focusView.transform = CGAffineTransform.identity
             }
         }
         
@@ -315,7 +318,6 @@ class FirstGateViewController: UIViewController {
             options: .beginFromCurrentState,
             animations: {
                 self.countDownPickerView.alpha = 0
-                
             },
             completion: { _ in
                 self.countDownPickerView.detail1.text = ""
@@ -355,7 +357,8 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
             options: .beginFromCurrentState,
             animations: {
                 self.countDownPickerView.alpha = 0
-                
+                self.focusView.alpha = 1
+                self.focusView.transform = CGAffineTransform.identity
             },
             completion: { _ in
                 self.countDownPickerView.detail1.text = ""

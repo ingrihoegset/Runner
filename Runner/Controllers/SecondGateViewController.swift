@@ -21,7 +21,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         return view
     }()
     
-    let pulsingView: PulsingAnimationView = {
+    lazy var pulsingView: PulsingAnimationView = {
         let view = PulsingAnimationView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
@@ -49,6 +49,14 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         return view
     }()
     
+    let focusImageView: UIImageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.image = UIImage(named: "Focus")
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -71,16 +79,22 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         previewLayer.frame = self.view.bounds
         self.view.layer.addSublayer(previewLayer)
         self.view.addSubview(focusView)
+        focusView.addSubview(focusImageView)
 
         // Top View
         view.addSubview(displayView)
-        displayView.addSubview(pulsingView)
+        //displayView.addSubview(pulsingView)
         displayView.addSubview(pulsingLabel)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
         self.secondGateViewModel.captureSession.stopRunning()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        displayView.addSubview(pulsingView)
     }
     
     override func viewDidLayoutSubviews() {
@@ -109,6 +123,11 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         focusView.widthAnchor.constraint(equalToConstant: width).isActive = true
         focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
         focusView.layer.cornerRadius = width / 2
+        
+        focusImageView.centerYAnchor.constraint(equalTo: focusView.centerYAnchor).isActive = true
+        focusImageView.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
+        focusImageView.widthAnchor.constraint(equalTo: focusView.widthAnchor).isActive = true
+        focusImageView.heightAnchor.constraint(equalTo: focusView.heightAnchor).isActive = true
     }
     
     deinit {

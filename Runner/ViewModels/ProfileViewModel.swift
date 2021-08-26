@@ -60,4 +60,19 @@ class ProfileViewModel {
             }
         })
     }
+    
+    // Upload new profile photo
+    func uploadNewProfilePhoto(data: Data, filename: String, completion: @escaping (Bool) -> Void) {
+        
+        StorageManager.shared.uploadProfilPicture(with: data, fileName: filename, completion: { [weak self] result in
+            switch result {
+            case .success(_):
+                print("Succeed in downloading url")
+                completion(true)
+            case .failure(let error):
+                print("Failed to download url: \(error)")
+                completion(false)
+            }
+        })
+    }
 }

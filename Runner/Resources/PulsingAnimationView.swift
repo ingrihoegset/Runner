@@ -50,7 +50,7 @@ class PulsingAnimationView: UIView {
     private static func circleLayer(color: CGColor) -> CAShapeLayer {
         let circleLayer = CAShapeLayer()
         circleLayer.path = PulsConstants.bezierPath.cgPath
-        circleLayer.lineWidth = 5
+        circleLayer.lineWidth = Constants.borderWidth
         circleLayer.strokeColor = color
         circleLayer.fillColor = UIColor.clear.cgColor
         // positions animation in center of 40 x 40 frame

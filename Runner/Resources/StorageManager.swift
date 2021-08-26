@@ -39,6 +39,12 @@ final class StorageManager {
                 
                 let urlString = url.absoluteString
                 print("Downloading url returned: \(urlString)")
+                
+                // Cache profile image
+                let downloadedImage = UIImage(data: data)
+
+                StorageManager.cache.setObject(downloadedImage!, forKey: url.absoluteString as NSString)
+
                 completion(.success(urlString))
             })
         })
@@ -98,6 +104,7 @@ final class StorageManager {
     static func getImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
         // If there is a cached image
         if let image = cache.object(forKey: url.absoluteString as NSString) {
+            print("URL", url.absoluteString)
             completion(image)
             print("Getting cached image")
         }

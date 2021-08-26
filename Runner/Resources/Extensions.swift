@@ -88,6 +88,16 @@ extension UIImage {
     }
 }
 
+extension UIView {
+    func addTopBorder() {
+        let thickness: CGFloat = 2.0
+        let topBorder = CALayer()
+        topBorder.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.size.width, height: Constants.borderWidth)
+        topBorder.backgroundColor = Constants.accentColorDark?.cgColor
+        self.layer.addSublayer(topBorder)
+    }
+}
+
 /// Is used to get the current time stamp
 extension Date {
     func currentTimeMillis() -> Double {
