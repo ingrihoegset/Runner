@@ -11,6 +11,7 @@ import FirebaseAuth
 class HomeViewController: UIViewController {
     
     var homeViewModel = HomeViewModel()
+    let launcherViewController = LauncherViewController()
     
     // MARK: - Elements related to main view
     private let mainView: UIView = {
@@ -34,7 +35,6 @@ class HomeViewController: UIViewController {
         view.backgroundColor = Constants.mainColor
         return view
     }()
-   
     
     // MARK: - Elements related to unconnected user
     private let unconnectedHeaderView: UIView = {
@@ -48,7 +48,7 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderColor = Constants.accentColor?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
@@ -58,13 +58,13 @@ class HomeViewController: UIViewController {
 
     private let qrImageView: UIImageView = {
         let qrImageView = UIImageView()
-        qrImageView.backgroundColor = Constants.mainColor
+        qrImageView.backgroundColor = Constants.accentColorDark
         qrImageView.translatesAutoresizingMaskIntoConstraints = false
         qrImageView.contentMode = .scaleAspectFill
-        qrImageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        qrImageView.layer.borderColor = Constants.accentColor?.cgColor
         qrImageView.layer.borderWidth = Constants.borderWidth
         qrImageView.layer.masksToBounds = true
-        let image = UIImage(systemName: "qrcode")
+        let image = UIImage(systemName: "qrcode")?.withTintColor(Constants.mainColor!, renderingMode: .alwaysOriginal)
         qrImageView.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         qrImageView.isUserInteractionEnabled = true
         return qrImageView
@@ -325,6 +325,8 @@ class HomeViewController: UIViewController {
         
         let unlinkFromPartnerTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapToUnlinkFromPartner))
         partnerProfileImageView.addGestureRecognizer(unlinkFromPartnerTapGesture)
+        
+        addChildController()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -363,7 +365,6 @@ class HomeViewController: UIViewController {
         detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
         detailHelperView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor).isActive = true
         detailHelperView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor).isActive = true
-        detailHelperView.addTopBorder()
         
         // Unlinked header
         unconnectedHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
@@ -518,6 +519,14 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.linkedProfileImageView.image = image
                 self.secondGateProfileImageView.image = image
             }
+            self.launchFinished()
+        }
+    }
+    
+    func launchFinished() {
+        launcherViewController.spinner.stopAnimating()
+        UIView.animate(withDuration: 0.25) {
+            self.launcherViewController.view.alpha = 0
         }
     }
     
@@ -757,5 +766,16 @@ extension HomeViewController {
         let vc = SecondGateViewController()
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
+    }
+}
+
+extension HomeViewController {
+    
+    func addChildController() {
+        addChild(launcherViewController)
+        view.addSubview(launcherViewController.view)
+        launcherViewController.view.frame = view.bounds
+        launcherViewController.didMove(toParent: self)
+        launcherViewController.view.isHidden = false
     }
 }

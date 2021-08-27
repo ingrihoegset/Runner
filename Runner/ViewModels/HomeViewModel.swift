@@ -12,6 +12,7 @@ protocol HomeViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
     func didUpdatePartnerUI(partner: String, gateNumber: Int)
     func didGetRunResult(result: RunResults)
+    func launchFinished()
 }
 
 
@@ -49,6 +50,7 @@ class HomeViewModel {
                 })
             case .failure(let error):
                 print("Failed to download url: \(error)")
+                self?.homeViewModelDelegate?.launchFinished()
             }
         })
     }

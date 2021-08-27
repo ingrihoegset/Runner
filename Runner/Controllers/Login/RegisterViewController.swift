@@ -12,14 +12,6 @@ import JGProgressHUD
 class RegisterViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
-
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.clipsToBounds = true
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.backgroundColor = Constants.mainColor
-        return scrollView
-    }()
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -38,6 +30,7 @@ class RegisterViewController: UIViewController {
     private let emailField: UITextField = {
         let field = UITextField()
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.font = Constants.mainFontLarge
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .continue
@@ -48,7 +41,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .clear
+        field.backgroundColor = Constants.mainColor
         return field
     }()
     
@@ -57,6 +50,7 @@ class RegisterViewController: UIViewController {
         field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
+        field.font = Constants.mainFontLarge
         field.returnKeyType = .continue
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
@@ -65,7 +59,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .clear
+        field.backgroundColor = Constants.mainColor
         return field
     }()
     
@@ -74,6 +68,7 @@ class RegisterViewController: UIViewController {
         field.translatesAutoresizingMaskIntoConstraints = false
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
+        field.font = Constants.mainFontLarge
         field.returnKeyType = .continue
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
@@ -82,7 +77,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .clear
+        field.backgroundColor = Constants.mainColor
         return field
     }()
     
@@ -92,6 +87,7 @@ class RegisterViewController: UIViewController {
         field.autocapitalizationType = .none
         field.autocorrectionType = .no
         field.returnKeyType = .done
+        field.font = Constants.mainFontLarge
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
@@ -99,7 +95,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .clear
+        field.backgroundColor = Constants.mainColor
         field.isSecureTextEntry = true
         return field
     }()
@@ -108,9 +104,10 @@ class RegisterViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Register", for: .normal)
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.contrastColor
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
+        button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
         button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
         button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
@@ -120,12 +117,12 @@ class RegisterViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Create Account"
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.accentColor
         
         // Makes the nav bar blend in with the background
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.tintColor = Constants.accentColorDark
         
         emailField.delegate = self
         passwordField.delegate = self
@@ -134,20 +131,18 @@ class RegisterViewController: UIViewController {
         imageView.addGestureRecognizer(gesture)
         
         /// Adding subviews
-        view.addSubview(scrollView)
-        scrollView.addSubview(imageView)
-        scrollView.addSubview(firstNameField)
-        scrollView.addSubview(lastNameField)
-        scrollView.addSubview(emailField)
-        scrollView.addSubview(passwordField)
-        scrollView.addSubview(logginButton)
+        view.addSubview(imageView)
+        view.addSubview(firstNameField)
+        view.addSubview(lastNameField)
+        view.addSubview(emailField)
+        view.addSubview(passwordField)
+        view.addSubview(logginButton)
     }
     
     /// Lay out constraints
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        scrollView.frame = view.bounds
+
         
         imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -194,7 +189,7 @@ class RegisterViewController: UIViewController {
     }
     
     @objc func release(sender:UIButton){
-        sender.backgroundColor = Constants.accentColor
+        sender.backgroundColor = Constants.contrastColor
     }
     
     /// When user taps image view to set profile pic
@@ -236,8 +231,6 @@ class RegisterViewController: UIViewController {
             guard let strongSelf = self else {
                 return
             }
-            
-
                 
             // CASE: User already exists
             guard !exists else {

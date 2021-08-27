@@ -52,7 +52,7 @@ class PulsingAnimationView: UIView {
         circleLayer.path = PulsConstants.bezierPath.cgPath
         circleLayer.lineWidth = Constants.borderWidth
         circleLayer.strokeColor = color
-        circleLayer.fillColor = UIColor.clear.cgColor
+        circleLayer.fillColor = color
         // positions animation in center of 40 x 40 frame
         circleLayer.position = CGPoint(x: 20, y: 20)
         return circleLayer
@@ -69,8 +69,10 @@ class PulsingAnimationView: UIView {
     }
     
     func setColor(color: CGColor) {
+        mainLayer.fillColor = color
         mainLayer.strokeColor = color
         pulsingLayer.strokeColor = color
+        pulsingLayer.fillColor = color
     }
 }
 

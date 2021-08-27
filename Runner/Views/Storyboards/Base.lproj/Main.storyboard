@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,9 +14,12 @@
         <scene sceneID="0eh-yZ-H8h">
             <objects>
                 <navigationController storyboardIdentifier="SignIn" id="Gbb-uB-cpa" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KYI-SE-fjj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="KYI-SE-fjj">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" name="AccentColorDark"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="lU7-4S-OGf" kind="relationship" relationship="rootViewController" id="pSg-ty-dRo"/>
@@ -30,7 +34,7 @@
             <objects>
                 <viewController id="lU7-4S-OGf" customClass="LoginViewController" customModule="Runner" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="337-Nt-3bn">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="GvN-Ue-tBc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -43,6 +47,9 @@
         </scene>
     </scenes>
     <resources>
+        <namedColor name="AccentColorDark">
+            <color red="0.0078431372549019607" green="0.01653690264" blue="0.184327513" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

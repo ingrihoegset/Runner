@@ -17,7 +17,7 @@ struct Constants {
     //Design dimensions
     static let smallCornerRadius: CGFloat = 4
     static let cornerRadius: CGFloat = 16
-    static let borderWidth: CGFloat = 3
+    static let borderWidth: CGFloat = 0
     static let sideSpacing: CGFloat = 15
     static let verticalSpacing: CGFloat = 20
     static let verticalSpacingSmall: CGFloat = 10

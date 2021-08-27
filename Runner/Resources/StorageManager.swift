@@ -40,10 +40,8 @@ final class StorageManager {
                 let urlString = url.absoluteString
                 print("Downloading url returned: \(urlString)")
                 
-                // Cache profile image
-                let downloadedImage = UIImage(data: data)
-
-                StorageManager.cache.setObject(downloadedImage!, forKey: url.absoluteString as NSString)
+                let uploadedImage = UIImage(data: data)
+                StorageManager.cache.setObject(uploadedImage!, forKey: urlString as NSString)
 
                 completion(.success(urlString))
             })
@@ -79,6 +77,21 @@ final class StorageManager {
             completion(.success(url))
         })
     }
+
+    // Checks if image is already cached
+    static func getImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
+        // If there is a cached image
+        if let image = cache.object(forKey: url.absoluteString as NSString) {
+            print("URL", url.absoluteString)
+            completion(image)
+            print("Getting cached image")
+        }
+        // If no image is cached
+        else {
+            downloadImage(withURL: url, completion: completion)
+            print("downloading image")
+        }
+    }
     
     static func downloadImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
         let dataTask = URLSession.shared.dataTask(with: url) { data, responsURL, error in
@@ -98,20 +111,5 @@ final class StorageManager {
             }
         }
         dataTask.resume()
-    }
-    
-    // Checks if image is already cached
-    static func getImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
-        // If there is a cached image
-        if let image = cache.object(forKey: url.absoluteString as NSString) {
-            print("URL", url.absoluteString)
-            completion(image)
-            print("Getting cached image")
-        }
-        // If no image is cached
-        else {
-            downloadImage(withURL: url, completion: completion)
-            print("downloading image")
-        }
     }
 }

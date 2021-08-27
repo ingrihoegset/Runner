@@ -53,7 +53,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.setTitle("Run Type", for: .normal)
         button.setTitleColor(Constants.textColorWhite, for: .normal)
-        button.titleLabel?.font = Constants.mainFontSB
+        button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(presentSortType), for: .touchUpInside)
         return button
     }()
@@ -67,14 +67,14 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.setTitle("Date", for: .normal)
         button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.addTarget(self, action: #selector(presentDateType), for: .touchUpInside)
-        button.titleLabel?.font = Constants.mainFontSB
+        button.titleLabel?.font = Constants.mainFontLargeSB
         return button
     }()
     
     let statsHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.contrastColor
         return view
     }()
     
@@ -213,7 +213,6 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statsHeaderView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         statsHeaderView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         statsHeaderView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        statsHeaderView.addTopBorder()
 
         let sortButtonWidth = (Constants.widthOfDisplay - 5 * Constants.sideMargin) * 0.25
         editButton.leadingAnchor.constraint(equalTo: statsHeaderView.leadingAnchor, constant: Constants.sideMargin).isActive = true

@@ -94,7 +94,7 @@ class FirstGateViewController: UIViewController {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
-        view.image = UIImage(named: "Focus")
+        view.image = UIImage(named: "Focus")?.withTintColor(Constants.contrastColor!)
         if UserRunSelections.shared.getIsRunningWithOneGate() == true {
             view.isHidden = false
         }

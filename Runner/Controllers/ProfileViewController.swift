@@ -106,7 +106,6 @@ class ProfileViewController: UIViewController {
         detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
         detailHelperView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
         detailHelperView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
-        detailHelperView.addTopBorder()
         
         profileImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
         profileImageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
@@ -235,7 +234,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
         let filename = "\(safeEmail)_profile_picture.png"
         
-        profileViewModel.uploadNewProfilePhoto(data: data, filename: filename, completion: { [weak self] success in
+        profileViewModel.updateProfilePicture(data: data, fileName: filename, completion: { [weak self] success in
             if success {
                 self?.profileImageView.image = selectedImage
             }

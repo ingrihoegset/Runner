@@ -40,6 +40,7 @@
 		BFC4AE3226D02FA400912F79 /* DetailRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3126D02FA400912F79 /* DetailRow.swift */; };
 		BFC4AE3526D0410400912F79 /* ResultDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */; };
 		BFC86A9F26BDED84006E320F /* SortTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */; };
+		BFDBF0A226D94B19006BDDD6 /* LauncherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */; };
 		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
 		BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */; };
 		BFF7A93426B9995B0037F4AF /* PulsingAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */; };
@@ -93,6 +94,7 @@
 		BFC4AE3126D02FA400912F79 /* DetailRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRow.swift; sourceTree = "<group>"; };
 		BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewModel.swift; sourceTree = "<group>"; };
 		BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTypeViewController.swift; sourceTree = "<group>"; };
+		BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherViewController.swift; sourceTree = "<group>"; };
 		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRunSelections.swift; sourceTree = "<group>"; };
 		BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulsingAnimationView.swift; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
 				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
+				BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */,
 				BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */,
 				BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */,
+				BFDBF0A226D94B19006BDDD6 /* LauncherViewController.swift in Sources */,
 				BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */,
 				BFFB69BB269A17BD0080DA62 /* LoginViewController.swift in Sources */,
 				BFFB69A0269A14E30080DA62 /* SceneDelegate.swift in Sources */,
