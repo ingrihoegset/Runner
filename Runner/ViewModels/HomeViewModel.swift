@@ -28,6 +28,11 @@ class HomeViewModel {
         currentRunOngoing()
     }
     
+    // Updates User Selected Run type when user selects a run type from home view
+    func updateRunType(type: UserRunSelections.runTypes) {
+        UserRunSelections.shared.setUserSelectedType(type: type.rawValue)
+    }
+    
     /// Call on storageManager to fetch profil pic for our user
     func fetchProfilePic(email: String) {
         
@@ -114,7 +119,7 @@ class HomeViewModel {
     private func listenForEndOfCurrentRun() {
         DatabaseManager.shared.listenForEndOfCurrentRun(completion: { [weak self] success in
             if success {
-                print("listned for end")
+                print("listened for end")
                 DatabaseManager.shared.getCurrentRunData(completion: { [weak self] result in
                     switch result {
                         case .success(let runData):

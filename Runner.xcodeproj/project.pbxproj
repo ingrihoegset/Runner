@@ -40,6 +40,9 @@
 		BFC4AE3226D02FA400912F79 /* DetailRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3126D02FA400912F79 /* DetailRow.swift */; };
 		BFC4AE3526D0410400912F79 /* ResultDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */; };
 		BFC86A9F26BDED84006E320F /* SortTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */; };
+		BFD5488226E13EED009A2390 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488126E13EED009A2390 /* CounterView.swift */; };
+		BFD5488526F25D22009A2390 /* SetUpRunViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */; };
+		BFD5488B26F330D5009A2390 /* BounceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488A26F330D4009A2390 /* BounceButton.swift */; };
 		BFDBF0A226D94B19006BDDD6 /* LauncherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */; };
 		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
 		BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */; };
@@ -94,6 +97,9 @@
 		BFC4AE3126D02FA400912F79 /* DetailRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRow.swift; sourceTree = "<group>"; };
 		BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewModel.swift; sourceTree = "<group>"; };
 		BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTypeViewController.swift; sourceTree = "<group>"; };
+		BFD5488126E13EED009A2390 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
+		BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpRunViewModel.swift; sourceTree = "<group>"; };
+		BFD5488A26F330D4009A2390 /* BounceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BounceButton.swift; sourceTree = "<group>"; };
 		BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherViewController.swift; sourceTree = "<group>"; };
 		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRunSelections.swift; sourceTree = "<group>"; };
@@ -241,6 +247,7 @@
 				BF512AE426A07976001C6BF2 /* SecondGateViewModel.swift */,
 				BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */,
 				BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */,
+				BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -252,6 +259,7 @@
 				BFFB69A6269A14E70080DA62 /* Assets.xcassets */,
 				BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */,
 				BFC4AE3126D02FA400912F79 /* DetailRow.swift */,
+				BFD5488126E13EED009A2390 /* CounterView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -274,6 +282,7 @@
 				BF6E059326A9A7600028C0AF /* RunResults.swift */,
 				BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */,
 				BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */,
+				BFD5488A26F330D4009A2390 /* BounceButton.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -455,11 +464,13 @@
 				BF12FF0A269F568400B51370 /* SetUpRunViewController.swift in Sources */,
 				BFFB69C2269A182B0080DA62 /* ProfileViewController.swift in Sources */,
 				BFFB69A2269A14E30080DA62 /* HomeViewController.swift in Sources */,
+				BFD5488B26F330D5009A2390 /* BounceButton.swift in Sources */,
 				BFC4AE3526D0410400912F79 /* ResultDetailsViewModel.swift in Sources */,
 				BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */,
 				BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */,
 				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
+				BFD5488226E13EED009A2390 /* CounterView.swift in Sources */,
 				BF512ADE269F631F001C6BF2 /* FirstGateViewModel.swift in Sources */,
 				BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */,
 				BFC4AE1626D02DD300912F79 /* ResultDetailsViewController.swift in Sources */,
@@ -487,6 +498,7 @@
 				BF4FF85626D652EB005D6920 /* CountDownPicker.swift in Sources */,
 				BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */,
 				BF4830C7269CE1AF00C8CC6C /* HomeViewModel.swift in Sources */,
+				BFD5488526F25D22009A2390 /* SetUpRunViewModel.swift in Sources */,
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
 				BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */,
 				BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */,

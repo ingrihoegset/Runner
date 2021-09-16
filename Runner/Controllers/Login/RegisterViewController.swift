@@ -299,7 +299,7 @@ class RegisterViewController: UIViewController {
     /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
     private func prepareTabBar() {
         let tabBarVC = UITabBarController()
-        let tabButtonImages = ["house", "chart.bar.xaxis" ,"person.circle"]
+        let tabButtonImages = ["Home", "Stats" ,"Settings"]
         
         tabBarVC.tabBar.barTintColor = Constants.accentColorDark
         tabBarVC.tabBar.isTranslucent = false
@@ -319,7 +319,7 @@ class RegisterViewController: UIViewController {
         navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
         
         let profile = ProfileViewController()
-        profile.title = "Profile"
+        profile.title = "Settings"
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
         navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
@@ -331,7 +331,7 @@ class RegisterViewController: UIViewController {
         }
         
         for x in 0..<items.count {
-            items[x].image = UIImage(systemName: tabButtonImages[x])
+            items[x].image = UIImage(named: tabButtonImages[x])
         }
         
         tabBarVC.modalPresentationStyle = .fullScreen

@@ -13,7 +13,7 @@ protocol SortTypeDelegate: AnyObject {
 
 class SortTypeViewController: UIViewController {
     
-    var sortTableViewData = ["Sprint", "Reaction Run", "Speed"]
+    var sortTableViewData = [UserRunSelections.runTypes.Sprint.rawValue, UserRunSelections.runTypes.Reaction.rawValue]
     let cellReuseIdentifier = "sortCell"
     var selectedTypes: [String] = []
     
@@ -42,8 +42,8 @@ class SortTypeViewController: UIViewController {
         return tableView
     }()
      
-    let selectSortingButton: UIButton = {
-         let button = UIButton()
+    let selectSortingButton: BounceButton = {
+         let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
          button.backgroundColor = Constants.accentColorDark
          button.setTitle("Select", for: .normal)
@@ -56,8 +56,8 @@ class SortTypeViewController: UIViewController {
          return button
     }()
     
-    let closeSortingButton: UIButton = {
-         let button = UIButton()
+    let closeSortingButton: BounceButton = {
+         let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
          button.backgroundColor = Constants.accentColorDark
          button.setTitle("Close", for: .normal)

@@ -9,6 +9,7 @@ struct Constants {
     static let accentColorDark = UIColor(named: "AccentColorDark")
     static let whiteColor = UIColor(named: "WhiteColor")
     static let contrastColor = UIColor(named: "ContrastColor")
+    static let superLightGrey = UIColor(named: "SuperLightGrey")
     
     //Text Colors
     static let textColorMain = UIColor.black

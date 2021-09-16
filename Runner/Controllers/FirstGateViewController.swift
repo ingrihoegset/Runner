@@ -104,8 +104,8 @@ class FirstGateViewController: UIViewController {
         return view
     }()
     
-    let startButton: UIButton = {
-        let button = UIButton()
+    let startButton: BounceButton = {
+        let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Start Count Down", for: .normal)
@@ -138,6 +138,12 @@ class FirstGateViewController: UIViewController {
         return picker
     }()
     
+    let timerView: CounterView = {
+        let view = CounterView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     deinit {
         print("DESTROYED FIRST GATE")
     }
@@ -160,21 +166,24 @@ class FirstGateViewController: UIViewController {
         
         // Add top displays
         view.addSubview(displayView)
-        displayView.addSubview(displayLabel1)
-        displayView.addSubview(displayLabel2)
         displayView.addSubview(pulsingView)
         displayView.addSubview(pulsingLabel)
         view.addSubview(cameraView)
+
         cameraView.addSubview(focusView)
         focusView.addSubview(focusImageView)
         
         // Add other elements to view
+        view.addSubview(displayLabel1)
+        view.addSubview(displayLabel2)
         view.addSubview(startButton)
         view.addSubview(cancelRaceButton)
         view.addSubview(countDownPickerView)
+        view.addSubview(timerView)
         
         // Set tekst in top labels
         setDisplayLabelText()
+        setConstraints()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -182,38 +191,44 @@ class FirstGateViewController: UIViewController {
         self.firstGateViewModel.captureSession.stopRunning()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    // Using setConstraints because didlayoutsubview caused memory leak after i implemented the live counter.
+    func setConstraints() {
         
         displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         displayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: Constants.displayViewHeight).isActive = true
+        displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 2).isActive = true
         displayView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        
-        displayLabel1.trailingAnchor.constraint(equalTo: displayView.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
-        displayLabel1.leadingAnchor.constraint(equalTo: displayView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        displayLabel1.topAnchor.constraint(equalTo: displayView.topAnchor).isActive = true
-        displayLabel1.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
-        
-        displayLabel2.leadingAnchor.constraint(equalTo: displayView.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
-        displayLabel2.topAnchor.constraint(equalTo: displayView.topAnchor).isActive = true
-        displayLabel2.trailingAnchor.constraint(equalTo: displayView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        displayLabel2.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
 
         pulsingView.leadingAnchor.constraint(equalTo: displayLabel1.leadingAnchor).isActive = true
-        pulsingView.topAnchor.constraint(equalTo: displayLabel1.bottomAnchor, constant: Constants.verticalSpacing / 2).isActive = true
+        pulsingView.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
         pulsingView.widthAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         pulsingView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         pulsingLabel.centerYAnchor.constraint(equalTo: pulsingView.centerYAnchor).isActive = true
         pulsingLabel.leadingAnchor.constraint(equalTo: pulsingView.trailingAnchor, constant: Constants.sideMargin / 2).isActive = true
-        pulsingLabel.trailingAnchor.constraint(equalTo: displayLabel2.trailingAnchor).isActive = true
+        pulsingLabel.trailingAnchor.constraint(equalTo: displayView.trailingAnchor).isActive = true
         pulsingLabel.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         cameraView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
         cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        displayLabel1.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        displayLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        displayLabel1.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
+        displayLabel1.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        
+        displayLabel2.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
+        displayLabel2.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
+        displayLabel2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        displayLabel2.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        
+        
+        timerView.topAnchor.constraint(equalTo: displayLabel2.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
+        timerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        timerView.widthAnchor.constraint(equalToConstant: (Constants.widthOfDisplay / 2) - 1.5 * Constants.sideMargin).isActive = true
+        timerView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         // Must match size of focus frame in breakobserver
         let width = Constants.widthOfDisplay / 6
@@ -265,20 +280,19 @@ class FirstGateViewController: UIViewController {
     
     /// Activates Count down When user taps to start run
     @objc func startCountDown() {
-        firstGateViewModel.startCountDown(countDownTime: self.firstGateViewModel.userSelectedDelay)
+        firstGateViewModel.startCountDown()
         
-        // Show cancel button and countdown label when start is clicked
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.focusView.alpha = 0
-            self.focusView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+            self.focusView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
             self.startButton.alpha = 0
-            self.startButton.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+            self.startButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
         }) { (_) in
-            self.cancelRaceButton.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-            self.cancelRaceButton.alpha = 0
-            self.countDownPickerView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
-            self.countDownPickerView.alpha = 0
-            UIView.animate(withDuration: 0.5) {
+            self.cancelRaceButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            self.cancelRaceButton.alpha = 0.5
+            self.countDownPickerView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            self.countDownPickerView.alpha = 0.5
+            UIView.animate(withDuration: 0.3) {
                 self.cancelRaceButton.alpha = 1
                 self.cancelRaceButton.transform = CGAffineTransform.identity
                 self.countDownPickerView.alpha = 1
@@ -296,14 +310,14 @@ class FirstGateViewController: UIViewController {
     private func animateCancel() {
         
         // Show start run button when run is cancelled.
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.cancelRaceButton.alpha = 0
-            self.cancelRaceButton.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
+            self.cancelRaceButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
         }) { (_) in
             self.cancelRaceButton.alpha = 0
-            self.startButton.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-            self.startButton.alpha = 0
-            UIView.animate(withDuration: 0.5) {
+            self.startButton.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            self.startButton.alpha = 0.5
+            UIView.animate(withDuration: 0.3) {
                 self.startButton.alpha = 1
                 self.startButton.transform = CGAffineTransform.identity
                 self.focusView.alpha = 1
@@ -313,7 +327,7 @@ class FirstGateViewController: UIViewController {
         
         // Hide count down label on cancel
         UIView.animate(
-            withDuration: 0.5,
+            withDuration: 0.3,
             delay: 0.0,
             options: .beginFromCurrentState,
             animations: {
@@ -329,13 +343,26 @@ class FirstGateViewController: UIViewController {
 }
 
 extension FirstGateViewController: FirstGateViewModelDelegate {
-    
+
     func updateCountDownLabelText(firstCount: String, secondCount: String) {
         DispatchQueue.main.async {
             self.countDownPickerView.detail1.text = firstCount
             self.countDownPickerView.detail2.text = secondCount
         }
     }
+    
+    func updateTimeElapsed(firstMin: String, secondMin: String, firstSec: String, secondSec: String, firstHun: String, secondHun: String) {
+       
+        DispatchQueue.main.async {
+            self.timerView.minsView.first.text = firstMin
+            self.timerView.minsView.second.text = secondMin
+            self.timerView.secsView.first.text = firstSec
+            self.timerView.secsView.second.text = secondSec
+            self.timerView.hundrethsView.first.text = firstHun
+            self.timerView.hundrethsView.second.text = secondHun
+        }
+    }
+    
     
     func resetUIOnRunEnd() {
         animateCancel()
@@ -352,7 +379,7 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
         
         // Hide count down label when count down complete
         UIView.animate(
-            withDuration: 0.5,
+            withDuration: 0.3,
             delay: 0.0,
             options: .beginFromCurrentState,
             animations: {

@@ -10,22 +10,31 @@ import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
 
+enum SettingsSelectionViewModelType {
+    case restore, help, privacy, units, logout
+}
+
+struct SettingSelectionViewModel {
+    let viewModelType: SettingsSelectionViewModelType
+    let title: String
+    let handler: (() -> Void)?
+}
+
 class ProfileViewController: UIViewController {
     
-    let data = ["Log Out"]
+    let sectionTitles: [String] = ["About app","Preferences","Account"]
+    var section1Data = [SettingSelectionViewModel]()
+    var section2Data = [SettingSelectionViewModel]()
+    var section3Data = [SettingSelectionViewModel]()
+    var sectionData: [Int: [SettingSelectionViewModel]] = [:]
+    
+    var data = [SettingSelectionViewModel]()
     var profileViewModel = ProfileViewModel()
     
     let headerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColor
-        return view
-    }()
-    
-    let detailHelperView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -40,7 +49,6 @@ class ProfileViewController: UIViewController {
         imageView.backgroundColor = Constants.mainColor
         imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
-        imageView.layer.cornerRadius = Constants.imageSize / 2
         return imageView
     }()
     
@@ -48,9 +56,9 @@ class ProfileViewController: UIViewController {
         let label = UILabel()
         let name = UserDefaults.standard.value(forKey: "name") as? String
         label.text = name
-        label.textAlignment = .center
-        label.textColor = Constants.textColorMain
-        label.backgroundColor = Constants.mainColor
+        label.textAlignment = .left
+        label.textColor = Constants.accentColorDark
+        label.backgroundColor = .clear
         label.font = Constants.mainFontLargeSB
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -58,6 +66,7 @@ class ProfileViewController: UIViewController {
 
     var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = Constants.superLightGrey
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -65,19 +74,19 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Profile"
+        title = "Settings"
         view.backgroundColor = Constants.accentColor
         
         profileViewModel.profileViewModelDelegate = self
         profileViewModel.fetchProfilePic()
         
         view.addSubview(headerView)
-        headerView.addSubview(detailHelperView)
         headerView.addSubview(profileImageView)
         view.addSubview(userNameLabel)
         view.addSubview(tableView)
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(SettingsTableViewCell.self,
+                           forCellReuseIdentifier: SettingsTableViewCell.identifier)
         tableView.delegate = self
         tableView.dataSource = self
         // To make line separator go edge to egde
@@ -87,6 +96,74 @@ class ProfileViewController: UIViewController {
         // Add gesture to profile image
         let gesture = UITapGestureRecognizer(target: self, action: #selector(presentPhotoActionSheet))
         profileImageView.addGestureRecognizer(gesture)
+        
+        // Configure data for table view
+        section1Data.append(SettingSelectionViewModel(viewModelType: .help,
+                                              title: "Help",
+                                              handler: nil))
+        section1Data.append(SettingSelectionViewModel(viewModelType: .privacy,
+                                              title: "Privacy policy",
+                                              handler: nil))
+        section2Data.append(SettingSelectionViewModel(viewModelType: .units,
+                                              title: "Units of measurement",
+                                              handler: nil))
+        section3Data.append(SettingSelectionViewModel(viewModelType: .restore,
+                                              title: "Restore purchase",
+                                              handler: nil))
+        section3Data.append(SettingSelectionViewModel(viewModelType: .logout, title: "Log out", handler: { [weak self] in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            let actionSheet = UIAlertController(title: "Are you sure you wish to log out?",
+                                                message: "",
+                                                preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] _ in
+                
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                // Clear any partner link from database
+                strongSelf.profileViewModel.clearPartnerLinkFromDatabase()
+                
+                // Get ride of cached values related to user
+                UserDefaults.standard.setValue(nil, forKey: "email")
+                UserDefaults.standard.setValue(nil, forKey: "name")
+                UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
+                UserDefaults.standard.setValue(nil, forKey: Constants.profileImageURL)
+                
+                // Log Out From Facebook
+                FBSDKLoginKit.LoginManager().logOut()
+                
+                // Log Out From Google
+                GIDSignIn.sharedInstance()?.signOut()
+                
+                // Log out of Firebase session
+                do {
+                    try FirebaseAuth.Auth.auth().signOut()
+                    
+                    // Dismisses and destroys all view controllers as long as no memory cycle. Can se if VC are destroyed by checking that "deinit" is called.
+                    strongSelf.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                    
+                }
+                catch {
+                    print("Failed to log out")
+                }
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                                style: .cancel,
+                                                handler: nil))
+            
+            strongSelf.present(actionSheet, animated: true)
+        }))
+        
+        
+        // Add data to sections data
+        sectionData = [0: section1Data, 1: section2Data, 2: section3Data]
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -98,26 +175,22 @@ class ProfileViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 2).isActive = true
         headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
-        detailHelperView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
-        detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
-        detailHelperView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor).isActive = true
-        detailHelperView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
-        
         profileImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
-        profileImageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        profileImageView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        profileImageView.widthAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.8).isActive = true
+        profileImageView.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.8).isActive = true
+        profileImageView.layer.cornerRadius = Constants.headerSize / 4 * 0.8
         
-        userNameLabel.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
-        userNameLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        userNameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        userNameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        userNameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
+        userNameLabel.heightAnchor.constraint(equalTo: profileImageView.heightAnchor, multiplier: 1).isActive = true
+        userNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: Constants.sideMargin).isActive = true
+        userNameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        tableView.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -131,69 +204,51 @@ class ProfileViewController: UIViewController {
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        if let count = sectionData[section]?.count {
+            return count
+        }
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = Constants.superLightGrey
+        
+        let label = UILabel()
+        label.text = sectionTitles[section]
+        label.textColor = Constants.textColorMain
+        label.font = Constants.mainFontSB
+        label.textAlignment = .center
+        label.frame = CGRect(x: 0, y: 0, width: Constants.widthOfDisplay, height: 60)
+        
+        view.addSubview(label)
+        
+        return view
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sectionTitles.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        // To make cell divider lines to from edge to edge
-        cell.layoutMargins = UIEdgeInsets.zero
-        cell.textLabel?.text = data[indexPath.row]
-        cell.textLabel?.textAlignment = .center
-        cell.textLabel?.textColor = .red
+        let viewModel = sectionData[indexPath.section]![indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as! SettingsTableViewCell
+        cell.setUp(with: viewModel)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        60
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let actionSheet = UIAlertController(title: "Are you sure you wish to log out?",
-                                      message: "",
-                                      preferredStyle: .actionSheet)
-        
-        actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] _ in
-            
-            guard let strongSelf = self else {
-                return
-            }
-            
-            // Clear any partner link from database
-            strongSelf.profileViewModel.clearPartnerLinkFromDatabase()
-            
-            // Get ride of cached values related to user
-            UserDefaults.standard.setValue(nil, forKey: "email")
-            UserDefaults.standard.setValue(nil, forKey: "name")
-            UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
-            UserDefaults.standard.setValue(nil, forKey: Constants.profileImageURL)
-            
-            // Log Out From Facebook
-            FBSDKLoginKit.LoginManager().logOut()
-            
-            // Log Out From Google
-            GIDSignIn.sharedInstance()?.signOut()
-            
-            // Log out of Firebase session
-            do {
-                try FirebaseAuth.Auth.auth().signOut()
-
-                // Dismisses and destroys all view controllers as long as no memory cycle. Can se if VC are destroyed by checking that "deinit" is called.
-                self?.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
-                
-            }
-            catch {
-                print("Failed to log out")
-            }
-        }))
-        
-        actionSheet.addAction(UIAlertAction(title: "Cancel",
-                                            style: .cancel,
-                                            handler: nil))
-        
-        present(actionSheet, animated: true)
+        // Call cells handler if one exists
+        sectionData[indexPath.section]![indexPath.row].handler?()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return Constants.mainButtonSize
     }
 }
 
@@ -204,7 +259,6 @@ extension ProfileViewController: ProfileViewModelDelegate {
         }
     }
 }
-
 
 /// All code assosiated with selecting a profile picture
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -298,6 +352,34 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         vc.delegate = self
         vc.allowsEditing = true
         present(vc, animated: true)
+    }
+}
+
+class SettingsTableViewCell: UITableViewCell {
+    
+    // Identifier
+    static let identifier = "SettingsTableViewCell"
+    
+    public func setUp(with viewModel: SettingSelectionViewModel) {
+
+        // Set cell label
+        self.textLabel?.text = viewModel.title
+        self.textLabel?.font = Constants.mainFont
+        self.textLabel?.textAlignment = .center
+        
+        // Set appearance for type of cell
+        switch viewModel.viewModelType {
+        case .help:
+            self.textLabel?.textColor = Constants.textColorMain
+        case .privacy:
+            self.textLabel?.textColor = Constants.textColorMain
+        case .units:
+            self.textLabel?.textColor = Constants.textColorMain
+        case .restore:
+            self.textLabel?.textColor = Constants.textColorMain
+        case .logout:
+            self.textLabel?.textColor = .systemRed
+        }
     }
 }
 

@@ -10,7 +10,13 @@ import JGProgressHUD
 
 class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
-    private let spinner = JGProgressHUD(style: .dark)
+    private let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView()
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.style = .large
+        spinner.color = Constants.accentColorDark
+        return spinner
+    }()
     
     public static let dateFormatterMonth: DateFormatter = {
         let formatter = DateFormatter()
@@ -45,9 +51,10 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         return view
     }()
     
-    let sortTypeButton: UIButton = {
-        let button = UIButton()
+    let sortTypeButton: BounceButton = {
+        let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.animationColor = Constants.accentColorDark
         button.backgroundColor = Constants.accentColorDark
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -58,8 +65,9 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         return button
     }()
     
-    let sortDateButton: UIButton = {
-        let button = UIButton()
+    let sortDateButton: BounceButton = {
+        let button = BounceButton()
+        button.animationColor = Constants.accentColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
         button.clipsToBounds = true
@@ -74,12 +82,12 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let statsHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.contrastColor
+        view.backgroundColor = Constants.superLightGrey
         return view
     }()
     
-    let editButton: UIButton = {
-        let button = UIButton()
+    let editButton: BounceButton = {
+        let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(editTable), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -91,18 +99,6 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     }()
     
     /// Labels for header of stats tabel view
-    private let runTypeLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.backgroundColor = .clear
-        label.numberOfLines = 1
-        label.font = Constants.mainFontSB
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = Constants.textColorWhite
-        label.text = ""
-        return label
-    }()
-    
     private let runLapsLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -116,8 +112,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     }()
     
     /// Labels for header of stats tabel view
-    private let runTimeButton: UIButton = {
-        let button = UIButton()
+    private let runTimeButton: BounceButton = {
+        let button = BounceButton()
         button.setTitle("Time", for: .normal)
         button.backgroundColor = Constants.accentColorDark
         button.titleLabel?.font = Constants.mainFontSB
@@ -129,8 +125,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     }()
     
     /// Labels for header of stats tabel view
-    private let runDistanceButton: UIButton = {
-        let button = UIButton()
+    private let runDistanceButton: BounceButton = {
+        let button = BounceButton()
         button.setTitle("Distance", for: .normal)
         button.backgroundColor = Constants.accentColorDark
         button.titleLabel?.font = Constants.mainFontSB
@@ -142,8 +138,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     }()
     
     /// Labels for header of stats tabel view
-    private let runSpeedButton: UIButton = {
-        let button = UIButton()
+    private let runSpeedButton: BounceButton = {
+        let button = BounceButton()
         button.setTitle("Speed", for: .normal)
         button.backgroundColor = Constants.accentColorDark
         button.titleLabel?.font = Constants.mainFontSB
@@ -163,8 +159,6 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        spinner.show(in: view)
         
         statisticsViewModel.statisticsViewModelDelegate = self
         statisticsViewModel.listenForCompletedRuns()
@@ -188,6 +182,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         // So that cell separation line will go edge to edge
         tableView.layoutMargins = UIEdgeInsets.zero
         tableView.separatorInset = UIEdgeInsets.zero
+        
+        spinner.startAnimating()
     }
     
     override func viewDidLayoutSubviews() {
@@ -272,7 +268,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     func stopSpinner() {
         DispatchQueue.main.async {
-            self.spinner.dismiss()
+
         }
     }
     
@@ -395,6 +391,16 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             })
             
             tableView.endUpdates()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+
+        let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 0, 15, 0)
+        cell.layer.transform = rotationTransform
+        UIView.animate(withDuration: 0.25) {
+            cell.alpha = 1
+            cell.layer.transform = CATransform3DIdentity
         }
     }
     

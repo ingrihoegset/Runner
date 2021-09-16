@@ -370,7 +370,7 @@ class LoginViewController: UIViewController {
         print("Preparing Tab Bar")
         
         let tabBarVC = UITabBarController()
-        let tabButtonImages = ["house", "chart.bar.xaxis" ,"person.circle"]
+        let tabButtonImages = ["Home", "Stats" ,"Settings"]
         
         tabBarVC.tabBar.barTintColor = Constants.accentColorDark
         tabBarVC.tabBar.isTranslucent = false
@@ -390,7 +390,7 @@ class LoginViewController: UIViewController {
         navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
         
         let profile = ProfileViewController()
-        profile.title = "Profile"
+        profile.title = "Settings"
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
         navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
@@ -402,7 +402,7 @@ class LoginViewController: UIViewController {
         }
         
         for x in 0..<items.count {
-            items[x].image = UIImage(systemName: tabButtonImages[x])
+            items[x].image = UIImage(named: tabButtonImages[x])
         }
         
         tabBarVC.modalPresentationStyle = .fullScreen

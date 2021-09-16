@@ -53,7 +53,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     let segmentControl: RoundedSegmentedControl = {
         let control = RoundedSegmentedControl(items: ["Scan Partner QR","My QR Code"])
         control.translatesAutoresizingMaskIntoConstraints = false
-        control.backgroundColor = Constants.mainColor
+        control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.accentColorDark
         let normalTextAttributes: [NSObject : AnyObject] = [

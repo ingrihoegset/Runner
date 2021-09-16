@@ -100,7 +100,7 @@ class CustomPickerView: UIView {
         setConstraints()
     }
     
-    init(subTitle: String, unit: String, number: Int) {
+    init(subTitle: String, unit: String, number: Int, initialValue: Int) {
         super.init(frame: .zero)
         self.addSubview(pickerLengthBackgroundDetail)
         pickerLengthBackgroundDetail.addSubview(detail1)
@@ -118,6 +118,7 @@ class CustomPickerView: UIView {
         numberOfComponents = number
 
         setNumberOfPickerElements(number: number)
+        setPickerValue(number: number, value: initialValue)
         
         if number == 2 {
             setConstraintsFor2Components()
@@ -214,6 +215,38 @@ class CustomPickerView: UIView {
     func setTexts(subTitle: String, unit: String) {
         unitLabel.text = unit
         label.text = subTitle
+    }
+    
+    func setPickerValue(number: Int, value: Int) {
+        
+        let numberOfComponents = number
+        let value = String(value)
+        let digits = value.compactMap{ $0.wholeNumberValue}
+        
+        if numberOfComponents == 2 {
+            if digits.count == 1 {
+                self.picker.selectRow(digits[0], inComponent: 1, animated: true)
+            }
+            if digits.count == 2 {
+                self.picker.selectRow(digits[0], inComponent: 0, animated: true)
+                self.picker.selectRow(digits[1], inComponent: 1, animated: true)
+            }
+        }
+        
+        if numberOfComponents == 3 {
+            if digits.count == 1 {
+                self.picker.selectRow(digits[0], inComponent: 2, animated: true)
+            }
+            if digits.count == 2 {
+                self.picker.selectRow(digits[0], inComponent: 1, animated: true)
+                self.picker.selectRow(digits[1], inComponent: 2, animated: true)
+            }
+            if digits.count == 3 {
+                self.picker.selectRow(digits[0], inComponent: 0, animated: true)
+                self.picker.selectRow(digits[1], inComponent: 1, animated: true)
+                self.picker.selectRow(digits[2], inComponent: 2, animated: true)
+            }
+        }
     }
 }
 

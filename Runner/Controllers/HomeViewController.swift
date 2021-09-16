@@ -12,6 +12,7 @@ class HomeViewController: UIViewController {
     
     var homeViewModel = HomeViewModel()
     let launcherViewController = LauncherViewController()
+    var firstLaunch = true
     
     // MARK: - Elements related to main view
     private let mainView: UIView = {
@@ -53,21 +54,32 @@ class HomeViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
         return imageView
     }()
 
-    private let qrImageView: UIImageView = {
-        let qrImageView = UIImageView()
-        qrImageView.backgroundColor = Constants.accentColorDark
-        qrImageView.translatesAutoresizingMaskIntoConstraints = false
-        qrImageView.contentMode = .scaleAspectFill
-        qrImageView.layer.borderColor = Constants.accentColor?.cgColor
-        qrImageView.layer.borderWidth = Constants.borderWidth
-        qrImageView.layer.masksToBounds = true
+    private let qrButton: BounceButton = {
+        let qrButton = BounceButton()
+        qrButton.backgroundColor = Constants.accentColorDark
+        qrButton.translatesAutoresizingMaskIntoConstraints = false
+        qrButton.layer.borderColor = Constants.accentColor?.cgColor
+        qrButton.layer.borderWidth = Constants.borderWidth
+        qrButton.layer.masksToBounds = true
+        qrButton.animationColor = Constants.accentColorDark
         let image = UIImage(systemName: "qrcode")?.withTintColor(Constants.mainColor!, renderingMode: .alwaysOriginal)
-        qrImageView.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
-        qrImageView.isUserInteractionEnabled = true
-        return qrImageView
+        let imageview = UIImageView()
+        qrButton.addSubview(imageview)
+        imageview.translatesAutoresizingMaskIntoConstraints = false
+        imageview.topAnchor.constraint(equalTo: qrButton.topAnchor).isActive = true
+        imageview.bottomAnchor.constraint(equalTo: qrButton.bottomAnchor).isActive = true
+        imageview.leadingAnchor.constraint(equalTo: qrButton.leadingAnchor).isActive = true
+        imageview.trailingAnchor.constraint(equalTo: qrButton.trailingAnchor).isActive = true
+        imageview.contentMode = .scaleToFill
+        imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+        qrButton.addTarget(self, action: #selector(didTapQRButton), for: .touchUpInside)
+        qrButton.isUserInteractionEnabled = true
+        qrButton.isHidden = true
+        return qrButton
     }()
     
     private let qrImage: UIImage = {
@@ -82,29 +94,24 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    private let setUpSprintButton: UIButton = {
-        let button = UIButton()
+    private let setUpSprintButton: BounceButton = {
+        let button = BounceButton()
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Sprint", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.font = Constants.mainFontLargeSB
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         return button
     }()
     
-    private let setUpReactionButton: UIButton = {
-        let button = UIButton()
+    private let setUpReactionButton: BounceButton = {
+        let button = BounceButton()
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Reaction Run", for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
-        /*button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
-        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)*/
+        button.tag = 1
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         return button
     }()
 
@@ -151,29 +158,24 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    private let setUpSprintButtonTwoGates: UIButton = {
-        let button = UIButton()
+    private let setUpSprintButtonTwoGates: BounceButton = {
+        let button = BounceButton()
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Sprint", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.font = Constants.mainFontLargeSB
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         return button
     }()
     
-    private let setUpReactionButtonTwoGates: UIButton = {
-        let button = UIButton()
+    private let setUpReactionButtonTwoGates: BounceButton = {
+        let button = BounceButton()
+        button.tag = 1
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Reaction Run", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.font = Constants.mainFontLargeSB
-        /*button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
-        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)*/
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         return button
     }()
     
@@ -219,38 +221,32 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    private let openSecondGatesButton: UIButton = {
-        let button = UIButton()
+    private let openSecondGatesButton: BounceButton = {
+        let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Open end gate", for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didSelectOpenSecondGate), for: .touchUpInside)
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
-    private let unLinkFromSecondGateButton: UIButton = {
-        let button = UIButton()
+    private let unLinkFromSecondGateButton: BounceButton = {
+        let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Disconnect from end gate", for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
     
     let segmentControl: RoundedSegmentedControl = {
         let control = RoundedSegmentedControl(items: ["One Gate","Two Gates"])
         control.translatesAutoresizingMaskIntoConstraints = false
-        control.backgroundColor = Constants.mainColor
+        control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.accentColorDark
         let normalTextAttributes: [NSObject : AnyObject] = [
@@ -288,8 +284,8 @@ class HomeViewController: UIViewController {
         
         // Set profile header, that is active when not linked
         mainView.addSubview(unconnectedHeaderView)
+        unconnectedHeaderView.addSubview(qrButton)
         unconnectedHeaderView.addSubview(unconnectedprofileImageView)
-        unconnectedHeaderView.addSubview(qrImageView)
         
         // Header when user is first gate
         mainView.addSubview(linkedHeaderView)
@@ -319,9 +315,6 @@ class HomeViewController: UIViewController {
         secondGateView.addSubview(unLinkFromSecondGateButton)
 
         homeViewModel.clearLinkFromDatabase()
-        
-        let qrButtonTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapQRButton))
-        qrImageView.addGestureRecognizer(qrButtonTapGesture)
         
         let unlinkFromPartnerTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapToUnlinkFromPartner))
         partnerProfileImageView.addGestureRecognizer(unlinkFromPartnerTapGesture)
@@ -378,11 +371,11 @@ class HomeViewController: UIViewController {
         unconnectedprofileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         unconnectedprofileImageView.layer.cornerRadius = Constants.imageSize / 2
     
-        qrImageView.leadingAnchor.constraint(equalTo: unconnectedprofileImageView.trailingAnchor, constant: -Constants.borderWidth).isActive = true
-        qrImageView.centerYAnchor.constraint(equalTo: unconnectedprofileImageView.centerYAnchor).isActive = true
-        qrImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
-        qrImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
-        qrImageView.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
+        qrButton.leadingAnchor.constraint(equalTo: unconnectedprofileImageView.trailingAnchor, constant: -Constants.borderWidth).isActive = true
+        qrButton.centerYAnchor.constraint(equalTo: unconnectedprofileImageView.centerYAnchor).isActive = true
+        qrButton.widthAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
+        qrButton.heightAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
+        qrButton.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
         
         // Linked header first gate
         linkedHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
@@ -467,16 +460,6 @@ class HomeViewController: UIViewController {
         unLinkFromSecondGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
     }
     
-    /// Makes Buttons blink dark blue on click
-    @objc func holdDown(sender:UIButton){
-        sender.backgroundColor = Constants.accentColor
-    }
-    
-    @objc func release(sender:UIButton){
-        sender.backgroundColor = Constants.accentColorDark
-    }
-
-    
     /// Function checks if user is logged in or not
     private func validateAuth() {
         // If there is no current user, send user to log in view controller
@@ -519,15 +502,25 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.linkedProfileImageView.image = image
                 self.secondGateProfileImageView.image = image
             }
-            self.launchFinished()
+            if self.firstLaunch == true {
+                self.launchFinished()
+                self.firstLaunch = false
+            }
         }
     }
     
     func launchFinished() {
         launcherViewController.spinner.stopAnimating()
-        UIView.animate(withDuration: 0.25) {
-            self.launcherViewController.view.alpha = 0
-        }
+        
+        UIView.animate(withDuration: 0.2,
+            animations: {
+                self.launcherViewController.view.alpha = 0
+            },
+            completion: { _ in
+                self.unconnectedprofileImageView.isHidden = false
+                self.qrButton.isHidden = false
+                self.animateUnlink()
+            })
     }
     
     // Gets and updates UI elements in accordance with successful link with partner
@@ -550,6 +543,8 @@ extension HomeViewController: HomeViewModelDelegate {
                 
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 1
+                
+                self.animateLinkedPartnerUI()
             }
             // Show connected view, but for second gate
             else if gateNumber == 2 {
@@ -564,6 +559,8 @@ extension HomeViewController: HomeViewModelDelegate {
 
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 1
+                
+                self.animateLinkedPartnerUI()
             }
             // Show main view, no connection
             else {
@@ -579,6 +576,50 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.alertThatPartnerHasDisconnected()
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 0
+                
+                self.animateUnlink()
+            }
+        }
+    }
+    
+    func animateUnlink() {
+        unconnectedprofileImageView.transform = CGAffineTransform(translationX: -200, y: 0)
+        qrButton.transform = CGAffineTransform(translationX: 200, y: 0)
+        
+        UIView.animate(withDuration: 0.25,
+            animations: {
+                self.unconnectedprofileImageView.transform = CGAffineTransform.identity
+                self.qrButton.transform = CGAffineTransform.identity
+            },
+            completion: { _ in
+                UIView.animate(withDuration: 0.10,
+                    animations: {
+                        self.unconnectedprofileImageView.transform = CGAffineTransform(translationX: -10, y: 0)
+                        self.qrButton.transform = CGAffineTransform(translationX: 10, y: 0)
+                    },
+                    completion: { _ in
+                        UIView.animate(withDuration: 0.1) {
+                            self.unconnectedprofileImageView.transform = CGAffineTransform.identity
+                            self.qrButton.transform = CGAffineTransform.identity
+                        }
+                    })
+            })
+    }
+    
+    func animateLinkedPartnerUI() {
+        linkedProfileImageView.transform = CGAffineTransform(translationX: Constants.imageSize/2, y: 0)
+        partnerProfileImageView.transform = CGAffineTransform(translationX: -Constants.imageSize/2, y: 0)
+        secondGateProfileImageView.transform = CGAffineTransform(translationX: Constants.imageSize/2, y: 0)
+        secondGatePartnerProfileImageView.transform = CGAffineTransform(translationX: -Constants.imageSize/2, y: 0)
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.linkedProfileImageView.transform = CGAffineTransform.identity
+            self.partnerProfileImageView.transform = CGAffineTransform.identity
+            self.secondGateProfileImageView.transform = CGAffineTransform.identity
+            self.secondGatePartnerProfileImageView.transform = CGAffineTransform.identity
+        }) { (_) in
+            UIView.animate(withDuration: 0.3) {
+
             }
         }
     }
@@ -641,8 +682,16 @@ extension HomeViewController {
     
     /// Takes us to new view controller where race can be set up.
     @objc private func didTapSetUpRun(sender: UIButton) {
+        // Update user selected run type
+        if sender.tag == 1 {
+            homeViewModel.updateRunType(type: UserRunSelections.runTypes.Reaction)
+        }
+        else {
+            homeViewModel.updateRunType(type: UserRunSelections.runTypes.Sprint)
+        }
+        // Create SetUp View Controller
         let vc = SetUpRunViewController()
-        vc.navigationItem.largeTitleDisplayMode = .always
+        vc.navigationItem.largeTitleDisplayMode = .always      
         navigationController?.pushViewController(vc, animated: true)
     }
     

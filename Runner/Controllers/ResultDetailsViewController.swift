@@ -177,6 +177,9 @@ class ResultDetailsViewController: UIViewController {
         })
         
         setConstraints()
+        startAnimation()
+        summaryView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        lapsView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
     }
     
     func setConstraints() {
@@ -268,6 +271,21 @@ class ResultDetailsViewController: UIViewController {
         let speed = km / hours
 
         return speed
+    }
+    
+    func startAnimation() {
+        
+        // Show cancel button and countdown label when start is clicked
+        UIView.animate(withDuration: 0.3, animations: {
+            //self.summaryView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }) { (_) in
+            UIView.animate(withDuration: 0.2) {
+                self.summaryView.transform = CGAffineTransform.identity
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.lapsView.transform = CGAffineTransform.identity
+            }
+        }
     }
 }
 

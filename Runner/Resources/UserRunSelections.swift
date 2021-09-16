@@ -12,10 +12,15 @@ final class UserRunSelections {
     // Singelton for easy read and write access. Returns an instance of the UserSelections.
     static let shared = UserRunSelections()
     
+    enum runTypes: String {
+        case Sprint = "Sprint", Reaction = "Reaction"
+    }
+    
     var isRunningWithOneGate = true
     var userSelectedType = "Sprint"
-    var userSelectedLength = 60
+    var userSelectedLength = 30
     var userSelectedDelay = 3
+    var userSelectedReaction = 5
     
     private init() {    }
     
@@ -49,5 +54,13 @@ final class UserRunSelections {
     
     func setUserSelectedDelay(delay: Int) {
         self.userSelectedDelay = delay
+    }
+    
+    func getUserSelectedReaction() -> Int {
+        return userSelectedReaction
+    }
+    
+    func setUserSelectedReaction(reaction: Int) {
+        self.userSelectedReaction = reaction
     }
 }

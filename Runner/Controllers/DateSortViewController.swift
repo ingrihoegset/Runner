@@ -33,8 +33,8 @@ class SortDateViewController: UIViewController {
         return tableView
     }()
      
-    let selectSortingButton: UIButton = {
-         let button = UIButton()
+    let selectSortingButton: BounceButton = {
+         let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
          button.backgroundColor = Constants.accentColorDark
          button.setTitle("Select", for: .normal)
@@ -47,8 +47,8 @@ class SortDateViewController: UIViewController {
          return button
     }()
     
-    let closeSortingButton: UIButton = {
-         let button = UIButton()
+    let closeSortingButton: BounceButton = {
+         let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
          button.backgroundColor = Constants.accentColorDark
          button.setTitle("Close", for: .normal)

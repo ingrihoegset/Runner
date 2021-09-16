@@ -221,6 +221,33 @@ class ResultsViewController: UIViewController {
         detailComponent2.addSubview(raceSpeedResult)
         
         setConstraints()
+        startAnimation()
+    }
+    
+    func startAnimation() {
+        /*resultContainer.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        detailComponent1.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        detailComponent2.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)*/
+        resultContainer.transform = CGAffineTransform(translationX: 0, y: 100)
+        detailComponent1.transform = CGAffineTransform(translationX: 0, y: 150)
+        detailComponent2.transform = CGAffineTransform(translationX: 0, y: 100)
+        
+        // Show cancel button and countdown label when start is clicked
+        UIView.animate(withDuration: 0.5, animations: {
+            //self.summaryView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        }) { (_) in
+            UIView.animate(withDuration: 0.3) {
+                self.resultContainer.transform = CGAffineTransform(translationX: 0, y: 0)
+            }
+            UIView.animate(withDuration: 0.4) {
+                //self.detailComponent1.transform = CGAffineTransform.identity
+                //self.detailComponent2.transform = CGAffineTransform.identity
+                self.detailComponent2.transform = CGAffineTransform(translationX: 0, y: 0)
+            }
+            UIView.animate(withDuration: 0.5) {
+                self.detailComponent1.transform = CGAffineTransform(translationX: 0, y: 0)
+            }
+        }
     }
     
     private func setConstraints() {
