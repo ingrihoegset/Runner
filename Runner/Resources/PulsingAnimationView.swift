@@ -15,10 +15,15 @@ class PulsingAnimationView: UIView {
         layer.addSublayer(pulsingLayer)
         layer.addSublayer(mainLayer)
         pulsingLayer.add(animationGroup, forKey: nil)
+        animationGroup.isRemovedOnCompletion = false
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func addAnimations() {
+        pulsingLayer.add(animationGroup, forKey: nil)
     }
     
     private lazy var animationGroup: CAAnimationGroup = {
@@ -40,7 +45,7 @@ class PulsingAnimationView: UIView {
     private lazy var expandingAnimation: CABasicAnimation = {
         let expandingAnimation = CABasicAnimation(keyPath: "transform.scale")
         expandingAnimation.fromValue = 1
-        expandingAnimation.toValue = 1.5
+        expandingAnimation.toValue = 1.8
         return expandingAnimation
     }()
     

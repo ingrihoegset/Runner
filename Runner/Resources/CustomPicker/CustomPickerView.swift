@@ -68,14 +68,14 @@ class CustomPickerView: UIView {
         unitLabel.backgroundColor = .clear
         unitLabel.text = Constants.meters
         unitLabel.font = Constants.mainFontXXLargeSB
-        unitLabel.textColor = .black
+        unitLabel.textColor = Constants.textColorDarkGray
         return unitLabel
     }()
     
     let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.textColor = .white
+        label.textColor = Constants.textColorDarkGray
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
@@ -144,24 +144,24 @@ class CustomPickerView: UIView {
         pickerLengthBackgroundDetail.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         pickerLengthBackgroundDetail.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         
-        picker.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        picker.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         picker.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor,constant: Constants.sideMargin).isActive = true
         picker.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         picker.widthAnchor.constraint(equalToConstant: Constants.widthOfLengthPicker).isActive = true
         
         detail1.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor, constant: Constants.sideMargin).isActive = true
         detail1.widthAnchor.constraint(equalToConstant: Constants.widthOfPickerLabel).isActive = true
-        detail1.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        detail1.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         detail1.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         
         detail2.leadingAnchor.constraint(equalTo: detail1.trailingAnchor, constant: 5).isActive = true
         detail2.widthAnchor.constraint(equalToConstant: Constants.widthOfPickerLabel).isActive = true
-        detail2.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        detail2.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         detail2.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         
         detail3.leadingAnchor.constraint(equalTo: detail2.trailingAnchor, constant: 5).isActive = true
         detail3.widthAnchor.constraint(equalToConstant: Constants.widthOfPickerLabel).isActive = true
-        detail3.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        detail3.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         detail3.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         
         unitLabel.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
@@ -181,24 +181,24 @@ class CustomPickerView: UIView {
         pickerLengthBackgroundDetail.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         pickerLengthBackgroundDetail.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         
-        picker.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        picker.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         picker.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor,constant: Constants.sideMargin).isActive = true
         picker.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         picker.widthAnchor.constraint(equalToConstant: Constants.widthOfLengthPicker * 2/3).isActive = true
         
         detail1.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor, constant: Constants.sideMargin).isActive = true
         detail1.widthAnchor.constraint(equalToConstant: Constants.widthOfPickerLabel).isActive = true
-        detail1.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        detail1.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         detail1.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         
         detail2.leadingAnchor.constraint(equalTo: detail1.trailingAnchor, constant: 5).isActive = true
         detail2.widthAnchor.constraint(equalToConstant: Constants.widthOfPickerLabel).isActive = true
-        detail2.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        detail2.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         detail2.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         
         detail3.leadingAnchor.constraint(equalTo: detail2.trailingAnchor, constant: 5).isActive = true
         detail3.widthAnchor.constraint(equalToConstant: Constants.widthOfPickerLabel).isActive = true
-        detail3.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true
+        detail3.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         detail3.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
         
         unitLabel.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin).isActive = true

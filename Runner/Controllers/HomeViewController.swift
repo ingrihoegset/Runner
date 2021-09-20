@@ -27,13 +27,33 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColor
-        return view
-    }()
-    
-    let detailHelperView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
+        
+        let imageView = UIImageView()
+        view.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        imageView.contentMode = .scaleToFill
+        imageView.alpha = 0.7
+        let image = UIImage(named: "Track")
+        imageView.image = image
+
+
+        let imageViewColor = UIView()
+        view.addSubview(imageViewColor)
+        imageViewColor.translatesAutoresizingMaskIntoConstraints = false
+        imageViewColor.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        imageViewColor.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        imageViewColor.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        imageViewColor.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        imageViewColor.backgroundColor = Constants.textColorDarkGray
+        imageViewColor.alpha = 0.3
+        
+        view.bringSubviewToFront(imageViewColor)
+        
         return view
     }()
     
@@ -250,7 +270,7 @@ class HomeViewController: UIViewController {
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.accentColorDark
         let normalTextAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorMain,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
@@ -262,11 +282,40 @@ class HomeViewController: UIViewController {
         return control
     }()
     
+    let button: LargeImageButton = {
+        let button = LargeImageButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.accentColorDark
+        button.imageview.image = UIImage(named: "Sprint")
+        button.imageview.isOpaque = true
+        button.imageview.alpha = 0.7
+        button.title.text = "Sprint"
+        button.isHidden = true
+        return button
+    }()
+    
+    let rbutton: LargeImageButton = {
+        let button = LargeImageButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.accentColorDark
+        let image = UIImage(named: "Reaction")
+        button.imageview.image = UIImage(named: "Reaction")
+        button.imageview.isOpaque = true
+        button.imageview.alpha = 0.7
+        button.title.text = "Reaction Run"
+        button.isHidden = true
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Home"
         view.backgroundColor = Constants.accentColor
+        
+        let navBar = navigationController?.navigationBar
+        navBar?.setBackgroundImage(UIImage(), for: .default)
+        navBar?.shadowImage = UIImage()
+        navBar?.isTranslucent = true
         
         homeViewModel.homeViewModelDelegate = self
         
@@ -280,7 +329,6 @@ class HomeViewController: UIViewController {
         // Related to main view
         view.addSubview(mainView)
         mainView.addSubview(mainHeaderView)
-        mainHeaderView.addSubview(detailHelperView)
         
         // Set profile header, that is active when not linked
         mainView.addSubview(unconnectedHeaderView)
@@ -303,6 +351,8 @@ class HomeViewController: UIViewController {
         mainView.addSubview(unconnectedView)
         unconnectedView.addSubview(setUpSprintButton)
         unconnectedView.addSubview(setUpReactionButton)
+        unconnectedView.addSubview(button)
+        unconnectedView.addSubview(rbutton)
 
         // Related to view shown when linked to a partner as first gate
         mainView.addSubview(linkedView)
@@ -344,7 +394,7 @@ class HomeViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         // Elements related to main view
-        mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        mainView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
@@ -354,18 +404,13 @@ class HomeViewController: UIViewController {
         mainHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
         mainHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
-        detailHelperView.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor).isActive = true
-        detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
-        detailHelperView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor).isActive = true
-        detailHelperView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor).isActive = true
-        
         // Unlinked header
         unconnectedHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
         unconnectedHeaderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         unconnectedHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
         unconnectedHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
-        unconnectedprofileImageView.centerYAnchor.constraint(equalTo: unconnectedHeaderView.centerYAnchor).isActive = true
+        unconnectedprofileImageView.centerYAnchor.constraint(equalTo: unconnectedHeaderView.bottomAnchor).isActive = true
         unconnectedprofileImageView.centerXAnchor.constraint(equalTo: unconnectedHeaderView.centerXAnchor).isActive = true
         unconnectedprofileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         unconnectedprofileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
@@ -384,13 +429,13 @@ class HomeViewController: UIViewController {
         linkedHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
         linkedProfileImageView.trailingAnchor.constraint(equalTo: linkedHeaderView.centerXAnchor).isActive = true
-        linkedProfileImageView.centerYAnchor.constraint(equalTo: linkedHeaderView.centerYAnchor).isActive = true
+        linkedProfileImageView.centerYAnchor.constraint(equalTo: linkedHeaderView.bottomAnchor).isActive = true
         linkedProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         linkedProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         linkedProfileImageView.layer.cornerRadius = Constants.imageSize / 2
         
         partnerProfileImageView.leadingAnchor.constraint(equalTo: linkedHeaderView.centerXAnchor).isActive = true
-        partnerProfileImageView.centerYAnchor.constraint(equalTo: linkedHeaderView.centerYAnchor).isActive = true
+        partnerProfileImageView.centerYAnchor.constraint(equalTo: linkedHeaderView.bottomAnchor).isActive = true
         partnerProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         partnerProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         partnerProfileImageView.layer.cornerRadius = Constants.imageSize / 2
@@ -402,19 +447,19 @@ class HomeViewController: UIViewController {
         secondGateHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
         secondGateProfileImageView.trailingAnchor.constraint(equalTo: secondGateHeaderView.centerXAnchor).isActive = true
-        secondGateProfileImageView.centerYAnchor.constraint(equalTo: secondGateHeaderView.centerYAnchor).isActive = true
+        secondGateProfileImageView.centerYAnchor.constraint(equalTo: secondGateHeaderView.bottomAnchor).isActive = true
         secondGateProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         secondGateProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         secondGateProfileImageView.layer.cornerRadius = Constants.imageSize / 2
         
         secondGatePartnerProfileImageView.leadingAnchor.constraint(equalTo: secondGateHeaderView.centerXAnchor).isActive = true
-        secondGatePartnerProfileImageView.centerYAnchor.constraint(equalTo: secondGateHeaderView.centerYAnchor).isActive = true
+        secondGatePartnerProfileImageView.centerYAnchor.constraint(equalTo: secondGateHeaderView.bottomAnchor).isActive = true
         secondGatePartnerProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         secondGatePartnerProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
         secondGatePartnerProfileImageView.layer.cornerRadius = Constants.imageSize / 2
         
         // Segment control, common to all states / views
-        segmentControl.topAnchor.constraint(equalTo: mainHeaderView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        segmentControl.topAnchor.constraint(equalTo: unconnectedprofileImageView.bottomAnchor, constant: Constants.sideMargin).isActive = true
         segmentControl.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         segmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         segmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
@@ -430,6 +475,16 @@ class HomeViewController: UIViewController {
         
         setUpReactionButton.anchor(top: setUpSprintButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
         setUpReactionButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        button.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
+        button.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
+        button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
+        button.leadingAnchor.constraint(equalTo: unconnectedView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        
+        rbutton.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
+        rbutton.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
+        rbutton.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
+        rbutton.trailingAnchor.constraint(equalTo: unconnectedView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
 
         // Elements related to linked view
         linkedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true

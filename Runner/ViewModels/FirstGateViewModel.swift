@@ -44,6 +44,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     var userSelectedLength = UserRunSelections.shared.getUserSelectedLength()
     var userSelectedType = UserRunSelections.shared.getUserSelectedType()
     var userSelectedDelay = UserRunSelections.shared.getUserSelectedDelay()
+    var userSelectedRunner = UserRunSelections.shared.getUserIsRunning()
     
     // Objects related to countdown
     var timer = Timer()
@@ -61,7 +62,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         
     override init() {
         super.init()
-        // Listens for canceled or completed run so that UI is reset for user
+        // Listens for cancelled or completed run so that UI is reset for user
         NotificationCenter.default.addObserver(self, selector: #selector(reset), name: NSNotification.Name(rawValue: "reset"), object: nil)
         
         // Make sure visual timer is not counting
@@ -224,8 +225,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         let date = FirstGateViewModel.dateFormatterShort.string(from: Date())
         let type = userSelectedType
         let distance = userSelectedLength
+        let userRunning = userSelectedRunner
         
-        DatabaseManager.shared.registerCurrentRunToDatabase(time: startTime, runType: type, runDate: date, runDistance: distance, with: { success in
+        DatabaseManager.shared.registerCurrentRunToDatabase(time: startTime, runType: type, runDate: date, runDistance: distance, userIsRunning: userRunning, with: { success in
             if success  {
             }
             else {
@@ -255,11 +257,11 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             }
             if success {
                 print("ongoing")
-                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColor!.cgColor, label: "Run ongoing")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColorDark!.cgColor, label: "Running")
             }
             else {
                 print("waiting")
-                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.contrastColor!.cgColor, label: "Waiting for run to start")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.textColorDarkGray.cgColor, label: "Waiting")
             }
         })
     }

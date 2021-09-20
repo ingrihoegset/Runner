@@ -21,6 +21,7 @@ final class UserRunSelections {
     var userSelectedLength = 30
     var userSelectedDelay = 3
     var userSelectedReaction = 5
+    var userIsRunning = true
     
     private init() {    }
     
@@ -62,5 +63,13 @@ final class UserRunSelections {
     
     func setUserSelectedReaction(reaction: Int) {
         self.userSelectedReaction = reaction
+    }
+    
+    func getUserIsRunning() -> Bool {
+        return userIsRunning
+    }
+    
+    func setUserIsRunning(running: Bool) {
+        self.userIsRunning = running
     }
 }

@@ -46,7 +46,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     let segmentControlPanel: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -57,7 +57,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.accentColorDark
         let normalTextAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorMain,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
             NSAttributedString.Key.font as NSObject : Constants.mainFontSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
@@ -74,7 +74,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
-        imageView.tintColor = Constants.mainColor
+        imageView.tintColor = Constants.accentColor
         let image = UIImage(systemName: "qrcode.viewfinder")
         imageView.image = image
         imageView.alpha = 0.5
@@ -85,21 +85,21 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     private let backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
     private let detailView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         return view
     }()
     
     private let userImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = Constants.mainColor
+        imageView.backgroundColor = Constants.accentColor
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
@@ -122,7 +122,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     
     private let qrImageView: UIImageView = {
         let qrImageView = UIImageView()
-        qrImageView.backgroundColor = Constants.mainColor
+        qrImageView.backgroundColor = Constants.accentColor
         qrImageView.translatesAutoresizingMaskIntoConstraints = false
         qrImageView.contentMode = .scaleAspectFill
         qrImageView.layer.masksToBounds = true
@@ -141,14 +141,14 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         title = "Connect to Partner"
         view.backgroundColor = Constants.accentColor
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorWhite]
+                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
         
         // Makes navigation like rest of panel
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Constants.accentColor
+        navigationController?.navigationBar.barTintColor = Constants.mainColor
         
-        navigationController?.navigationBar.tintColor = Constants.mainColor
+        navigationController?.navigationBar.tintColor = Constants.accentColorDark
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
                                                             style: .done,
                                                             target: self,
@@ -195,12 +195,12 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         segmentControlPanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         segmentControlPanel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         segmentControlPanel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        segmentControlPanel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.1).isActive = true
+        segmentControlPanel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize + 2 * Constants.sideMargin).isActive = true
         
         segmentControl.centerYAnchor.constraint(equalTo: segmentControlPanel.centerYAnchor).isActive = true
         segmentControl.centerXAnchor.constraint(equalTo: segmentControlPanel.centerXAnchor).isActive = true
-        segmentControl.widthAnchor.constraint(equalTo: segmentControlPanel.widthAnchor, multiplier: 0.9).isActive = true
-        segmentControl.heightAnchor.constraint(equalTo: segmentControlPanel.heightAnchor, multiplier: 0.7).isActive = true
+        segmentControl.widthAnchor.constraint(equalTo: segmentControlPanel.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
+        segmentControl.heightAnchor.constraint(equalTo: segmentControlPanel.heightAnchor, constant: -Constants.sideMargin * 2).isActive = true
         
         /*
         qrIndicatorImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
@@ -216,10 +216,10 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
-        detailView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: Constants.verticalSpacing).isActive = true
-        detailView.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor).isActive = true
-        detailView.widthAnchor.constraint(equalTo: backgroundView.widthAnchor, multiplier: 0.9).isActive = true
-        detailView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -Constants.largeVerticalSpacing).isActive = true
+        detailView.heightAnchor.constraint(equalTo: backgroundView.heightAnchor, multiplier: 0.8).isActive = true
+        detailView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: Constants.sideMargin).isActive = true
+        detailView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        detailView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         userImageView.topAnchor.constraint(equalTo: detailView.topAnchor, constant: Constants.verticalSpacing).isActive = true
         userImageView.centerXAnchor.constraint(equalTo: detailView.centerXAnchor).isActive = true
@@ -233,8 +233,8 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         
         qrImageView.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
         qrImageView.centerXAnchor.constraint(equalTo: detailView.centerXAnchor).isActive = true
-        qrImageView.widthAnchor.constraint(equalTo: detailView.widthAnchor, multiplier: 0.65).isActive = true
-        qrImageView.heightAnchor.constraint(equalTo: detailView.widthAnchor, multiplier: 0.65).isActive = true
+        qrImageView.widthAnchor.constraint(equalTo: detailView.heightAnchor, multiplier: 0.45).isActive = true
+        qrImageView.heightAnchor.constraint(equalTo: detailView.heightAnchor, multiplier: 0.45).isActive = true
     }
     
     @objc private func dismissSelf() {

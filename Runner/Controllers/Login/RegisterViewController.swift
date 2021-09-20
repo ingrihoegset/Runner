@@ -21,7 +21,7 @@ class RegisterViewController: UIViewController {
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true
         imageView.layer.masksToBounds = true
-        imageView.backgroundColor = Constants.mainColor
+        imageView.backgroundColor = Constants.accentColor
         imageView.layer.borderColor = Constants.accentColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         return imageView
@@ -41,7 +41,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.mainColor
+        field.backgroundColor = Constants.accentColor
         return field
     }()
     
@@ -59,7 +59,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.mainColor
+        field.backgroundColor = Constants.accentColor
         return field
     }()
     
@@ -77,7 +77,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.mainColor
+        field.backgroundColor = Constants.accentColor
         return field
     }()
     
@@ -95,7 +95,7 @@ class RegisterViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.mainColor
+        field.backgroundColor = Constants.accentColor
         field.isSecureTextEntry = true
         return field
     }()
@@ -117,7 +117,7 @@ class RegisterViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         
         // Makes the nav bar blend in with the background
         navigationController?.navigationBar.isTranslucent = false
@@ -301,28 +301,31 @@ class RegisterViewController: UIViewController {
         let tabBarVC = UITabBarController()
         let tabButtonImages = ["Home", "Stats" ,"Settings"]
         
-        tabBarVC.tabBar.barTintColor = Constants.accentColorDark
+        tabBarVC.tabBar.barTintColor = Constants.textColorDarkGray
         tabBarVC.tabBar.isTranslucent = false
         tabBarVC.tabBar.tintColor = Constants.contrastColor
         tabBarVC.tabBar.unselectedItemTintColor = Constants.accentColor
         
         let home = HomeViewController()
-        home.title = "Home"
+        home.title = ""
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
-        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
+        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVC.navigationBar.tintColor = Constants.accentColorDark
         
         let stats = StatisticsViewController()
         stats.title = "My Runs"
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
-        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
+        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVCStats.navigationBar.tintColor = Constants.accentColorDark
         
         let profile = ProfileViewController()
         profile.title = "Settings"
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
-        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
+        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVCProfile.navigationBar.tintColor = Constants.accentColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
         

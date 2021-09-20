@@ -47,7 +47,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let headerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -82,7 +82,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let statsHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.superLightGrey
+        view.backgroundColor = Constants.accentColor
         return view
     }()
     
@@ -153,7 +153,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = Constants.mainColor
+        tableView.backgroundColor = Constants.accentColor
         return tableView
     }()
 
@@ -189,24 +189,24 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 2).isActive = true
+        headerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
         sortTypeButton.trailingAnchor.constraint(equalTo: headerView.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
         sortTypeButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        sortTypeButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -Constants.verticalSpacing).isActive = true
+        sortTypeButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -Constants.sideMargin / 2).isActive = true
         sortTypeButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         sortDateButton.leadingAnchor.constraint(equalTo: headerView.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
-        sortDateButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -Constants.verticalSpacing).isActive = true
+        sortDateButton.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -Constants.sideMargin / 2).isActive = true
         sortDateButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         sortDateButton.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         // Header for table view
         statsHeaderView.topAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
-        statsHeaderView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        statsHeaderView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight + Constants.sideMargin).isActive = true
         statsHeaderView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         statsHeaderView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
 

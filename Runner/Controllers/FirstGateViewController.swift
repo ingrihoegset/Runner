@@ -33,7 +33,7 @@ class FirstGateViewController: UIViewController {
         label.textAlignment = .center
         label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
-        label.textColor = .white
+        label.textColor = Constants.textColorDarkGray
         return label
     }()
     
@@ -45,7 +45,7 @@ class FirstGateViewController: UIViewController {
         label.textAlignment = .center
         label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
-        label.textColor = .white
+        label.textColor = Constants.textColorDarkGray
         return label
     }()
       
@@ -53,6 +53,16 @@ class FirstGateViewController: UIViewController {
         let view = PulsingAnimationView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
+        view.clipsToBounds = false
+        return view
+    }()
+    
+    let pulsingLabelView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = false
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        view.backgroundColor = Constants.accentColor
         return view
     }()
     
@@ -60,10 +70,11 @@ class FirstGateViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.text = "Waiting for run to start"
+        label.text = "Waiting"
         label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
-        label.textColor = Constants.textColorMain
+        label.layer.cornerRadius = Constants.smallCornerRadius
+        label.textColor = Constants.textColorDarkGray
         return label
     }()
     
@@ -109,7 +120,7 @@ class FirstGateViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
         button.setTitle("Start Count Down", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(startCountDown), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -123,7 +134,7 @@ class FirstGateViewController: UIViewController {
         button.backgroundColor = Constants.contrastColor
         button.alpha = 0
         button.setTitle("Cancel", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.layer.masksToBounds = false
@@ -166,16 +177,17 @@ class FirstGateViewController: UIViewController {
         
         // Add top displays
         view.addSubview(displayView)
-        displayView.addSubview(pulsingView)
-        displayView.addSubview(pulsingLabel)
+        displayView.addSubview(displayLabel1)
+        displayView.addSubview(displayLabel2)
         view.addSubview(cameraView)
 
         cameraView.addSubview(focusView)
         focusView.addSubview(focusImageView)
         
         // Add other elements to view
-        view.addSubview(displayLabel1)
-        view.addSubview(displayLabel2)
+        view.addSubview(pulsingLabelView)
+        pulsingLabelView.addSubview(pulsingLabel)
+        pulsingLabelView.addSubview(pulsingView)
         view.addSubview(startButton)
         view.addSubview(cancelRaceButton)
         view.addSubview(countDownPickerView)
@@ -191,41 +203,52 @@ class FirstGateViewController: UIViewController {
         self.firstGateViewModel.captureSession.stopRunning()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.firstGateViewModel.captureSession.startRunning()
+        pulsingView.addAnimations()
+    }
+    
+    
     // Using setConstraints because didlayoutsubview caused memory leak after i implemented the live counter.
     func setConstraints() {
         
-        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        displayView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         displayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 2).isActive = true
+        displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         displayView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        
+        displayLabel1.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        displayLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        displayLabel1.bottomAnchor.constraint(equalTo: displayView.bottomAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        displayLabel1.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        
+        displayLabel2.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
+        displayLabel2.bottomAnchor.constraint(equalTo: displayView.bottomAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        displayLabel2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        displayLabel2.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        
+        pulsingLabelView.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
+        pulsingLabelView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        pulsingLabelView.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        pulsingLabelView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
 
-        pulsingView.leadingAnchor.constraint(equalTo: displayLabel1.leadingAnchor).isActive = true
-        pulsingView.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
+        pulsingView.leadingAnchor.constraint(equalTo: pulsingLabelView.leadingAnchor).isActive = true
+        pulsingView.centerYAnchor.constraint(equalTo: pulsingLabelView.centerYAnchor).isActive = true
         pulsingView.widthAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         pulsingView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
-        pulsingLabel.centerYAnchor.constraint(equalTo: pulsingView.centerYAnchor).isActive = true
+        pulsingLabel.centerYAnchor.constraint(equalTo: pulsingLabelView.centerYAnchor).isActive = true
         pulsingLabel.leadingAnchor.constraint(equalTo: pulsingView.trailingAnchor, constant: Constants.sideMargin / 2).isActive = true
-        pulsingLabel.trailingAnchor.constraint(equalTo: displayView.trailingAnchor).isActive = true
-        pulsingLabel.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        pulsingLabel.trailingAnchor.constraint(equalTo: pulsingLabelView.trailingAnchor).isActive = true
+        pulsingLabel.heightAnchor.constraint(equalTo: pulsingLabelView.heightAnchor).isActive = true
         
         cameraView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
         cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        displayLabel1.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
-        displayLabel1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        displayLabel1.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
-        displayLabel1.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
-        
-        displayLabel2.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
-        displayLabel2.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
-        displayLabel2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        displayLabel2.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
-        
-        
-        timerView.topAnchor.constraint(equalTo: displayLabel2.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
+        timerView.topAnchor.constraint(equalTo: displayView.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
         timerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         timerView.widthAnchor.constraint(equalToConstant: (Constants.widthOfDisplay / 2) - 1.5 * Constants.sideMargin).isActive = true
         timerView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
@@ -246,7 +269,7 @@ class FirstGateViewController: UIViewController {
         
         startButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        startButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
+        startButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         startButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         
         countDownPickerView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
@@ -306,7 +329,6 @@ class FirstGateViewController: UIViewController {
         animateCancel()
     }
     
-    
     private func animateCancel() {
         
         // Show start run button when run is cancelled.
@@ -338,7 +360,6 @@ class FirstGateViewController: UIViewController {
                 self.countDownPickerView.detail2.text = ""
             }
         )
-        
     }
 }
 

@@ -15,6 +15,7 @@
 		BF12FF22269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF1F269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf */; };
 		BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */; };
 		BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */; };
+		BF3900F126F884D300EE58F2 /* LargeImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3900F026F884D300EE58F2 /* LargeImageButton.swift */; };
 		BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF48305D269AF90600C8CC6C /* DatabaseManager.swift */; };
 		BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */; };
 		BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4830A2269C654A00C8CC6C /* Sender.swift */; };
@@ -72,6 +73,7 @@
 		BF12FF1F269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-SemiBold.ttf"; sourceTree = "<group>"; };
 		BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
 		BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstGateViewController.swift; sourceTree = "<group>"; };
+		BF3900F026F884D300EE58F2 /* LargeImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeImageButton.swift; sourceTree = "<group>"; };
 		BF48305D269AF90600C8CC6C /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		BF483060269AFA8E00C8CC6C /* RaceAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RaceAppUser.swift; sourceTree = "<group>"; };
 		BF4830A2269C654A00C8CC6C /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */,
 				BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */,
 				BFD5488A26F330D4009A2390 /* BounceButton.swift */,
+				BF3900F026F884D300EE58F2 /* LargeImageButton.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -502,6 +505,7 @@
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
 				BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */,
 				BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */,
+				BF3900F126F884D300EE58F2 /* LargeImageButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

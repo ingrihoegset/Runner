@@ -15,14 +15,14 @@ protocol SetUpRunViewModelDelegate: AnyObject {
 class SetUpRunViewModel {
     
     weak var setUpRunViewModelDelegate: SetUpRunViewModelDelegate?
-    let model = UserRunSelections.shared
+    let selectionModel = UserRunSelections.shared
     
     init() {
 
     }
     
     func selectedRunType() {
-        let selectedRunType = model.getUserSelectedType()
+        let selectedRunType = selectionModel.getUserSelectedType()
 
         if selectedRunType == String(UserRunSelections.runTypes.Reaction.rawValue) {
             self.setUpRunViewModelDelegate?.showReactionRun()
@@ -30,6 +30,11 @@ class SetUpRunViewModel {
         else {
 
         }
+    }
+    
+    /// Sets User selections after segment control is altered
+    func setUserSelectedRunner(userIsRunning: Bool) {
+        selectionModel.setUserIsRunning(running: userIsRunning)
     }
     
    

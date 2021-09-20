@@ -18,13 +18,14 @@ class ResultsViewController: UIViewController {
     let resultContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.shadeColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
         view.layer.masksToBounds = false
         return view
     }()
     
+    /*
     let raceTimeLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -36,14 +37,14 @@ class ResultsViewController: UIViewController {
         label.text = "Run time"
         label.font = Constants.mainFontLargeSB
         return label
-    }()
+    }()*/
     
     let raceTimeHundreths: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.textColor = Constants.textColorWhite
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.resultFont
         return label
@@ -55,7 +56,7 @@ class ResultsViewController: UIViewController {
         label.textColor = Constants.textColorWhite
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.resultFont
         return label
@@ -67,7 +68,7 @@ class ResultsViewController: UIViewController {
         label.textColor = Constants.textColorWhite
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.resultFont
         return label
@@ -79,10 +80,10 @@ class ResultsViewController: UIViewController {
         label.textColor = Constants.textColorWhite
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.mainFont
-        label.text = "CENTISECONDS"
+        label.text = "Centiseconds"
         return label
     }()
     
@@ -92,10 +93,10 @@ class ResultsViewController: UIViewController {
         label.textColor = Constants.textColorWhite
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.mainFont
-        label.text = "SECONDS"
+        label.text = "Seconds"
         return label
     }()
     
@@ -105,43 +106,43 @@ class ResultsViewController: UIViewController {
         label.textColor = Constants.textColorWhite
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.mainFont
-        label.text = "MINUTES"
+        label.text = "Minutes"
         return label
     }()
     
     let raceSpeedTitle: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.textColorWhite
+        label.textColor = Constants.textColorDarkGray
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.mainFont
-        label.text = "AVERAGE SPEED"
+        label.text = "Average speed"
         return label
     }()
     
     let racelengthTitle: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.textColorWhite
+        label.textColor = Constants.textColorDarkGray
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.mainFont
-        label.text = "TOTAL DISTANCE"
+        label.text = "Distance"
         return label
     }()
     
     let raceSpeedResult: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.textColorWhite
+        label.textColor = Constants.accentColorDark
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
@@ -153,7 +154,7 @@ class ResultsViewController: UIViewController {
     let racelengthResult: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.textColorWhite
+        label.textColor = Constants.accentColorDark
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
@@ -165,7 +166,7 @@ class ResultsViewController: UIViewController {
     let detailComponent1: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColorDark
+        view.backgroundColor = Constants.accentColor
         view.isUserInteractionEnabled = false
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
@@ -176,7 +177,7 @@ class ResultsViewController: UIViewController {
     let detailComponent2: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColorDark
+        view.backgroundColor = Constants.accentColor
         view.isUserInteractionEnabled = false
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
@@ -189,7 +190,9 @@ class ResultsViewController: UIViewController {
         
         // Navigation bar appearance
         title = "Run Completed!"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
+                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
                                                             style: .done,
                                                             target: self,
@@ -202,10 +205,9 @@ class ResultsViewController: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.accentColorDark
         
         view.addSubview(resultContainer)
-        resultContainer.addSubview(raceTimeLabel)
         resultContainer.addSubview(raceTimeMinutes)
         resultContainer.addSubview(raceTimeSeconds)
         resultContainer.addSubview(raceTimeHundreths)
@@ -257,10 +259,11 @@ class ResultsViewController: UIViewController {
         resultContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin).isActive = true
         resultContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         
+        /*
         raceTimeLabel.centerXAnchor.constraint(equalTo: resultContainer.centerXAnchor).isActive = true
         raceTimeLabel.topAnchor.constraint(equalTo: resultContainer.topAnchor, constant: Constants.sideMargin).isActive = true
         raceTimeLabel.heightAnchor.constraint(equalTo: resultContainer.heightAnchor, multiplier: 0.1).isActive = true
-        raceTimeLabel.widthAnchor.constraint(equalTo: resultContainer.widthAnchor).isActive = true
+        raceTimeLabel.widthAnchor.constraint(equalTo: resultContainer.widthAnchor).isActive = true*/
         
         raceTimeSeconds.centerXAnchor.constraint(equalTo: resultContainer.centerXAnchor).isActive = true
         raceTimeSeconds.centerYAnchor.constraint(equalTo: resultContainer.centerYAnchor).isActive = true

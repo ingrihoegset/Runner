@@ -28,34 +28,58 @@ class ResultDetailsViewController: UIViewController {
     let summaryView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = .clear
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
         return view
     }()
     
-    let detailRowDate: DetailRow = {
-        let view = DetailRow(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    let detailRowDate: UILabel = {
+        let label = UILabel()
+        label.font = Constants.mainFontLargeSB
+        label.textColor = Constants.contrastColor
+        label.textAlignment = .center
+        label.backgroundColor = Constants.accentColor
+        label.layer.cornerRadius = Constants.smallCornerRadius
+        label.clipsToBounds = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
-    let detailRowTime: DetailRow = {
-        let view = DetailRow(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    let detailRowTime: UILabel = {
+        let label = UILabel()
+        label.font = Constants.resultFontSmall
+        label.textColor = Constants.contrastColor
+        label.textAlignment = .center
+        label.backgroundColor = Constants.accentColor
+        label.layer.cornerRadius = Constants.smallCornerRadius
+        label.clipsToBounds = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
-    let detailRowDistance: DetailRow = {
-        let view = DetailRow(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    let detailRowDistance: UILabel = {
+        let label = UILabel()
+        label.font = Constants.resultFontSmall
+        label.textColor = Constants.contrastColor
+        label.textAlignment = .center
+        label.backgroundColor = Constants.accentColor
+        label.layer.cornerRadius = Constants.smallCornerRadius
+        label.clipsToBounds = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
-    let detailRowSpeed: DetailRow = {
-        let view = DetailRow(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    let detailRowSpeed: UILabel = {
+        let label = UILabel()
+        label.font = Constants.resultFontSmall
+        label.textColor = Constants.contrastColor
+        label.textAlignment = .center
+        label.backgroundColor = Constants.accentColor
+        label.layer.cornerRadius = Constants.smallCornerRadius
+        label.clipsToBounds = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let lapsView: UIView = {
@@ -77,7 +101,7 @@ class ResultDetailsViewController: UIViewController {
         label.clipsToBounds = true
         label.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         label.font = Constants.mainFontLargeSB
-        label.textColor = Constants.textColorWhite
+        label.textColor = Constants.textColorDarkGray
         return label
     }()
     
@@ -98,7 +122,7 @@ class ResultDetailsViewController: UIViewController {
         leftAxis.axisLineColor = .clear
         leftAxis.axisMinimum = 0 // FIXME: HUH?? this replaces startAtZero = YES
         leftAxis.drawGridLinesEnabled = false
-        leftAxis.labelTextColor = Constants.textColorWhite
+        leftAxis.labelTextColor = Constants.textColorDarkGray
         leftAxis.labelFont = Constants.mainFont!
         
         let rightAxis = chartView.rightAxis
@@ -109,7 +133,7 @@ class ResultDetailsViewController: UIViewController {
         rightAxis.axisLineColor = .clear
         rightAxis.axisMinimum = 0
         rightAxis.drawGridLinesEnabled = false
-        rightAxis.labelTextColor = Constants.textColorWhite
+        rightAxis.labelTextColor = Constants.textColorDarkGray
         rightAxis.labelFont = Constants.mainFont!
         
         let l = chartView.legend
@@ -120,7 +144,7 @@ class ResultDetailsViewController: UIViewController {
         l.form = .circle
         l.formSize = 9
         l.font = Constants.mainFont!
-        l.textColor = Constants.textColorWhite
+        l.textColor = Constants.textColorDarkGray
         l.xOffset = -Constants.widthOfDisplay * 0.08
         
         chartView.animate(yAxisDuration: 2.0)
@@ -138,7 +162,7 @@ class ResultDetailsViewController: UIViewController {
         chartView.xAxis.axisMinimum = 0.8
         chartView.xAxis.granularity = 1
         chartView.xAxis.labelFont = Constants.mainFont!
-        chartView.xAxis.labelTextColor = Constants.textColorWhite
+        chartView.xAxis.labelTextColor = Constants.textColorDarkGray
 
         return chartView
     }()
@@ -158,10 +182,31 @@ class ResultDetailsViewController: UIViewController {
         summaryView.addSubview(detailRowDistance)
         summaryView.addSubview(detailRowSpeed)
         
-        detailRowDate.setProperties(title: "Run Date", unit: "", detail: date)
-        detailRowTime.setProperties(title: "Time", unit: "s", detail: time)
-        detailRowDistance.setProperties(title: "Total Distance", unit: "m", detail: String(distance))
-        detailRowSpeed.setProperties(title: "Average Speed", unit: "km/h", detail: averageSpeed)
+        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.contrastColor, NSAttributedString.Key.font: Constants.resultFontSmall]
+        let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+
+        let timeResult = NSMutableAttributedString(string: time, attributes: resultAttributes as [NSAttributedString.Key : Any])
+        let timeUnit = NSMutableAttributedString(string: " s", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        let timeText = NSMutableAttributedString()
+        timeText.append(timeResult)
+        timeText.append(timeUnit)
+        
+        let speedResult = NSMutableAttributedString(string: averageSpeed, attributes: resultAttributes as [NSAttributedString.Key : Any])
+        let speedUnit = NSMutableAttributedString(string: " km/h", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        let speedText = NSMutableAttributedString()
+        speedText.append(speedResult)
+        speedText.append(speedUnit)
+        
+        let distResult = NSMutableAttributedString(string: String(distance), attributes: resultAttributes as [NSAttributedString.Key : Any])
+        let distUnit = NSMutableAttributedString(string: " m", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        let distText = NSMutableAttributedString()
+        distText.append(distResult)
+        distText.append(distUnit)
+        
+        detailRowDate.text = date
+        detailRowTime.attributedText = timeText
+        detailRowDistance.attributedText = distText
+        detailRowSpeed.attributedText = speedText
 
         view.addSubview(lapsView)
         lapsView.addSubview(tabGraphLabel)
@@ -178,8 +223,6 @@ class ResultDetailsViewController: UIViewController {
         
         setConstraints()
         startAnimation()
-        summaryView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-        lapsView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
     }
     
     func setConstraints() {
@@ -189,25 +232,27 @@ class ResultDetailsViewController: UIViewController {
         summaryView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         summaryView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        detailRowDate.topAnchor.constraint(equalTo: summaryView.topAnchor).isActive = true
-        detailRowDate.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 1/4).isActive = true
-        detailRowDate.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        detailRowDate.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        let widthOfSummaryView = Constants.widthOfDisplay - 2 * Constants.sideMargin
         
-        detailRowTime.topAnchor.constraint(equalTo: detailRowDate.bottomAnchor).isActive = true
-        detailRowTime.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 1/4).isActive = true
-        detailRowTime.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        detailRowTime.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        detailRowTime.topAnchor.constraint(equalTo: summaryView.topAnchor).isActive = true
+        detailRowTime.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 0.6).isActive = true
+        detailRowTime.widthAnchor.constraint(equalToConstant: (widthOfSummaryView / 2) - (Constants.sideMargin / 2)).isActive = true
+        detailRowTime.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor).isActive = true
         
-        detailRowDistance.topAnchor.constraint(equalTo: detailRowTime.bottomAnchor).isActive = true
-        detailRowDistance.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 1/4).isActive = true
-        detailRowDistance.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        detailRowDistance.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        detailRowDistance.topAnchor.constraint(equalTo: summaryView.topAnchor).isActive = true
+        detailRowDistance.heightAnchor.constraint(equalTo: detailRowSpeed.heightAnchor).isActive = true
+        detailRowDistance.widthAnchor.constraint(equalToConstant: (widthOfSummaryView / 2) - (Constants.sideMargin / 2)).isActive = true
+        detailRowDistance.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor).isActive = true
         
-        detailRowSpeed.topAnchor.constraint(equalTo: detailRowDistance.bottomAnchor).isActive = true
-        detailRowSpeed.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 1/4).isActive = true
-        detailRowSpeed.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        detailRowSpeed.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        detailRowDate.topAnchor.constraint(equalTo: detailRowTime.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        detailRowDate.bottomAnchor.constraint(equalTo: summaryView.bottomAnchor).isActive = true
+        detailRowDate.widthAnchor.constraint(equalToConstant: (widthOfSummaryView / 2) - (Constants.sideMargin / 2)).isActive = true
+        detailRowDate.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor).isActive = true
+        
+        detailRowSpeed.topAnchor.constraint(equalTo: detailRowDistance.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        detailRowSpeed.bottomAnchor.constraint(equalTo: summaryView.bottomAnchor).isActive = true
+        detailRowSpeed.widthAnchor.constraint(equalToConstant: (widthOfSummaryView / 2) - (Constants.sideMargin / 2)).isActive = true
+        detailRowSpeed.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor).isActive = true
         
         lapsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         lapsView.topAnchor.constraint(equalTo: summaryView.bottomAnchor, constant: Constants.sideMargin).isActive = true
@@ -235,10 +280,10 @@ class ResultDetailsViewController: UIViewController {
         let set = LineChartDataSet(entries: entries)
         set.mode = .linear
         set.drawCirclesEnabled = true
-        set.circleColors = [Constants.mainColor ?? UIColor.white]
+        set.circleColors = [Constants.accentColorDark ?? UIColor.white]
+        set.circleHoleColor = Constants.accentColorDark ?? UIColor.white
         set.lineWidth = Constants.borderWidth
         set.circleRadius = 5
-        set.setColor(Constants.mainColor ?? UIColor.white)
         set.fill = Fill(color: Constants.accentColorDark ?? UIColor.clear)
         set.fillAlpha = 1
         set.drawFilledEnabled = true
@@ -275,16 +320,44 @@ class ResultDetailsViewController: UIViewController {
     
     func startAnimation() {
         
+        detailRowDistance.alpha = 0
+        detailRowTime.alpha = 0
+        detailRowSpeed.alpha = 0
+        detailRowDate.alpha = 0
+        lapsView.alpha = 0
+        
+        detailRowDistance.transform = CGAffineTransform(translationX: 0, y: 150)
+        detailRowTime.transform = CGAffineTransform(translationX: 0, y: 175)
+        detailRowSpeed.transform = CGAffineTransform(translationX: 0, y: 150)
+        detailRowDate.transform = CGAffineTransform(translationX: 0, y: 160)
+        lapsView.transform = CGAffineTransform(translationX: 0, y: 180)
+        
         // Show cancel button and countdown label when start is clicked
-        UIView.animate(withDuration: 0.3, animations: {
-            //self.summaryView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            self.detailRowDistance.transform = CGAffineTransform(translationX: 0, y: 0)
+            self.detailRowDistance.alpha = 1
+            UIView.animate(withDuration: 0.15, delay: 0.05, options: .curveEaseOut) {
+                self.detailRowTime.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.detailRowTime.alpha = 1
+            }
+            UIView.animate(withDuration: 0.35, delay: 0.05, options: .curveEaseOut) {
+                self.detailRowSpeed.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.detailRowDate.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.detailRowSpeed.alpha = 1
+                self.detailRowDate.alpha = 1
+                
+            }
+            UIView.animate(withDuration: 0.3, delay: 0.15, options: .curveEaseOut) {
+                self.detailRowDate.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.detailRowDate.alpha = 1
+                
+            }
+            UIView.animate(withDuration: 0.4, delay: 0.2, options: .curveEaseOut) {
+                self.lapsView.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.lapsView.alpha = 1
+            }
         }) { (_) in
-            UIView.animate(withDuration: 0.2) {
-                self.summaryView.transform = CGAffineTransform.identity
-            }
-            UIView.animate(withDuration: 0.3) {
-                self.lapsView.transform = CGAffineTransform.identity
-            }
+            
         }
     }
 }

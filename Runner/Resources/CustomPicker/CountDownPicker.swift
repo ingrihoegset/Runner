@@ -28,12 +28,12 @@ class CountDownPicker: UIView {
     let detail1: UILabel = {
         let detail1 = UILabel()
         detail1.translatesAutoresizingMaskIntoConstraints = false
-        detail1.backgroundColor = Constants.accentColorDark
+        detail1.backgroundColor = Constants.accentColor
         detail1.alpha = 1
         detail1.layer.cornerRadius = Constants.smallCornerRadius
         detail1.clipsToBounds = true
         detail1.font = Constants.countDownFont
-        detail1.textColor = Constants.textColorWhite
+        detail1.textColor = Constants.textColorDarkGray
         detail1.textAlignment = .center
         return detail1
     }()
@@ -41,12 +41,12 @@ class CountDownPicker: UIView {
     let detail2: UILabel = {
         let detail2 = UILabel()
         detail2.translatesAutoresizingMaskIntoConstraints = false
-        detail2.backgroundColor = Constants.accentColorDark
+        detail2.backgroundColor = Constants.accentColor
         detail2.alpha = 1
         detail2.layer.cornerRadius = Constants.smallCornerRadius
         detail2.clipsToBounds = true
         detail2.font = Constants.countDownFont
-        detail2.textColor = Constants.textColorWhite
+        detail2.textColor = Constants.textColorDarkGray
         detail2.textAlignment = .center
         return detail2
     }()

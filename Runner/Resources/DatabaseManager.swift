@@ -281,7 +281,7 @@ extension DatabaseManager {
     }
 
     /// Registers current run to user and partner user
-    func registerCurrentRunToDatabase(time: Double, runType: String, runDate: String, runDistance: Int, with completion: @escaping (Bool) -> Void) {
+    func registerCurrentRunToDatabase(time: Double, runType: String, runDate: String, runDistance: Int, userIsRunning: Bool, with completion: @escaping (Bool) -> Void) {
         
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when trying to register run ID to database.")
@@ -313,7 +313,8 @@ extension DatabaseManager {
                 "start_time": time,
                 "run_type": runType,
                 "run_date": runDate,
-                "run_distance": runDistance
+                "run_distance": runDistance,
+                "user_is_running": userIsRunning
             ]
 
             userNode["current_run"] = currentRun
@@ -338,7 +339,8 @@ extension DatabaseManager {
                     "start_time": time,
                     "run_type": runType,
                     "run_date": runDate,
-                    "run_distance": runDistance
+                    "run_distance": runDistance,
+                    "user_is_running": !userIsRunning
                 ]
                 
                 // Create partner link entry
@@ -498,6 +500,7 @@ extension DatabaseManager {
     /// Function saves current run to completed run and deletes current run from current run
     // Only needs to clean up after user because function is called when a race end time is observed. Both user and partner
     // have functions in place that listen for an end time.
+    // Check if our user is the one who ran, if so, run should be saved in completed runs. If not, discard run.
     func cleanUpAfterRunCompleted(completion: @ escaping (Bool) -> Void) {
         
         // Step 1: Get user
@@ -529,26 +532,33 @@ extension DatabaseManager {
                 completion(false)
                 return
             }
-
-            // Step 2: Update completed runs array
-            // If true - means that array of runs already exists - append to array
-            if var completedRuns = userNode["completed_runs"] as? [[String: Any]] {
-                completedRuns.append(currentRun)
-                userNode["completed_runs"] = completedRuns
+            
+            // Get bool value of whether user is running or not
+            guard let userIsRunning = currentRun["user_is_running"] as? Bool else {
+                print("Couldnt get Bool-value of runner")
+                completion(false)
+                return
             }
-            // Else, there is no existing completed runs array, so create one
-            else {
-                userNode["completed_runs"] = [
-                    currentRun
-                ]
+            
+            // Check if user is running, if so, save run to completed runs, if not, discard run
+            if userIsRunning == true {
+                
+                // Step 2: Update completed runs array
+                // If true - means that array of runs already exists - append to array
+                if var completedRuns = userNode["completed_runs"] as? [[String: Any]] {
+                    completedRuns.append(currentRun)
+                    userNode["completed_runs"] = completedRuns
+                }
+                // Else, there is no existing completed runs array, so create one
+                else {
+                    userNode["completed_runs"] = [
+                        currentRun
+                    ]
+                }
             }
             
             // Step 3: Delete current run
             userNode["current_run"] = nil
-            
-            /*
-            self?.database.child("\(userSafeEmail)/completed_runs/\(runID)").setValue(currentRun)
-             */
             
             // Update database with changes
             reference.setValue(userNode, withCompletionBlock: { error, _ in

@@ -153,11 +153,12 @@ class CounterPart: UIView {
     let first: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
+        label.backgroundColor = Constants.accentColor
         label.font = Constants.mainFontLargeSB
         label.layer.cornerRadius = Constants.smallCornerRadius
         label.clipsToBounds = true
         label.text = "0"
+        label.textColor = Constants.accentColorDark
         label.textAlignment = .center
         return label
     }()
@@ -165,11 +166,12 @@ class CounterPart: UIView {
     let second: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
+        label.backgroundColor = Constants.accentColor
         label.font = Constants.mainFontLargeSB
         label.layer.cornerRadius = Constants.smallCornerRadius
         label.clipsToBounds = true
         label.text = "0"
+        label.textColor = Constants.accentColorDark
         label.textAlignment = .center
         return label
     }()

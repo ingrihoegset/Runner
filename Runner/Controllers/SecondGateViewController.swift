@@ -97,12 +97,17 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         displayView.addSubview(pulsingView)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        self.secondGateViewModel.captureSession.startRunning()
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        displayView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         displayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: Constants.displayViewHeight / 2).isActive = true
+        displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         displayView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
 
         pulsingView.leadingAnchor.constraint(equalTo: displayView.leadingAnchor, constant: Constants.sideMargin).isActive = true

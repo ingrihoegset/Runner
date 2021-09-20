@@ -34,7 +34,7 @@ class ProfileViewController: UIViewController {
     let headerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -66,7 +66,7 @@ class ProfileViewController: UIViewController {
 
     var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = Constants.superLightGrey
+        tableView.backgroundColor = Constants.textColorDarkGray
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -174,16 +174,16 @@ class ProfileViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 2).isActive = true
+        headerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        headerView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
-        profileImageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -Constants.sideMargin / 2).isActive = true
         profileImageView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        profileImageView.widthAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.8).isActive = true
-        profileImageView.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.8).isActive = true
-        profileImageView.layer.cornerRadius = Constants.headerSize / 4 * 0.8
+        profileImageView.widthAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        profileImageView.layer.cornerRadius = Constants.displayButtonHeight / 2
         
         userNameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
         userNameLabel.heightAnchor.constraint(equalTo: profileImageView.heightAnchor, multiplier: 1).isActive = true
@@ -212,11 +212,11 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = Constants.superLightGrey
+        view.backgroundColor = Constants.textColorDarkGray
         
         let label = UILabel()
         label.text = sectionTitles[section]
-        label.textColor = Constants.textColorMain
+        label.textColor = Constants.textColorWhite
         label.font = Constants.mainFontSB
         label.textAlignment = .center
         label.frame = CGRect(x: 0, y: 0, width: Constants.widthOfDisplay, height: 60)
@@ -366,17 +366,18 @@ class SettingsTableViewCell: UITableViewCell {
         self.textLabel?.text = viewModel.title
         self.textLabel?.font = Constants.mainFont
         self.textLabel?.textAlignment = .center
+        self.backgroundColor = Constants.accentColor
         
         // Set appearance for type of cell
         switch viewModel.viewModelType {
         case .help:
-            self.textLabel?.textColor = Constants.textColorMain
+            self.textLabel?.textColor = Constants.textColorDarkGray
         case .privacy:
-            self.textLabel?.textColor = Constants.textColorMain
+            self.textLabel?.textColor = Constants.textColorDarkGray
         case .units:
-            self.textLabel?.textColor = Constants.textColorMain
+            self.textLabel?.textColor = Constants.textColorDarkGray
         case .restore:
-            self.textLabel?.textColor = Constants.textColorMain
+            self.textLabel?.textColor = Constants.textColorDarkGray
         case .logout:
             self.textLabel?.textColor = .systemRed
         }

@@ -20,5 +20,53 @@
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F628A1AC-5794-4409-8C86-118F6862CF06"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Runner/Controllers/ResultDetailsViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "detailRowTime"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "F628A1AC-5794-4409-8C86-118F6862CF06 - bca075d1169db7ef"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Runner.ResultDetailsViewController.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; Runner.ResultDetailsViewController"
+                  moduleName = "Runner"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ingrid/Desktop/Runner/Runner/Controllers/ResultDetailsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "1931">
+               </Location>
+               <Location
+                  uuid = "F628A1AC-5794-4409-8C86-118F6862CF06 - baa322ce5c9ab926"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Runner.ResultDetailsViewController.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;Runner.ResultDetailsViewController&gt;"
+                  moduleName = "Runner"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ingrid/Desktop/Runner/Runner/Controllers/ResultDetailsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "1866">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
