@@ -191,7 +191,7 @@ class ResultsViewController: UIViewController {
         // Navigation bar appearance
         title = "Run Completed!"
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorWhite]
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
                                                             style: .done,

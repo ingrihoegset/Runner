@@ -51,19 +51,18 @@ class SetUpRunViewController: UIViewController {
     }()
     
     let runnerSegmentControl: RoundedSegmentedControl = {
-        let name = UserDefaults.standard.value(forKey: "name") as? String
-        let control = RoundedSegmentedControl(items: ["Partner", name])
+        let control = RoundedSegmentedControl(items: ["Me", "You"])
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColorDark
+        control.selectedSegmentTintColor = Constants.accentColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorWhite,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(runnerSegmentControl(_:)), for: .valueChanged)
@@ -75,14 +74,14 @@ class SetUpRunViewController: UIViewController {
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColorDark
+        control.selectedSegmentTintColor = Constants.accentColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorWhite,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         //control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
@@ -101,11 +100,25 @@ class SetUpRunViewController: UIViewController {
         label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         label.trailingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        label.text = "Running"
+        label.text = " Running"
         label.textAlignment = .left
         label.textColor = Constants.textColorDarkGray
         label.font = Constants.mainFontLarge
+        view.isHidden = true
         return view
+    }()
+    
+    let runnerViewLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.layer.cornerRadius = Constants.smallCornerRadius
+        label.clipsToBounds = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = " Who's running?"
+        label.textAlignment = .left
+        label.textColor = Constants.textColorDarkGray
+        label.font = Constants.mainFont
+        return label
     }()
     
     let falseStartView: UIView = {
@@ -120,11 +133,25 @@ class SetUpRunViewController: UIViewController {
         label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         label.trailingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        label.text = "False start"
+        label.text = " False start"
         label.textAlignment = .left
         label.textColor = Constants.textColorDarkGray
         label.font = Constants.mainFontLarge
+        view.isHidden = true
         return view
+    }()
+    
+    let falseViewLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.layer.cornerRadius = Constants.smallCornerRadius
+        label.clipsToBounds = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = " False start?"
+        label.textAlignment = .left
+        label.textColor = Constants.textColorDarkGray
+        label.font = Constants.mainFont
+        return label
     }()
     
     override func viewDidLoad() {
@@ -141,25 +168,38 @@ class SetUpRunViewController: UIViewController {
         topView.addSubview(reactionPicker)
         
         view.addSubview(falseStartView)
+        view.addSubview(falseViewLabel)
+
         falseStartView.addSubview(falseStartSegmentControl)
         view.addSubview(runnerView)
+        view.addSubview(runnerViewLabel)
         runnerView.addSubview(runnerSegmentControl)
         
         view.addSubview(newRaceButton)
+        view.bringSubviewToFront(falseViewLabel)
         
         // Adjusts view for selected type of run
         setUpRunViewModel.selectedRunType()
+        setUpRunViewModel.isConnectedToParter()
     }
     
     deinit {
         print("DESTROYED SETUPRUN")
     }
     
+    func image(with image: UIImage?, scaledTo newSize: CGSize) -> UIImage? {
+            UIGraphicsBeginImageContext(newSize)
+            image?.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+            let newImage: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return newImage
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         topView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        topView.bottomAnchor.constraint(equalTo: falseStartView.topAnchor, constant: -Constants.sideMargin).isActive = true
+        topView.bottomAnchor.constraint(equalTo: falseStartView.topAnchor, constant: -Constants.sideMargin * 2).isActive = true
         topView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         topView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
@@ -188,20 +228,30 @@ class SetUpRunViewController: UIViewController {
         runnerView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         runnerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        runnerSegmentControl.leadingAnchor.constraint(equalTo: runnerView.centerXAnchor, constant: Constants.sideMargin/4).isActive = true
-        runnerSegmentControl.bottomAnchor.constraint(equalTo: runnerView.bottomAnchor, constant: -Constants.sideMargin/4).isActive = true
-        runnerSegmentControl.topAnchor.constraint(equalTo: runnerView.topAnchor, constant: Constants.sideMargin/4).isActive = true
-        runnerSegmentControl.trailingAnchor.constraint(equalTo: runnerView.trailingAnchor, constant: -Constants.sideMargin/4).isActive = true
+        runnerViewLabel.leadingAnchor.constraint(equalTo: runnerView.leadingAnchor).isActive = true
+        runnerViewLabel.bottomAnchor.constraint(equalTo: runnerView.topAnchor).isActive = true
+        runnerViewLabel.heightAnchor.constraint(equalToConstant: Constants.sideMargin).isActive = true
+        runnerViewLabel.trailingAnchor.constraint(equalTo: runnerView.trailingAnchor).isActive = true
+        
+        runnerSegmentControl.leadingAnchor.constraint(equalTo: runnerView.leadingAnchor).isActive = true
+        runnerSegmentControl.bottomAnchor.constraint(equalTo: runnerView.bottomAnchor).isActive = true
+        runnerSegmentControl.heightAnchor.constraint(equalTo: runnerView.heightAnchor).isActive = true
+        runnerSegmentControl.trailingAnchor.constraint(equalTo: runnerView.trailingAnchor).isActive = true
         
         falseStartView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         falseStartView.bottomAnchor.constraint(equalTo: newRaceButton.topAnchor, constant: -Constants.sideMargin).isActive = true
         falseStartView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         falseStartView.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
         
-        falseStartSegmentControl.leadingAnchor.constraint(equalTo: falseStartView.centerXAnchor, constant: Constants.sideMargin/4).isActive = true
-        falseStartSegmentControl.bottomAnchor.constraint(equalTo: falseStartView.bottomAnchor, constant: -Constants.sideMargin/4).isActive = true
-        falseStartSegmentControl.topAnchor.constraint(equalTo: falseStartView.topAnchor, constant: Constants.sideMargin/4).isActive = true
-        falseStartSegmentControl.trailingAnchor.constraint(equalTo: falseStartView.trailingAnchor, constant: -Constants.sideMargin/4).isActive = true
+        falseViewLabel.leadingAnchor.constraint(equalTo: falseStartView.leadingAnchor).isActive = true
+        falseViewLabel.bottomAnchor.constraint(equalTo: falseStartView.topAnchor).isActive = true
+        falseViewLabel.heightAnchor.constraint(equalToConstant: Constants.sideMargin).isActive = true
+        falseViewLabel.trailingAnchor.constraint(equalTo: falseStartView.trailingAnchor).isActive = true
+        
+        falseStartSegmentControl.leadingAnchor.constraint(equalTo: falseStartView.leadingAnchor).isActive = true
+        falseStartSegmentControl.bottomAnchor.constraint(equalTo: falseStartView.bottomAnchor).isActive = true
+        falseStartSegmentControl.heightAnchor.constraint(equalTo: falseStartView.heightAnchor).isActive = true
+        falseStartSegmentControl.trailingAnchor.constraint(equalTo: falseStartView.trailingAnchor).isActive = true
     }
     
     /// Takes us to Start Gate View Contoller and sends run selections to User selections
@@ -248,5 +298,10 @@ class SetUpRunViewController: UIViewController {
 extension SetUpRunViewController: SetUpRunViewModelDelegate {
     func showReactionRun() {
         reactionPicker.isHidden = false
+    }
+    
+    func showLinkedFeatures(isRunningWithOneGate: Bool) {
+        runnerView.isHidden = false
+        falseStartView.isHidden = false
     }
 }

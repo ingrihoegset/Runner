@@ -13,6 +13,8 @@ class RegisterViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
     
+    private var hud = Hud.create()
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -190,6 +192,69 @@ class RegisterViewController: UIViewController {
     
     @objc func release(sender:UIButton){
         sender.backgroundColor = Constants.contrastColor
+    }
+    
+    /// Send verification email to user when registering for first time
+    /*Email is sendt, but it takes a long time, haven't checked if email app actually opens, because i have to download on first.
+     Pressing on the link provided in the email does not lead back to the app. We get an error...
+     "Invalid dynamic link. Ensure that your dynamic links domain is correctly configure and that the path component of this url is valid.
+     Also need to work on how this process coensides with the rest of the registration process...*/
+    
+    @objc private func sendVerificationEmail() {
+        
+        Hud.handle(hud, with: HudInfo(type: .show, text: "Working", detailText: "Sending verification email..."))
+        
+        let actionCodeSettings = ActionCodeSettings()
+        
+        let email = emailField.text ?? ""
+        let scheme = InfoPlistParser.getStringValue(forKey: Setup.kFirebaseOpenAppScheme)
+        let uriPrefix = InfoPlistParser.getStringValue(forKey: Setup.kFirebaseOpenAppURIPrefix)
+        let queryItemEmailName = InfoPlistParser.getStringValue(forKey: Setup.kFirebaseOpenAppQueryItemEmailName)
+        
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = uriPrefix
+        
+        let emailURLQueryItem = URLQueryItem(name: queryItemEmailName, value: email)
+        components.queryItems = [emailURLQueryItem]
+        
+        guard let linkParameter = components.url else { return }
+        print("The link parameter is: \(linkParameter)")
+        
+        actionCodeSettings.url = linkParameter
+        actionCodeSettings.handleCodeInApp = true
+        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
+        
+        Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings, completion: { (error) in
+            if let error = error {
+                print(error.localizedDescription)
+                Hud.handle(self.hud, with: HudInfo(type: .error, text: "Error", detailText: "Failed to send verification email"))
+            }
+        })
+        
+        print("Successfully sent verification email to user on registration.")
+        
+        UserDefaults.standard.set(email, forKey: "email")
+        
+        Hud.handle(self.hud, with: HudInfo(type: .success, text: "Success!", detailText: "Successfully sent email"))
+        
+        // Prompt user to open email app
+        let openEmailAppAlertAction = UIAlertAction(title: "Open Mail App", style: .default, handler: { (action) in
+            Setup.shouldOpenMailApp = true
+            self.navigationController?.popViewController(animated: true)
+        })
+        
+        let cancelAlertAction = UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+            self.navigationController?.popViewController(animated: true)
+        })
+        
+        let alert = UIAlertController(title: "Success!",
+                                      message: "Successfully sent verification link to \(email).",
+                                      preferredStyle: .alert)
+        alert.addAction(openEmailAppAlertAction)
+        alert.addAction(cancelAlertAction)
+        present(alert, animated: true)
+        
     }
     
     /// When user taps image view to set profile pic

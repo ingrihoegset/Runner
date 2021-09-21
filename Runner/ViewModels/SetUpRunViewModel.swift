@@ -10,6 +10,7 @@ import Foundation
 
 protocol SetUpRunViewModelDelegate: AnyObject {
     func showReactionRun()
+    func showLinkedFeatures(isRunningWithOneGate: Bool)
 }
 
 class SetUpRunViewModel {
@@ -21,6 +22,7 @@ class SetUpRunViewModel {
 
     }
     
+    /// Checks selected run type so that UI is correct
     func selectedRunType() {
         let selectedRunType = selectionModel.getUserSelectedType()
 
@@ -29,6 +31,18 @@ class SetUpRunViewModel {
         }
         else {
 
+        }
+    }
+    
+    /// Checks if linked to a partner or not. If not linked runner selection and false start selection not necessary
+    func isConnectedToParter() {
+        let isRunningWithOneGate = selectionModel.getIsRunningWithOneGate()
+
+        if isRunningWithOneGate == true {
+            setUpRunViewModelDelegate?.showLinkedFeatures(isRunningWithOneGate: isRunningWithOneGate)
+        }
+        else {
+            setUpRunViewModelDelegate?.showLinkedFeatures(isRunningWithOneGate: false)
         }
     }
     

@@ -372,6 +372,34 @@ class HomeViewController: UIViewController {
         addChildController()
     }
     
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Open email app here on verification of email on registration
+        if Setup.shouldOpenMailApp {
+            Setup.shouldOpenMailApp = false
+            if let url = URL(string: "message://") {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+                // Could not open email app
+                else {
+                    let cancelAlertAction = UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+                        self.navigationController?.popViewController(animated: true)
+                    })
+                    
+                    let alert = UIAlertController(title: "Error",
+                                                  message: "Could not open email app on your phone.",
+                                                  preferredStyle: .alert)
+ 
+                    alert.addAction(cancelAlertAction)
+                    present(alert, animated: true)
+                }
+            }
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     
