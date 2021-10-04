@@ -51,7 +51,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     }()
     
     let segmentControl: RoundedSegmentedControl = {
-        let control = RoundedSegmentedControl(items: ["Scan Partner QR","My QR Code"])
+        let control = RoundedSegmentedControl(items: ["Scan partner QR","My QR code"])
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
@@ -75,9 +75,9 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
         imageView.tintColor = Constants.accentColor
-        let image = UIImage(systemName: "qrcode.viewfinder")
+        let image = UIImage(named: "QrScanner")
         imageView.image = image
-        imageView.alpha = 0.5
+        imageView.alpha = 0.7
         return imageView
     }()
     
@@ -138,7 +138,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         linkViewModel.linkViewModelDelegate = self
         linkViewModel.fetchProfilePic()
         
-        title = "Connect to Partner"
+        title = "Add second gate"
         view.backgroundColor = Constants.accentColor
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
@@ -156,21 +156,13 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         
         startCameraSession()
 
-        //view.addSubview(qrIndicatorImageView)
+        view.addSubview(qrIndicatorImageView)
         view.addSubview(segmentControlPanel)
         segmentControlPanel.addSubview(segmentControl)
         // Should start on different page depending on sender from home VC
         segmentControl.selectedSegmentIndex = startControlSegment
 
         segmentControl(segmentControl.self)
-
-        // Create details to indicate QR-scanning to user
-        let x: CGFloat = 80
-        let widthOfSquare: CGFloat = view.frame.width - x*2
-        let y: CGFloat = (view.frame.height - widthOfSquare) / 2
-        let rect = CGRect(x: x, y: y, width: widthOfSquare, height: widthOfSquare)
-        //addTransparentOverlayWithCirlce(rect: rect)
-        drawFoucusSquare(rect: rect, view: self.view)
         
         view.addSubview(backgroundView)
         backgroundView.addSubview(detailView)
@@ -202,12 +194,18 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         segmentControl.widthAnchor.constraint(equalTo: segmentControlPanel.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         segmentControl.heightAnchor.constraint(equalTo: segmentControlPanel.heightAnchor, constant: -Constants.sideMargin * 2).isActive = true
         
-        /*
-        qrIndicatorImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        qrIndicatorImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        qrIndicatorImageView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75).isActive = true
-        qrIndicatorImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75).isActive = true
-        */
+        // Related to centering QR-image in visible space in video preview layer
+        let g = UILayoutGuide()
+        self.view.addLayoutGuide(g)
+        g.topAnchor.constraint(equalTo: segmentControlPanel.bottomAnchor).isActive = true
+        g.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        g.leadingAnchor.constraint(equalTo:view.leadingAnchor).isActive = true
+        g.trailingAnchor.constraint(equalTo:view.trailingAnchor).isActive = true
+
+        qrIndicatorImageView.centerYAnchor.constraint(equalTo:g.centerYAnchor).isActive = true
+        qrIndicatorImageView.centerXAnchor.constraint(equalTo: g.centerXAnchor).isActive = true
+        qrIndicatorImageView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
+        qrIndicatorImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
         
         // Related to users own QR code
         
@@ -343,95 +341,6 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
                 }
             }
         }
-    }
-    
-    /// Creates a shaded out area an leaves a prominent square so user should know to look for QR code
-    func createOverlay(rect: CGRect) -> UIView {
-        
-        let overlayView = UIView(frame: view.frame)
-        overlayView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-
-        let path = CGMutablePath()
-
-        path.addRoundedRect(in: rect, cornerWidth: 5, cornerHeight: 5)
-
-        path.closeSubpath()
-        
-        let shape = CAShapeLayer()
-        shape.path = path
-
-        overlayView.layer.addSublayer(shape)
-        
-        path.addRect(CGRect(origin: .zero, size: overlayView.frame.size))
-
-        let maskLayer = CAShapeLayer()
-        maskLayer.backgroundColor = UIColor.black.cgColor
-        maskLayer.path = path
-        maskLayer.fillRule = CAShapeLayerFillRule.evenOdd
-
-        overlayView.layer.mask = maskLayer
-        overlayView.clipsToBounds = true
-        
-        return overlayView
-    }
-    
-    /// Draws the camera focus square
-    func drawFoucusSquare(rect: CGRect, view: UIView) -> Void {
-
-        let cornerWidth: CGFloat = 45.0
-
-        let topLeftBezierPath = UIBezierPath()
-        topLeftBezierPath.move(to: CGPoint(x: rect.origin.x, y: rect.origin.y + cornerWidth))
-        topLeftBezierPath.addLine(to: CGPoint(x: rect.origin.x, y: rect.origin.y))
-        topLeftBezierPath.addLine(to: CGPoint(x: rect.origin.x + cornerWidth, y: rect.origin.y))
-
-        let topRightBezierPath = UIBezierPath()
-        topRightBezierPath.move(to: CGPoint(x: rect.maxX, y: rect.origin.y + cornerWidth))
-        topRightBezierPath.addLine(to: CGPoint(x: rect.maxX, y: rect.origin.y))
-        topRightBezierPath.addLine(to: CGPoint(x: rect.maxX - cornerWidth, y: rect.origin.y))
-
-        let bottomRightBezierPath = UIBezierPath()
-        bottomRightBezierPath.move(to: CGPoint(x: rect.maxX, y: rect.maxY - cornerWidth))
-        bottomRightBezierPath.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        bottomRightBezierPath.addLine(to: CGPoint(x: rect.maxX - cornerWidth, y: rect.maxY))
-
-        let bottomLeftBezierPath = UIBezierPath()
-        bottomLeftBezierPath.move(to: CGPoint(x: rect.origin.x, y: rect.maxY - cornerWidth))
-        bottomLeftBezierPath.addLine(to: CGPoint(x: rect.origin.x, y: rect.maxY))
-        bottomLeftBezierPath.addLine(to: CGPoint(x: rect.origin.x + cornerWidth, y: rect.maxY))
-
-        func cornerLayer(with bezierPath: UIBezierPath) -> CAShapeLayer {
-            let shape = CAShapeLayer()
-            shape.path = bezierPath.cgPath
-            shape.lineWidth = 5.0
-            shape.strokeColor = UIColor.white.cgColor
-            shape.fillColor = UIColor.clear.cgColor
-            shape.lineCap = .round
-            return shape
-        }
-
-        let topLeftShape = cornerLayer(with: topLeftBezierPath)
-        view.layer.addSublayer(topLeftShape)
-
-        let topRightShape = cornerLayer(with: topRightBezierPath)
-        view.layer.addSublayer(topRightShape)
-
-        let bottomRightShape = cornerLayer(with: bottomRightBezierPath)
-        view.layer.addSublayer(bottomRightShape)
-
-        let bottomLeftShape = cornerLayer(with: bottomLeftBezierPath)
-        view.layer.addSublayer(bottomLeftShape)
-        
-        return
-    }
-
-    func addTransparentOverlayWithCirlce(rect: CGRect){
-        overlay = createOverlay(rect: rect)
-        view.addSubview(overlay)
-        overlay.topAnchor.constraint(equalTo: segmentControlPanel.bottomAnchor).isActive = true
-        overlay.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        overlay.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        overlay.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
 }
 

@@ -93,6 +93,7 @@ class CustomPickerView: UIView {
         pickerLengthBackgroundDetail.addSubview(detail3)
         pickerLengthBackgroundDetail.addSubview(unitLabel)
         pickerLengthBackgroundDetail.addSubview(label)
+        pickerLengthBackgroundDetail.addSubview(picker)
         
         picker.dataSource = self
         picker.delegate = self
@@ -144,9 +145,9 @@ class CustomPickerView: UIView {
         pickerLengthBackgroundDetail.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         pickerLengthBackgroundDetail.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         
-        picker.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
+        picker.topAnchor.constraint(equalTo: detail1.topAnchor, constant: -Constants.sideMargin).isActive = true
         picker.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor,constant: Constants.sideMargin).isActive = true
-        picker.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
+        picker.bottomAnchor.constraint(equalTo: detail1.bottomAnchor, constant: Constants.sideMargin).isActive = true
         picker.widthAnchor.constraint(equalToConstant: Constants.widthOfLengthPicker).isActive = true
         
         detail1.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor, constant: Constants.sideMargin).isActive = true
@@ -181,10 +182,10 @@ class CustomPickerView: UIView {
         pickerLengthBackgroundDetail.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         pickerLengthBackgroundDetail.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         
-        picker.topAnchor.constraint(equalTo: pickerLengthBackgroundDetail.topAnchor, constant: Constants.sideMargin / 2).isActive = true
+        picker.topAnchor.constraint(equalTo: detail1.topAnchor, constant: -Constants.sideMargin).isActive = true
         picker.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor,constant: Constants.sideMargin).isActive = true
-        picker.bottomAnchor.constraint(equalTo: pickerLengthBackgroundDetail.bottomAnchor, constant: -Constants.sideMargin * 1.5).isActive = true
-        picker.widthAnchor.constraint(equalToConstant: Constants.widthOfLengthPicker * 2/3).isActive = true
+        picker.bottomAnchor.constraint(equalTo: detail1.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        picker.widthAnchor.constraint(equalToConstant: Constants.widthOfLengthPicker * 2/3 - 5).isActive = true
         
         detail1.leadingAnchor.constraint(equalTo: pickerLengthBackgroundDetail.leadingAnchor, constant: Constants.sideMargin).isActive = true
         detail1.widthAnchor.constraint(equalToConstant: Constants.widthOfPickerLabel).isActive = true
@@ -294,10 +295,11 @@ extension CustomPickerView: UIPickerViewDataSource {
         return Constants.widthOfPickerLabel
     }
     
+    
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var label = UILabel()
         if let v = view as? UILabel { label = v }
-        label.font = Constants.mainFontXXLargeSB
+        label.font = Constants.resultFontSmall
         label.backgroundColor = .clear
         label.textColor = .white
         label.text =  numbers[row]
@@ -306,7 +308,9 @@ extension CustomPickerView: UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return pickerView.frame.height * 1
+        return pickerView.frame.height * 0.35
+        // Set back to * 1 to get back to original look
+        
     }
 }
 

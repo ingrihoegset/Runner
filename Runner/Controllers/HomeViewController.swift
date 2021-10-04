@@ -80,13 +80,11 @@ class HomeViewController: UIViewController {
 
     private let qrButton: BounceButton = {
         let qrButton = BounceButton()
-        qrButton.backgroundColor = Constants.accentColorDark
+        qrButton.backgroundColor = Constants.accentColor
         qrButton.translatesAutoresizingMaskIntoConstraints = false
-        qrButton.layer.borderColor = Constants.accentColor?.cgColor
-        qrButton.layer.borderWidth = Constants.borderWidth
-        qrButton.layer.masksToBounds = true
+        qrButton.layer.masksToBounds = false
         qrButton.animationColor = Constants.accentColorDark
-        let image = UIImage(systemName: "qrcode")?.withTintColor(Constants.mainColor!, renderingMode: .alwaysOriginal)
+        let image = UIImage(named: "QrCode")?.withTintColor(Constants.accentColorDark!, renderingMode: .alwaysOriginal)
         let imageview = UIImageView()
         qrButton.addSubview(imageview)
         imageview.translatesAutoresizingMaskIntoConstraints = false
@@ -94,8 +92,8 @@ class HomeViewController: UIViewController {
         imageview.bottomAnchor.constraint(equalTo: qrButton.bottomAnchor).isActive = true
         imageview.leadingAnchor.constraint(equalTo: qrButton.leadingAnchor).isActive = true
         imageview.trailingAnchor.constraint(equalTo: qrButton.trailingAnchor).isActive = true
-        imageview.contentMode = .scaleToFill
-        imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+        imageview.contentMode = .scaleAspectFit
+        imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
         qrButton.addTarget(self, action: #selector(didTapQRButton), for: .touchUpInside)
         qrButton.isUserInteractionEnabled = true
         qrButton.isHidden = true
@@ -114,9 +112,10 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    private let setUpSprintButton: BounceButton = {
-        let button = BounceButton()
-        button.backgroundColor = Constants.accentColorDark
+    private let setUpSprintButton: LargeImageButton = {
+        let button = LargeImageButton()
+        button.backgroundColor = Constants.accentColor
+        button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.accentColorDark!)
         button.setTitle("Sprint", for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.font = Constants.mainFontLargeSB
@@ -263,47 +262,95 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    let segmentLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = " Number of timing gates"
+        label.font = Constants.mainFont
+        label.textColor = Constants.textColorDarkGray
+        label.textAlignment = .left
+        return label
+    }()
+    
     let segmentControl: RoundedSegmentedControl = {
-        let control = RoundedSegmentedControl(items: ["One Gate","Two Gates"])
+        let control = RoundedSegmentedControl(items: ["1 Gate","2 Gates"])
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColorDark
+        control.selectedSegmentTintColor = Constants.accentColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorWhite,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
+        control.isHidden = true
         return control
+    }()
+    
+    let fakeSegmentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.accentColor
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    let segmentLeft: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.accentColorDark
+        button.setTitle("1 gate", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = Constants.mainFontLargeSB
+        button.layer.borderWidth = 2
+        button.layer.borderColor = Constants.accentColor?.cgColor
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        return button
+    }()
+    
+    let segmentRight: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.accentColor
+        button.setTitle("2 gates", for: .normal)
+        button.setTitleColor(Constants.textColorDarkGray, for: .normal)
+        button.titleLabel?.font = Constants.mainFontLargeSB
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        return button
     }()
     
     let button: LargeImageButton = {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
-        button.imageview.image = UIImage(named: "Sprint")
+        button.backgroundColor = Constants.accentColor
+        button.animationColor = Constants.accentColorDark
+        button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.accentColorDark!)
         button.imageview.isOpaque = true
-        button.imageview.alpha = 0.7
+        button.imageview.alpha = 1
         button.title.text = "Sprint"
-        button.isHidden = true
+        button.title.textColor = Constants.textColorDarkGray
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         return button
     }()
     
     let rbutton: LargeImageButton = {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.accentColor
+        button.animationColor = Constants.accentColorDark
+        button.tag = 1
         let image = UIImage(named: "Reaction")
-        button.imageview.image = UIImage(named: "Reaction")
+        button.imageview.image = UIImage(named: "Reaction")?.withTintColor(Constants.accentColorDark!)
         button.imageview.isOpaque = true
-        button.imageview.alpha = 0.7
+        button.imageview.alpha = 1
         button.title.text = "Reaction Run"
-        button.isHidden = true
+        button.title.textColor = Constants.textColorDarkGray
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         return button
     }()
     
@@ -346,6 +393,10 @@ class HomeViewController: UIViewController {
         secondGateHeaderView.addSubview(secondGateProfileImageView)
         
         // Controller used to switch between two gate and  one gate
+        mainView.addSubview(fakeSegmentView)
+        fakeSegmentView.addSubview(segmentLeft)
+        fakeSegmentView.addSubview(segmentRight)
+        mainView.addSubview(segmentLabel)
         mainView.addSubview(segmentControl)
         
         mainView.addSubview(unconnectedView)
@@ -363,6 +414,8 @@ class HomeViewController: UIViewController {
         mainView.addSubview(secondGateView)
         secondGateView.addSubview(openSecondGatesButton)
         secondGateView.addSubview(unLinkFromSecondGateButton)
+        
+        view.bringSubviewToFront(qrButton)
 
         homeViewModel.clearLinkFromDatabase()
         
@@ -487,10 +540,30 @@ class HomeViewController: UIViewController {
         secondGatePartnerProfileImageView.layer.cornerRadius = Constants.imageSize / 2
         
         // Segment control, common to all states / views
-        segmentControl.topAnchor.constraint(equalTo: unconnectedprofileImageView.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        segmentLabel.heightAnchor.constraint(equalToConstant: Constants.sideMargin * 1.35).isActive = true
+        segmentLabel.topAnchor.constraint(equalTo: unconnectedprofileImageView.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
+        segmentLabel.leadingAnchor.constraint(equalTo: segmentControl.leadingAnchor).isActive = true
+        segmentLabel.trailingAnchor.constraint(equalTo: segmentControl.trailingAnchor).isActive = true
+        
+        segmentControl.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor).isActive = true
         segmentControl.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         segmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         segmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        
+        fakeSegmentView.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor).isActive = true
+        fakeSegmentView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        fakeSegmentView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        fakeSegmentView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        
+        segmentLeft.leadingAnchor.constraint(equalTo: fakeSegmentView.leadingAnchor).isActive = true
+        segmentLeft.trailingAnchor.constraint(equalTo: fakeSegmentView.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        segmentLeft.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor).isActive = true
+        segmentLeft.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        segmentRight.trailingAnchor.constraint(equalTo: fakeSegmentView.trailingAnchor).isActive = true
+        segmentRight.leadingAnchor.constraint(equalTo: fakeSegmentView.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
+        segmentRight.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor).isActive = true
+        segmentRight.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         // Selections shown when no link
         unconnectedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
@@ -498,11 +571,12 @@ class HomeViewController: UIViewController {
         unconnectedView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor).isActive = true
         unconnectedView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
 
+        /*
         setUpSprintButton.anchor(top: unconnectedView.topAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
         setUpSprintButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         setUpReactionButton.anchor(top: setUpSprintButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        setUpReactionButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        setUpReactionButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true*/
         
         button.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
         button.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true

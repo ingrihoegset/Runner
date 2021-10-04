@@ -145,7 +145,6 @@ class RegisterViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        
         imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
@@ -372,21 +371,18 @@ class RegisterViewController: UIViewController {
         tabBarVC.tabBar.unselectedItemTintColor = Constants.accentColor
         
         let home = HomeViewController()
-        home.title = ""
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
         navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
         navVC.navigationBar.tintColor = Constants.accentColorDark
         
         let stats = StatisticsViewController()
-        stats.title = "My Runs"
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
         navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
         navVCStats.navigationBar.tintColor = Constants.accentColorDark
         
         let profile = ProfileViewController()
-        profile.title = "Settings"
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
         navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]

@@ -86,15 +86,23 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         return view
     }()
     
-    let editButton: BounceButton = {
-        let button = BounceButton()
+    let editButton: UIButton = {
+        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(editTable), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.setTitle("Edit", for: .normal)
+        let image = UIImage(systemName: "trash.fill")?.withTintColor(Constants.accentColor!)
+        let imageview = UIImageView()
+        button.addSubview(imageview)
+        imageview.translatesAutoresizingMaskIntoConstraints = false
+        imageview.topAnchor.constraint(equalTo: button.topAnchor).isActive = true
+        imageview.bottomAnchor.constraint(equalTo: button.bottomAnchor).isActive = true
+        imageview.leadingAnchor.constraint(equalTo: button.leadingAnchor).isActive = true
+        imageview.trailingAnchor.constraint(equalTo: button.trailingAnchor).isActive = true
+        button.imageView?.image = image
+        imageview.contentMode = .scaleAspectFit
+        imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         button.backgroundColor = Constants.accentColorDark
-        button.titleLabel?.font = Constants.mainFontSB
-        button.setTitleColor(Constants.textColorWhite, for: .normal)
         return button
     }()
     
@@ -127,7 +135,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     /// Labels for header of stats tabel view
     private let runDistanceButton: BounceButton = {
         let button = BounceButton()
-        button.setTitle("Distance", for: .normal)
+        button.setTitle("m", for: .normal)
         button.backgroundColor = Constants.accentColorDark
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -140,7 +148,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     /// Labels for header of stats tabel view
     private let runSpeedButton: BounceButton = {
         let button = BounceButton()
-        button.setTitle("Speed", for: .normal)
+        button.setTitle("km/h", for: .normal)
         button.backgroundColor = Constants.accentColorDark
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -163,7 +171,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statisticsViewModel.statisticsViewModelDelegate = self
         statisticsViewModel.listenForCompletedRuns()
         
-        title = "My Runs"
+        navigationItem.title = "My Runs"
         view.backgroundColor = Constants.accentColor
         
         view.addSubview(headerView)

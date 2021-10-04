@@ -167,10 +167,7 @@ class HomeViewModel {
     private func timesToResult(times: [String: Any]) -> RunResults {
         if let endTime = times["end_time"] as? Double,
            let startTime = times["start_time"] as? Double,
-           let distance = times["run_distance"] as? Int,
-           let type = times["run_type"] as? String,
-           let date = times["run_date"] as? String,
-           let runID = times["run_id"] as? String {
+           let distance = times["run_distance"] as? Int {
             
             // Get total race time in seconds
             let totalSeconds = endTime - startTime
@@ -179,8 +176,6 @@ class HomeViewModel {
             // Find average time
             let hours = totalSeconds / 3600
             let kilometers = Double(distance) / 1000
-
-            print(hours, kilometers)
             
             let averageSpeed = kilometers / hours
             let averageSpeedInDecimals = averageSpeed.round(to: 2)
@@ -195,33 +190,17 @@ class HomeViewModel {
             let raceTimeSeconds = String(format: "%02d", seconds)
             let raceTimeMinutes = String(format: "%02d", minutes)
             
-            if let dateAsDate = FirstGateViewModel.dateFormatterShort.date(from: date) {
-                
-                // Create run result with data
-                let runResult = RunResults(time: timeInDecimals,
-                                           minutes: raceTimeMinutes,
-                                           seconds: raceTimeSeconds,
-                                           hundreths: raceTimeHundreths,
-                                           distance: distance,
-                                           averageSpeed: averageSpeedInDecimals,
-                                           type: type,
-                                           date: dateAsDate,
-                                           runID: runID)
-                return runResult
-            }
-            else {
-                // Create run result with data
-                let runResult = RunResults(time: timeInDecimals,
-                                           minutes: raceTimeMinutes,
-                                           seconds: raceTimeSeconds,
-                                           hundreths: raceTimeHundreths,
-                                           distance: distance,
-                                           averageSpeed: averageSpeedInDecimals,
-                                           type: type,
-                                           date: Date(),
-                                           runID: runID)
-                return runResult
-            }
+            // Create run result with data
+            let runResult = RunResults(time: timeInDecimals,
+                                       minutes: raceTimeMinutes,
+                                       seconds: raceTimeSeconds,
+                                       hundreths: raceTimeHundreths,
+                                       distance: distance,
+                                       averageSpeed: averageSpeedInDecimals,
+                                       type: "",
+                                       date: Date(),
+                                       runID: "")
+            return runResult
         }
         
         // If something went wrong when converting data
@@ -242,6 +221,22 @@ class HomeViewModel {
     
     func milliSecondsToMinutesSecondsHundreths (milliseconds : Int) -> (Int, Int, Int) {
       return (milliseconds / 6000, (milliseconds % 6000) / 100, (milliseconds % 60000) % 100)
+    }
+    
+    func metersToYards(meters: Int) -> Double {
+        return Double(meters) * 1.0936133
+    }
+    
+    func yardsToMeters(yards: Int) -> Double {
+        return Double(yards) * 0.9144
+    }
+    
+    func kmhToMph(kmh: Double) -> Double {
+        return kmh * 0.621371192
+    }
+    
+    func mphToKmh(mph: Double) -> Double {
+        return mph * 1.609344
     }
 }
 

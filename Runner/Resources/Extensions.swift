@@ -136,8 +136,3 @@ extension String {
     }
 }
 
-extension UIImage {
-    
-
-    
-}

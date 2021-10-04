@@ -16,7 +16,7 @@ enum SettingsSelectionViewModelType {
 
 struct SettingSelectionViewModel {
     let viewModelType: SettingsSelectionViewModelType
-    let title: String
+    var title: String
     let handler: (() -> Void)?
 }
 
@@ -30,6 +30,9 @@ class ProfileViewController: UIViewController {
     
     var data = [SettingSelectionViewModel]()
     var profileViewModel = ProfileViewModel()
+    
+    var metricSystem = true
+    var unitTitle = "Units: Metric system"
     
     let headerView: UIView = {
         let view = UIView()
@@ -74,7 +77,7 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Settings"
+        navigationItem.title = "Settings"
         view.backgroundColor = Constants.accentColor
         
         profileViewModel.profileViewModelDelegate = self
@@ -97,6 +100,12 @@ class ProfileViewController: UIViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(presentPhotoActionSheet))
         profileImageView.addGestureRecognizer(gesture)
         
+        // Units title depends on user preferences
+        
+        if metricSystem == false {
+            unitTitle = "Units: Imperial system"
+        }
+        
         // Configure data for table view
         section1Data.append(SettingSelectionViewModel(viewModelType: .help,
                                               title: "Help",
@@ -104,9 +113,27 @@ class ProfileViewController: UIViewController {
         section1Data.append(SettingSelectionViewModel(viewModelType: .privacy,
                                               title: "Privacy policy",
                                               handler: nil))
+        // Obs, no unit functionality has been programmed yet
         section2Data.append(SettingSelectionViewModel(viewModelType: .units,
-                                              title: "Units of measurement",
-                                              handler: nil))
+                                              title: unitTitle,
+                                              handler: { [weak self] in
+                                                
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                
+                                                if strongSelf.metricSystem == true {
+                                                    strongSelf.metricSystem = false
+                                                    strongSelf.unitTitle = "Units: Imperial system"
+                                                }
+                                                else {
+                                                    strongSelf.metricSystem = true
+                                                    strongSelf.unitTitle = "Units: Metric system"
+                                                }
+                                                // Obs, hard coded which row is updated on selection
+                                                strongSelf.sectionData[1]?[0].title = strongSelf.unitTitle
+                                                self?.tableView.reloadData()
+                                              }))
         section3Data.append(SettingSelectionViewModel(viewModelType: .restore,
                                               title: "Restore purchase",
                                               handler: nil))

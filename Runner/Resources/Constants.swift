@@ -46,8 +46,8 @@ struct Constants {
     
     // Picker dimensions
     static let widthOfPickerLabel = Constants.widthOfDisplay * 0.165
-    static let widthOfLengthPicker = widthOfPickerLabel * 3
-    static let widthOfDelayPicker = widthOfPickerLabel * 2
+    static let widthOfLengthPicker = widthOfPickerLabel * 3 + 10
+    static let widthOfDelayPicker = widthOfPickerLabel * 2 + 5
     
     // Fonts
         //Light
@@ -64,7 +64,7 @@ struct Constants {
     static let mainFontXXLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 40)
     static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 120)
     static let resultFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 70)
-    static let resultFontSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 40)
+    static let resultFontSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 30)
     
     // Set race VC texts
     static let noOfLaps = "Number of laps"
