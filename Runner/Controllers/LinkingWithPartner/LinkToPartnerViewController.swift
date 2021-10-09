@@ -55,17 +55,18 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColorDark
+        control.selectedSegmentTintColor = Constants.mainColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
             NSAttributedString.Key.font as NSObject : Constants.mainFontSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorWhite,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
+        control.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return control
     }()
     
@@ -94,6 +95,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return view
     }()
     

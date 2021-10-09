@@ -39,11 +39,12 @@ class RegisterViewController: UIViewController {
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
         field.layer.borderColor = Constants.accentColorDark?.cgColor
-        field.placeholder = "Email Address..."
+        field.placeholder = "Email address..."
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
+        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
     
@@ -62,6 +63,7 @@ class RegisterViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
+        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
     
@@ -80,6 +82,7 @@ class RegisterViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
+        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
     
@@ -99,6 +102,7 @@ class RegisterViewController: UIViewController {
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
         field.isSecureTextEntry = true
+        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
     
@@ -154,27 +158,27 @@ class RegisterViewController: UIViewController {
         firstNameField.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
         firstNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         firstNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        firstNameField.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        firstNameField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        lastNameField.topAnchor.constraint(equalTo: firstNameField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        lastNameField.topAnchor.constraint(equalTo: firstNameField.bottomAnchor, constant: Constants.sideMargin).isActive = true
         lastNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         lastNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        lastNameField.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        lastNameField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        emailField.topAnchor.constraint(equalTo: lastNameField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        emailField.topAnchor.constraint(equalTo: lastNameField.bottomAnchor, constant: Constants.sideMargin).isActive = true
         emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        emailField.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        emailField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: Constants.sideMargin).isActive = true
         passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        passwordField.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        passwordField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        logginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        logginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: Constants.sideMargin).isActive = true
         logginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        logginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        logginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
     }
     
     private func clearTextFields() {

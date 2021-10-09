@@ -44,11 +44,12 @@ class LoginViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.font = Constants.mainFontLarge
-        field.placeholder = "Email Address..."
+        field.placeholder = "Email address..."
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
+        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
     
@@ -66,13 +67,14 @@ class LoginViewController: UIViewController {
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
         field.isSecureTextEntry = true
+        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
     
     private let logginButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Log In", for: .normal)
+        button.setTitle("Log in", for: .normal)
         button.backgroundColor = Constants.contrastColor
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.setTitleColor(.white, for: .normal)
@@ -218,18 +220,18 @@ class LoginViewController: UIViewController {
         emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         emailField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: Constants.sideMargin).isActive = true
         passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         passwordField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        logginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        logginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: Constants.sideMargin).isActive = true
         logginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         logginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         /*
-        fbLoginButton.topAnchor.constraint(equalTo: logginButton.bottomAnchor, constant: Constants.verticalSpacingSmall).isActive = true
+        fbLoginButton.topAnchor.constraint(equalTo: logginButton.bottomAnchor, constant: Constants.sideMargin).isActive = true
         fbLoginButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         fbLoginButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin).isActive = true
         fbLoginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true

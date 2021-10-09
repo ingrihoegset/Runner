@@ -36,12 +36,6 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     let statisticsViewModel = StatisticsViewModel()
     
-    var sortDistanceClicked = false
-    var sortTimeClicked = false
-    var sortDateClicked = false
-    var sortSpeedClicked = false
-    var sortTypeClicked = false
-    var sortEditClicked = false
     var selectedTypes: [String] = []
     
     let headerView: UIView = {
@@ -58,7 +52,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.backgroundColor = Constants.accentColorDark
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.smallCornerRadius
-        button.setTitle("Run Type", for: .normal)
+        button.setTitle("Run type", for: .normal)
         button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(presentSortType), for: .touchUpInside)
@@ -91,7 +85,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(editTable), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        let image = UIImage(systemName: "trash.fill")?.withTintColor(Constants.accentColor!)
+        let image = UIImage(systemName: "trash.fill")?.withTintColor(Constants.accentColorDark!)
         let imageview = UIImageView()
         button.addSubview(imageview)
         imageview.translatesAutoresizingMaskIntoConstraints = false
@@ -102,7 +96,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.imageView?.image = image
         imageview.contentMode = .scaleAspectFit
         imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColor
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -123,12 +118,14 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     private let runTimeButton: BounceButton = {
         let button = BounceButton()
         button.setTitle("Time", for: .normal)
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColor
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.setTitleColor(Constants.mainColor, for: .selected)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(sortByTime), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -136,12 +133,20 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     private let runDistanceButton: BounceButton = {
         let button = BounceButton()
         button.setTitle("m", for: .normal)
-        button.backgroundColor = Constants.accentColorDark
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == false {
+                button.setTitle("yd", for: .normal)
+            }
+        }
+        button.animationColor = Constants.mainColor
+        button.backgroundColor = Constants.mainColor
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.setTitleColor(Constants.textColorWhite, for: .selected)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(sortByDistance), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -149,12 +154,19 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     private let runSpeedButton: BounceButton = {
         let button = BounceButton()
         button.setTitle("km/h", for: .normal)
-        button.backgroundColor = Constants.accentColorDark
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == false {
+                button.setTitle("mph", for: .normal)
+            }
+        }
+        button.backgroundColor = Constants.mainColor
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(Constants.textColorWhite, for: .normal)
+        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.setTitleColor(Constants.mainColor, for: .selected)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(sortBySpeed), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -169,9 +181,9 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         super.viewDidLoad()
         
         statisticsViewModel.statisticsViewModelDelegate = self
-        statisticsViewModel.listenForCompletedRuns()
+        statisticsViewModel.getCompletedRuns()
         
-        navigationItem.title = "My Runs"
+        navigationItem.title = "My runs"
         view.backgroundColor = Constants.accentColor
         
         view.addSubview(headerView)
@@ -183,6 +195,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statsHeaderView.addSubview(runSpeedButton)
         statsHeaderView.addSubview(runTimeButton)
         view.addSubview(tableView)
+        view.bringSubviewToFront(statsHeaderView)
         
         tableView.register(RunTableViewCell.self, forCellReuseIdentifier: RunTableViewCell.identifier)
         tableView.delegate = self
@@ -192,6 +205,25 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         tableView.separatorInset = UIEdgeInsets.zero
         
         spinner.startAnimating()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == true {
+                runSpeedButton.setTitle("km/h", for: .normal)
+                runDistanceButton.setTitle("m", for: .normal)
+            }
+            else {
+                runSpeedButton.setTitle("mph", for: .normal)
+                runDistanceButton.setTitle("yd", for: .normal)
+            }
+        }
+        else {
+            runSpeedButton.setTitle("km/h", for: .normal)
+            runDistanceButton.setTitle("m", for: .normal)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -415,22 +447,18 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     @objc func editTable(_ sender: UIButton) {
         self.tableView.isEditing = !self.tableView.isEditing
         
-        if sortEditClicked == true {
-            sortEditClicked = false
+        if editButton.isSelected == true {
+            editButton.isSelected = false
+            DispatchQueue.main.async {
+                self.editButton.backgroundColor = Constants.mainColor
+            }
+        }
+        else {
+            editButton.isSelected = true
             DispatchQueue.main.async {
                 self.editButton.backgroundColor = Constants.accentColorDark
             }
         }
-        else {
-            sortEditClicked = true
-            DispatchQueue.main.async {
-                self.editButton.backgroundColor = Constants.contrastColor
-            }
-        }
-        
-        
-        //let title = (self.statsTableView.isEditing) ? "Done" : "Edit"
-        //sender.setTitle(title, for: .normal)
     }
     
     @objc func presentSortType() {
@@ -464,121 +492,112 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     private func unselectAllButtons() {
-        sortDistanceClicked = false
-        sortTimeClicked = false
-        sortDateClicked = false
-        sortSpeedClicked = false
-        sortEditClicked = false
-        sortTypeClicked = false
-        runTimeButton.backgroundColor = Constants.accentColorDark
-        runDistanceButton.backgroundColor = Constants.accentColorDark
-        runSpeedButton.backgroundColor = Constants.accentColorDark
-        editButton.backgroundColor = Constants.accentColorDark
+        runDistanceButton.isSelected = false
+        runTimeButton.isSelected = false
+        runDistanceButton.isSelected = false
+        editButton.isSelected = false
+        sortTypeButton.isSelected = false
+        sortDateButton.isSelected = false
+        runTimeButton.backgroundColor = Constants.mainColor
+        runDistanceButton.backgroundColor = Constants.mainColor
+        runSpeedButton.backgroundColor = Constants.mainColor
+        editButton.backgroundColor = Constants.mainColor
         sortTypeButton.backgroundColor = Constants.accentColorDark
         sortDateButton.backgroundColor = Constants.accentColorDark
+        runTimeButton.animationColor = Constants.mainColor
+        runSpeedButton.animationColor = Constants.mainColor
+        runDistanceButton.animationColor = Constants.mainColor
     }
     
     @objc func sortByDistance() {
-        sortTimeClicked = false
-        runTimeButton.backgroundColor = Constants.accentColorDark
-        sortSpeedClicked = false
-        runSpeedButton.backgroundColor = Constants.accentColorDark
-        if sortDistanceClicked == true {
-            sortDistanceClicked = false
+        runTimeButton.isSelected = false
+        runSpeedButton.isSelected = false
+        runTimeButton.backgroundColor = Constants.mainColor
+        runSpeedButton.backgroundColor = Constants.mainColor
+        runTimeButton.animationColor = Constants.mainColor
+        runSpeedButton.animationColor = Constants.mainColor
+        if runDistanceButton.isSelected == true {
+            runDistanceButton.isSelected = false
+            runDistanceButton.backgroundColor = Constants.mainColor
+            runDistanceButton.animationColor = Constants.mainColor
             runs.sort {
                 $0.distance > $1.distance
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runDistanceButton.backgroundColor = Constants.accentColorDark
             }
         }
         else {
-            sortDistanceClicked = true
+            runDistanceButton.isSelected = true
+            runDistanceButton.backgroundColor = Constants.accentColorDark
+            runDistanceButton.animationColor = Constants.accentColorDark
             runs.sort {
                 $0.distance < $1.distance
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runDistanceButton.backgroundColor = Constants.contrastColor
             }
-
         }
     }
     
     @objc func sortBySpeed() {
-        sortTimeClicked = false
-        runTimeButton.backgroundColor = Constants.accentColorDark
-        sortDistanceClicked = false
-        runDistanceButton.backgroundColor = Constants.accentColorDark
-        if sortSpeedClicked == true {
-            sortSpeedClicked = false
+        runTimeButton.isSelected = false
+        runDistanceButton.isSelected = false
+        runTimeButton.backgroundColor = Constants.mainColor
+        runDistanceButton.backgroundColor = Constants.mainColor
+        runDistanceButton.animationColor = Constants.mainColor
+        runTimeButton.animationColor = Constants.mainColor
+        if runSpeedButton.isSelected == true {
+            runSpeedButton.isSelected = false
             runs.sort {
                 $0.averageSpeed < $1.averageSpeed
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runSpeedButton.backgroundColor = Constants.accentColorDark
+                self.runSpeedButton.backgroundColor = Constants.mainColor
+                self.runSpeedButton.animationColor = Constants.mainColor
             }
         }
         else {
-            sortSpeedClicked = true
+            runSpeedButton.isSelected = true
             runs.sort {
                 $0.averageSpeed > $1.averageSpeed
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runSpeedButton.backgroundColor = Constants.contrastColor
-            }
-        }
-    }
-    
-    @objc func sortByDate() {
-        if sortDateClicked == true {
-            sortDateClicked = false
-            runs.sort {
-                $0.date < $1.date
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.sortDateButton.backgroundColor = Constants.accentColorDark
-            }
-        }
-        else {
-            sortDateClicked = true
-            runs.sort {
-                $0.date > $1.date
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.sortDateButton.backgroundColor = Constants.contrastColor
+                self.runSpeedButton.backgroundColor = Constants.accentColorDark
+                self.runSpeedButton.animationColor = Constants.accentColorDark
             }
         }
     }
     
     @objc func sortByTime() {
-        sortDistanceClicked = false
-        runDistanceButton.backgroundColor = Constants.accentColorDark
-        sortSpeedClicked = false
-        runSpeedButton.backgroundColor = Constants.accentColorDark
-        if sortTimeClicked == true {
-            sortTimeClicked = false
+        runDistanceButton.isSelected = false
+        runSpeedButton.isSelected = false
+        runDistanceButton.backgroundColor = Constants.mainColor
+        runSpeedButton.backgroundColor = Constants.mainColor
+        runDistanceButton.animationColor = Constants.mainColor
+        runSpeedButton.animationColor = Constants.mainColor
+        if runTimeButton.isSelected == true {
+            runTimeButton.isSelected = false
             runs.sort {
                 $0.time > $1.time
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runTimeButton.backgroundColor = Constants.accentColorDark
+                self.runTimeButton.backgroundColor = Constants.mainColor
+                self.runTimeButton.animationColor = Constants.mainColor
             }
         }
         else {
-            sortTimeClicked = true
+            runTimeButton.isSelected = true
             runs.sort {
                 $0.time < $1.time
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runTimeButton.backgroundColor = Constants.contrastColor
+                self.runTimeButton.backgroundColor = Constants.accentColorDark
+                self.runTimeButton.animationColor = Constants.accentColorDark
             }
         }
     }

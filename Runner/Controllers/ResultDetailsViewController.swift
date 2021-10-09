@@ -34,52 +34,60 @@ class ResultDetailsViewController: UIViewController {
         return view
     }()
     
-    let detailRowDate: UILabel = {
-        let label = UILabel()
-        label.font = Constants.mainFontLargeSB
-        label.textColor = Constants.contrastColor
-        label.textAlignment = .center
-        label.backgroundColor = Constants.accentColor
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let detailRowDate: UIButton = {
+        let button = UIButton()
+        button.titleLabel?.font = Constants.resultFontSmall
+        button.titleLabel?.textColor = Constants.accentColorDark
+        button.titleLabel?.textAlignment = .center
+        button.backgroundColor = Constants.accentColor
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.layer.masksToBounds = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
+        button.isUserInteractionEnabled = false
+        return button
     }()
     
-    let detailRowTime: UILabel = {
-        let label = UILabel()
-        label.font = Constants.resultFontSmall
-        label.textColor = Constants.contrastColor
-        label.textAlignment = .center
-        label.backgroundColor = Constants.accentColor
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let detailRowTime: UIButton = {
+        let button = UIButton()
+        button.titleLabel?.font = Constants.resultFontSmall
+        button.titleLabel?.textColor = Constants.contrastColor
+        button.titleLabel?.textAlignment = .center
+        button.backgroundColor = Constants.accentColor
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.layer.masksToBounds = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
+        button.isUserInteractionEnabled = false
+        return button
     }()
     
-    let detailRowDistance: UILabel = {
-        let label = UILabel()
-        label.font = Constants.resultFontSmall
-        label.textColor = Constants.contrastColor
-        label.textAlignment = .center
-        label.backgroundColor = Constants.accentColor
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let detailRowDistance: UIButton = {
+        let button = UIButton()
+        button.titleLabel?.font = Constants.resultFontSmall
+        button.titleLabel?.textColor = Constants.contrastColor
+        button.titleLabel?.textAlignment = .center
+        button.backgroundColor = Constants.accentColor
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.layer.masksToBounds = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
+        button.isUserInteractionEnabled = false
+        return button
     }()
     
-    let detailRowSpeed: UILabel = {
-        let label = UILabel()
-        label.font = Constants.resultFontSmall
-        label.textColor = Constants.contrastColor
-        label.textAlignment = .center
-        label.backgroundColor = Constants.accentColor
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    let detailRowSpeed: UIButton = {
+        let button = UIButton()
+        button.titleLabel?.font = Constants.resultFontSmall
+        button.titleLabel?.textColor = Constants.contrastColor
+        button.titleLabel?.textAlignment = .center
+        button.backgroundColor = Constants.accentColor
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.layer.masksToBounds = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
+        button.isUserInteractionEnabled = false
+        return button
     }()
     
     let lapsView: UIView = {
@@ -88,6 +96,7 @@ class ResultDetailsViewController: UIViewController {
         view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return view
     }()
     
@@ -170,7 +179,7 @@ class ResultDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title =  type + " Stats"
+        title =  type + " stats"
         
         resultDetailsViewModel.resultsViewModelDelegate = self
         
@@ -191,22 +200,41 @@ class ResultDetailsViewController: UIViewController {
         timeText.append(timeResult)
         timeText.append(timeUnit)
         
+        var speedUnit = NSMutableAttributedString(string: " km/h", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        var distUnit = NSMutableAttributedString(string: " m", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == true {
+                // Do nothing, metric version already set
+            }
+            else {
+                speedUnit = NSMutableAttributedString(string: " mph", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                distUnit = NSMutableAttributedString(string: " yd", attributes: unitAttributes as [NSAttributedString.Key : Any])
+            }
+        }
+        else {
+            // Do nothing, metric version already set
+        }
+        
         let speedResult = NSMutableAttributedString(string: averageSpeed, attributes: resultAttributes as [NSAttributedString.Key : Any])
-        let speedUnit = NSMutableAttributedString(string: " km/h", attributes: unitAttributes as [NSAttributedString.Key : Any])
         let speedText = NSMutableAttributedString()
         speedText.append(speedResult)
         speedText.append(speedUnit)
         
         let distResult = NSMutableAttributedString(string: String(distance), attributes: resultAttributes as [NSAttributedString.Key : Any])
-        let distUnit = NSMutableAttributedString(string: " m", attributes: unitAttributes as [NSAttributedString.Key : Any])
         let distText = NSMutableAttributedString()
         distText.append(distResult)
         distText.append(distUnit)
         
-        detailRowDate.text = date
-        detailRowTime.attributedText = timeText
-        detailRowDistance.attributedText = distText
-        detailRowSpeed.attributedText = speedText
+        let dateAttributes = [NSAttributedString.Key.foregroundColor: Constants.contrastColor, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let dated = NSMutableAttributedString(string: String(date), attributes: dateAttributes as [NSAttributedString.Key : Any])
+        let dateText = NSMutableAttributedString()
+        dateText.append(dated)
+
+        detailRowDate.setAttributedTitle(dateText, for: .normal)
+        detailRowTime.setAttributedTitle(timeText, for: .normal)
+        detailRowDistance.setAttributedTitle(distText, for: .normal)
+        detailRowSpeed.setAttributedTitle(speedText, for: .normal)
 
         view.addSubview(lapsView)
         lapsView.addSubview(tabGraphLabel)
@@ -223,6 +251,37 @@ class ResultDetailsViewController: UIViewController {
         
         setConstraints()
         startAnimation()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        
+        // Update units to correct selected units if unit selection changed after view did load
+        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.contrastColor, NSAttributedString.Key.font: Constants.resultFontSmall]
+        let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        
+        var speedUnit = NSMutableAttributedString(string: " km/h", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        var distUnit = NSMutableAttributedString(string: " m", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == false {
+                speedUnit = NSMutableAttributedString(string: " mph", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                distUnit = NSMutableAttributedString(string: " yd", attributes: unitAttributes as [NSAttributedString.Key : Any])
+            }
+        }
+        
+        let speedResult = NSMutableAttributedString(string: averageSpeed, attributes: resultAttributes as [NSAttributedString.Key : Any])
+        let speedText = NSMutableAttributedString()
+        speedText.append(speedResult)
+        speedText.append(speedUnit)
+        
+        let distResult = NSMutableAttributedString(string: String(distance), attributes: resultAttributes as [NSAttributedString.Key : Any])
+        let distText = NSMutableAttributedString()
+        distText.append(distResult)
+        distText.append(distUnit)
+        
+        detailRowDistance.setAttributedTitle(distText, for: .normal)
+        detailRowSpeed.setAttributedTitle(speedText, for: .normal)
     }
     
     func setConstraints() {

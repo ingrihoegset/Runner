@@ -64,14 +64,14 @@ class SortDateViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.mainColor
         
-        title = "Select Dates"
+        title = "Select dates"
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.accentColor]
         
         // Makes navigation like rest of panel
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Constants.mainColor
+        navigationController?.navigationBar.barTintColor = Constants.accentColorDark
         
         navigationController?.navigationBar.tintColor = Constants.accentColor
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
@@ -142,8 +142,8 @@ extension SortDateViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionHeader = UIButton(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 60))
         sectionHeader.titleLabel?.font = Constants.mainFontLargeSB
-        sectionHeader.titleLabel?.textColor = Constants.textColorMain
-        sectionHeader.backgroundColor = Constants.accentColorDark
+        sectionHeader.setTitleColor(Constants.accentColorDark, for: .normal)
+        sectionHeader.backgroundColor = Constants.accentColor
         sectionHeader.tag = section
         sectionHeader.addTarget(self,
                                 action: #selector(self.hideSection(sender:)),
@@ -194,6 +194,9 @@ extension SortDateViewController: UITableViewDataSource {
         cell.separatorInset = UIEdgeInsets.zero
         cell.layoutMargins = UIEdgeInsets.init(top: 0, left: Constants.sideMargin, bottom: 0, right: 0)
         cell.textLabel?.text = self.sortTableViewData[indexPath.section][indexPath.row]
+        cell.textLabel?.textAlignment = .center
+        cell.textLabel?.font = Constants.mainFont
+        cell.textLabel?.textColor = Constants.textColorDarkGray
         return cell
     }
     

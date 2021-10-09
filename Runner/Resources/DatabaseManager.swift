@@ -289,6 +289,15 @@ extension DatabaseManager {
             return
         }
         
+        // Find units of run
+        var metricSystem = true
+        if let selectedSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if selectedSystem == false {
+                metricSystem = false
+            }
+        }
+
+        
         // Create run ID
         let runID = createRunID()
         
@@ -314,7 +323,8 @@ extension DatabaseManager {
                 "run_type": runType,
                 "run_date": runDate,
                 "run_distance": runDistance,
-                "user_is_running": userIsRunning
+                "user_is_running": userIsRunning,
+                "metric_system": metricSystem
             ]
 
             userNode["current_run"] = currentRun
@@ -340,7 +350,8 @@ extension DatabaseManager {
                     "run_type": runType,
                     "run_date": runDate,
                     "run_distance": runDistance,
-                    "user_is_running": !userIsRunning
+                    "user_is_running": !userIsRunning,
+                    "metric_system": metricSystem
                 ]
                 
                 // Create partner link entry
@@ -693,7 +704,7 @@ extension DatabaseManager {
         // Get safe email version of emails.
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
         
-        database.child("\(userSafeEmail)/completed_runs").observe( .value, with: { snapshot in
+        database.child("\(userSafeEmail)/completed_runs").observeSingleEvent(of: .value, with: { snapshot in
             
             guard let completedRuns = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DataBaseErrors.failedToFetch))
@@ -759,7 +770,7 @@ extension DatabaseManager {
         
         let ref = database.child("\(safeEmail)/completed_runs")
         ref.observeSingleEvent(of: .value, with: { snapshot in
-            if var runs = snapshot.value as? [[String: Any]] {
+            if let runs = snapshot.value as? [[String: Any]] {
                 completion(.success(runs))
             }
             else {

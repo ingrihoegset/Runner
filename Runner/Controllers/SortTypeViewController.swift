@@ -73,14 +73,14 @@ class SortTypeViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = Constants.mainColor
         
-        title = "Select Run Type"
+        title = "Select run type"
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.accentColor]
         
         // Makes navigation like rest of panel
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Constants.mainColor
+        navigationController?.navigationBar.barTintColor = Constants.accentColorDark
         
         navigationController?.navigationBar.tintColor = Constants.accentColor
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
@@ -146,6 +146,9 @@ extension SortTypeViewController: UITableViewDataSource {
         cell.separatorInset = UIEdgeInsets.zero
         cell.layoutMargins = UIEdgeInsets.init(top: 0, left: Constants.sideMargin, bottom: 0, right: 0)
         cell.textLabel?.text = self.sortTableViewData[indexPath.row]
+        cell.textLabel?.textAlignment = .center
+        cell.textLabel?.font = Constants.mainFont
+        cell.textLabel?.textColor = Constants.textColorDarkGray
         return cell
     }
     

@@ -122,7 +122,17 @@ class ResultsViewController: UIViewController {
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.mainFont
-        label.text = "Average speed"
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == true {
+                label.text = "km/h"
+            }
+            else {
+                label.text = "mph"
+            }
+        }
+        else {
+            label.text = "km/h"
+        }
         return label
     }()
     
@@ -135,7 +145,17 @@ class ResultsViewController: UIViewController {
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
         label.font = Constants.mainFont
-        label.text = "Distance"
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == true {
+                label.text = "m"
+            }
+            else {
+                label.text = "yd"
+            }
+        }
+        else {
+            label.text = "m"
+        }
         return label
     }()
     
@@ -189,7 +209,7 @@ class ResultsViewController: UIViewController {
         super.viewDidLoad()
         
         // Navigation bar appearance
-        title = "Run Completed!"
+        title = "Run completed!"
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.textColorWhite]
 

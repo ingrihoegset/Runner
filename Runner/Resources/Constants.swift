@@ -11,6 +11,7 @@ struct Constants {
     static let contrastColor = UIColor(named: "ContrastColor")
     static let superLightGrey = UIColor(named: "SuperLightGrey")
     static let shadeColor = UIColor(named: "WhiteShade")
+    static let lightGray = UIColor(named: "LightGray")
     
     //Text Colors
     static let textColorMain = UIColor.black

@@ -97,6 +97,7 @@ class HomeViewController: UIViewController {
         qrButton.addTarget(self, action: #selector(didTapQRButton), for: .touchUpInside)
         qrButton.isUserInteractionEnabled = true
         qrButton.isHidden = true
+        qrButton.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5 / 1.5, spread: 0)
         return qrButton
     }()
     
@@ -277,7 +278,7 @@ class HomeViewController: UIViewController {
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColor
+        control.selectedSegmentTintColor = Constants.mainColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
@@ -288,40 +289,8 @@ class HomeViewController: UIViewController {
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
-        control.isHidden = true
+        control.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return control
-    }()
-    
-    let fakeSegmentView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
-        view.layer.cornerRadius = Constants.smallCornerRadius
-        return view
-    }()
-    
-    let segmentLeft: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
-        button.setTitle("1 gate", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = Constants.mainFontLargeSB
-        button.layer.borderWidth = 2
-        button.layer.borderColor = Constants.accentColor?.cgColor
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        return button
-    }()
-    
-    let segmentRight: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
-        button.setTitle("2 gates", for: .normal)
-        button.setTitleColor(Constants.textColorDarkGray, for: .normal)
-        button.titleLabel?.font = Constants.mainFontLargeSB
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        return button
     }()
     
     let button: LargeImageButton = {
@@ -335,6 +304,7 @@ class HomeViewController: UIViewController {
         button.title.text = "Sprint"
         button.title.textColor = Constants.textColorDarkGray
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -351,6 +321,9 @@ class HomeViewController: UIViewController {
         button.title.text = "Reaction Run"
         button.title.textColor = Constants.textColorDarkGray
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
+        
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+
         return button
     }()
     
@@ -393,9 +366,6 @@ class HomeViewController: UIViewController {
         secondGateHeaderView.addSubview(secondGateProfileImageView)
         
         // Controller used to switch between two gate and  one gate
-        mainView.addSubview(fakeSegmentView)
-        fakeSegmentView.addSubview(segmentLeft)
-        fakeSegmentView.addSubview(segmentRight)
         mainView.addSubview(segmentLabel)
         mainView.addSubview(segmentControl)
         
@@ -549,21 +519,6 @@ class HomeViewController: UIViewController {
         segmentControl.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         segmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         segmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        
-        fakeSegmentView.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor).isActive = true
-        fakeSegmentView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        fakeSegmentView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        fakeSegmentView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        
-        segmentLeft.leadingAnchor.constraint(equalTo: fakeSegmentView.leadingAnchor).isActive = true
-        segmentLeft.trailingAnchor.constraint(equalTo: fakeSegmentView.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
-        segmentLeft.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor).isActive = true
-        segmentLeft.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        segmentRight.trailingAnchor.constraint(equalTo: fakeSegmentView.trailingAnchor).isActive = true
-        segmentRight.leadingAnchor.constraint(equalTo: fakeSegmentView.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
-        segmentRight.topAnchor.constraint(equalTo: segmentLabel.bottomAnchor).isActive = true
-        segmentRight.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         // Selections shown when no link
         unconnectedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true

@@ -22,7 +22,7 @@ class SetUpRunViewController: UIViewController {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
-        button.setTitle("New Run", for: .normal)
+        button.setTitle("New run", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(didTapNewRace), for: .touchUpInside)
@@ -33,6 +33,11 @@ class SetUpRunViewController: UIViewController {
     
     let lengthPicker: CustomPickerView = {
         let picker = CustomPickerView(subTitle: Constants.lengthOfLap, unit: "m", number: 3, initialValue: 30)
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == false {
+                picker.unitLabel.text = "yd"
+            }
+        }
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
@@ -181,6 +186,22 @@ class SetUpRunViewController: UIViewController {
         // Adjusts view for selected type of run
         setUpRunViewModel.selectedRunType()
         setUpRunViewModel.isConnectedToParter()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        // Adjusts metrics on opening of view if units change
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == true {
+                lengthPicker.unitLabel.text = "m"
+            }
+            else {
+                lengthPicker.unitLabel.text = "yd"
+            }
+        }
+        else {
+            lengthPicker.unitLabel.text = "m"
+        }
     }
     
     deinit {

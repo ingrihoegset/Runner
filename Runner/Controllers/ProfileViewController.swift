@@ -30,8 +30,6 @@ class ProfileViewController: UIViewController {
     
     var data = [SettingSelectionViewModel]()
     var profileViewModel = ProfileViewModel()
-    
-    var metricSystem = true
     var unitTitle = "Units: Metric system"
     
     let headerView: UIView = {
@@ -69,7 +67,7 @@ class ProfileViewController: UIViewController {
 
     var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = Constants.textColorDarkGray
+        tableView.backgroundColor = Constants.lightGray
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -101,9 +99,16 @@ class ProfileViewController: UIViewController {
         profileImageView.addGestureRecognizer(gesture)
         
         // Units title depends on user preferences
-        
-        if metricSystem == false {
-            unitTitle = "Units: Imperial system"
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == true {
+                unitTitle = "Units: Metric system"
+            }
+            else {
+                unitTitle = "Units: Imperial system"
+            }
+        }
+        else {
+            unitTitle = "Units: Metric system"
         }
         
         // Configure data for table view
@@ -114,26 +119,43 @@ class ProfileViewController: UIViewController {
                                               title: "Privacy policy",
                                               handler: nil))
         // Obs, no unit functionality has been programmed yet
-        section2Data.append(SettingSelectionViewModel(viewModelType: .units,
-                                              title: unitTitle,
-                                              handler: { [weak self] in
-                                                
-                                                guard let strongSelf = self else {
-                                                    return
-                                                }
-                                                
-                                                if strongSelf.metricSystem == true {
-                                                    strongSelf.metricSystem = false
-                                                    strongSelf.unitTitle = "Units: Imperial system"
-                                                }
-                                                else {
-                                                    strongSelf.metricSystem = true
-                                                    strongSelf.unitTitle = "Units: Metric system"
-                                                }
-                                                // Obs, hard coded which row is updated on selection
-                                                strongSelf.sectionData[1]?[0].title = strongSelf.unitTitle
-                                                self?.tableView.reloadData()
-                                              }))
+        section2Data.append(SettingSelectionViewModel(viewModelType: .units, title: unitTitle, handler: { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            let actionSheet = UIAlertController(title: "Select preferred units of measurement",
+                                                message: "",
+                                                preferredStyle: .actionSheet)
+            
+            actionSheet.addAction(UIAlertAction(title: "Metric system", style: .default, handler: { [weak self] _ in
+                //Metric system is selected
+                UserDefaults.standard.set(true, forKey: "unit")
+                strongSelf.unitTitle = "Units: Metric system"
+                strongSelf.sectionData[1]?[0].title = strongSelf.unitTitle
+                self?.tableView.reloadData()
+                // Tell My runs to update table so that tableveiw of all runs shows runs in correct unit
+                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reloadOnUnitChange"), object: nil)
+            }))
+            actionSheet.addAction(UIAlertAction(title: "Imperial system", style: .default, handler: { [weak self] _ in
+                //Imperial system is selected
+                UserDefaults.standard.set(false, forKey: "unit")
+                strongSelf.unitTitle = "Units: Imperial system"
+                strongSelf.sectionData[1]?[0].title = strongSelf.unitTitle
+                self?.tableView.reloadData()
+                // Tell My runs to update table so that tableveiw of all runs shows runs in correct unit
+                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "reloadOnUnitChange"), object: nil)
+            }))
+            
+            actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                                style: .cancel,
+                                                handler: nil))
+            
+            strongSelf.present(actionSheet, animated: true)
+            
+
+        }))
+        
         section3Data.append(SettingSelectionViewModel(viewModelType: .restore,
                                               title: "Restore purchase",
                                               handler: nil))
@@ -239,14 +261,14 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = Constants.textColorDarkGray
+        view.backgroundColor = Constants.lightGray
         
         let label = UILabel()
         label.text = sectionTitles[section]
         label.textColor = Constants.textColorWhite
         label.font = Constants.mainFontSB
-        label.textAlignment = .center
-        label.frame = CGRect(x: 0, y: 0, width: Constants.widthOfDisplay, height: 60)
+        label.textAlignment = .left
+        label.frame = CGRect(x: Constants.sideMargin, y: 0, width: Constants.widthOfDisplay - Constants.sideMargin, height: Constants.mainButtonSize)
         
         view.addSubview(label)
         
@@ -261,11 +283,12 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         let viewModel = sectionData[indexPath.section]![indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: SettingsTableViewCell.identifier, for: indexPath) as! SettingsTableViewCell
         cell.setUp(with: viewModel)
+        cell.layoutMargins = UIEdgeInsets(top: 0, left: Constants.sideMargin, bottom: 0, right: 0)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        60
+        Constants.mainButtonSize
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -392,7 +415,7 @@ class SettingsTableViewCell: UITableViewCell {
         // Set cell label
         self.textLabel?.text = viewModel.title
         self.textLabel?.font = Constants.mainFont
-        self.textLabel?.textAlignment = .center
+        self.textLabel?.textAlignment = .left
         self.backgroundColor = Constants.accentColor
         
         // Set appearance for type of cell

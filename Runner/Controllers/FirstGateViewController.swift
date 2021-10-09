@@ -25,28 +25,32 @@ class FirstGateViewController: UIViewController {
         return view
     }()
     
-    let displayLabel1: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.textAlignment = .center
-        label.font = Constants.mainFontLargeSB
-        label.clipsToBounds = true
-        label.textColor = Constants.textColorDarkGray
-        return label
+    let displayLabel1: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.accentColor
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.titleLabel?.textAlignment = .center
+        button.titleLabel?.font = Constants.mainFontLargeSB
+        button.clipsToBounds = true
+        button.setTitleColor(Constants.textColorDarkGray, for: .normal)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
+        button.isUserInteractionEnabled = false
+        return button
     }()
     
-    let displayLabel2: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.textAlignment = .center
-        label.font = Constants.mainFontLargeSB
-        label.clipsToBounds = true
-        label.textColor = Constants.textColorDarkGray
-        return label
+    let displayLabel2: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.accentColor
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.titleLabel?.textAlignment = .center
+        button.titleLabel?.font = Constants.mainFontLargeSB
+        button.clipsToBounds = true
+        button.setTitleColor(Constants.textColorDarkGray, for: .normal)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
+        button.isUserInteractionEnabled = false
+        return button
     }()
       
     let pulsingView: PulsingAnimationView = {
@@ -119,7 +123,7 @@ class FirstGateViewController: UIViewController {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColorDark
-        button.setTitle("Start Count Down", for: .normal)
+        button.setTitle("Start count down", for: .normal)
         button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(startCountDown), for: .touchUpInside)
@@ -294,10 +298,10 @@ class FirstGateViewController: UIViewController {
     /// Set text in top labels
     func setDisplayLabelText() {
         DispatchQueue.main.async {
-            let countDown = "Count Down: " + String(self.firstGateViewModel.userSelectedDelay)
+            let countDown = "Count down: " + String(self.firstGateViewModel.userSelectedDelay)
             let distance = "Distance: " + String(self.firstGateViewModel.userSelectedLength)
-            self.displayLabel1.text = countDown
-            self.displayLabel2.text = distance
+            self.displayLabel1.setTitle(countDown, for: .normal)
+            self.displayLabel2.setTitle(distance, for: .normal)
         }
     }
     

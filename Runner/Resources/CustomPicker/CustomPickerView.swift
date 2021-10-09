@@ -32,6 +32,7 @@ class CustomPickerView: UIView {
         view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return view
     }()
         
