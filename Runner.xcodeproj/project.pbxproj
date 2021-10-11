@@ -39,6 +39,7 @@
 		BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */; };
 		BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */; };
 		BF711FF0269DC64400144DA4 /* LinkToPartnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */; };
+		BF7DA83C2714D5150065FFA9 /* OnBoardingBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7DA83B2714D5130065FFA9 /* OnBoardingBubble.swift */; };
 		BF82518326FA59FD00792FCB /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF82518226FA59FD00792FCB /* StoreKit.framework */; };
 		BF82518626FA65CB00792FCB /* InfoPlistParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82518526FA65CB00792FCB /* InfoPlistParser.swift */; };
 		BF82518926FA68BE00792FCB /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82518826FA68BE00792FCB /* Hud.swift */; };
@@ -102,6 +103,7 @@
 		BF6E059D26AB0DA60028C0AF /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
 		BF711FEB269DB1B500144DA4 /* LinkToPartnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewController.swift; sourceTree = "<group>"; };
 		BF711FEF269DC64400144DA4 /* LinkToPartnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToPartnerViewModel.swift; sourceTree = "<group>"; };
+		BF7DA83B2714D5130065FFA9 /* OnBoardingBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingBubble.swift; sourceTree = "<group>"; };
 		BF82518226FA59FD00792FCB /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BF82518526FA65CB00792FCB /* InfoPlistParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistParser.swift; sourceTree = "<group>"; };
 		BF82518826FA68BE00792FCB /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */,
 				BFC4AE3126D02FA400912F79 /* DetailRow.swift */,
 				BFD5488126E13EED009A2390 /* CounterView.swift */,
+				BF7DA83B2714D5130065FFA9 /* OnBoardingBubble.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -499,6 +502,7 @@
 				BF711FEC269DB1B500144DA4 /* LinkToPartnerViewController.swift in Sources */,
 				BFFB69BE269A17DA0080DA62 /* RegisterViewController.swift in Sources */,
 				BFD5488226E13EED009A2390 /* CounterView.swift in Sources */,
+				BF7DA83C2714D5150065FFA9 /* OnBoardingBubble.swift in Sources */,
 				BF512ADE269F631F001C6BF2 /* FirstGateViewModel.swift in Sources */,
 				BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */,
 				BFC4AE1626D02DD300912F79 /* ResultDetailsViewController.swift in Sources */,

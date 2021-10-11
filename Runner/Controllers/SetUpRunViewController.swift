@@ -159,11 +159,19 @@ class SetUpRunViewController: UIViewController {
         return label
     }()
     
+    /// Views related to onboarding
+    let onBoardScroll: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Scroll!", pointerPlacement: "topLeft")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        return bubble
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Set Run Details"
+        title = "Set run"
         // Subscribe to delegate
         setUpRunViewModel.setUpRunViewModelDelegate = self
+        onBoardScroll.onBoardingBubbleDelegate = self
         view.backgroundColor = Constants.mainColor
 
         view.addSubview(topView)
@@ -186,6 +194,9 @@ class SetUpRunViewController: UIViewController {
         // Adjusts view for selected type of run
         setUpRunViewModel.selectedRunType()
         setUpRunViewModel.isConnectedToParter()
+        
+        //Add onboarding view
+        view.addSubview(onBoardScroll)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -233,6 +244,11 @@ class SetUpRunViewController: UIViewController {
         lengthPicker.topAnchor.constraint(equalTo: delayPicker.bottomAnchor, constant: Constants.sideMargin).isActive = true
         lengthPicker.heightAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.heightAnchor, multiplier: 0.3).isActive = true
         lengthPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        
+        onBoardScroll.leadingAnchor.constraint(equalTo: lengthPicker.centerXAnchor).isActive = true
+        onBoardScroll.topAnchor.constraint(equalTo: lengthPicker.detail3.bottomAnchor).isActive = true
+        onBoardScroll.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        onBoardScroll.trailingAnchor.constraint(equalTo: lengthPicker.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         reactionPicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         reactionPicker.topAnchor.constraint(equalTo: lengthPicker.bottomAnchor, constant: Constants.sideMargin).isActive = true
@@ -324,5 +340,12 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
     func showLinkedFeatures(isRunningWithOneGate: Bool) {
         runnerView.isHidden = false
         falseStartView.isHidden = false
+    }
+}
+
+extension SetUpRunViewController: OnBoardingBubbleDelegate {
+    func handleDismissal() {
+        print("OK")
+        onBoardScroll.isHidden = true
     }
 }

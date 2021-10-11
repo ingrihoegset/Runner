@@ -404,6 +404,14 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         destinationController.date = FirstGateViewModel.dateFormatterShort.string(from: model.date)
         destinationController.distance = model.distance
         destinationController.time = String(model.time)
+        
+        // Tells destination controller which units to display
+        destinationController.metricSystemOnOpen = true
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == false {
+                destinationController.metricSystemOnOpen = false
+            }
+        }
 
         navigationController?.pushViewController(destinationController, animated: false)
     }

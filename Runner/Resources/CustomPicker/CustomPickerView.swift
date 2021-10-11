@@ -300,7 +300,7 @@ extension CustomPickerView: UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var label = UILabel()
         if let v = view as? UILabel { label = v }
-        label.font = Constants.resultFontSmall
+        label.font = Constants.pickerFont
         label.backgroundColor = .clear
         label.textColor = .white
         label.text =  numbers[row]
@@ -309,7 +309,7 @@ extension CustomPickerView: UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return pickerView.frame.height * 0.35
+        return pickerView.frame.height * 0.6
         // Set back to * 1 to get back to original look
         
     }

@@ -170,10 +170,10 @@ class FirstGateViewController: UIViewController {
         // Tells Gate whether user is running with one or two gates
         let runningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
         if runningWithOneGate == true {
-            title = "End Gate"
+            title = "End gate"
         }
         else {
-            title = "Start Gate"
+            title = "Start run"
         }
         
         // Subscribe to delegate

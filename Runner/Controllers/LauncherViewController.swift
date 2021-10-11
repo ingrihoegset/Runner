@@ -9,14 +9,10 @@ import UIKit
 import JGProgressHUD
 
 class LauncherViewController: UIViewController {
-
-    let spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView()
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.style = .large
-        spinner.color = Constants.accentColorDark
-        return spinner
-    }()
+    
+    let gradientLayerLeft = CAGradientLayer()
+    let gradientLayerRight = CAGradientLayer()
+    let gradientLayerController = CAGradientLayer()
 
     private let mainView: UIView = {
         let view = UIView()
@@ -29,14 +25,31 @@ class LauncherViewController: UIViewController {
     private let mainHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.superLightGrey
         return view
     }()
     
-    private let detailHelperView: UIView = {
+    private let fakeSegmentControl: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.mainColor
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeButtonLeft: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeButtonRight: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
         return view
     }()
     
@@ -45,47 +58,97 @@ class LauncherViewController: UIViewController {
         
         view.addSubview(mainView)
         mainView.addSubview(mainHeaderView)
-        mainView.addSubview(spinner)
-        mainHeaderView.addSubview(detailHelperView)
+        mainView.addSubview(fakeSegmentControl)
+        mainView.addSubview(fakeButtonLeft)
+        mainView.addSubview(fakeButtonRight)
         
         view.backgroundColor = Constants.accentColor
         
-        spinner.startAnimating()
+        setup()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        gradientLayerLeft.frame = fakeButtonLeft.bounds
+        gradientLayerRight.frame = fakeButtonRight.bounds
+        gradientLayerController.frame = fakeSegmentControl.bounds
+        
+        gradientLayerLeft.cornerRadius = Constants.smallCornerRadius
+        gradientLayerRight.cornerRadius = Constants.smallCornerRadius
+        gradientLayerController.cornerRadius = Constants.smallCornerRadius
     }
     
     override func viewDidLayoutSubviews() {
         
         // Elements related to main view
-        mainView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        mainView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mainView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         mainView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         mainView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        
-        spinner.centerYAnchor.constraint(equalTo: mainView.centerYAnchor).isActive = true
-        spinner.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
-        spinner.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        spinner.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         mainHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
         mainHeaderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         mainHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
         mainHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         
-        detailHelperView.bottomAnchor.constraint(equalTo: mainHeaderView.bottomAnchor).isActive = true
-        detailHelperView.heightAnchor.constraint(equalToConstant: Constants.headerSize/2).isActive = true
-        detailHelperView.leadingAnchor.constraint(equalTo: mainHeaderView.leadingAnchor).isActive = true
-        detailHelperView.trailingAnchor.constraint(equalTo: mainHeaderView.trailingAnchor).isActive = true
+        fakeSegmentControl.topAnchor.constraint(equalTo: mainHeaderView.bottomAnchor, constant: Constants.sideMargin * 1.35 + Constants.sideMargin / 2 + Constants.imageSize / 2).isActive = true
+        fakeSegmentControl.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        fakeSegmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        fakeSegmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        
+        fakeButtonLeft.topAnchor.constraint(equalTo: fakeSegmentControl.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        fakeButtonLeft.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
+        fakeButtonLeft.heightAnchor.constraint(equalTo: fakeButtonLeft.widthAnchor).isActive = true
+        fakeButtonLeft.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        
+        fakeButtonRight.topAnchor.constraint(equalTo: fakeSegmentControl.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        fakeButtonRight.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
+        fakeButtonRight.heightAnchor.constraint(equalTo: fakeButtonRight.widthAnchor).isActive = true
+        fakeButtonRight.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func setup() {
+        
+        gradientLayerLeft.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayerLeft.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeButtonLeft.layer.addSublayer(gradientLayerLeft)
+        
+        gradientLayerRight.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayerRight.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeButtonRight.layer.addSublayer(gradientLayerRight)
+        
+        gradientLayerController.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayerController.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeSegmentControl.layer.addSublayer(gradientLayerController)
+        
+        let titleGroup = makeAnimationGroup()
+        titleGroup.beginTime = 0.0
+        gradientLayerLeft.add(titleGroup, forKey: "backgroundColor")
+        gradientLayerRight.add(titleGroup, forKey: "backgroundColor")
+        gradientLayerController.add(titleGroup, forKey: "backgroundColor")
     }
-    */
-
+    
+    private func makeAnimationGroup(previousGroup: CAAnimationGroup? = nil) -> CAAnimationGroup {
+        let animDuration: CFTimeInterval = 1.25
+        let anim1 = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.backgroundColor))
+        anim1.fromValue = Constants.superLightGrey?.cgColor
+        anim1.toValue = UIColor(red: 250 / 255.0, green: 250 / 255.0, blue: 250 / 255.0, alpha: 1).cgColor
+        anim1.duration = animDuration
+        anim1.beginTime = 0.0
+        
+        let anim2 = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.backgroundColor))
+        anim2.fromValue = UIColor(red: 250 / 255.0, green: 250 / 255.0, blue: 250 / 255.0, alpha: 1).cgColor
+        anim2.toValue = Constants.superLightGrey?.cgColor
+        anim2.duration = animDuration
+        anim2.beginTime = anim1.beginTime + anim1.duration
+        
+        let group = CAAnimationGroup()
+        group.animations = [anim1, anim2]
+        group.repeatCount = .greatestFiniteMagnitude
+        group.duration = anim2.beginTime + anim2.duration
+        group.isRemovedOnCompletion = false
+        
+        return group
+    }
 }

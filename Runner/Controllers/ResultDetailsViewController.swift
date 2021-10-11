@@ -24,6 +24,7 @@ class ResultDetailsViewController: UIViewController {
     var date = "3, July"
     var lapTimes: [Double] = [5.0]
     var laps = 0
+    var metricSystemOnOpen = true
     
     let summaryView: UIView = {
         let view = UIView()
@@ -200,28 +201,20 @@ class ResultDetailsViewController: UIViewController {
         timeText.append(timeResult)
         timeText.append(timeUnit)
         
-        var speedUnit = NSMutableAttributedString(string: " km/h", attributes: unitAttributes as [NSAttributedString.Key : Any])
-        var distUnit = NSMutableAttributedString(string: " m", attributes: unitAttributes as [NSAttributedString.Key : Any])
-        
-        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
-            if metricSystem == true {
-                // Do nothing, metric version already set
-            }
-            else {
-                speedUnit = NSMutableAttributedString(string: " mph", attributes: unitAttributes as [NSAttributedString.Key : Any])
-                distUnit = NSMutableAttributedString(string: " yd", attributes: unitAttributes as [NSAttributedString.Key : Any])
-            }
-        }
-        else {
-            // Do nothing, metric version already set
-        }
-        
         let speedResult = NSMutableAttributedString(string: averageSpeed, attributes: resultAttributes as [NSAttributedString.Key : Any])
+        var speedUnit = NSMutableAttributedString(string: " km/h", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        if metricSystemOnOpen == false {
+            speedUnit = NSMutableAttributedString(string: " mph", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        }
         let speedText = NSMutableAttributedString()
         speedText.append(speedResult)
         speedText.append(speedUnit)
         
         let distResult = NSMutableAttributedString(string: String(distance), attributes: resultAttributes as [NSAttributedString.Key : Any])
+        var distUnit = NSMutableAttributedString(string: " m", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        if metricSystemOnOpen == false {
+            distUnit = NSMutableAttributedString(string: " yd", attributes: unitAttributes as [NSAttributedString.Key : Any])
+        }
         let distText = NSMutableAttributedString()
         distText.append(distResult)
         distText.append(distUnit)
@@ -251,37 +244,6 @@ class ResultDetailsViewController: UIViewController {
         
         setConstraints()
         startAnimation()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(false)
-        
-        // Update units to correct selected units if unit selection changed after view did load
-        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.contrastColor, NSAttributedString.Key.font: Constants.resultFontSmall]
-        let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
-        
-        var speedUnit = NSMutableAttributedString(string: " km/h", attributes: unitAttributes as [NSAttributedString.Key : Any])
-        var distUnit = NSMutableAttributedString(string: " m", attributes: unitAttributes as [NSAttributedString.Key : Any])
-        
-        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
-            if metricSystem == false {
-                speedUnit = NSMutableAttributedString(string: " mph", attributes: unitAttributes as [NSAttributedString.Key : Any])
-                distUnit = NSMutableAttributedString(string: " yd", attributes: unitAttributes as [NSAttributedString.Key : Any])
-            }
-        }
-        
-        let speedResult = NSMutableAttributedString(string: averageSpeed, attributes: resultAttributes as [NSAttributedString.Key : Any])
-        let speedText = NSMutableAttributedString()
-        speedText.append(speedResult)
-        speedText.append(speedUnit)
-        
-        let distResult = NSMutableAttributedString(string: String(distance), attributes: resultAttributes as [NSAttributedString.Key : Any])
-        let distText = NSMutableAttributedString()
-        distText.append(distResult)
-        distText.append(distUnit)
-        
-        detailRowDistance.setAttributedTitle(distText, for: .normal)
-        detailRowSpeed.setAttributedTitle(speedText, for: .normal)
     }
     
     func setConstraints() {

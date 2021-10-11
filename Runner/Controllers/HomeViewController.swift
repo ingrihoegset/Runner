@@ -72,7 +72,7 @@ class HomeViewController: UIViewController {
         imageView.layer.borderColor = Constants.accentColor?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
-        imageView.image = UIImage(systemName: "person.circle")
+        imageView.image = UIImage(systemName: "person.circle")?.withTintColor(Constants.lightGray!)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isHidden = true
         return imageView
@@ -113,25 +113,35 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    private let setUpSprintButton: LargeImageButton = {
+    let setUpSprintButton: LargeImageButton = {
         let button = LargeImageButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.accentColor
+        button.animationColor = Constants.accentColorDark
         button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.accentColorDark!)
-        button.setTitle("Sprint", for: .normal)
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        button.titleLabel?.font = Constants.mainFontLargeSB
+        button.imageview.isOpaque = true
+        button.imageview.alpha = 1
+        button.title.text = "Sprint"
+        button.title.textColor = Constants.textColorDarkGray
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
-    private let setUpReactionButton: BounceButton = {
-        let button = BounceButton()
-        button.backgroundColor = Constants.accentColorDark
-        button.setTitle("Reaction Run", for: .normal)
-        button.titleLabel?.font = Constants.mainFontLargeSB
-        button.layer.cornerRadius = Constants.smallCornerRadius
+    let setUpReactionButton: LargeImageButton = {
+        let button = LargeImageButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.accentColor
+        button.animationColor = Constants.accentColorDark
         button.tag = 1
+        let image = UIImage(named: "Reaction")
+        button.imageview.image = UIImage(named: "Reaction")?.withTintColor(Constants.accentColorDark!)
+        button.imageview.isOpaque = true
+        button.imageview.alpha = 1
+        button.title.text = "Reaction run"
+        button.title.textColor = Constants.textColorDarkGray
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
 
@@ -168,35 +178,6 @@ class HomeViewController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isUserInteractionEnabled = true
         return imageView
-    }()
-    
-    let linkedView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
-        view.isHidden = true
-        return view
-    }()
-    
-    private let setUpSprintButtonTwoGates: BounceButton = {
-        let button = BounceButton()
-        button.backgroundColor = Constants.accentColorDark
-        button.setTitle("Sprint", for: .normal)
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        button.titleLabel?.font = Constants.mainFontLargeSB
-        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
-        return button
-    }()
-    
-    private let setUpReactionButtonTwoGates: BounceButton = {
-        let button = BounceButton()
-        button.tag = 1
-        button.backgroundColor = Constants.accentColorDark
-        button.setTitle("Reaction Run", for: .normal)
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        button.titleLabel?.font = Constants.mainFontLargeSB
-        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
-        return button
     }()
     
     // MARK: - Elements related to linked view, second gate
@@ -255,11 +236,14 @@ class HomeViewController: UIViewController {
     private let unLinkFromSecondGateButton: BounceButton = {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
-        button.setTitle("Disconnect from end gate", for: .normal)
+        button.backgroundColor = Constants.mainColor
+        button.setTitle("Disconnect", for: .normal)
+        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.animationColor = Constants.mainColor
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -291,40 +275,6 @@ class HomeViewController: UIViewController {
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
         control.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return control
-    }()
-    
-    let button: LargeImageButton = {
-        let button = LargeImageButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
-        button.animationColor = Constants.accentColorDark
-        button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.accentColorDark!)
-        button.imageview.isOpaque = true
-        button.imageview.alpha = 1
-        button.title.text = "Sprint"
-        button.title.textColor = Constants.textColorDarkGray
-        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
-        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
-        return button
-    }()
-    
-    let rbutton: LargeImageButton = {
-        let button = LargeImageButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
-        button.animationColor = Constants.accentColorDark
-        button.tag = 1
-        let image = UIImage(named: "Reaction")
-        button.imageview.image = UIImage(named: "Reaction")?.withTintColor(Constants.accentColorDark!)
-        button.imageview.isOpaque = true
-        button.imageview.alpha = 1
-        button.title.text = "Reaction Run"
-        button.title.textColor = Constants.textColorDarkGray
-        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
-        
-        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
-
-        return button
     }()
     
     override func viewDidLoad() {
@@ -372,13 +322,7 @@ class HomeViewController: UIViewController {
         mainView.addSubview(unconnectedView)
         unconnectedView.addSubview(setUpSprintButton)
         unconnectedView.addSubview(setUpReactionButton)
-        unconnectedView.addSubview(button)
-        unconnectedView.addSubview(rbutton)
 
-        // Related to view shown when linked to a partner as first gate
-        mainView.addSubview(linkedView)
-        linkedView.addSubview(setUpSprintButtonTwoGates)
-        linkedView.addSubview(setUpReactionButtonTwoGates)
         
         // Related to view show when user is second gate
         mainView.addSubview(secondGateView)
@@ -525,35 +469,16 @@ class HomeViewController: UIViewController {
         unconnectedView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
         unconnectedView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor).isActive = true
         unconnectedView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
-
-        /*
-        setUpSprintButton.anchor(top: unconnectedView.topAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        setUpSprintButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        setUpReactionButton.anchor(top: setUpSprintButton.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        setUpReactionButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true*/
+        setUpSprintButton.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
+        setUpSprintButton.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
+        setUpSprintButton.heightAnchor.constraint(equalTo: setUpSprintButton.widthAnchor).isActive = true
+        setUpSprintButton.leadingAnchor.constraint(equalTo: unconnectedView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         
-        button.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
-        button.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
-        button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
-        button.leadingAnchor.constraint(equalTo: unconnectedView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        
-        rbutton.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
-        rbutton.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
-        rbutton.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
-        rbutton.trailingAnchor.constraint(equalTo: unconnectedView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-
-        // Elements related to linked view
-        linkedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
-        linkedView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor).isActive = true
-        linkedView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
-        linkedView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
-        
-        setUpSprintButtonTwoGates.anchor(top: linkedView.topAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        setUpSprintButtonTwoGates.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        setUpReactionButtonTwoGates.anchor(top: setUpSprintButtonTwoGates.bottomAnchor, leading: mainView.leadingAnchor, bottom: nil, trailing: mainView.trailingAnchor, padding: UIEdgeInsets(top: Constants.verticalSpacing, left: Constants.sideMargin, bottom: 0, right: Constants.sideMargin))
-        setUpReactionButtonTwoGates.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        setUpReactionButton.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
+        setUpReactionButton.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
+        setUpReactionButton.heightAnchor.constraint(equalTo: setUpSprintButton.widthAnchor).isActive = true
+        setUpReactionButton.trailingAnchor.constraint(equalTo: unconnectedView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         // Elements related to second gate view
         secondGateView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
@@ -561,15 +486,15 @@ class HomeViewController: UIViewController {
         secondGateView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
         secondGateView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
         
-        openSecondGatesButton.topAnchor.constraint(equalTo: secondGateView.topAnchor, constant: Constants.verticalSpacing).isActive = true
-        openSecondGatesButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        openSecondGatesButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        unLinkFromSecondGateButton.topAnchor.constraint(equalTo: openSecondGatesButton.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        unLinkFromSecondGateButton.topAnchor.constraint(equalTo: secondGateView.topAnchor, constant: Constants.verticalSpacing).isActive = true
         unLinkFromSecondGateButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         unLinkFromSecondGateButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         unLinkFromSecondGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        openSecondGatesButton.topAnchor.constraint(equalTo: unLinkFromSecondGateButton.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        openSecondGatesButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        openSecondGatesButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
     }
     
     /// Function checks if user is logged in or not
@@ -622,7 +547,6 @@ extension HomeViewController: HomeViewModelDelegate {
     }
     
     func launchFinished() {
-        launcherViewController.spinner.stopAnimating()
         
         UIView.animate(withDuration: 0.2,
             animations: {
@@ -645,17 +569,16 @@ extension HomeViewController: HomeViewModelDelegate {
             if gateNumber == 1 {
                 // Show
                 self.linkedHeaderView.isHidden = false
-                self.linkedView.isHidden = false
+                self.unconnectedView.isHidden = false
                 
                 // Hide
                 self.unconnectedHeaderView.isHidden = true
                 self.secondGateHeaderView.isHidden = true
-                self.unconnectedView.isHidden = true
                 self.secondGateView.isHidden = true
                 
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 1
-                
+    
                 self.animateLinkedPartnerUI()
             }
             // Show connected view, but for second gate
@@ -667,7 +590,6 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.unconnectedHeaderView.isHidden = true
                 self.linkedHeaderView.isHidden = true
                 self.unconnectedView.isHidden = true
-                self.linkedView.isHidden = true
 
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 1
@@ -682,7 +604,6 @@ extension HomeViewController: HomeViewModelDelegate {
                 // Hide
                 self.linkedHeaderView.isHidden = true
                 self.secondGateHeaderView.isHidden = true
-                self.linkedView.isHidden = true
                 self.secondGateView.isHidden = true
                 // Alert
                 self.alertThatPartnerHasDisconnected()
@@ -810,11 +731,11 @@ extension HomeViewController {
     /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
     @objc func didTapToUnlinkFromPartner(sender: UIGestureRecognizer) {
         if sender.state == .ended {
-            let actionSheet = UIAlertController(title: "Do you wish to unlink from second gate?",
+            let actionSheet = UIAlertController(title: "Do you wish to disconnect from second gate?",
                                                 message: "",
                                                 preferredStyle: .actionSheet)
             
-            actionSheet.addAction(UIAlertAction(title: "Unlink from second gate", style: .destructive, handler: { [weak self] _ in
+            actionSheet.addAction(UIAlertAction(title: "Disconnect", style: .destructive, handler: { [weak self] _ in
                 
                 guard let strongSelf = self else {
                     return

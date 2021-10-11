@@ -66,6 +66,7 @@ struct Constants {
     static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 120)
     static let resultFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 70)
     static let resultFontSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 30)
+    static let pickerFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 45)
     
     // Set race VC texts
     static let noOfLaps = "Number of laps"

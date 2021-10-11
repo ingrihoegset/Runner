@@ -35,7 +35,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         label.text = "Waiting for run to start"
         label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
-        label.textColor = Constants.textColorMain
+        label.textColor = Constants.textColorDarkGray
         return label
     }()
     
@@ -61,12 +61,14 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         super.viewDidLoad()
         
         // Navigation bar appearance
-        title = "End Gate"
+        navigationItem.title = "End gate"
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
         self.navigationController?.navigationBar.backgroundColor = Constants.mainColor
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.tintColor = Constants.accentColorDark
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
                                                             target: self,
                                                             action: #selector(dismissSelf))
@@ -105,10 +107,11 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        displayView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        // Made height / 3 because for some reason the view didnt want to constrain to top of view, but only to safe area.
+        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         displayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
         displayView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 3).isActive = true
 
         pulsingView.leadingAnchor.constraint(equalTo: displayView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         pulsingView.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
