@@ -10,14 +10,6 @@ import JGProgressHUD
 
 class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
-    private let spinner: UIActivityIndicatorView = {
-        let spinner = UIActivityIndicatorView()
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.style = .large
-        spinner.color = Constants.accentColorDark
-        return spinner
-    }()
-    
     public static let dateFormatterMonth: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "LLLL"
@@ -176,12 +168,20 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         tableView.backgroundColor = Constants.accentColor
         return tableView
     }()
+    
+    /// Views related to onboarding
+    let onBoardClickMe: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Click me!", pointerPlacement: "topMiddle")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        return bubble
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         statisticsViewModel.statisticsViewModelDelegate = self
         statisticsViewModel.getCompletedRuns()
+        onBoardClickMe.onBoardingBubbleDelegate = self
         
         navigationItem.title = "My runs"
         view.backgroundColor = Constants.accentColor
@@ -204,7 +204,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         tableView.layoutMargins = UIEdgeInsets.zero
         tableView.separatorInset = UIEdgeInsets.zero
         
-        spinner.startAnimating()
+        // Views related to onboarding
+        view.addSubview(onBoardClickMe)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -275,6 +276,12 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        // Views related to onboarding
+        onBoardClickMe.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor, constant: Constants.mainButtonSize).isActive = true
+        onBoardClickMe.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        onBoardClickMe.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        onBoardClickMe.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
     }
     
     deinit {
@@ -303,12 +310,6 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     func reloadTableView() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
-        }
-    }
-    
-    func stopSpinner() {
-        DispatchQueue.main.async {
-
         }
     }
     
@@ -608,6 +609,12 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
                 self.runTimeButton.animationColor = Constants.accentColorDark
             }
         }
+    }
+}
+
+extension StatisticsViewController: OnBoardingBubbleDelegate {
+    func handleDismissal(sender: UIView) {
+        sender.isHidden = true
     }
 }
 

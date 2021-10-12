@@ -57,6 +57,14 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         return view
     }()
     
+    /// Views related to onboarding
+    let onBoardPlace: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at finish line. Set pointer so the camera can see you run across the finish line!", pointerPlacement: "topMiddle")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.tag = 0
+        return bubble
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,6 +83,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         // Delegates
         secondGateViewModel.secondGateViewModelDelegate = self
+        onBoardPlace.onBoardingBubbleDelegate  = self
         
         // Set up for camera view
         let previewLayer = secondGateViewModel.previewLayer
@@ -82,6 +91,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         self.view.layer.addSublayer(previewLayer)
         self.view.addSubview(focusView)
         focusView.addSubview(focusImageView)
+        view.addSubview(onBoardPlace)
 
         // Top View
         view.addSubview(displayView)
@@ -136,6 +146,11 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         focusImageView.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
         focusImageView.widthAnchor.constraint(equalTo: focusView.widthAnchor).isActive = true
         focusImageView.heightAnchor.constraint(equalTo: focusView.heightAnchor).isActive = true
+        
+        onBoardPlace.topAnchor.constraint(equalTo: focusView.bottomAnchor).isActive = true
+        onBoardPlace.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
+        onBoardPlace.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7).isActive = true
+        onBoardPlace.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2.5).isActive = true
     }
     
     deinit {
@@ -165,3 +180,11 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
         }
     }
 }
+
+/// Related to onboarding the user
+extension SecondGateViewController: OnBoardingBubbleDelegate {
+    func handleDismissal(sender: UIView) {
+        sender.isHidden = true
+    }
+}
+

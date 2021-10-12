@@ -161,7 +161,12 @@ class SetUpRunViewController: UIViewController {
     
     /// Views related to onboarding
     let onBoardScroll: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Scroll!", pointerPlacement: "topLeft")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Scroll me!", pointerPlacement: "topLeft")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        return bubble
+    }()
+    let onBoardReaction: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Interval for random starting signal !", pointerPlacement: "bottomLeft")
         bubble.translatesAutoresizingMaskIntoConstraints = false
         return bubble
     }()
@@ -169,9 +174,12 @@ class SetUpRunViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Set run"
-        // Subscribe to delegate
+        
+        // Subscribe to delegates
         setUpRunViewModel.setUpRunViewModelDelegate = self
         onBoardScroll.onBoardingBubbleDelegate = self
+        onBoardReaction.onBoardingBubbleDelegate = self
+        
         view.backgroundColor = Constants.mainColor
 
         view.addSubview(topView)
@@ -197,6 +205,7 @@ class SetUpRunViewController: UIViewController {
         
         //Add onboarding view
         view.addSubview(onBoardScroll)
+        view.addSubview(onBoardReaction)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -245,7 +254,7 @@ class SetUpRunViewController: UIViewController {
         lengthPicker.heightAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.heightAnchor, multiplier: 0.3).isActive = true
         lengthPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        onBoardScroll.leadingAnchor.constraint(equalTo: lengthPicker.centerXAnchor).isActive = true
+        onBoardScroll.leadingAnchor.constraint(equalTo: lengthPicker.detail3.leadingAnchor).isActive = true
         onBoardScroll.topAnchor.constraint(equalTo: lengthPicker.detail3.bottomAnchor).isActive = true
         onBoardScroll.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         onBoardScroll.trailingAnchor.constraint(equalTo: lengthPicker.trailingAnchor, constant: -Constants.sideMargin).isActive = true
@@ -254,6 +263,11 @@ class SetUpRunViewController: UIViewController {
         reactionPicker.topAnchor.constraint(equalTo: lengthPicker.bottomAnchor, constant: Constants.sideMargin).isActive = true
         reactionPicker.heightAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.heightAnchor, multiplier: 0.3).isActive = true
         reactionPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        
+        onBoardReaction.leadingAnchor.constraint(equalTo: reactionPicker.detail2.leadingAnchor).isActive = true
+        onBoardReaction.bottomAnchor.constraint(equalTo: reactionPicker.detail2.topAnchor).isActive = true
+        onBoardReaction.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        onBoardReaction.trailingAnchor.constraint(equalTo: reactionPicker.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         newRaceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         newRaceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
@@ -344,8 +358,7 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
 }
 
 extension SetUpRunViewController: OnBoardingBubbleDelegate {
-    func handleDismissal() {
-        print("OK")
-        onBoardScroll.isHidden = true
+    func handleDismissal(sender: UIView) {
+            sender.isHidden = true
     }
 }

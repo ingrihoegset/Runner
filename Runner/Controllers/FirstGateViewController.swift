@@ -159,6 +159,22 @@ class FirstGateViewController: UIViewController {
         return view
     }()
     
+    /// Views related to onboarding
+    let onBoardPlace: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at your finish line and start count down. Make sure you have enough time to get into position!", pointerPlacement: "topMiddle")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.tag = 0
+        return bubble
+    }()
+    
+    let onBoardConnectedStart: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Place your phone at starting line and listen for starting signal!", pointerPlacement: "bottomMiddle")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.tag = 1
+        return bubble
+    }()
+    
+    
     deinit {
         print("DESTROYED FIRST GATE")
     }
@@ -176,8 +192,10 @@ class FirstGateViewController: UIViewController {
             title = "Start run"
         }
         
-        // Subscribe to delegate
+        // Subscribe to delegates
         firstGateViewModel.firstGateViewModelDelegate = self
+        onBoardPlace.onBoardingBubbleDelegate = self
+        onBoardConnectedStart.onBoardingBubbleDelegate = self
         
         // Add top displays
         view.addSubview(displayView)
@@ -187,12 +205,14 @@ class FirstGateViewController: UIViewController {
 
         cameraView.addSubview(focusView)
         focusView.addSubview(focusImageView)
+        cameraView.addSubview(onBoardPlace)
         
         // Add other elements to view
         view.addSubview(pulsingLabelView)
         pulsingLabelView.addSubview(pulsingLabel)
         pulsingLabelView.addSubview(pulsingView)
         view.addSubview(startButton)
+        view.addSubview(onBoardConnectedStart)
         view.addSubview(cancelRaceButton)
         view.addSubview(countDownPickerView)
         view.addSubview(timerView)
@@ -266,6 +286,11 @@ class FirstGateViewController: UIViewController {
         focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
         focusView.layer.cornerRadius = width / 2
         
+        onBoardPlace.topAnchor.constraint(equalTo: focusView.bottomAnchor).isActive = true
+        onBoardPlace.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
+        onBoardPlace.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.8).isActive = true
+        onBoardPlace.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -Constants.sideMargin).isActive = true
+        
         focusImageView.centerYAnchor.constraint(equalTo: focusView.centerYAnchor).isActive = true
         focusImageView.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
         focusImageView.widthAnchor.constraint(equalTo: focusView.widthAnchor).isActive = true
@@ -275,6 +300,11 @@ class FirstGateViewController: UIViewController {
         startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         startButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         startButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
+        
+        onBoardConnectedStart.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2).isActive = true
+        onBoardConnectedStart.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
+        onBoardConnectedStart.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.7).isActive = true
+        onBoardConnectedStart.bottomAnchor.constraint(equalTo: startButton.topAnchor).isActive = true
         
         countDownPickerView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
         countDownPickerView.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor, constant: -Constants.sideMargin).isActive = true
@@ -292,6 +322,7 @@ class FirstGateViewController: UIViewController {
             previewLayer.frame = self.cameraView.bounds
             self.cameraView.layer.addSublayer(previewLayer)
             self.cameraView.bringSubviewToFront(self.focusView)
+            self.cameraView.bringSubviewToFront(self.onBoardPlace)
         }
     }
     
@@ -417,5 +448,12 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
                 self.countDownPickerView.detail2.text = ""
             }
         )
+    }
+}
+
+/// Related to onboarding the user
+extension FirstGateViewController: OnBoardingBubbleDelegate {
+    func handleDismissal(sender: UIView) {
+        sender.isHidden = true
     }
 }

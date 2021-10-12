@@ -134,11 +134,19 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         return qrImageView
     }()
     
+    /// Views related to onboarding
+    let onBoardConnect: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Let partner scan your QR-code to add a second running gate.", pointerPlacement: "topMiddle")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        return bubble
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         linkViewModel.linkViewModelDelegate = self
         linkViewModel.fetchProfilePic()
+        onBoardConnect.onBoardingBubbleDelegate = self
         
         title = "Add second gate"
         view.backgroundColor = Constants.accentColor
@@ -151,7 +159,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         navigationController?.navigationBar.barTintColor = Constants.mainColor
         
         navigationController?.navigationBar.tintColor = Constants.accentColorDark
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
                                                             target: self,
                                                             action: #selector(dismissSelf))
@@ -173,6 +181,9 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         detailView.addSubview(qrImageView)
         
         createUserSpecificQRCodeIImage()
+        
+        // Views related to onboarding use
+        view.addSubview(onBoardConnect)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -206,8 +217,8 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
 
         qrIndicatorImageView.centerYAnchor.constraint(equalTo:g.centerYAnchor).isActive = true
         qrIndicatorImageView.centerXAnchor.constraint(equalTo: g.centerXAnchor).isActive = true
-        qrIndicatorImageView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
-        qrIndicatorImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1).isActive = true
+        qrIndicatorImageView.heightAnchor.constraint(equalTo: g.widthAnchor, multiplier: 0.8).isActive = true
+        qrIndicatorImageView.widthAnchor.constraint(equalTo: g.widthAnchor, multiplier: 0.8).isActive = true
         
         // Related to users own QR code
         
@@ -235,6 +246,11 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         qrImageView.centerXAnchor.constraint(equalTo: detailView.centerXAnchor).isActive = true
         qrImageView.widthAnchor.constraint(equalTo: detailView.heightAnchor, multiplier: 0.45).isActive = true
         qrImageView.heightAnchor.constraint(equalTo: detailView.heightAnchor, multiplier: 0.45).isActive = true
+        
+        onBoardConnect.topAnchor.constraint(equalTo: qrImageView.bottomAnchor).isActive = true
+        onBoardConnect.centerXAnchor.constraint(equalTo: qrImageView.centerXAnchor).isActive = true
+        onBoardConnect.widthAnchor.constraint(equalTo: detailView.widthAnchor, multiplier: 0.85).isActive = true
+        onBoardConnect.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.mainButtonSize).isActive = true
     }
     
     @objc private func dismissSelf() {
@@ -247,10 +263,12 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
           case 0:
              backgroundView.isHidden = true
              session.startRunning()
+             onBoardConnect.label.text = "Scan your partners QR-Code to add a second timing gate!"
           break
           case 1:
              backgroundView.isHidden = false
              session.stopRunning()
+             onBoardConnect.label.text = "Let partner scan your QR-code to add a second timing gate."
           break
           default:
             backgroundView.isHidden = true
@@ -357,5 +375,11 @@ extension LinkToPartnerViewController: LinkViewModelDelegate {
         DispatchQueue.main.async {
             self.userImageView.image = image
         }
+    }
+}
+
+extension LinkToPartnerViewController: OnBoardingBubbleDelegate {
+    func handleDismissal(sender: UIView) {
+        sender.isHidden = true
     }
 }

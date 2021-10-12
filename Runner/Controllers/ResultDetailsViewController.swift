@@ -105,7 +105,7 @@ class ResultDetailsViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = Constants.accentColor
-        label.text = "Identical Runs"
+        label.text = "Identical runs"
         label.textAlignment = .center
         label.layer.cornerRadius = Constants.smallCornerRadius
         label.clipsToBounds = true

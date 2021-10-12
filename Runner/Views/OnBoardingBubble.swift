@@ -8,7 +8,7 @@
 import UIKit
 
 protocol OnBoardingBubbleDelegate {
-    func handleDismissal()
+    func handleDismissal(sender: UIView)
 }
 
 class OnBoardingBubble: UIView {
@@ -19,7 +19,7 @@ class OnBoardingBubble: UIView {
     
     let closeButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = Constants.textColorDarkGray
+        button.backgroundColor = .clear
         button.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(systemName: "xmark")?.withTintColor(Constants.mainColor!)
         button.setImage(image, for: .normal)
@@ -32,7 +32,7 @@ class OnBoardingBubble: UIView {
     
     let label: UILabel = {
         let label = UILabel()
-        label.backgroundColor = Constants.textColorDarkGray
+        label.backgroundColor = .clear
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Constants.mainFont
         label.textColor = Constants.mainColor
@@ -40,7 +40,16 @@ class OnBoardingBubble: UIView {
         label.layer.cornerRadius = Constants.smallCornerRadius
         label.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         label.textAlignment = .center
+        label.numberOfLines = 0
         return label
+    }()
+    
+    let backgroundView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.textColorDarkGray
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
     }()
     
     let pointerView: UIView = {
@@ -53,31 +62,63 @@ class OnBoardingBubble: UIView {
 
     init(frame: CGRect, title: String, pointerPlacement: String) {
         super.init(frame: frame)
+        self.pointerDirection = pointerPlacement
         self.backgroundColor = .clear
+        self.addSubview(backgroundView)
         self.addSubview(pointerView)
-        self.addSubview(label)
-        self.addSubview(closeButton)
+        backgroundView.addSubview(label)
+        backgroundView.addSubview(closeButton)
         label.text = title
         
     }
     
     override func layoutSubviews() {
         
+        pointerView.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        pointerView.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        
         if pointerDirection == "topLeft" {
             pointerView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-            pointerView.heightAnchor.constraint(equalToConstant: 15).isActive = true
-            pointerView.widthAnchor.constraint(equalToConstant: 15).isActive = true
             pointerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.sideMargin).isActive = true
+            backgroundView.topAnchor.constraint(equalTo: pointerView.centerYAnchor).isActive = true
+            backgroundView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        }
+        if pointerDirection == "topMiddle" {
+            pointerView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+            pointerView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+            backgroundView.topAnchor.constraint(equalTo: pointerView.centerYAnchor).isActive = true
+            backgroundView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        }
+        if pointerDirection == "bottomRight" {
+            pointerView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+            pointerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+            backgroundView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+            backgroundView.bottomAnchor.constraint(equalTo: pointerView.centerYAnchor).isActive = true
+        }
+        if pointerDirection == "bottomMiddle" {
+            pointerView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+            pointerView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+            backgroundView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+            backgroundView.bottomAnchor.constraint(equalTo: pointerView.centerYAnchor).isActive = true
+        }
+        if pointerDirection == "bottomLeft" {
+            pointerView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+            pointerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.sideMargin).isActive = true
+            backgroundView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+            backgroundView.bottomAnchor.constraint(equalTo: pointerView.centerYAnchor).isActive = true
         }
         
-        closeButton.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        closeButton.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        closeButton.topAnchor.constraint(equalTo: pointerView.centerYAnchor).isActive = true
-        closeButton.widthAnchor.constraint(equalTo: closeButton.heightAnchor).isActive = true
+        backgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         
-        label.topAnchor.constraint(equalTo: pointerView.centerYAnchor).isActive = true
-        label.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        closeButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor).isActive = true
+        closeButton.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
+        closeButton.heightAnchor.constraint(equalTo: label.heightAnchor).isActive = true
+        closeButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        label.topAnchor.constraint(equalTo: backgroundView.topAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10).isActive = true
         label.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor).isActive = true
     }
     
@@ -86,6 +127,6 @@ class OnBoardingBubble: UIView {
     }
     
     @objc func handleDismissal() {
-        onBoardingBubbleDelegate?.handleDismissal()
+        onBoardingBubbleDelegate?.handleDismissal(sender: self)
     }
 }

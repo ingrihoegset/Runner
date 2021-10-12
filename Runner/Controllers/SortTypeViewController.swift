@@ -83,7 +83,7 @@ class SortTypeViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = Constants.accentColorDark
         
         navigationController?.navigationBar.tintColor = Constants.accentColor
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"),
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
                                                             target: self,
                                                             action: #selector(close))

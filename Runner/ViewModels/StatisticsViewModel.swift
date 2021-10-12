@@ -14,7 +14,6 @@ protocol StatisticsViewModelDelegate: AnyObject {
     func reloadTableView(completedRunsArray: [RunResults])
     func reloadTableView()
     func loadYears(years: [String])
-    func stopSpinner()
 }
 
 class StatisticsViewModel {
@@ -52,7 +51,6 @@ class StatisticsViewModel {
                 }
                 strongSelf.statisticsViewModelDelegate?.reloadTableView(completedRunsArray: transformedRunData)
                 strongSelf.statisticsViewModelDelegate?.loadYears(years: years)
-                strongSelf.statisticsViewModelDelegate?.stopSpinner()
 
             case .failure(let error):
                 print(error)

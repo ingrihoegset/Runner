@@ -277,6 +277,19 @@ class HomeViewController: UIViewController {
         return control
     }()
     
+    /// Views related to onboarding
+    let onBoardConnect: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Connect to partner to add second timing gate and unlock more features!", pointerPlacement: "bottomMiddle")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        return bubble
+    }()
+    
+    let onBoardEndGate: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Open end gate to create a finish line!", pointerPlacement: "topMiddle")
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        return bubble
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -288,6 +301,8 @@ class HomeViewController: UIViewController {
         navBar?.isTranslucent = true
         
         homeViewModel.homeViewModelDelegate = self
+        onBoardConnect.onBoardingBubbleDelegate = self
+        onBoardEndGate.onBoardingBubbleDelegate = self
         
         if let email = UserDefaults.standard.value(forKey: "email") as? String {
             homeViewModel.fetchProfilePic(email: email)
@@ -318,16 +333,17 @@ class HomeViewController: UIViewController {
         // Controller used to switch between two gate and  one gate
         mainView.addSubview(segmentLabel)
         mainView.addSubview(segmentControl)
+        mainView.addSubview(onBoardConnect)
         
         mainView.addSubview(unconnectedView)
         unconnectedView.addSubview(setUpSprintButton)
         unconnectedView.addSubview(setUpReactionButton)
-
         
         // Related to view show when user is second gate
         mainView.addSubview(secondGateView)
         secondGateView.addSubview(openSecondGatesButton)
         secondGateView.addSubview(unLinkFromSecondGateButton)
+        secondGateView.addSubview(onBoardEndGate)
         
         view.bringSubviewToFront(qrButton)
 
@@ -464,6 +480,11 @@ class HomeViewController: UIViewController {
         segmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         segmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
+        onBoardConnect.bottomAnchor.constraint(equalTo: segmentControl.topAnchor).isActive = true
+        onBoardConnect.trailingAnchor.constraint(equalTo: segmentControl.trailingAnchor).isActive = true
+        onBoardConnect.leadingAnchor.constraint(equalTo: segmentControl.centerXAnchor).isActive = true
+        onBoardConnect.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 3).isActive = true
+        
         // Selections shown when no link
         unconnectedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
         unconnectedView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
@@ -495,6 +516,11 @@ class HomeViewController: UIViewController {
         openSecondGatesButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         openSecondGatesButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        onBoardEndGate.topAnchor.constraint(equalTo: openSecondGatesButton.bottomAnchor).isActive = true
+        onBoardEndGate.widthAnchor.constraint(equalTo: openSecondGatesButton.widthAnchor, multiplier: 0.6).isActive = true
+        onBoardEndGate.centerXAnchor.constraint(equalTo: openSecondGatesButton.centerXAnchor).isActive = true
+        onBoardEndGate.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
     }
     
     /// Function checks if user is logged in or not
@@ -859,5 +885,12 @@ extension HomeViewController {
         launcherViewController.view.frame = view.bounds
         launcherViewController.didMove(toParent: self)
         launcherViewController.view.isHidden = false
+    }
+}
+
+/// Related to onboarding the user
+extension HomeViewController: OnBoardingBubbleDelegate {
+    func handleDismissal(sender: UIView) {
+        sender.isHidden = true
     }
 }
