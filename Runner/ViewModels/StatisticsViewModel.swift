@@ -16,6 +16,9 @@ protocol StatisticsViewModelDelegate: AnyObject {
     func loadYears(years: [String])
     func showOnboardClickMe()
     func hasOnboardedClickMe()
+    func showNoRunDataView()
+    func hideNoRunDataView()
+    func hideSkeletonLoadView()
 }
 
 class StatisticsViewModel {
@@ -56,10 +59,22 @@ class StatisticsViewModel {
                 
                 // Related to onboarding
                 if runsData.count >= 1 {
-                    strongSelf.statisticsViewModelDelegate?.showOnboardClickMe()
+                    let onboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedTableViewClickMe)
+                    if onboarded == false {
+                        strongSelf.statisticsViewModelDelegate?.showOnboardClickMe()
+                    }
+                    // When data is retrieved hide loading view and hide no run view.
+                    strongSelf.statisticsViewModelDelegate?.hideSkeletonLoadView()
+                    strongSelf.statisticsViewModelDelegate?.hideNoRunDataView()
                 }
 
             case .failure(let error):
+                guard let strongSelf = self else {
+                    return
+                }
+                // When no data is retrieved, hide loading view and show no data view
+                strongSelf.statisticsViewModelDelegate?.hideSkeletonLoadView()
+                strongSelf.statisticsViewModelDelegate?.showNoRunDataView()
                 print(error)
             }
         })

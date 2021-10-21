@@ -169,6 +169,38 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         return tableView
     }()
     
+    let noDataView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        let image = UIImage(systemName: "exclamationmark.circle")?.withTintColor(Constants.lightGray!, renderingMode: .alwaysOriginal)
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        let label = UITextView()
+        label.isScrollEnabled = false
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .clear
+        label.textAlignment = .center
+        label.text = "No runs to show yet. Complete your first run!"
+        label.font = Constants.mainFont
+        label.textColor = Constants.lightGray
+        label.isUserInteractionEnabled = false
+        view.addSubview(imageView)
+        view.addSubview(label)
+        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50).isActive = true
+        imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.3).isActive = true
+        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
+        label.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+        label.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        return view
+    }()
+    
     /// Views related to onboarding
     let onBoardClickMe: OnBoardingBubble = {
         let bubble = OnBoardingBubble(frame: .zero, title: "Click me!", pointerPlacement: "topMiddle")
@@ -176,7 +208,88 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         bubble.isHidden = true
         return bubble
     }()
-
+    
+    /// Related to loading skeleton for table view
+    let gradientLayer1 = CAGradientLayer()
+    let gradientLayer2 = CAGradientLayer()
+    let gradientLayer3 = CAGradientLayer()
+    let gradientLayer4 = CAGradientLayer()
+    let gradientLayer5 = CAGradientLayer()
+    let gradientLayer6 = CAGradientLayer()
+    let gradientLayer7 = CAGradientLayer()
+    let gradientLayer8 = CAGradientLayer()
+    
+    private let skeletonLoadingView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        return view
+    }()
+    
+    private let fakeRow1: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeRow2: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeRow3: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeRow4: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeRow5: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeRow6: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeRow7: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    private let fakeRow8: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -196,6 +309,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         statsHeaderView.addSubview(runSpeedButton)
         statsHeaderView.addSubview(runTimeButton)
         view.addSubview(tableView)
+        view.addSubview(noDataView)
         view.bringSubviewToFront(statsHeaderView)
         
         tableView.register(RunTableViewCell.self, forCellReuseIdentifier: RunTableViewCell.identifier)
@@ -207,6 +321,18 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         
         // Views related to onboarding
         view.addSubview(onBoardClickMe)
+        
+        // Related to loading table view
+        view.addSubview(skeletonLoadingView)
+        skeletonLoadingView.addSubview(fakeRow1)
+        skeletonLoadingView.addSubview(fakeRow2)
+        skeletonLoadingView.addSubview(fakeRow3)
+        skeletonLoadingView.addSubview(fakeRow4)
+        skeletonLoadingView.addSubview(fakeRow5)
+        skeletonLoadingView.addSubview(fakeRow6)
+        skeletonLoadingView.addSubview(fakeRow7)
+        skeletonLoadingView.addSubview(fakeRow8)
+        setup()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -226,6 +352,16 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
             runSpeedButton.setTitle("km/h", for: .normal)
             runDistanceButton.setTitle("m", for: .normal)
         }
+        
+        // Related to skeleton loading screen
+        gradientLayer1.frame = fakeRow1.bounds
+        gradientLayer2.frame = fakeRow2.bounds
+        gradientLayer3.frame = fakeRow3.bounds
+        gradientLayer4.frame = fakeRow4.bounds
+        gradientLayer5.frame = fakeRow5.bounds
+        gradientLayer6.frame = fakeRow6.bounds
+        gradientLayer7.frame = fakeRow7.bounds
+        gradientLayer8.frame = fakeRow8.bounds
     }
     
     override func viewDidLayoutSubviews() {
@@ -277,6 +413,56 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        noDataView.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
+        noDataView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        noDataView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        noDataView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        skeletonLoadingView.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
+        skeletonLoadingView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        skeletonLoadingView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        skeletonLoadingView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        fakeRow1.topAnchor.constraint(equalTo: skeletonLoadingView.topAnchor, constant: 1).isActive = true
+        fakeRow1.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow1.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow1.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
+        
+        fakeRow2.topAnchor.constraint(equalTo: fakeRow1.bottomAnchor, constant: 2).isActive = true
+        fakeRow2.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow2.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow2.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
+        
+        fakeRow3.topAnchor.constraint(equalTo: fakeRow2.bottomAnchor, constant: 2).isActive = true
+        fakeRow3.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow3.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow3.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
+        
+        fakeRow4.topAnchor.constraint(equalTo: fakeRow3.bottomAnchor, constant: 2).isActive = true
+        fakeRow4.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow4.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow4.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
+        
+        fakeRow5.topAnchor.constraint(equalTo: fakeRow4.bottomAnchor, constant: 2).isActive = true
+        fakeRow5.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow5.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow5.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
+        
+        fakeRow6.topAnchor.constraint(equalTo: fakeRow5.bottomAnchor, constant: 2).isActive = true
+        fakeRow6.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow6.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow6.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
+        
+        fakeRow7.topAnchor.constraint(equalTo: fakeRow6.bottomAnchor, constant: 2).isActive = true
+        fakeRow7.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow7.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow7.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
+        
+        fakeRow8.topAnchor.constraint(equalTo: fakeRow7.bottomAnchor, constant: 2).isActive = true
+        fakeRow8.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize - 2).isActive = true
+        fakeRow8.leadingAnchor.constraint(equalTo: skeletonLoadingView.leadingAnchor).isActive = true
+        fakeRow8.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
         
         // Views related to onboarding
         onBoardClickMe.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor, constant: Constants.mainButtonSize).isActive = true
@@ -338,6 +524,24 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     func hasOnboardedClickMe() {
         DispatchQueue.main.async {
             self.onBoardClickMe.isHidden = true
+        }
+    }
+    
+    func showNoRunDataView() {
+        DispatchQueue.main.async {
+            self.noDataView.isHidden = false
+        }
+    }
+    
+    func hideNoRunDataView() {
+        DispatchQueue.main.async {
+            self.noDataView.isHidden = true
+        }
+    }
+    
+    func hideSkeletonLoadView() {
+        DispatchQueue.main.async {
+            self.skeletonLoadingView.isHidden = true
         }
     }
 }
@@ -443,12 +647,15 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             
             // Begin delete
             let runID = runs[indexPath.row].runID
+            print(indexPath.row)
             tableView.beginUpdates()
+            print(self.runs.count)
             
             self.statisticsViewModel.deleteRun(runID: runID, completion: { [weak self] success in
                 if success {
+                    /* Not needed - updates itself when deleted from database
                     self?.runs.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .left)
+                    tableView.deleteRows(at: [indexPath], with: .left)*/
                 }
                 else {
                     self?.alertThatRunDeletionFailed()
@@ -631,6 +838,80 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
 extension StatisticsViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
         statisticsViewModel.hasOnboardedClickMe()
+    }
+}
+
+
+// Functions related to skeleton loading screen
+extension StatisticsViewController {
+    
+    private func setup() {
+        
+        gradientLayer1.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer1.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow1.layer.addSublayer(gradientLayer1)
+        
+        gradientLayer2.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer2.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow2.layer.addSublayer(gradientLayer2)
+        
+        gradientLayer3.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer3.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow3.layer.addSublayer(gradientLayer3)
+        
+        gradientLayer4.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer4.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow4.layer.addSublayer(gradientLayer4)
+        
+        gradientLayer5.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer5.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow5.layer.addSublayer(gradientLayer5)
+        
+        gradientLayer6.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer6.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow6.layer.addSublayer(gradientLayer6)
+        
+        gradientLayer7.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer7.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow7.layer.addSublayer(gradientLayer7)
+        
+        gradientLayer8.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer8.endPoint = CGPoint(x: 1, y: 0.5)
+        fakeRow8.layer.addSublayer(gradientLayer8)
+        
+        let titleGroup = makeAnimationGroup()
+        titleGroup.beginTime = 0.0
+        gradientLayer1.add(titleGroup, forKey: "backgroundColor")
+        gradientLayer2.add(titleGroup, forKey: "backgroundColor")
+        gradientLayer3.add(titleGroup, forKey: "backgroundColor")
+        gradientLayer4.add(titleGroup, forKey: "backgroundColor")
+        gradientLayer5.add(titleGroup, forKey: "backgroundColor")
+        gradientLayer6.add(titleGroup, forKey: "backgroundColor")
+        gradientLayer7.add(titleGroup, forKey: "backgroundColor")
+        gradientLayer8.add(titleGroup, forKey: "backgroundColor")
+    }
+    
+    private func makeAnimationGroup(previousGroup: CAAnimationGroup? = nil) -> CAAnimationGroup {
+        let animDuration: CFTimeInterval = 1.0
+        let anim1 = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.backgroundColor))
+        anim1.fromValue = Constants.superLightGrey?.cgColor
+        anim1.toValue = UIColor(red: 250 / 255.0, green: 250 / 255.0, blue: 250 / 255.0, alpha: 1).cgColor
+        anim1.duration = animDuration
+        anim1.beginTime = 0.0
+        
+        let anim2 = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.backgroundColor))
+        anim2.fromValue = UIColor(red: 250 / 255.0, green: 250 / 255.0, blue: 250 / 255.0, alpha: 1).cgColor
+        anim2.toValue = Constants.superLightGrey?.cgColor
+        anim2.duration = animDuration
+        anim2.beginTime = anim1.beginTime + anim1.duration
+        
+        let group = CAAnimationGroup()
+        group.animations = [anim1, anim2]
+        group.repeatCount = .greatestFiniteMagnitude
+        group.duration = anim2.beginTime + anim2.duration
+        group.isRemovedOnCompletion = false
+        
+        return group
     }
 }
 

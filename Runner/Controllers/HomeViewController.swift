@@ -233,20 +233,6 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    private let unLinkFromSecondGateButton: BounceButton = {
-        let button = BounceButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.mainColor
-        button.setTitle("Disconnect", for: .normal)
-        button.setTitleColor(Constants.accentColorDark, for: .normal)
-        button.animationColor = Constants.mainColor
-        button.titleLabel?.font = Constants.mainFontLargeSB
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        button.addTarget(self, action: #selector(didTapButtonToUnlinkFromPartner), for: .touchUpInside)
-        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
-        return button
-    }()
-    
     let segmentLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -287,7 +273,7 @@ class HomeViewController: UIViewController {
     }()
     
     let onBoardEndGate: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Open end gate to create a finish line!", pointerPlacement: "topMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Open end gate to create a finish line!", pointerPlacement: "bottomMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.isHidden = true
         bubble.tag = 1
@@ -357,16 +343,12 @@ class HomeViewController: UIViewController {
         // Related to view show when user is second gate
         mainView.addSubview(secondGateView)
         secondGateView.addSubview(openSecondGatesButton)
-        secondGateView.addSubview(unLinkFromSecondGateButton)
         secondGateView.addSubview(onBoardEndGate)
         
         view.bringSubviewToFront(qrButton)
 
         homeViewModel.clearLinkFromDatabase()
-        
-        let unlinkFromPartnerTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapToUnlinkFromPartner))
-        partnerProfileImageView.addGestureRecognizer(unlinkFromPartnerTapGesture)
-        
+
         addChildController()
         
         // Related to onboarding
@@ -525,17 +507,12 @@ class HomeViewController: UIViewController {
         secondGateView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
         secondGateView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
         
-        unLinkFromSecondGateButton.topAnchor.constraint(equalTo: secondGateView.topAnchor, constant: Constants.verticalSpacing).isActive = true
-        unLinkFromSecondGateButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        unLinkFromSecondGateButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        unLinkFromSecondGateButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        openSecondGatesButton.topAnchor.constraint(equalTo: unLinkFromSecondGateButton.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        openSecondGatesButton.bottomAnchor.constraint(equalTo: secondGateView.bottomAnchor, constant: -Constants.sideMargin * 2).isActive = true
         openSecondGatesButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         openSecondGatesButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        onBoardEndGate.topAnchor.constraint(equalTo: openSecondGatesButton.bottomAnchor).isActive = true
+        onBoardEndGate.bottomAnchor.constraint(equalTo: openSecondGatesButton.topAnchor).isActive = true
         onBoardEndGate.widthAnchor.constraint(equalTo: openSecondGatesButton.widthAnchor, multiplier: 0.6).isActive = true
         onBoardEndGate.centerXAnchor.constraint(equalTo: openSecondGatesButton.centerXAnchor).isActive = true
         onBoardEndGate.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
@@ -801,54 +778,6 @@ extension HomeViewController {
         
         // Tell Home view that it is ready to show connect to partner onboarding next time it appears
         homeViewModel.showOnboardConnect()
-    }
-    
-    /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
-    @objc func didTapToUnlinkFromPartner(sender: UIGestureRecognizer) {
-        if sender.state == .ended {
-            let actionSheet = UIAlertController(title: "Do you wish to disconnect from second gate?",
-                                                message: "",
-                                                preferredStyle: .actionSheet)
-            
-            actionSheet.addAction(UIAlertAction(title: "Disconnect", style: .destructive, handler: { [weak self] _ in
-                
-                guard let strongSelf = self else {
-                    return
-                }
-                
-                // Clear any partner link from database
-                strongSelf.homeViewModel.clearLinkFromDatabase()
-
-            }))
-            
-            actionSheet.addAction(UIAlertAction(title: "Cancel",
-                                                style: .cancel,
-                                                handler: nil))
-            
-            present(actionSheet, animated: true)
-        }
-    }
-    
-    @objc func didTapButtonToUnlinkFromPartner() {
-        let actionSheet = UIAlertController(title: "Do you wish to unlink from second gate?",
-                                            message: "",
-                                            preferredStyle: .actionSheet)
-        
-        actionSheet.addAction(UIAlertAction(title: "Unlink from second gate", style: .destructive, handler: { [weak self] _ in
-            
-            guard let strongSelf = self else {
-                return
-            }
-            
-            // Clear any partner link from database
-            strongSelf.homeViewModel.clearLinkFromDatabase()
-        }))
-        
-        actionSheet.addAction(UIAlertAction(title: "Cancel",
-                                            style: .cancel,
-                                            handler: nil))
-        
-        present(actionSheet, animated: true)
     }
     
     @objc func didNotFindPartnerToLinkTo() {

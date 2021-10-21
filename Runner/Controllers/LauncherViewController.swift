@@ -130,7 +130,7 @@ class LauncherViewController: UIViewController {
     }
     
     private func makeAnimationGroup(previousGroup: CAAnimationGroup? = nil) -> CAAnimationGroup {
-        let animDuration: CFTimeInterval = 1.25
+        let animDuration: CFTimeInterval = 1.0
         let anim1 = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.backgroundColor))
         anim1.fromValue = Constants.superLightGrey?.cgColor
         anim1.toValue = UIColor(red: 250 / 255.0, green: 250 / 255.0, blue: 250 / 255.0, alpha: 1).cgColor
