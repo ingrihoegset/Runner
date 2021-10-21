@@ -77,7 +77,19 @@ struct Constants {
     // User Default Strings
     static let currentRunID = "currentRunID"
     static let profileImageURL = "profileImageURL"
-
+    
+    // User Default Onboarding strings
+    static let hasOnBoardedScroll = "hasOnBoardedScroll"
+    static let hasOnBoardedReaction = "hasOnboardedReaction"
+    static let hasOnboardedStartLineTwoUsers = "hasOnboardedStartLineTwoUsers"
+    static let hasOnboardedFinishLineOneUser = "hasOnboardedFinishLineOneUser"
+    static let hasOnboardedConnectToPartner = "hasOnboardedConnectToPartner"
+    static let hasOnboardedTableViewClickMe = "hasOnboardedTableViewClickMe"
+    static let hasOnboardedScanPartnerQR = "hasOnboardedScanPartnerQR"
+    static let hasOnboardedLetPartnerScanYourQR = "hasOnboardedLetPartnerScanYourQR"
+    static let hasOnboardedOpenEndGate = "hasOnboardedOpenEndGate"
+    static let hasOnboardedFinishLineTwoUsers = "hasOnboardedFinishLineTwoUsers"
+    
     // Camera uses to know if race has started and whether it should listen for breaks or not
     static var isRunning = false
 }

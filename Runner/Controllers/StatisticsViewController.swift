@@ -173,6 +173,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let onBoardClickMe: OnBoardingBubble = {
         let bubble = OnBoardingBubble(frame: .zero, title: "Click me!", pointerPlacement: "topMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.isHidden = true
         return bubble
     }()
 
@@ -326,6 +327,19 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         }))
         present(actionSheet, animated: true)
     }
+    
+    /// Related to onboarding
+    func showOnboardClickMe() {
+        DispatchQueue.main.async {
+            self.onBoardClickMe.isHidden = false
+        }
+    }
+    
+    func hasOnboardedClickMe() {
+        DispatchQueue.main.async {
+            self.onBoardClickMe.isHidden = true
+        }
+    }
 }
 
 extension StatisticsViewController: SortTypeDelegate {
@@ -374,7 +388,6 @@ extension StatisticsViewController: SortDateDelegate {
                 self.reloadTableView(sortedTypeRunsArray: self.allRuns)
             }
         }
-
     }
 }
 
@@ -413,7 +426,10 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
                 destinationController.metricSystemOnOpen = false
             }
         }
-
+        
+        // Related to onboarding
+        statisticsViewModel.hasOnboardedClickMe()
+        
         navigationController?.pushViewController(destinationController, animated: false)
     }
     
@@ -465,7 +481,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         else {
             editButton.isSelected = true
             DispatchQueue.main.async {
-                self.editButton.backgroundColor = Constants.accentColorDark
+                self.editButton.backgroundColor = Constants.textColorDarkGray
             }
         }
     }
@@ -614,7 +630,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension StatisticsViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
-        sender.isHidden = true
+        statisticsViewModel.hasOnboardedClickMe()
     }
 }
 

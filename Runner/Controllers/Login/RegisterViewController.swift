@@ -321,8 +321,20 @@ class RegisterViewController: UIViewController {
                 // cache values related to user
                 UserDefaults.standard.setValue(email, forKey: "email")
                 UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+                
                 // Make sure there is no lingering partner email
                 UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
+                
+                // Set userdefaults related to Onboarding
+                UserDefaults.standard.set(false, forKey: Constants.hasOnBoardedScroll)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnBoardedReaction)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedStartLineTwoUsers)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineOneUser)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedConnectToPartner)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedTableViewClickMe)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedScanPartnerQR)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedOpenEndGate)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineTwoUsers)
                 
                 // Insert user into database with properties given in text fields
                 let raceAppUser = RaceAppUser(firstName: firstName,

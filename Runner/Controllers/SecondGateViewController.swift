@@ -62,6 +62,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at finish line. Set pointer so the camera can see you run across the finish line!", pointerPlacement: "topMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 0
+        bubble.isHidden = true
         return bubble
     }()
     
@@ -76,10 +77,14 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationBar.tintColor = Constants.accentColorDark
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
-                                                            style: .done,
-                                                            target: self,
-                                                            action: #selector(dismissSelf))
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                                              style: .done,
+                                                              target: self,
+                                                              action: #selector(dismissSelf)),
+                                              UIBarButtonItem(image: UIImage(systemName: "camera.rotate"),
+                                                              style: .done,
+                                                              target: self,
+                                                              action: #selector(switchCameraDirection))]
         
         // Delegates
         secondGateViewModel.secondGateViewModelDelegate = self
@@ -97,6 +102,9 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         view.addSubview(displayView)
         //displayView.addSubview(pulsingView)
         displayView.addSubview(pulsingLabel)
+        
+        // Related to onboarding
+        secondGateViewModel.showOnboardingFinishLine()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -161,6 +169,10 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         dismiss(animated: true, completion: nil)
         self.secondGateViewModel.captureSession.stopRunning()
     }
+    
+    @objc private func switchCameraDirection() {
+        secondGateViewModel.switchCamera()
+    }
 }
 
 
@@ -179,12 +191,25 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
             self.pulsingView.setColor(color: color)
         }
     }
+    
+    /// Related to onboarding the user
+    func hasOnboardedFinsihLine() {
+        DispatchQueue.main.async {
+            self.onBoardPlace.isHidden = true
+        }
+    }
+    
+    func showOnboardingFinishLine() {
+        DispatchQueue.main.async {
+            self.onBoardPlace.isHidden = false
+        }
+    }
 }
 
 /// Related to onboarding the user
 extension SecondGateViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
-        sender.isHidden = true
+        secondGateViewModel.hasOnboardedFinishLine()
     }
 }
 

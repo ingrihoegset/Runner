@@ -15,6 +15,10 @@ protocol FirstGateViewModelDelegate: AnyObject {
     func resetUIOnRunEnd()
     func updateRunningAnimtion(color: CGColor, label: String)
     func removeCountDownLabel()
+    func showOnboardFinishLineOneUser()
+    func hasOnboardedFinishLineOneUser()
+    func showOnboardStartLineTwoUsers()
+    func hasOnboardedStartLineTwoUsers()
 }
 
 class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -364,6 +368,39 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             }
         }
     }
+    
+    /// Related to onboarding
+    func hasOnboardedFinishLineOneUser() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedFinishLineOneUser)
+        firstGateViewModelDelegate?.hasOnboardedFinishLineOneUser()
+    }
+    
+    // If onboarding of connect hasnt already occured, show onboardconnect bubble
+    func showOnboardingFinishLineOneUser() {
+        let onboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedFinishLineOneUser)
+        let runningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
+        if runningWithOneGate == true {
+            if onboarded == false {
+                firstGateViewModelDelegate?.showOnboardFinishLineOneUser()
+            }
+        }
+    }
+    
+    func hasOnboardedStartLineTwoUsers() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedStartLineTwoUsers)
+        firstGateViewModelDelegate?.hasOnboardedStartLineTwoUsers()
+    }
+    
+    // If onboarding of connect hasnt already occured, show onboardconnect bubble
+    func showOnboardingStartLineTwoUsers() {
+        let onboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedStartLineTwoUsers)
+        let runningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
+        if runningWithOneGate == false {
+            if onboarded == false {
+                firstGateViewModelDelegate?.showOnboardStartLineTwoUsers()
+            }
+        }
+    }
 }
 
 
@@ -437,6 +474,27 @@ extension FirstGateViewModel {
              }
          }
      }
+    
+    // Switches camera between front and back
+    func switchCamera() {
+        captureSession.beginConfiguration()
+        let currentInput = captureSession.inputs.first as? AVCaptureDeviceInput
+        captureSession.removeInput(currentInput!)
+        let newCameraDevice = currentInput?.device.position == .back ? getCamera(with: .front) : getCamera(with: .back)
+        let newVideoInput = try? AVCaptureDeviceInput(device: newCameraDevice!)
+        captureSession.addInput(newVideoInput!)
+        captureSession.commitConfiguration()
+    }
+    
+    private func getCamera(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+        guard let devices = AVCaptureDevice.devices(for: AVMediaType.video) as? [AVCaptureDevice] else {
+            return nil
+        }
+        
+        return devices.filter {
+            $0.position == position
+            }.first
+    }
 }
 
 

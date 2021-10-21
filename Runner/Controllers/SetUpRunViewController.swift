@@ -163,11 +163,15 @@ class SetUpRunViewController: UIViewController {
     let onBoardScroll: OnBoardingBubble = {
         let bubble = OnBoardingBubble(frame: .zero, title: "Scroll me!", pointerPlacement: "topLeft")
         bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.tag = 0
+        bubble.isHidden = true
         return bubble
     }()
     let onBoardReaction: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Interval for random starting signal !", pointerPlacement: "bottomLeft")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Select interval for random starting signal!", pointerPlacement: "bottomLeft")
         bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.tag = 1
+        bubble.isHidden = true
         return bubble
     }()
     
@@ -202,6 +206,8 @@ class SetUpRunViewController: UIViewController {
         // Adjusts view for selected type of run
         setUpRunViewModel.selectedRunType()
         setUpRunViewModel.isConnectedToParter()
+        setUpRunViewModel.showScrollOnboarding()
+        setUpRunViewModel.showReactionOnboarding()
         
         //Add onboarding view
         view.addSubview(onBoardScroll)
@@ -355,10 +361,32 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
         runnerView.isHidden = false
         falseStartView.isHidden = false
     }
+    
+    func showOnboardScroll() {
+        DispatchQueue.main.async {
+            self.onBoardScroll.isHidden = false
+        }
+    }
+    
+    func showReactionOnboarding() {
+        DispatchQueue.main.async {
+            self.onBoardReaction.isHidden = false
+        }
+    }
 }
 
 extension SetUpRunViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
-            sender.isHidden = true
+        sender.isHidden = true
+        
+        // Check if has been onboarded. When onboarded, set user default to true, this will prevent message from showing again
+        // Scroller
+        if sender.tag == 0 {
+            setUpRunViewModel.scrollOnboarded()
+        }
+        // Reaction
+        if sender.tag == 1 {
+            setUpRunViewModel.reactionOnboarded()
+        }
     }
 }

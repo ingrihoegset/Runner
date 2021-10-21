@@ -12,6 +12,8 @@ import UIKit
 protocol SecondGateViewModelDelegate: AnyObject {
     func runHasEnded()
     func updateRunningAnimtion(color: CGColor, label: String)
+    func hasOnboardedFinsihLine()
+    func showOnboardingFinishLine()
 }
 
 class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate  {
@@ -111,9 +113,21 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
             }
         })
     }
+    
+    /// Related to onboarding
+    func hasOnboardedFinishLine() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedFinishLineTwoUsers)
+        secondGateViewModelDelegate?.hasOnboardedFinsihLine()
+    }
+    
+    // If onboarding of connect hasnt already occured, show onboardconnect bubble
+    func showOnboardingFinishLine() {
+        let onboardConnect = UserDefaults.standard.bool(forKey: Constants.hasOnboardedFinishLineTwoUsers)
+        if onboardConnect == false {
+            secondGateViewModelDelegate?.showOnboardingFinishLine()
+        }
+    }
 }
-
-
 
 
 // MARK: - Functions related to Setting up and configuring camera.
@@ -184,5 +198,26 @@ extension SecondGateViewModel {
              }
          }
      }
+    
+    // Switches camera between front and back
+    func switchCamera() {
+        captureSession.beginConfiguration()
+        let currentInput = captureSession.inputs.first as? AVCaptureDeviceInput
+        captureSession.removeInput(currentInput!)
+        let newCameraDevice = currentInput?.device.position == .back ? getCamera(with: .front) : getCamera(with: .back)
+        let newVideoInput = try? AVCaptureDeviceInput(device: newCameraDevice!)
+        captureSession.addInput(newVideoInput!)
+        captureSession.commitConfiguration()
+    }
+    
+    private func getCamera(with position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+        guard let devices = AVCaptureDevice.devices(for: AVMediaType.video) as? [AVCaptureDevice] else {
+            return nil
+        }
+        
+        return devices.filter {
+            $0.position == position
+            }.first
+    }
 }
 

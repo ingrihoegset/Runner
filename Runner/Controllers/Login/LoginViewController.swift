@@ -5,8 +5,7 @@
 //  Created by Ingrid on 10/07/2021.
 //
 
-
-// Created custom FB login button. If something fails with this, remove commenting out related to fbloginbutton.
+// Removed Google login alltogether because it overrides the FB login credentials so facebook login ceases to work after google login has occured with same user email. Apparently a common problem.
 
 import UIKit
 import FirebaseAuth
@@ -86,18 +85,6 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    /*
-    private let fbLoginButton: FBLoginButton = {
-        let button = FBLoginButton()
-        button.layer.cornerRadius = Constants.mainButtonSize / 2
-        button.backgroundColor = Constants.mainColor
-        button.translatesAutoresizingMaskIntoConstraints = false
-        // To override height property inherent in fb button
-        button.removeConstraints(button.constraints)
-        button.permissions = ["public_profile", "email"]
-        return button
-    }()*/
-    
     private let orLogInLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -111,13 +98,14 @@ class LoginViewController: UIViewController {
     private let customFBLoginButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.mainColor
+        button.backgroundColor = UIColor(named: "Facebook_Blue")
         button.addTarget(self, action: #selector(customFBLoginButtonTapped(_:)), for: .touchUpInside)
-        button.layer.cornerRadius = Constants.mainButtonSize / 2
-        let image = UIImage(named: "Facebook_F")?.withTintColor(UIColor(named: "Facebook_Blue") ?? UIColor.link)
+        button.layer.cornerRadius = Constants.mainButtonSize * 1.15 / 2
+        let image = UIImage(named: "Facebook_F")?.withTintColor(.white)
         button.imageView?.contentMode = .scaleAspectFit
         button.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         button.setImage(image, for: .normal)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -179,8 +167,10 @@ class LoginViewController: UIViewController {
         // Custom Facebook login button
         view.addSubview(customFBLoginButton)
         
+        /*
         // Google login button
         view.addSubview(googleLoginButton)
+        */
         
         // Present welcome animation
         presentWelcome()
@@ -230,26 +220,15 @@ class LoginViewController: UIViewController {
         logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         logginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        /*
-        fbLoginButton.topAnchor.constraint(equalTo: logginButton.bottomAnchor, constant: Constants.sideMargin).isActive = true
-        fbLoginButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        fbLoginButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin).isActive = true
-        fbLoginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        */
-        
         orLogInLabel.topAnchor.constraint(equalTo: logginButton.bottomAnchor).isActive = true
         orLogInLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         orLogInLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         orLogInLabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        googleLoginButton.topAnchor.constraint(equalTo: orLogInLabel.bottomAnchor).isActive = true
-        googleLoginButton.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: Constants.sideMargin).isActive = true
-        googleLoginButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
         customFBLoginButton.topAnchor.constraint(equalTo: orLogInLabel.bottomAnchor).isActive = true
-        customFBLoginButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        customFBLoginButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin).isActive = true
-        customFBLoginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        customFBLoginButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.15).isActive = true
+        customFBLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        customFBLoginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.15).isActive = true
     }
     
     /// Present Welcome text with animation

@@ -132,16 +132,16 @@ class CounterView: UIView {
         secsView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         secsView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         secsView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        secsView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1/3).isActive = true
+        secsView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.31).isActive = true
         
         minsView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         minsView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         minsView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        minsView.trailingAnchor.constraint(equalTo: secsView.leadingAnchor, constant: -6).isActive = true
+        minsView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.31).isActive = true
         
         hundrethsView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         hundrethsView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        hundrethsView.leadingAnchor.constraint(equalTo: secsView.trailingAnchor, constant: 6).isActive = true
+        hundrethsView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.31).isActive = true
         hundrethsView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
     }
 }

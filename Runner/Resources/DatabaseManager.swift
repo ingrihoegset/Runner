@@ -694,7 +694,7 @@ extension DatabaseManager {
     
     public func getAllCompletedRuns(completion: @escaping (Result<[[String: Any]], Error>) -> Void) {
         
-        // Step 1: Get user som that we can remove current run from our user
+        // Step 1: Get user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No user email found when trying to register end time to database.")
             completion(.failure(DataBaseErrors.failedToFetch))
@@ -704,7 +704,7 @@ extension DatabaseManager {
         // Get safe email version of emails.
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
         
-        database.child("\(userSafeEmail)/completed_runs").observeSingleEvent(of: .value, with: { snapshot in
+        database.child("\(userSafeEmail)/completed_runs").observe( .value, with: { snapshot in
             
             guard let completedRuns = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DataBaseErrors.failedToFetch))

@@ -14,6 +14,8 @@ protocol StatisticsViewModelDelegate: AnyObject {
     func reloadTableView(completedRunsArray: [RunResults])
     func reloadTableView()
     func loadYears(years: [String])
+    func showOnboardClickMe()
+    func hasOnboardedClickMe()
 }
 
 class StatisticsViewModel {
@@ -51,6 +53,11 @@ class StatisticsViewModel {
                 }
                 strongSelf.statisticsViewModelDelegate?.reloadTableView(completedRunsArray: transformedRunData)
                 strongSelf.statisticsViewModelDelegate?.loadYears(years: years)
+                
+                // Related to onboarding
+                if runsData.count >= 1 {
+                    strongSelf.statisticsViewModelDelegate?.showOnboardClickMe()
+                }
 
             case .failure(let error):
                 print(error)
@@ -114,7 +121,8 @@ class StatisticsViewModel {
            let startTime = run["start_time"] as? Double,
            let distance = run["run_distance"] as? Int,
            let type = run["run_type"] as? String,
-           let date = run["run_date"] as? String {
+           let date = run["run_date"] as? String,
+           let runID = run["run_id"] as? String {
             
             // Get total race time in seconds
             let totalSeconds = endTime - startTime
@@ -150,7 +158,7 @@ class StatisticsViewModel {
                                        averageSpeed: speed,
                                        type: type,
                                        date: dateAsDate,
-                                       runID: "")
+                                       runID: runID)
             
             return runResult
         }
@@ -192,7 +200,7 @@ class StatisticsViewModel {
             speedInDecimals = speed.round(to: 2)
             return speedInDecimals
         }
-        // #1.1 Saved run is in imperial units and selected units are in metric
+        // #1.2 Saved run is in imperial units and selected units are in metric
         else if metricSystem == true && unitOfSavedRun == false {
             
             // Convert from distance in yards to distance in kilometers
@@ -212,7 +220,7 @@ class StatisticsViewModel {
             speedInDecimals = speed.round(to: 2)
             return speedInDecimals
         }
-        // #2.1 Saved run is in metric, but selected units are in imperial
+        // #2.2 Saved run is in metric, but selected units are in imperial
         else if metricSystem == false && unitOfSavedRun == true {
             
             // Find distance in miles from meters
@@ -243,7 +251,7 @@ class StatisticsViewModel {
             // Find distance in meters
             return runDistance
         }
-        // #1.1 Saved run is in imperial units and selected units are in metric
+        // #1.2 Saved run is in imperial units and selected units are in metric
         else if metricSystem == true && unitOfSavedRun == false {
             
             // Convert from distance in yards to distance in meters
@@ -259,7 +267,7 @@ class StatisticsViewModel {
             return runDistance
 
         }
-        // #2.1 Saved run is in metric, but selected units are in imperial
+        // #2.2 Saved run is in metric, but selected units are in imperial
         else if metricSystem == false && unitOfSavedRun == true {
             
             // Find distance in yards from meters
@@ -298,5 +306,19 @@ class StatisticsViewModel {
     
     func mphToKmh(mph: Double) -> Double {
         return mph * 1.609344
+    }
+    
+    /// Related to onboarding
+    func hasOnboardedClickMe() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedTableViewClickMe)
+        statisticsViewModelDelegate?.hasOnboardedClickMe()
+    }
+    
+    // If onboarding of connect hasnt already occured, show onboardconnect bubble
+    func showOnboardClickMe() {
+        let onboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedTableViewClickMe)
+        if onboarded == false {
+            statisticsViewModelDelegate?.showOnboardClickMe()
+        }
     }
 }

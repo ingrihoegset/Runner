@@ -13,6 +13,10 @@ protocol HomeViewModelDelegate: AnyObject {
     func didUpdatePartnerUI(partner: String, gateNumber: Int)
     func didGetRunResult(result: RunResults)
     func launchFinished()
+    func hasOnboardedConnect()
+    func showOnboardConnect()
+    func showOnboardedOpenEndGate()
+    func hasOnboardedEndGate()
 }
 
 
@@ -58,6 +62,33 @@ class HomeViewModel {
                 self?.homeViewModelDelegate?.launchFinished()
             }
         })
+    }
+    
+    /// Related to managing the progressive onboarding.
+    func hasOnboardedConnect() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedConnectToPartner)
+        homeViewModelDelegate?.hasOnboardedConnect()
+    }
+    
+    func hasOnboardedEndGate() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedOpenEndGate)
+        homeViewModelDelegate?.hasOnboardedEndGate()
+    }
+    
+    // If onboarding of connect hasnt already occured, show onboardconnect bubble
+    func showOnboardConnect() {
+        let onboardConnect = UserDefaults.standard.bool(forKey: Constants.hasOnboardedConnectToPartner)
+        if onboardConnect == false {
+            homeViewModelDelegate?.showOnboardConnect()
+        }
+    }
+    
+    // If onboarding of connect hasnt already occured, show onboardendgate bubble
+    func showOnboardEndGate() {
+        let onboardConnect = UserDefaults.standard.bool(forKey: Constants.hasOnboardedOpenEndGate)
+        if onboardConnect == false {
+            homeViewModelDelegate?.showOnboardedOpenEndGate()
+        }
     }
     
     // Clears link with partner from database upon app opening from terminate state
@@ -180,7 +211,8 @@ class HomeViewModel {
            let startTime = run["start_time"] as? Double,
            let distance = run["run_distance"] as? Int,
            let type = run["run_type"] as? String,
-           let date = run["run_date"] as? String {
+           let date = run["run_date"] as? String,
+           let runID = run["run_id"] as? String {
             
             // Get total race time in seconds
             let totalSeconds = endTime - startTime
@@ -216,7 +248,7 @@ class HomeViewModel {
                                        averageSpeed: speed,
                                        type: type,
                                        date: dateAsDate,
-                                       runID: "")
+                                       runID: runID)
             
             return runResult
         }

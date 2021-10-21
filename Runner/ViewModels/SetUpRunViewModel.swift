@@ -11,6 +11,8 @@ import Foundation
 protocol SetUpRunViewModelDelegate: AnyObject {
     func showReactionRun()
     func showLinkedFeatures(isRunningWithOneGate: Bool)
+    func showOnboardScroll()
+    func showReactionOnboarding()
 }
 
 class SetUpRunViewModel {
@@ -28,9 +30,6 @@ class SetUpRunViewModel {
 
         if selectedRunType == String(UserRunSelections.runTypes.Reaction.rawValue) {
             self.setUpRunViewModelDelegate?.showReactionRun()
-        }
-        else {
-
         }
     }
     
@@ -51,6 +50,35 @@ class SetUpRunViewModel {
         selectionModel.setUserIsRunning(running: userIsRunning)
     }
     
-   
+    /// Show onboarding elements
+    func showScrollOnboarding() {
+        let onboardScroll = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedScroll)
+        if onboardScroll == false {
+            setUpRunViewModelDelegate?.showOnboardScroll()
+        }
+    }
+    
+    func scrollOnboarded() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnBoardedScroll)
+        showReactionOnboarding()
+    }
+    
+    func reactionOnboarded() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnBoardedReaction)
+    }
+    
+    func showReactionOnboarding() {
+        print("start")
+        let selectedRunType = selectionModel.getUserSelectedType()
+        let scrollOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedScroll)
+        let reactionOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedReaction)
+        print(selectedRunType, scrollOnboarded, reactionOnboarded)
+        if selectedRunType == String(UserRunSelections.runTypes.Reaction.rawValue) {
+            if scrollOnboarded == true && reactionOnboarded == false {
+                print("calling")
+                setUpRunViewModelDelegate?.showReactionOnboarding()
+            }
+        }
+    }
 }
     

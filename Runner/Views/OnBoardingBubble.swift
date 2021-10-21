@@ -68,6 +68,7 @@ class OnBoardingBubble: UIView {
         self.addSubview(pointerView)
         backgroundView.addSubview(label)
         backgroundView.addSubview(closeButton)
+        self.sendSubviewToBack(pointerView)
         label.text = title
         
     }

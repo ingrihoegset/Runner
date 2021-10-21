@@ -67,6 +67,7 @@ class FirstGateViewController: UIViewController {
         view.layer.masksToBounds = false
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.backgroundColor = Constants.accentColor
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return view
     }()
     
@@ -150,20 +151,23 @@ class FirstGateViewController: UIViewController {
         let picker = CountDownPicker()
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.alpha = 0
+        picker.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return picker
     }()
     
     let timerView: CounterView = {
         let view = CounterView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return view
     }()
     
     /// Views related to onboarding
-    let onBoardPlace: OnBoardingBubble = {
+    let onBoardFinishLine: OnBoardingBubble = {
         let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at your finish line and start count down. Make sure you have enough time to get into position!", pointerPlacement: "topMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 0
+        bubble.isHidden = true
         return bubble
     }()
     
@@ -171,6 +175,7 @@ class FirstGateViewController: UIViewController {
         let bubble = OnBoardingBubble(frame: .zero, title: "Place your phone at starting line and listen for starting signal!", pointerPlacement: "bottomMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 1
+        bubble.isHidden = true
         return bubble
     }()
     
@@ -187,6 +192,10 @@ class FirstGateViewController: UIViewController {
         let runningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
         if runningWithOneGate == true {
             title = "End gate"
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.rotate"),
+                                                                style: .done,
+                                                                target: self,
+                                                                action: #selector(switchCameraDirection))
         }
         else {
             title = "Start run"
@@ -194,7 +203,7 @@ class FirstGateViewController: UIViewController {
         
         // Subscribe to delegates
         firstGateViewModel.firstGateViewModelDelegate = self
-        onBoardPlace.onBoardingBubbleDelegate = self
+        onBoardFinishLine.onBoardingBubbleDelegate = self
         onBoardConnectedStart.onBoardingBubbleDelegate = self
         
         // Add top displays
@@ -205,7 +214,7 @@ class FirstGateViewController: UIViewController {
 
         cameraView.addSubview(focusView)
         focusView.addSubview(focusImageView)
-        cameraView.addSubview(onBoardPlace)
+        cameraView.addSubview(onBoardFinishLine)
         
         // Add other elements to view
         view.addSubview(pulsingLabelView)
@@ -220,6 +229,10 @@ class FirstGateViewController: UIViewController {
         // Set tekst in top labels
         setDisplayLabelText()
         setConstraints()
+        
+        //Related to onboarding
+        firstGateViewModel.showOnboardingFinishLineOneUser()
+        firstGateViewModel.showOnboardingStartLineTwoUsers()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -286,10 +299,10 @@ class FirstGateViewController: UIViewController {
         focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
         focusView.layer.cornerRadius = width / 2
         
-        onBoardPlace.topAnchor.constraint(equalTo: focusView.bottomAnchor).isActive = true
-        onBoardPlace.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
-        onBoardPlace.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.8).isActive = true
-        onBoardPlace.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -Constants.sideMargin).isActive = true
+        onBoardFinishLine.topAnchor.constraint(equalTo: focusView.bottomAnchor).isActive = true
+        onBoardFinishLine.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
+        onBoardFinishLine.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.8).isActive = true
+        onBoardFinishLine.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -Constants.sideMargin).isActive = true
         
         focusImageView.centerYAnchor.constraint(equalTo: focusView.centerYAnchor).isActive = true
         focusImageView.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
@@ -322,7 +335,7 @@ class FirstGateViewController: UIViewController {
             previewLayer.frame = self.cameraView.bounds
             self.cameraView.layer.addSublayer(previewLayer)
             self.cameraView.bringSubviewToFront(self.focusView)
-            self.cameraView.bringSubviewToFront(self.onBoardPlace)
+            self.cameraView.bringSubviewToFront(self.onBoardFinishLine)
         }
     }
     
@@ -362,6 +375,10 @@ class FirstGateViewController: UIViewController {
     @objc private func cancelRun() {
         firstGateViewModel.cancelRun()
         animateCancel()
+    }
+    
+    @objc private func switchCameraDirection() {
+        firstGateViewModel.switchCamera()
     }
     
     private func animateCancel() {
@@ -419,7 +436,6 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
         }
     }
     
-    
     func resetUIOnRunEnd() {
         animateCancel()
     }
@@ -449,11 +465,41 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
             }
         )
     }
+    
+    // Related to onboarding
+    func showOnboardFinishLineOneUser() {
+        DispatchQueue.main.async {
+            self.onBoardFinishLine.isHidden = false
+        }
+    }
+    
+    func hasOnboardedFinishLineOneUser() {
+        DispatchQueue.main.async {
+            self.onBoardFinishLine.isHidden = true
+        }
+    }
+    
+    func showOnboardStartLineTwoUsers() {
+        DispatchQueue.main.async {
+            self.onBoardConnectedStart.isHidden = false
+        }
+    }
+    
+    func hasOnboardedStartLineTwoUsers() {
+        DispatchQueue.main.async {
+            self.onBoardConnectedStart.isHidden = true
+        }
+    }
 }
 
 /// Related to onboarding the user
 extension FirstGateViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
-        sender.isHidden = true
+        if sender.tag == 0 {
+            firstGateViewModel.hasOnboardedFinishLineOneUser()
+        }
+        if sender.tag == 1 {
+            firstGateViewModel.hasOnboardedStartLineTwoUsers()
+        }
     }
 }

@@ -279,19 +279,34 @@ class HomeViewController: UIViewController {
     
     /// Views related to onboarding
     let onBoardConnect: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Connect to partner to add second timing gate and unlock more features!", pointerPlacement: "bottomMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Connect to partner to add second timing gate and unlock more features!", pointerPlacement: "bottomRight")
         bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.isHidden = true
+        bubble.tag = 0
         return bubble
     }()
     
     let onBoardEndGate: OnBoardingBubble = {
         let bubble = OnBoardingBubble(frame: .zero, title: "Open end gate to create a finish line!", pointerPlacement: "topMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.isHidden = true
+        bubble.tag = 1
         return bubble
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //-- OBS! Must be removed when onboarding functionality complete--//
+        UserDefaults.standard.set(false, forKey: Constants.hasOnBoardedScroll)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnBoardedReaction)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedStartLineTwoUsers)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineOneUser)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedConnectToPartner)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedTableViewClickMe)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedScanPartnerQR)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedOpenEndGate)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineTwoUsers)
         
         view.backgroundColor = Constants.accentColor
         
@@ -353,6 +368,9 @@ class HomeViewController: UIViewController {
         partnerProfileImageView.addGestureRecognizer(unlinkFromPartnerTapGesture)
         
         addChildController()
+        
+        // Related to onboarding
+        homeViewModel.showOnboardEndGate()
     }
     
     
@@ -482,8 +500,8 @@ class HomeViewController: UIViewController {
         
         onBoardConnect.bottomAnchor.constraint(equalTo: segmentControl.topAnchor).isActive = true
         onBoardConnect.trailingAnchor.constraint(equalTo: segmentControl.trailingAnchor).isActive = true
-        onBoardConnect.leadingAnchor.constraint(equalTo: segmentControl.centerXAnchor).isActive = true
-        onBoardConnect.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 3).isActive = true
+        onBoardConnect.widthAnchor.constraint(equalTo: segmentControl.widthAnchor, multiplier: 0.75).isActive = true
+        onBoardConnect.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
         
         // Selections shown when no link
         unconnectedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
@@ -538,6 +556,9 @@ class HomeViewController: UIViewController {
     
     /// QR-button is tapped. It should reveal the users QR-code for scanning.
     @objc func didTapQRButton() {
+        // Onboarding of connect is completed when user selects this button
+        homeViewModel.hasOnboardedConnect()
+        // Send user to linking views
         let vc = LinkToPartnerViewController()
         vc.startControlSegment = 1
         let navVC = UINavigationController(rootViewController: vc)
@@ -689,6 +710,30 @@ extension HomeViewController: HomeViewModelDelegate {
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
     }
+    
+    func hasOnboardedConnect() {
+        DispatchQueue.main.async {
+            self.onBoardConnect.isHidden = true
+        }
+    }
+    
+    func showOnboardConnect() {
+        DispatchQueue.main.async {
+            self.onBoardConnect.isHidden = false
+        }
+    }
+    
+    func showOnboardedOpenEndGate() {
+        DispatchQueue.main.async {
+            self.onBoardEndGate.isHidden = false
+        }
+    }
+    
+    func hasOnboardedEndGate() {
+        DispatchQueue.main.async {
+            self.onBoardEndGate.isHidden = true
+        }
+    }
 }
 
 // MARK: - Functions relating to connecting with second gate
@@ -717,21 +762,22 @@ extension HomeViewController {
     }
     
     @objc func segmentControl(_ segmentedControl: UISegmentedControl) {
-       switch (segmentedControl.selectedSegmentIndex) {
-          case 0:
+        // Makes onboarding bubble disappear or never appear since user has already tested feature
+        homeViewModel.hasOnboardedConnect()
+        // Switch to connect to partner or disconnect from partner
+        switch (segmentedControl.selectedSegmentIndex) {
+        case 0:
             revertToOneGate()
             print("0", UserRunSelections.shared.getIsRunningWithOneGate())
-
-          break
-          case 1:
+            break
+        case 1:
             didTapAddSecondGate()
             print("1", UserRunSelections.shared.getIsRunningWithOneGate())
-
-          break
-          default:
+            break
+        default:
             print("DEFAULT", UserRunSelections.shared.getIsRunningWithOneGate())
-          break
-       }
+            break
+        }
     }
 }
 
@@ -752,6 +798,9 @@ extension HomeViewController {
         let vc = SetUpRunViewController()
         vc.navigationItem.largeTitleDisplayMode = .always      
         navigationController?.pushViewController(vc, animated: true)
+        
+        // Tell Home view that it is ready to show connect to partner onboarding next time it appears
+        homeViewModel.showOnboardConnect()
     }
     
     /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
@@ -874,6 +923,9 @@ extension HomeViewController {
         let vc = SecondGateViewController()
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
+        
+        // User has been onboarded to end gate
+        homeViewModel.hasOnboardedEndGate()
     }
 }
 
@@ -892,5 +944,12 @@ extension HomeViewController {
 extension HomeViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
         sender.isHidden = true
+        // Update user defaults so that these bubbles are never shown again
+        if sender.tag == 0 {
+            homeViewModel.hasOnboardedConnect()
+        }
+        if sender.tag == 1 {
+            homeViewModel.hasOnboardedEndGate()
+        }
     }
 }

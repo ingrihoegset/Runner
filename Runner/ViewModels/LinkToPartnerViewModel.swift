@@ -11,6 +11,8 @@ import UIKit
 protocol LinkViewModelDelegate: AnyObject {
     func didUpdateLink()
     func didFetchProfileImage(image: UIImage)
+    func scanOnboarded()
+    func showOnboardConnect()
 }
 
 class LinkToPartnerViewModel {
@@ -42,9 +44,11 @@ class LinkToPartnerViewModel {
                 guard let strongSelf = self else {
                     return
                 }
-                
                 strongSelf.linkViewModelDelegate?.didUpdateLink()
                 print ("Link updated. Close QR view controller")
+                
+                //Onboarding of connect to partner by scanning is successful, never show onboarding bubble again
+                strongSelf.scanOnboarded()
                 
             case .failure(_):
                 print("Do not close QR-code VC automatically.")
@@ -78,6 +82,19 @@ class LinkToPartnerViewModel {
                 print("Failed to download url: \(error)")
             }
         })
+    }
+    
+    /// Related to onboarding of scanning functions
+    func showOnboardConnect() {
+        let onboardedConnect = UserDefaults.standard.bool(forKey: Constants.hasOnboardedScanPartnerQR)
+        if onboardedConnect == false {
+            linkViewModelDelegate?.showOnboardConnect()
+        }
+    }
+    
+    func scanOnboarded() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedScanPartnerQR)
+        linkViewModelDelegate?.scanOnboarded()
     }
 }
 

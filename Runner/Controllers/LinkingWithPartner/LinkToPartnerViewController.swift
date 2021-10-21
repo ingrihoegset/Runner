@@ -138,6 +138,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     let onBoardConnect: OnBoardingBubble = {
         let bubble = OnBoardingBubble(frame: .zero, title: "Let partner scan your QR-code to add a second running gate.", pointerPlacement: "topMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.isHidden = true
         return bubble
     }()
     
@@ -183,6 +184,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         createUserSpecificQRCodeIImage()
         
         // Views related to onboarding use
+        linkViewModel.showOnboardConnect()
         view.addSubview(onBoardConnect)
     }
     
@@ -376,10 +378,24 @@ extension LinkToPartnerViewController: LinkViewModelDelegate {
             self.userImageView.image = image
         }
     }
+    
+    // Hide onboaring bubble when bubble is closed by user or when a link has occured
+    func scanOnboarded() {
+        DispatchQueue.main.async {
+            self.onBoardConnect.isHidden = true
+        }
+    }
+    
+    func showOnboardConnect() {
+        DispatchQueue.main.async {
+            self.onBoardConnect.isHidden = false
+        }
+    }
 }
 
 extension LinkToPartnerViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
         sender.isHidden = true
+        linkViewModel.scanOnboarded()
     }
 }
