@@ -17,7 +17,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     let displayView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -79,18 +79,16 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         // Navigation bar appearance
         navigationItem.title = "End gate"
-        self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
-        self.navigationController?.navigationBar.backgroundColor = Constants.mainColor
-        self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        let navBar = navigationController?.navigationBar
+        navBar?.setBackgroundImage(UIImage(), for: .default)
+        navBar?.shadowImage = UIImage()
+        navBar?.isTranslucent = true
+        view.backgroundColor = Constants.mainColor
+
         self.navigationController?.navigationBar.tintColor = Constants.accentColorDark
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
-                                                              style: .done,
-                                                              target: self,
-                                                              action: #selector(dismissSelf))
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.rotate"),
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.rotate"),
                                                               style: .done,
                                                               target: self,
                                                               action: #selector(switchCameraDirection))
@@ -101,7 +99,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         // Set up for camera view
         let previewLayer = secondGateViewModel.previewLayer
-        previewLayer.frame = self.view.bounds
+        previewLayer.frame = self.view.safeAreaLayoutGuide.layoutFrame
         self.view.layer.addSublayer(previewLayer)
         self.view.addSubview(focusView)
         focusView.addSubview(focusImageView)
@@ -136,11 +134,10 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Made height / 3 because for some reason the view didnt want to constrain to top of view, but only to safe area.
-        displayView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        displayView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         displayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         displayView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 3).isActive = true
+        displayView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         
         pulsingLabelView.leadingAnchor.constraint(equalTo: displayView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         pulsingLabelView.trailingAnchor.constraint(equalTo: displayView.trailingAnchor, constant:  -Constants.sideMargin).isActive = true
@@ -160,8 +157,8 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Must match size of focus frame in breakobserver
         let width = Constants.widthOfDisplay / 6
 
-        focusView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        focusView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        focusView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        focusView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         focusView.widthAnchor.constraint(equalToConstant: width).isActive = true
         focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
         focusView.layer.cornerRadius = width / 2
@@ -196,8 +193,25 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
     
     @objc func runHasEnded() {
         DispatchQueue.main.async {
-            self.dismiss(animated: true, completion: nil)
             self.secondGateViewModel.captureSession.stopRunning()
+        }
+    }
+    
+    func showRunResult(runresult: RunResults) {
+        DispatchQueue.main.async {
+            let vc = ResultsViewController()
+            vc.result = runresult
+            let navVC = UINavigationController(rootViewController: vc)
+            self.present(navVC, animated: true, completion: {
+                self.secondGateViewModel.captureSession.startRunning()
+            })
+        }
+    }
+    
+    // Remove results VC when new run is started
+    func dismissResultsVC() {
+        DispatchQueue.main.async {
+            self.presentedViewController?.dismiss(animated: true, completion: nil)
         }
     }
     

@@ -504,7 +504,7 @@ class HomeViewController: UIViewController {
         secondGateView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
         secondGateView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
         
-        openSecondGatesButton.bottomAnchor.constraint(equalTo: secondGateView.bottomAnchor, constant: -Constants.sideMargin * 2).isActive = true
+        openSecondGatesButton.bottomAnchor.constraint(equalTo: secondGateView.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         openSecondGatesButton.leadingAnchor.constraint(equalTo: secondGateView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         openSecondGatesButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
@@ -703,10 +703,10 @@ extension HomeViewController: HomeViewModelDelegate {
     }
     
     func didGetRunResult(result: RunResults) {
-        let vc = ResultsViewController()
+        /*let vc = ResultsViewController()
         vc.result = result
         let navVC = UINavigationController(rootViewController: vc)
-        present(navVC, animated: true)
+        present(navVC, animated: true)*/
     }
     
     func hasOnboardedConnect() {
@@ -857,8 +857,7 @@ extension HomeViewController {
     // MARK: - Functions related to second gate
     @objc private func didSelectOpenSecondGate(sender: UIButton) {
         let vc = SecondGateViewController()
-        let navVC = UINavigationController(rootViewController: vc)
-        present(navVC, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
         
         // User has been onboarded to end gate
         homeViewModel.hasOnboardedEndGate()

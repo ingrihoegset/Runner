@@ -490,6 +490,15 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
             self.onBoardConnectedStart.isHidden = true
         }
     }
+    
+    func showRunResult(runresult: RunResults) {
+        DispatchQueue.main.async {
+            let vc = ResultsViewController()
+            vc.result = runresult
+            let navVC = UINavigationController(rootViewController: vc)
+            self.present(navVC, animated: true)
+        }
+    }
 }
 
 /// Related to onboarding the user
