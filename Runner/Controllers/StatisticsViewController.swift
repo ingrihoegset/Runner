@@ -290,6 +290,13 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         return view
     }()
     
+    let noConnectionView: NoConnectionView = {
+        let view = NoConnectionView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -333,6 +340,28 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         skeletonLoadingView.addSubview(fakeRow7)
         skeletonLoadingView.addSubview(fakeRow8)
         setup()
+        
+        // Related to internet connection
+        view.addSubview(noConnectionView)
+        NetworkManager.isUnreachable { _ in
+            self.showOfflinePage()
+        }
+        NetworkManager.isReachable { _ in
+            self.showMainPage()
+        }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(foundConnection),
+            name: NSNotification.Name(Constants.networkIsReachable),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(lostConnection),
+            name: NSNotification.Name(Constants.networkIsNotReachable),
+            object: nil
+        )
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -469,10 +498,24 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         onBoardClickMe.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
         onBoardClickMe.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         onBoardClickMe.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        // View related to internet connection
+        noConnectionView.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor).isActive = true
+        noConnectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        noConnectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        noConnectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
     
     deinit {
         print("DESTROYED STATSPAGE")
+    }
+    
+    @objc func foundConnection() {
+        self.noConnectionView.isHidden = true
+    }
+    
+    @objc func lostConnection() {
+        self.noConnectionView.isHidden = false
     }
     
     func reloadTableView(completedRunsArray: [RunResults]) {
@@ -542,6 +585,21 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     func hideSkeletonLoadView() {
         DispatchQueue.main.async {
             self.skeletonLoadingView.isHidden = true
+        }
+    }
+    
+    /// Shows the not connected to internett view controller to user
+    private func showOfflinePage() -> Void {
+        print("show")
+        DispatchQueue.main.async {
+            self.noConnectionView.isHidden = false
+        }
+    }
+    
+    private func showMainPage() -> Void {
+        print("hide")
+        DispatchQueue.main.async {
+            self.noConnectionView.isHidden = true
         }
     }
 }
@@ -914,4 +972,5 @@ extension StatisticsViewController {
         return group
     }
 }
+
 

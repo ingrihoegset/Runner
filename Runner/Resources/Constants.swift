@@ -92,4 +92,8 @@ struct Constants {
     
     // Camera uses to know if race has started and whether it should listen for breaks or not
     static var isRunning = false
+    
+    // Network status
+    static let networkIsReachable = "networkIsReachable"
+    static let networkIsNotReachable = "networkIsNotReachable"
 }

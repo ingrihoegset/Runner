@@ -16,6 +16,9 @@
 		BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */; };
 		BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */; };
 		BF2F5193272406AE0066C5AD /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2F5192272406AE0066C5AD /* ForgotPasswordViewController.swift */; };
+		BF2F51B227247EF10066C5AD /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2F51B127247EF10066C5AD /* NetworkManager.swift */; };
+		BF2F51BA2724828E0066C5AD /* NoNetworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2F51B92724828E0066C5AD /* NoNetworkViewController.swift */; };
+		BF2F51BE2724A02C0066C5AD /* NoConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF2F51BD2724A02C0066C5AD /* NoConnectionView.swift */; };
 		BF3900F126F884D300EE58F2 /* LargeImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3900F026F884D300EE58F2 /* LargeImageButton.swift */; };
 		BF3BF16E2722D9AD00B4D28B /* AnimatedPulsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3BF16D2722D9AC00B4D28B /* AnimatedPulsView.swift */; };
 		BF48305E269AF90600C8CC6C /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF48305D269AF90600C8CC6C /* DatabaseManager.swift */; };
@@ -82,6 +85,9 @@
 		BF12FF20269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BarlowSemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
 		BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstGateViewController.swift; sourceTree = "<group>"; };
 		BF2F5192272406AE0066C5AD /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		BF2F51B127247EF10066C5AD /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		BF2F51B92724828E0066C5AD /* NoNetworkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoNetworkViewController.swift; sourceTree = "<group>"; };
+		BF2F51BD2724A02C0066C5AD /* NoConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoConnectionView.swift; sourceTree = "<group>"; };
 		BF3900F026F884D300EE58F2 /* LargeImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeImageButton.swift; sourceTree = "<group>"; };
 		BF3BF16D2722D9AC00B4D28B /* AnimatedPulsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedPulsView.swift; sourceTree = "<group>"; };
 		BF48305D269AF90600C8CC6C /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -197,6 +203,14 @@
 			path = LinkingWithPartner;
 			sourceTree = "<group>";
 		};
+		BF2F51B8272482750066C5AD /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				BF2F51B92724828E0066C5AD /* NoNetworkViewController.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		BF512AD5269F629F001C6BF2 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,6 +304,7 @@
 				BFC4AE3126D02FA400912F79 /* DetailRow.swift */,
 				BFD5488126E13EED009A2390 /* CounterView.swift */,
 				BF7DA83B2714D5130065FFA9 /* OnBoardingBubble.swift */,
+				BF2F51BD2724A02C0066C5AD /* NoConnectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -317,6 +332,7 @@
 				BF3900F026F884D300EE58F2 /* LargeImageButton.swift */,
 				BF82518826FA68BE00792FCB /* Hud.swift */,
 				BF3BF16D2722D9AC00B4D28B /* AnimatedPulsView.swift */,
+				BF2F51B127247EF10066C5AD /* NetworkManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -334,6 +350,7 @@
 				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
 				BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */,
+				BF2F51B8272482750066C5AD /* Network */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -519,8 +536,10 @@
 				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
 				BF4FF85226D57294005D6920 /* DateSortViewController.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */,
+				BF2F51B227247EF10066C5AD /* NetworkManager.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
+				BF2F51BA2724828E0066C5AD /* NoNetworkViewController.swift in Sources */,
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BF82518626FA65CB00792FCB /* InfoPlistParser.swift in Sources */,
 				BF4830A3269C654A00C8CC6C /* Sender.swift in Sources */,
@@ -544,6 +563,7 @@
 				BFD5488526F25D22009A2390 /* SetUpRunViewModel.swift in Sources */,
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
 				BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */,
+				BF2F51BE2724A02C0066C5AD /* NoConnectionView.swift in Sources */,
 				BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */,
 				BF3900F126F884D300EE58F2 /* LargeImageButton.swift in Sources */,
 			);

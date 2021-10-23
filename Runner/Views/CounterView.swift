@@ -35,85 +35,12 @@ class CounterView: UIView {
         return view
     }()
     
-    /*let minutes10s: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
-        label.font = Constants.mainFontLargeSB
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.text = "0"
-        label.textAlignment = .center
-        return label
-    }()
-    
-    let minutes1s: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
-        label.font = Constants.mainFontLargeSB
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.text = "0"
-        label.textAlignment = .center
-        return label
-    }()
-    
-    let seconds10s: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
-        label.font = Constants.mainFontLargeSB
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.text = "0"
-        label.textAlignment = .center
-        return label
-    }()
-    
-    let seconds1s: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
-        label.font = Constants.mainFontLargeSB
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.text = "0"
-        label.textAlignment = .center
-        return label
-    }()
-    
-    let hundreths10s: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
-        label.font = Constants.mainFontLargeSB
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.text = "0"
-        label.textAlignment = .center
-        return label
-    }()
-    
-    let hundreths1s: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.contrastColor
-        label.font = Constants.mainFontLargeSB
-        label.layer.cornerRadius = Constants.smallCornerRadius
-        label.clipsToBounds = true
-        label.text = "0"
-        label.textAlignment = .center
-        return label
-    }()*/
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.addSubview(minsView)
         self.addSubview(secsView)
         self.addSubview(hundrethsView)
-
     }
     
     init() {

@@ -382,9 +382,6 @@ class HomeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    
-        // Check if user is logged in already
-        validateAuth()
         
         if let email = UserDefaults.standard.value(forKey: "email") as? String {
             homeViewModel.fetchProfilePic(email: email)
@@ -513,19 +510,6 @@ class HomeViewController: UIViewController {
         onBoardEndGate.widthAnchor.constraint(equalTo: openSecondGatesButton.widthAnchor, multiplier: 0.6).isActive = true
         onBoardEndGate.centerXAnchor.constraint(equalTo: openSecondGatesButton.centerXAnchor).isActive = true
         onBoardEndGate.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
-    }
-    
-    /// Function checks if user is logged in or not
-    private func validateAuth() {
-        // If there is no current user, send user to log in view controller
-        // Current user is set automatically when you instantiate firebase auth, and log a user in.
-        if FirebaseAuth.Auth.auth().currentUser == nil {
-            let vc = LoginViewController()
-            let nav = UINavigationController(rootViewController: vc)
-            // Full screen so the user cannot dismiss login page if not logged in
-            nav.modalPresentationStyle = .fullScreen
-            present(nav, animated: false)
-        }
     }
     
     /// QR-button is tapped. It should reveal the users QR-code for scanning.

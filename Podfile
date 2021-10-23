@@ -25,4 +25,8 @@ pod 'JGProgressHUD'
 # For charts
 pod 'Charts' 
 
+# In order to observe internet connectivity
+pod 'ReachabilitySwift'
+pod 'Alamofire'
+
 end

@@ -13,7 +13,8 @@
         <!--Navigation Controller-->
         <scene sceneID="0eh-yZ-H8h">
             <objects>
-                <navigationController storyboardIdentifier="SignIn" id="Gbb-uB-cpa" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="SignIn" modalPresentationStyle="fullScreen" id="Gbb-uB-cpa" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="1VT-VM-07f"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="KYI-SE-fjj">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

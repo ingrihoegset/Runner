@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (5.4.4)
   - AppAuth (1.4.0):
     - AppAuth/Core (= 1.4.0)
     - AppAuth/ExternalUserAgent (= 1.4.0)
@@ -112,11 +113,13 @@ PODS:
   - nanopb/decode (2.30907.0)
   - nanopb/encode (2.30907.0)
   - PromisesObjC (1.2.12)
+  - ReachabilitySwift (5.0.0)
   - SDWebImage (5.10.4):
     - SDWebImage/Core (= 5.10.4)
   - SDWebImage/Core (5.10.4)
 
 DEPENDENCIES:
+  - Alamofire
   - Charts
   - FBSDKLoginKit
   - Firebase/Auth
@@ -125,10 +128,12 @@ DEPENDENCIES:
   - Firebase/Storage
   - GoogleSignIn
   - JGProgressHUD
+  - ReachabilitySwift
   - SDWebImage
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - AppAuth
     - Charts
     - FBSDKCoreKit
@@ -151,9 +156,11 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - ReachabilitySwift
     - SDWebImage
 
 SPEC CHECKSUMS:
+  Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   FBSDKCoreKit: fada1a6a0076724678993ff05a633848765ff18c
@@ -176,8 +183,9 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   SDWebImage: c666b97e1fa9c64b4909816a903322018f0a9c84
 
-PODFILE CHECKSUM: f872c057989c01e7e858a91e883aa40704d842ec
+PODFILE CHECKSUM: 52145a033c6d8e16eb2ea5ea2a521c21a0209a36
 
 COCOAPODS: 1.10.1

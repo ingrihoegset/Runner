@@ -15,6 +15,7 @@ import JGProgressHUD
 
 class LoginViewController: UIViewController {
     
+    private let noNetworkViewController = NoNetworkViewController()
     private let spinner = JGProgressHUD(style: .dark)
     
     private let logoView: UIImageView = {
@@ -190,6 +191,15 @@ class LoginViewController: UIViewController {
         
         // Makes keyboard disappear when tapped outside of keyboard
         self.dismissKeyboard()
+        
+        // Check for connection with internet, if not show user that they are not connected
+        addChildController()
+        NetworkManager.isUnreachable { _ in
+            self.showOfflinePage()
+        }
+        NetworkManager.isReachable { _ in
+            self.showMainPage()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -204,6 +214,11 @@ class LoginViewController: UIViewController {
         if let observer = googleLoginObserver {
             NotificationCenter.default.removeObserver(observer)
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+
     }
     
     /// Lay out constraints
@@ -256,6 +271,15 @@ class LoginViewController: UIViewController {
         UIView.animate(withDuration: 1.35) {
             self.welcomeLabel.alpha = 1
         }
+    }
+    
+    /// Shows the not connected to internett view controller to user
+    private func showOfflinePage() -> Void {
+        noNetworkViewController.view.isHidden = false
+    }
+    
+    private func showMainPage() -> Void {
+        noNetworkViewController.view.isHidden = true
     }
     
     /// When user taps to register new user, send user to register view controller
@@ -590,6 +614,18 @@ extension LoginViewController: UITextFieldDelegate {
             loginButtonTapped()
         }
         return true
+    }
+}
+
+/// Extension related to showing network warnign
+extension LoginViewController {
+    
+    func addChildController() {
+        addChild(noNetworkViewController)
+        view.addSubview(noNetworkViewController.view)
+        noNetworkViewController.view.frame = view.bounds
+        noNetworkViewController.didMove(toParent: self)
+        noNetworkViewController.view.isHidden = true
     }
 }
 

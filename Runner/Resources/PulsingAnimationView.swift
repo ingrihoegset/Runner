@@ -69,8 +69,8 @@ class PulsingAnimationView: UIView {
                                                     startAngle: -(CGFloat.pi / 2),
                                                     endAngle: -(CGFloat.pi / 2) + (2 * CGFloat.pi),
                                                     clockwise: true)
-        static let mainColor: CGColor = Constants.contrastColor!.cgColor
-        static let pulsingColor: CGColor = Constants.contrastColor!.cgColor
+        static let mainColor: CGColor = Constants.textColorDarkGray.cgColor
+        static let pulsingColor: CGColor = Constants.textColorDarkGray.cgColor
     }
     
     func setColor(color: CGColor) {
