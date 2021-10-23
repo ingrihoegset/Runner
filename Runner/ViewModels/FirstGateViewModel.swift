@@ -222,8 +222,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     private func createRun() {
-        print("Creating race IDs")
-        
         // Create data to include in run node
         let startTime = Date().currentTimeMillis()
         let date = FirstGateViewModel.dateFormatterShort.string(from: Date())
@@ -245,7 +243,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         DatabaseManager.shared.sendTime(time: time, endTime: endTime, completion: { success in
             if success {
 
-                
             }
             else {
                 

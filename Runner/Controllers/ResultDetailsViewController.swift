@@ -52,7 +52,7 @@ class ResultDetailsViewController: UIViewController {
     let detailRowTime: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.resultFontSmall
-        button.titleLabel?.textColor = Constants.contrastColor
+        button.titleLabel?.textColor = Constants.accentColorDark
         button.titleLabel?.textAlignment = .center
         button.backgroundColor = Constants.accentColor
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -66,7 +66,7 @@ class ResultDetailsViewController: UIViewController {
     let detailRowDistance: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.resultFontSmall
-        button.titleLabel?.textColor = Constants.contrastColor
+        button.titleLabel?.textColor = Constants.accentColorDark
         button.titleLabel?.textAlignment = .center
         button.backgroundColor = Constants.accentColor
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -80,7 +80,7 @@ class ResultDetailsViewController: UIViewController {
     let detailRowSpeed: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.resultFontSmall
-        button.titleLabel?.textColor = Constants.contrastColor
+        button.titleLabel?.textColor = Constants.accentColorDark
         button.titleLabel?.textAlignment = .center
         button.backgroundColor = Constants.accentColor
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -192,7 +192,7 @@ class ResultDetailsViewController: UIViewController {
         summaryView.addSubview(detailRowDistance)
         summaryView.addSubview(detailRowSpeed)
         
-        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.contrastColor, NSAttributedString.Key.font: Constants.resultFontSmall]
+        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
         let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
 
         let timeResult = NSMutableAttributedString(string: time, attributes: resultAttributes as [NSAttributedString.Key : Any])
@@ -219,7 +219,7 @@ class ResultDetailsViewController: UIViewController {
         distText.append(distResult)
         distText.append(distUnit)
         
-        let dateAttributes = [NSAttributedString.Key.foregroundColor: Constants.contrastColor, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let dateAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.mainFontLargeSB]
         let dated = NSMutableAttributedString(string: String(date), attributes: dateAttributes as [NSAttributedString.Key : Any])
         let dateText = NSMutableAttributedString()
         dateText.append(dated)
@@ -301,11 +301,11 @@ class ResultDetailsViewController: UIViewController {
         let set = LineChartDataSet(entries: entries)
         set.mode = .linear
         set.drawCirclesEnabled = true
-        set.circleColors = [Constants.accentColorDark ?? UIColor.white]
-        set.circleHoleColor = Constants.accentColorDark ?? UIColor.white
+        set.circleColors = [Constants.contrastColor ?? UIColor.white]
+        set.circleHoleColor = Constants.contrastColor ?? UIColor.white
         set.lineWidth = Constants.borderWidth
         set.circleRadius = 5
-        set.fill = Fill(color: Constants.accentColorDark ?? UIColor.clear)
+        set.fill = Fill(color: Constants.contrastColor ?? UIColor.clear)
         set.fillAlpha = 1
         set.drawFilledEnabled = true
         set.highlightEnabled = false

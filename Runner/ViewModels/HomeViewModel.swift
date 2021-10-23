@@ -12,11 +12,12 @@ protocol HomeViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
     func didUpdatePartnerUI(partner: String, gateNumber: Int)
     func didGetRunResult(result: RunResults)
-    func launchFinished()
     func hasOnboardedConnect()
     func showOnboardConnect()
     func showOnboardedOpenEndGate()
     func hasOnboardedEndGate()
+    func launchFinished()
+    func alertUserThatIsDisconnectedFromPartner()
 }
 
 
@@ -58,7 +59,7 @@ class HomeViewModel {
                     }
                 })
             case .failure(let error):
-                print("Failed to download url: \(error)")
+                print("Failed to download url: \(error), or no image is saved for user.")
                 self?.homeViewModelDelegate?.launchFinished()
             }
         })
@@ -143,6 +144,7 @@ class HomeViewModel {
                 // Tell home that there is no partner and that it is gate 1.
                 // Also, if fetch fails in general, show unlinked view on home VC.
                 strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner", gateNumber: 0)
+                strongSelf.homeViewModelDelegate?.alertUserThatIsDisconnectedFromPartner()
             }
         })
     }

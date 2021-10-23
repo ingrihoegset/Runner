@@ -17,11 +17,10 @@ class LoginViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
     
-    private let imageView: UIImageView = {
+    private let logoView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.backgroundColor = Constants.accentColorDark
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = Constants.accentColorDark
         return imageView
     }()
     
@@ -30,6 +29,7 @@ class LoginViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Welcome!"
         label.font = Constants.mainFontXLargeSB
+        label.textColor = Constants.textColorDarkGray
         label.alpha = 0
         label.textAlignment = .center
         return label
@@ -70,18 +70,28 @@ class LoginViewController: UIViewController {
         return field
     }()
     
-    private let logginButton: UIButton = {
-        let button = UIButton()
+    private let logginButton: BounceButton = {
+        let button = BounceButton()
+        button.animationColor = Constants.accentColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Log in", for: .normal)
-        button.backgroundColor = Constants.contrastColor
+        button.backgroundColor = Constants.accentColorDark
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
+        return button
+    }()
+    
+    private let forgotPasswordButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Forgot your password?", for: .normal)
+        button.backgroundColor = .clear
+        button.titleLabel?.font = Constants.mainFont
+        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.addTarget(self, action: #selector(didTapForgotPassword), for: .touchUpInside)
         return button
     }()
     
@@ -90,7 +100,7 @@ class LoginViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "- or, sign in with -"
         label.font = Constants.mainFont
-        label.textColor = Constants.accentColorDark
+        label.textColor = Constants.textColorDarkGray
         label.textAlignment = .center
         return label
     }()
@@ -124,9 +134,10 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         // Makes the nav bar blend in with the background
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.barTintColor = Constants.mainColor
+        let navBar = navigationController?.navigationBar
+        navBar?.setBackgroundImage(UIImage(), for: .default)
+        navBar?.shadowImage = UIImage()
+        navBar?.isTranslucent = true
         
         googleLoginObserver = NotificationCenter.default.addObserver(forName: .didGoogleLoginNotification,
                                                                      object: nil,
@@ -143,10 +154,11 @@ class LoginViewController: UIViewController {
         
         view.backgroundColor = Constants.mainColor
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register",
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign up",
                                                             style: .done,
                                                             target: self,
                                                             action: #selector(didTapRegister))
+        
         navigationItem.rightBarButtonItem?.tintColor = Constants.accentColorDark
         
         emailField.delegate = self
@@ -154,12 +166,13 @@ class LoginViewController: UIViewController {
         // fbLoginButton.delegate = self
         
         /// Adding subviews
-        view.addSubview(imageView)
+        view.addSubview(logoView)
         view.addSubview(welcomeLabel)
         view.addSubview(emailField)
         view.addSubview(passwordField)
-        view.addSubview(orLogInLabel)
         view.addSubview(logginButton)
+        view.addSubview(forgotPasswordButton)
+        view.addSubview(orLogInLabel)
         
         // Facebook login button
         // view.addSubview(fbLoginButton)
@@ -174,6 +187,9 @@ class LoginViewController: UIViewController {
         
         // Present welcome animation
         presentWelcome()
+        
+        // Makes keyboard disappear when tapped outside of keyboard
+        self.dismissKeyboard()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -194,23 +210,22 @@ class LoginViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
-        imageView.layer.cornerRadius = Constants.widthOfDisplay * 0.3 / 2
+        logoView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin).isActive = true
+        logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        logoView.bottomAnchor.constraint(equalTo: welcomeLabel.topAnchor, constant: -Constants.sideMargin).isActive = true
+        logoView.widthAnchor.constraint(equalTo: logoView.heightAnchor).isActive = true
         
-        welcomeLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        welcomeLabel.bottomAnchor.constraint(equalTo: emailField.topAnchor, constant: -Constants.verticalSpacing).isActive = true
         welcomeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         welcomeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         welcomeLabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        emailField.topAnchor.constraint(equalTo: welcomeLabel.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        emailField.bottomAnchor.constraint(equalTo: passwordField.topAnchor, constant: -Constants.verticalSpacing).isActive = true
         emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         emailField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        passwordField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         passwordField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
@@ -220,12 +235,17 @@ class LoginViewController: UIViewController {
         logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         logginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        orLogInLabel.topAnchor.constraint(equalTo: logginButton.bottomAnchor).isActive = true
+        forgotPasswordButton.topAnchor.constraint(equalTo: logginButton.bottomAnchor).isActive = true
+        forgotPasswordButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        forgotPasswordButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        forgotPasswordButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        orLogInLabel.bottomAnchor.constraint(equalTo: customFBLoginButton.topAnchor).isActive = true
         orLogInLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         orLogInLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         orLogInLabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        customFBLoginButton.topAnchor.constraint(equalTo: orLogInLabel.bottomAnchor).isActive = true
+        customFBLoginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         customFBLoginButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.15).isActive = true
         customFBLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         customFBLoginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.15).isActive = true
@@ -233,18 +253,9 @@ class LoginViewController: UIViewController {
     
     /// Present Welcome text with animation
     func presentWelcome() {
-        UIView.animate(withDuration: 1) {
+        UIView.animate(withDuration: 1.35) {
             self.welcomeLabel.alpha = 1
         }
-    }
-    
-    /// Makes Buttons blink dark blue on click
-    @objc func holdDown(sender:UIButton){
-        sender.backgroundColor = Constants.accentColorDark
-    }
-    
-    @objc func release(sender:UIButton){
-        sender.backgroundColor = Constants.contrastColor
     }
     
     /// When user taps to register new user, send user to register view controller
@@ -280,6 +291,16 @@ class LoginViewController: UIViewController {
             // Checking for error during login. If error is discover, return.
             guard let result = authResult, error == nil else {
                 print("Failed to log in user with email: \(email)")
+                let alert = UIAlertController(title: "Error",
+                                              message: error?.localizedDescription,
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK",
+                                              style: .cancel,
+                                              handler: nil))
+                strongSelf.present(alert, animated: true)
+                DispatchQueue.main.async {
+                    strongSelf.spinner.dismiss()
+                }
                 return
             }
             
@@ -318,6 +339,12 @@ class LoginViewController: UIViewController {
                 }
             })
         })
+    }
+    
+    /// When user taps forgot password, sends user to new view controller
+    @objc private func didTapForgotPassword() {
+        let vc = ForgotPasswordViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     /// Alerts user if something is wrong with login inputs

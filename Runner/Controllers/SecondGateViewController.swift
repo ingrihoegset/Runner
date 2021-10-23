@@ -17,7 +17,15 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     let displayView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let pulsingLabelView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.mainColor
+        view.layer.cornerRadius = Constants.smallCornerRadius
         return view
     }()
     
@@ -77,14 +85,15 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationBar.tintColor = Constants.accentColorDark
         
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(systemName: "xmark"),
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                               style: .done,
                                                               target: self,
-                                                              action: #selector(dismissSelf)),
-                                              UIBarButtonItem(image: UIImage(systemName: "camera.rotate"),
+                                                              action: #selector(dismissSelf))
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.rotate"),
                                                               style: .done,
                                                               target: self,
-                                                              action: #selector(switchCameraDirection))]
+                                                              action: #selector(switchCameraDirection))
         
         // Delegates
         secondGateViewModel.secondGateViewModelDelegate = self
@@ -101,7 +110,9 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Top View
         view.addSubview(displayView)
         //displayView.addSubview(pulsingView)
-        displayView.addSubview(pulsingLabel)
+        displayView.addSubview(pulsingLabelView)
+        pulsingLabelView.addSubview(pulsingLabel)
+        pulsingLabelView.addSubview(pulsingView)
         
         // Related to onboarding
         secondGateViewModel.showOnboardingFinishLine()
@@ -130,16 +141,21 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         displayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         displayView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         displayView.heightAnchor.constraint(equalToConstant: Constants.headerSize / 3).isActive = true
+        
+        pulsingLabelView.leadingAnchor.constraint(equalTo: displayView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        pulsingLabelView.trailingAnchor.constraint(equalTo: displayView.trailingAnchor, constant:  -Constants.sideMargin).isActive = true
+        pulsingLabelView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin / 2).isActive = true
+        pulsingLabelView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
 
-        pulsingView.leadingAnchor.constraint(equalTo: displayView.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        pulsingView.centerYAnchor.constraint(equalTo: displayView.centerYAnchor).isActive = true
+        pulsingView.leadingAnchor.constraint(equalTo: pulsingLabelView.leadingAnchor, constant: Constants.sideMargin / 2).isActive = true
+        pulsingView.centerYAnchor.constraint(equalTo: pulsingLabelView.centerYAnchor).isActive = true
         pulsingView.widthAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         pulsingView.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
         
         pulsingLabel.centerYAnchor.constraint(equalTo: pulsingView.centerYAnchor).isActive = true
         pulsingLabel.leadingAnchor.constraint(equalTo: pulsingView.trailingAnchor, constant: Constants.sideMargin / 2).isActive = true
-        pulsingLabel.trailingAnchor.constraint(equalTo: displayView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        pulsingLabel.heightAnchor.constraint(equalToConstant: Constants.displayButtonHeight).isActive = true
+        pulsingLabel.trailingAnchor.constraint(equalTo: pulsingLabelView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        pulsingLabel.heightAnchor.constraint(equalTo: pulsingLabelView.heightAnchor).isActive = true
         
         // Must match size of focus frame in breakobserver
         let width = Constants.widthOfDisplay / 6

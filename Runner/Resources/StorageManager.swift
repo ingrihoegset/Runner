@@ -22,30 +22,39 @@ final class StorageManager {
      */
     
     /// Uploads picture to firebase storage and returns completion with URL string to download. On successful completion returns url as string.
-    public func uploadProfilPicture(with data: Data, fileName: String, completion: @escaping (Result<String, Error>) -> Void) {
-        storage.child("images/\(fileName)").putData(data, metadata: nil, completion: { metadata, error in
-            guard error == nil else {
-                print("Failed to upload data to Firebase for picture storage.")
-                completion(.failure(StorageErrors.failedToUpload))
-                return
-            }
+    public func uploadProfilPicture(with data: Data?, fileName: String, completion: @escaping (Result<String, Error>) -> Void) {
+        
+        if let data = data {
             
-            self.storage.child("images/\(fileName)").downloadURL(completion: { url, error in
-                guard let url = url else {
-                    print("Failed to get download URL")
-                    completion(.failure(StorageErrors.failedToGetDownloadURL))
+            storage.child("images/\(fileName)").putData(data, metadata: nil, completion: { metadata, error in
+                guard error == nil else {
+                    print("Failed to upload data to Firebase for picture storage.")
+                    completion(.failure(StorageErrors.failedToUpload))
                     return
                 }
                 
-                let urlString = url.absoluteString
-                print("Downloading url returned: \(urlString)")
-                
-                let uploadedImage = UIImage(data: data)
-                StorageManager.cache.setObject(uploadedImage!, forKey: urlString as NSString)
+                self.storage.child("images/\(fileName)").downloadURL(completion: { url, error in
+                    guard let url = url else {
+                        print("Failed to get download URL")
+                        completion(.failure(StorageErrors.failedToGetDownloadURL))
+                        return
+                    }
+                    
+                    let urlString = url.absoluteString
+                    print("Downloading url returned: \(urlString)")
+                    
+                    let uploadedImage = UIImage(data: data)
+                    StorageManager.cache.setObject(uploadedImage!, forKey: urlString as NSString)
 
-                completion(.success(urlString))
+                    completion(.success(urlString))
+                })
             })
-        })
+        }
+        
+        else {
+            completion(.failure(StorageErrors.failedToUpload))
+        }
+
     }
     
     public enum StorageErrors: Error {

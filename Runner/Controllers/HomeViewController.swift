@@ -69,10 +69,9 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColor?.cgColor
-        imageView.layer.borderWidth = Constants.borderWidth
         imageView.layer.masksToBounds = true
-        imageView.image = UIImage(systemName: "person.circle")?.withTintColor(Constants.lightGray!)
+        imageView.image = UIImage(systemName: "person.circle")
+        imageView.tintColor = Constants.textColorDarkGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.isHidden = true
         return imageView
@@ -83,6 +82,7 @@ class HomeViewController: UIViewController {
         qrButton.backgroundColor = Constants.accentColor
         qrButton.translatesAutoresizingMaskIntoConstraints = false
         qrButton.layer.masksToBounds = false
+        qrButton.clipsToBounds = false
         qrButton.animationColor = Constants.accentColorDark
         let image = UIImage(named: "QrCode")?.withTintColor(Constants.accentColorDark!, renderingMode: .alwaysOriginal)
         let imageview = UIImageView()
@@ -116,7 +116,7 @@ class HomeViewController: UIViewController {
     let setUpSprintButton: LargeImageButton = {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.animationColor = Constants.accentColorDark
         button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.accentColorDark!)
         button.imageview.isOpaque = true
@@ -159,8 +159,7 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
-        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.tintColor = Constants.textColorDarkGray
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -171,12 +170,10 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = Constants.mainColor
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
-        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.tintColor = Constants.textColorDarkGray
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -193,8 +190,7 @@ class HomeViewController: UIViewController {
         let imageView = UIImageView()
         imageView.backgroundColor = Constants.mainColor
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
-        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.tintColor = Constants.textColorDarkGray
         imageView.layer.masksToBounds = true
         imageView.image = UIImage(systemName: "person.circle")
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -318,7 +314,7 @@ class HomeViewController: UIViewController {
         
         // Set profile header, that is active when not linked
         mainView.addSubview(unconnectedHeaderView)
-        unconnectedHeaderView.addSubview(qrButton)
+        mainView.addSubview(qrButton)
         unconnectedHeaderView.addSubview(unconnectedprofileImageView)
         
         // Header when user is first gate
@@ -345,7 +341,8 @@ class HomeViewController: UIViewController {
         secondGateView.addSubview(openSecondGatesButton)
         secondGateView.addSubview(onBoardEndGate)
         
-        view.bringSubviewToFront(qrButton)
+        mainView.bringSubviewToFront(qrButton)
+        mainView.bringSubviewToFront(onBoardConnect)
 
         homeViewModel.clearLinkFromDatabase()
 
@@ -563,24 +560,30 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.linkedProfileImageView.image = image
                 self.secondGateProfileImageView.image = image
             }
-            if self.firstLaunch == true {
-                self.launchFinished()
-                self.firstLaunch = false
-            }
+            // Tells launch VC to disappear
+            self.launchFinished()
+
         }
     }
     
     func launchFinished() {
         
-        UIView.animate(withDuration: 0.2,
-            animations: {
-                self.launcherViewController.view.alpha = 0
-            },
-            completion: { _ in
-                self.unconnectedprofileImageView.isHidden = false
-                self.qrButton.isHidden = false
-                self.animateUnlink()
-            })
+        if self.firstLaunch == true {
+            
+            print("Launch finished called")
+            
+            UIView.animate(withDuration: 0.2,
+                animations: {
+                    self.launcherViewController.view.alpha = 0
+                },
+                completion: { _ in
+                    self.unconnectedprofileImageView.isHidden = false
+                    self.qrButton.isHidden = false
+                    self.animateUnlink()
+                })
+            // Set to false so that animation is only called on launch
+            self.firstLaunch = false
+        }
     }
     
     // Gets and updates UI elements in accordance with successful link with partner
@@ -599,6 +602,7 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.unconnectedHeaderView.isHidden = true
                 self.secondGateHeaderView.isHidden = true
                 self.secondGateView.isHidden = true
+                self.qrButton.isHidden = true
                 
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 1
@@ -610,10 +614,12 @@ extension HomeViewController: HomeViewModelDelegate {
                 // Show
                 self.secondGateHeaderView.isHidden = false
                 self.secondGateView.isHidden = false
+                
                 // Hide
                 self.unconnectedHeaderView.isHidden = true
                 self.linkedHeaderView.isHidden = true
                 self.unconnectedView.isHidden = true
+                self.qrButton.isHidden = true
 
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 1
@@ -625,12 +631,11 @@ extension HomeViewController: HomeViewModelDelegate {
                 // Show
                 self.unconnectedHeaderView.isHidden = false
                 self.unconnectedView.isHidden = false
+                self.qrButton.isHidden = false
                 // Hide
                 self.linkedHeaderView.isHidden = true
                 self.secondGateHeaderView.isHidden = true
                 self.secondGateView.isHidden = true
-                // Alert
-                self.alertThatPartnerHasDisconnected()
                 // Update segment Controller as well
                 self.segmentControl.selectedSegmentIndex = 0
                 
@@ -678,6 +683,22 @@ extension HomeViewController: HomeViewModelDelegate {
             UIView.animate(withDuration: 0.3) {
 
             }
+        }
+    }
+    
+    func alertUserThatIsDisconnectedFromPartner() {
+        if firstLaunch == false {
+            let actionSheet = UIAlertController(title: "You've been disconnected from partner. Running with 1 gate.",
+                                                message: "",
+                                                preferredStyle: .alert)
+            
+            actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.navigationController?.popToRootViewController(animated: true)
+            }))
+            present(actionSheet, animated: true)
         }
     }
     
@@ -830,21 +851,7 @@ extension HomeViewController {
         
         present(actionSheet, animated: true)
     }
-    
-    /// Partner profile pic is tapped. It should show a prompt to ask user if they want to disconnet from partner.
-    private func alertThatPartnerHasDisconnected() {
-        let actionSheet = UIAlertController(title: "You've been disconnected from partner.",
-                                            message: "",
-                                            preferredStyle: .alert)
-        
-        actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.navigationController?.popToRootViewController(animated: true)
-        }))
-        present(actionSheet, animated: true)
-    }
+
     
     
     // MARK: - Functions related to second gate

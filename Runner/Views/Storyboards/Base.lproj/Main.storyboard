@@ -48,7 +48,7 @@
     </scenes>
     <resources>
         <namedColor name="AccentColorDark">
-            <color red="1" green="0.44299998879432678" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.58099997043609619" green="0.067000001668930054" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

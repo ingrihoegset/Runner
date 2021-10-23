@@ -15,17 +15,33 @@ class RegisterViewController: UIViewController {
     
     private var hud = Hud.create()
     
+    private let helperView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        return view
+    }()
+    
+    private let imageViewBackground: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(systemName: "person.badge.plus")
+        imageView.tintColor = Constants.textColorDarkGray
+        imageView.contentMode = .scaleAspectFill
+        imageView.isUserInteractionEnabled = false
+        imageView.backgroundColor = .clear
+        return imageView
+    }()
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "person.circle")
-        imageView.tintColor = Constants.accentColorDark
-        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = Constants.textColorDarkGray
+        imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = true
-        imageView.layer.masksToBounds = true
-        imageView.backgroundColor = Constants.accentColor
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
-        imageView.layer.borderWidth = Constants.borderWidth
+        imageView.backgroundColor = .clear
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -106,18 +122,16 @@ class RegisterViewController: UIViewController {
         return field
     }()
     
-    private let logginButton: UIButton = {
-        let button = UIButton()
+    private let logginButton: BounceButton = {
+        let button = BounceButton()
+        button.animationColor = Constants.accentColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Register", for: .normal)
-        button.backgroundColor = Constants.contrastColor
+        button.setTitle("Sign up", for: .normal)
+        button.backgroundColor = Constants.accentColorDark
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
-        button.addTarget(self, action: #selector(holdDown(sender:)), for: UIControl.Event.touchDown)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchUpInside)
-        button.addTarget(self, action: #selector(release(sender:)), for: UIControl.Event.touchDragExit)
         return button
     }()
 
@@ -126,9 +140,11 @@ class RegisterViewController: UIViewController {
         view.backgroundColor = Constants.mainColor
         
         // Makes the nav bar blend in with the background
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.tintColor = Constants.accentColorDark
+        let navBar = navigationController?.navigationBar
+        navBar?.setBackgroundImage(UIImage(), for: .default)
+        navBar?.shadowImage = UIImage()
+        navBar?.isTranslucent = true
+        navBar?.tintColor = Constants.accentColorDark
         
         emailField.delegate = self
         passwordField.delegate = self
@@ -137,25 +153,46 @@ class RegisterViewController: UIViewController {
         imageView.addGestureRecognizer(gesture)
         
         /// Adding subviews
-        view.addSubview(imageView)
+        view.addSubview(helperView)
+        helperView.addSubview(imageViewBackground)
+        helperView.addSubview(imageView)
         view.addSubview(firstNameField)
         view.addSubview(lastNameField)
         view.addSubview(emailField)
         view.addSubview(passwordField)
         view.addSubview(logginButton)
+        
+        // Makes keyboard disappear when tapped outside of keyboard
+        self.dismissKeyboard()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        imageView.image = nil
     }
     
     /// Lay out constraints
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
-        imageView.layer.cornerRadius = Constants.widthOfDisplay * 0.3 / 2
         
-        firstNameField.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
+        helperView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        helperView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        helperView.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
+        helperView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.3).isActive = true
+        helperView.layer.cornerRadius = Constants.widthOfDisplay * 0.3 / 2
+        
+        imageViewBackground.topAnchor.constraint(equalTo: helperView.topAnchor, constant: 20).isActive = true
+        imageViewBackground.bottomAnchor.constraint(equalTo: helperView.bottomAnchor, constant: -20).isActive = true
+        imageViewBackground.leadingAnchor.constraint(equalTo: helperView.leadingAnchor, constant: 20).isActive = true
+        imageViewBackground.trailingAnchor.constraint(equalTo: helperView.trailingAnchor, constant: -20).isActive = true
+
+        imageView.topAnchor.constraint(equalTo: helperView.topAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: helperView.bottomAnchor).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: helperView.leadingAnchor).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: helperView.trailingAnchor).isActive = true
+        imageView.layer.cornerRadius = helperView.layer.cornerRadius
+        
+        firstNameField.topAnchor.constraint(equalTo: helperView.bottomAnchor, constant: Constants.verticalSpacing).isActive = true
         firstNameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         firstNameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         firstNameField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
@@ -186,15 +223,6 @@ class RegisterViewController: UIViewController {
         lastNameField.text?.removeAll()
         emailField.text?.removeAll()
         passwordField.text?.removeAll()
-    }
-    
-    /// Makes Buttons blink dark blue on click
-    @objc func holdDown(sender:UIButton){
-        sender.backgroundColor = Constants.accentColorDark
-    }
-    
-    @objc func release(sender:UIButton){
-        sender.backgroundColor = Constants.contrastColor
     }
     
     /// Send verification email to user when registering for first time
@@ -343,14 +371,14 @@ class RegisterViewController: UIViewController {
                 DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
                     if success {
                         // upload image
-                        guard let image = strongSelf.imageView.image,
-                              let data = image.pngData() else {
-                            return
-                        }
+                        // Might be image or might be nil
+                        let image = strongSelf.imageView.image
+                        
                         let filename = raceAppUser.profilePictureFileName
                         
                         // Upload profile picture to Firebase
-                        StorageManager.shared.uploadProfilPicture(with: data, fileName: filename, completion: { result in
+                        // with image png data or nil, if nil, user has not selected image and no image is uploaded to database
+                        StorageManager.shared.uploadProfilPicture(with: image?.pngData(), fileName: filename, completion: { result in
                             switch result {
                             case .success(let downloadUrl):
                                 UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
