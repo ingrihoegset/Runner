@@ -11,7 +11,7 @@ import FBSDKLoginKit
 import GoogleSignIn
 
 enum SettingsSelectionViewModelType {
-    case restore, help, privacy, units, logout
+    case restore, faq, privacy, units, logout, profilePic, about, contact, membership
 }
 
 struct SettingSelectionViewModel {
@@ -22,7 +22,7 @@ struct SettingSelectionViewModel {
 
 class ProfileViewController: UIViewController {
     
-    let sectionTitles: [String] = ["About app","Preferences","Account"]
+    let sectionTitles: [String] = ["Account","Preferences","About app"]
     var section1Data = [SettingSelectionViewModel]()
     var section2Data = [SettingSelectionViewModel]()
     var section3Data = [SettingSelectionViewModel]()
@@ -67,7 +67,7 @@ class ProfileViewController: UIViewController {
 
     var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = Constants.lightGray
+        tableView.backgroundColor = Constants.mainColor
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -79,7 +79,6 @@ class ProfileViewController: UIViewController {
         view.backgroundColor = Constants.accentColor
         
         profileViewModel.profileViewModelDelegate = self
-        profileViewModel.fetchProfilePic()
         
         view.addSubview(headerView)
         headerView.addSubview(profileImageView)
@@ -112,10 +111,25 @@ class ProfileViewController: UIViewController {
         }
         
         // Configure data for table view
-        section1Data.append(SettingSelectionViewModel(viewModelType: .help,
-                                              title: "Help",
-                                              handler: nil))
-        section1Data.append(SettingSelectionViewModel(viewModelType: .privacy,
+        section3Data.append(SettingSelectionViewModel(viewModelType: .faq,
+                                              title: "FAQ",
+                                              handler: { [weak self] in
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                let destinationController = HelpViewController()
+                                                strongSelf.navigationController?.pushViewController(destinationController, animated: true)
+                                              }))
+        section3Data.append(SettingSelectionViewModel(viewModelType: .about,
+                                              title: "About",
+                                              handler: { [weak self] in
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                let destinationController = AboutViewController()
+                                                strongSelf.navigationController?.pushViewController(destinationController, animated: true)
+                                              }))
+        section3Data.append(SettingSelectionViewModel(viewModelType: .privacy,
                                               title: "Privacy policy",
                                               handler: nil))
         // Obs, no unit functionality has been programmed yet
@@ -155,8 +169,24 @@ class ProfileViewController: UIViewController {
             
 
         }))
-        
-        section3Data.append(SettingSelectionViewModel(viewModelType: .restore,
+        section1Data.append(SettingSelectionViewModel(viewModelType: .profilePic,
+                                              title: "Change profile picture",
+                                              handler: { [weak self] in
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                strongSelf.presentPhotoActionSheet()
+                                              }))
+        section1Data.append(SettingSelectionViewModel(viewModelType: .membership,
+                                              title: "Current membership",
+                                              handler: { [weak self] in
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                let destinationController = MembershipViewController()
+                                                strongSelf.navigationController?.pushViewController(destinationController, animated: true)
+                                              }))
+        section1Data.append(SettingSelectionViewModel(viewModelType: .restore,
                                               title: "Restore purchase",
                                               handler: nil))
         section3Data.append(SettingSelectionViewModel(viewModelType: .logout, title: "Log out", handler: { [weak self] in
@@ -169,7 +199,7 @@ class ProfileViewController: UIViewController {
                                                 message: "",
                                                 preferredStyle: .actionSheet)
             
-            actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] _ in
+            actionSheet.addAction(UIAlertAction(title: "Log out", style: .destructive, handler: { [weak self] _ in
                 
                 guard let strongSelf = self else {
                     return
@@ -246,7 +276,7 @@ class ProfileViewController: UIViewController {
     }
     
     deinit {
-        print("DESTROYED PROFIL")
+        print("DESTROYED \(self)")
     }
 }
 
@@ -261,15 +291,16 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = Constants.lightGray
+        view.backgroundColor = Constants.mainColor
         
         let label = UILabel()
         label.text = sectionTitles[section]
-        label.textColor = Constants.textColorWhite
+        label.textColor = Constants.accentColorDarkest
         label.font = Constants.mainFontSB
         label.textAlignment = .left
-        label.frame = CGRect(x: Constants.sideMargin, y: 0, width: Constants.widthOfDisplay - Constants.sideMargin, height: Constants.mainButtonSize)
-        
+        label.frame = CGRect(x: Constants.sideMargin, y: 15, width: Constants.widthOfDisplay - Constants.sideMargin, height: Constants.mainButtonSize-15)
+        view.layer.borderColor = Constants.superLightGrey?.cgColor
+        view.layer.borderWidth = 1
         view.addSubview(label)
         
         return view
@@ -368,13 +399,9 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         let actionSheet = UIAlertController(title: "Update Profile Picture",
                                             message: "How would you like to select a picture for your profile?",
                                             preferredStyle: .actionSheet)
-        
-        actionSheet.addAction(UIAlertAction(title: "Cancel",
-                                            style: .default,
-                                            handler: nil))
-        
+
         actionSheet.addAction(UIAlertAction(title: "Take Photo",
-                                            style: .cancel,
+                                            style: .default,
                                             handler: { [weak self] _ in
                                                 self?.presentCamera()
         }))
@@ -384,6 +411,10 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
                                             handler: { [weak self] _ in
                                                 self?.presentPhotoPicker()
         }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                            style: .cancel,
+                                            handler: nil))
         
         present(actionSheet, animated: true)
     }
@@ -410,26 +441,96 @@ class SettingsTableViewCell: UITableViewCell {
     // Identifier
     static let identifier = "SettingsTableViewCell"
     
+    let icon: UIImageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let chevron: UIImageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.addSubview(icon)
+        contentView.addSubview(label)
+        contentView.addSubview(chevron)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        icon.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        icon.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        icon.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        icon.widthAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        
+        label.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: icon.trailingAnchor).isActive = true
+        label.trailingAnchor.constraint(equalTo: chevron.leadingAnchor).isActive = true
+        
+        chevron.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        chevron.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        chevron.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        chevron.widthAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+    }
+    
     public func setUp(with viewModel: SettingSelectionViewModel) {
+        
+        let iconColor = Constants.textColorDarkGray
 
         // Set cell label
-        self.textLabel?.text = viewModel.title
-        self.textLabel?.font = Constants.mainFont
-        self.textLabel?.textAlignment = .left
-        self.backgroundColor = Constants.accentColor
+        self.label.text = viewModel.title
+        self.label.font = Constants.mainFont
+        self.label.textAlignment = .left
+        self.label.textColor = Constants.textColorDarkGray
+        self.backgroundColor = Constants.mainColor
+        
+        self.chevron.image = UIImage(systemName: "chevron.right")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -20, left: -20, bottom: -20, right: -20))
         
         // Set appearance for type of cell
         switch viewModel.viewModelType {
-        case .help:
-            self.textLabel?.textColor = Constants.textColorDarkGray
+        case .faq:
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "questionmark.circle")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .privacy:
-            self.textLabel?.textColor = Constants.textColorDarkGray
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "lock")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .units:
-            self.textLabel?.textColor = Constants.textColorDarkGray
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "gauge")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .restore:
-            self.textLabel?.textColor = Constants.textColorDarkGray
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "tag")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .logout:
-            self.textLabel?.textColor = .systemRed
+            self.label.textColor = .systemRed
+            self.icon.image = UIImage(systemName: "nosign")?.withTintColor(UIColor.red, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
+        case .profilePic:
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "person")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
+        case .about:
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "info")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
+        case .contact:
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "questionmark.circle")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
+        case .membership:
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "star")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         }
     }
 }

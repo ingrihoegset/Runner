@@ -135,7 +135,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(Constants.accentColorDark, for: .normal)
-        button.setTitleColor(Constants.textColorWhite, for: .selected)
+        button.setTitleColor(Constants.mainColor, for: .selected)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(sortByDistance), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
@@ -293,7 +293,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let noConnectionView: NoConnectionView = {
         let view = NoConnectionView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.isHidden = true
+        view.alpha = 0
         return view
     }()
     
@@ -344,21 +344,21 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         // Related to internet connection
         view.addSubview(noConnectionView)
         NetworkManager.isUnreachable { _ in
-            self.showOfflinePage()
+            self.showNoConnection()
         }
         NetworkManager.isReachable { _ in
-            self.showMainPage()
+            self.showConnection()
         }
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(foundConnection),
+            selector: #selector(showConnection),
             name: NSNotification.Name(Constants.networkIsReachable),
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(lostConnection),
+            selector: #selector(showNoConnection),
             name: NSNotification.Name(Constants.networkIsNotReachable),
             object: nil
         )
@@ -507,15 +507,19 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     }
     
     deinit {
-        print("DESTROYED STATSPAGE")
+        print("DESTROYED \(self)")
     }
     
-    @objc func foundConnection() {
-        self.noConnectionView.isHidden = true
+    @objc func showConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 0
+        })
     }
     
-    @objc func lostConnection() {
-        self.noConnectionView.isHidden = false
+    @objc func showNoConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 1
+        })
     }
     
     func reloadTableView(completedRunsArray: [RunResults]) {
@@ -585,21 +589,6 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     func hideSkeletonLoadView() {
         DispatchQueue.main.async {
             self.skeletonLoadingView.isHidden = true
-        }
-    }
-    
-    /// Shows the not connected to internett view controller to user
-    private func showOfflinePage() -> Void {
-        print("show")
-        DispatchQueue.main.async {
-            self.noConnectionView.isHidden = false
-        }
-    }
-    
-    private func showMainPage() -> Void {
-        print("hide")
-        DispatchQueue.main.async {
-            self.noConnectionView.isHidden = true
         }
     }
 }
@@ -746,7 +735,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         else {
             editButton.isSelected = true
             DispatchQueue.main.async {
-                self.editButton.backgroundColor = Constants.textColorDarkGray
+                self.editButton.backgroundColor = Constants.contrastColor
             }
         }
     }
@@ -784,14 +773,12 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
     private func unselectAllButtons() {
         runDistanceButton.isSelected = false
         runTimeButton.isSelected = false
-        runDistanceButton.isSelected = false
-        editButton.isSelected = false
+        runSpeedButton.isSelected = false
         sortTypeButton.isSelected = false
         sortDateButton.isSelected = false
         runTimeButton.backgroundColor = Constants.mainColor
         runDistanceButton.backgroundColor = Constants.mainColor
         runSpeedButton.backgroundColor = Constants.mainColor
-        editButton.backgroundColor = Constants.mainColor
         sortTypeButton.backgroundColor = Constants.accentColorDark
         sortDateButton.backgroundColor = Constants.accentColorDark
         runTimeButton.animationColor = Constants.mainColor
@@ -819,8 +806,8 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         }
         else {
             runDistanceButton.isSelected = true
-            runDistanceButton.backgroundColor = Constants.accentColorDark
-            runDistanceButton.animationColor = Constants.accentColorDark
+            runDistanceButton.backgroundColor = Constants.contrastColor
+            runDistanceButton.animationColor = Constants.contrastColor
             runs.sort {
                 $0.distance < $1.distance
             }
@@ -855,8 +842,8 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runSpeedButton.backgroundColor = Constants.accentColorDark
-                self.runSpeedButton.animationColor = Constants.accentColorDark
+                self.runSpeedButton.backgroundColor = Constants.contrastColor
+                self.runSpeedButton.animationColor = Constants.contrastColor
             }
         }
     }
@@ -886,8 +873,8 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                self.runTimeButton.backgroundColor = Constants.accentColorDark
-                self.runTimeButton.animationColor = Constants.accentColorDark
+                self.runTimeButton.backgroundColor = Constants.contrastColor
+                self.runTimeButton.animationColor = Constants.contrastColor
             }
         }
     }

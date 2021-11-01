@@ -11,8 +11,10 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>BarlowSemiCondensed-Light.ttf</string>
+		<string>Overpass-ExtraBold.ttf</string>
 		<string>BarlowSemiCondensed-Medium.ttf</string>
 		<string>BarlowSemiCondensed-SemiBold.ttf</string>
+		<string>Overpass-SemiBold.ttf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>

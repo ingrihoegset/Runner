@@ -7,14 +7,7 @@
 
 import UIKit
 
-protocol NoConnectionDelegate: AnyObject {
-    func foundConnection()
-}
-
 class NoConnectionView: UIView {
-    
-    let network = NetworkManager.sharedInstance
-    weak var noConnectionDelegate: NoConnectionDelegate?
     
     let view: UIView = {
         let view = UIView()
@@ -27,7 +20,7 @@ class NoConnectionView: UIView {
         let imageview = UIImageView()
         imageview.translatesAutoresizingMaskIntoConstraints = false
         imageview.contentMode = .scaleAspectFit
-        let image = UIImage(systemName: "wifi.slash")?.withTintColor(Constants.accentColorDark!, renderingMode: .alwaysOriginal)
+        let image = UIImage(systemName: "wifi.slash")?.withTintColor(Constants.lightGray!, renderingMode: .alwaysOriginal)
         imageview.image = image
         imageview.backgroundColor = .clear
         return imageview
@@ -42,7 +35,7 @@ class NoConnectionView: UIView {
         textView.textAlignment = .center
         textView.text = "You are offline.\nConnect to the internet in order to use this app!"
         textView.font = Constants.mainFontLarge
-        textView.textColor = Constants.textColorDarkGray
+        textView.textColor = Constants.lightGray
         return textView
     }()
 
@@ -56,13 +49,6 @@ class NoConnectionView: UIView {
     
     init() {
         super.init(frame: .zero)
-        
-
-        
-        // If the network is reachable
-        network.reachability.whenReachable = { _ in
-            self.foundConnection()
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -84,12 +70,11 @@ class NoConnectionView: UIView {
         
         textView.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
         textView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
-        textView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6).isActive = true
+        textView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7).isActive = true
         textView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     
-    @objc func foundConnection() {
-        print("found connection")
-        self.noConnectionDelegate?.foundConnection()
+    func setText(text: String) {
+        textView.text = text
     }
 }

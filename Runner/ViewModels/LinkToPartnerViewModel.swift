@@ -20,7 +20,9 @@ class LinkToPartnerViewModel {
     weak var linkViewModelDelegate: LinkViewModelDelegate?
     
     init() {
-        listenForNewLink()
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(newLinkOccured), name: NSNotification.Name(rawValue: Constants.linkOccured), object: nil)
     }
     
     func createNewLink(safePartnerEmail: String) {
@@ -32,28 +34,15 @@ class LinkToPartnerViewModel {
             }
             else {
                 print("Failed update database with new Link")
+                
+                // -- Should show error to user -- //
             }
         })
     }
-    
-    // Start listening for new link
-    func listenForNewLink() {
-        DatabaseManager.shared.listenForNewLink(completion: { [weak self] result in
-            switch result {
-            case .success(_):
-                guard let strongSelf = self else {
-                    return
-                }
-                strongSelf.linkViewModelDelegate?.didUpdateLink()
-                print ("Link updated. Close QR view controller")
-                
-                //Onboarding of connect to partner by scanning is successful, never show onboarding bubble again
-                strongSelf.scanOnboarded()
-                
-            case .failure(_):
-                print("Do not close QR-code VC automatically.")
-            }
-        })
+        
+    // New Link occured. Notification posted. Should close LinkVC
+    @objc func newLinkOccured() {
+        self.linkViewModelDelegate?.didUpdateLink()
     }
     
     func fetchProfilePic() {

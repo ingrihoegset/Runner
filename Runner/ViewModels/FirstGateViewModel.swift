@@ -278,6 +278,14 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         })
     }
     
+    func removeEndOfRunListener() {
+        DatabaseManager.shared.removeEndOfRunListener()
+    }
+    
+    func removeCurrentRunOngoingListener() {
+        DatabaseManager.shared.removeCurrentRunOngoingListener()
+    }
+    
     // Converts data of run in database to run result object, taking into considertion users selected units and units applied when the run was saved
     private func getCurrentResult(run: [String: Any]) -> RunResults {
         

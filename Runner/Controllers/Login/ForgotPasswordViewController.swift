@@ -85,7 +85,7 @@ class ForgotPasswordViewController: UIViewController {
         emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         emailField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        sendPasswordButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        sendPasswordButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: Constants.sideMargin).isActive = true
         sendPasswordButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         sendPasswordButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         sendPasswordButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true

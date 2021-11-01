@@ -167,7 +167,7 @@ class ResultsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
-        label.font = Constants.mainFontXLargeSB
+        label.font = Constants.resultFontSmall
         return label
     }()
     
@@ -179,7 +179,7 @@ class ResultsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
-        label.font = Constants.mainFontXLargeSB
+        label.font = Constants.resultFontSmall
         return label
     }()
 

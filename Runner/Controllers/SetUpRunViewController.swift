@@ -234,14 +234,6 @@ class SetUpRunViewController: UIViewController {
         print("DESTROYED SETUPRUN")
     }
     
-    func image(with image: UIImage?, scaledTo newSize: CGSize) -> UIImage? {
-            UIGraphicsBeginImageContext(newSize)
-            image?.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-            let newImage: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            return newImage
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -272,7 +264,7 @@ class SetUpRunViewController: UIViewController {
         
         onBoardReaction.leadingAnchor.constraint(equalTo: reactionPicker.detail2.leadingAnchor).isActive = true
         onBoardReaction.bottomAnchor.constraint(equalTo: reactionPicker.detail2.topAnchor).isActive = true
-        onBoardReaction.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        onBoardReaction.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
         onBoardReaction.trailingAnchor.constraint(equalTo: reactionPicker.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         newRaceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

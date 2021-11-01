@@ -98,14 +98,14 @@ class LauncherViewController: UIViewController {
         fakeSegmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         fakeButtonLeft.topAnchor.constraint(equalTo: fakeSegmentControl.bottomAnchor, constant: Constants.sideMargin).isActive = true
-        fakeButtonLeft.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
-        fakeButtonLeft.heightAnchor.constraint(equalTo: fakeButtonLeft.widthAnchor).isActive = true
-        fakeButtonLeft.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        fakeButtonLeft.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - Constants.sideMargin * 2).isActive = true
+        fakeButtonLeft.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
+        fakeButtonLeft.centerXAnchor.constraint(equalTo: fakeSegmentControl.centerXAnchor).isActive = true
         
-        fakeButtonRight.topAnchor.constraint(equalTo: fakeSegmentControl.bottomAnchor, constant: Constants.sideMargin).isActive = true
-        fakeButtonRight.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
-        fakeButtonRight.heightAnchor.constraint(equalTo: fakeButtonRight.widthAnchor).isActive = true
-        fakeButtonRight.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        fakeButtonRight.topAnchor.constraint(equalTo: fakeButtonLeft.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        fakeButtonRight.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - Constants.sideMargin * 2).isActive = true
+        fakeButtonRight.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
+        fakeButtonRight.centerXAnchor.constraint(equalTo: fakeSegmentControl.centerXAnchor).isActive = true
     }
     
     private func setup() {

@@ -74,6 +74,15 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         return bubble
     }()
     
+    /// View related to internet connection
+    // Is shown when there is no internet connection
+    let noConnectionView: NoConnectionView = {
+        let view = NoConnectionView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -114,6 +123,29 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         // Related to onboarding
         secondGateViewModel.showOnboardingFinishLine()
+        
+        // Related to internet connection
+        view.addSubview(noConnectionView)
+        
+        NetworkManager.isUnreachable { _ in
+            self.showNoConnection()
+        }
+        NetworkManager.isReachable { _ in
+            self.showConnection()
+        }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showConnection),
+            name: NSNotification.Name(Constants.networkIsReachable),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showNoConnection),
+            name: NSNotification.Name(Constants.networkIsNotReachable),
+            object: nil
+        )
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -129,6 +161,16 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.secondGateViewModel.captureSession.startRunning()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        if self.isMovingFromParent {
+            // Removes listeners so that http calls arent duplicated
+            secondGateViewModel.removeEndOfRunListener()
+            secondGateViewModel.removeCurrentRunOngoingListener()
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -172,10 +214,15 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         onBoardPlace.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
         onBoardPlace.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7).isActive = true
         onBoardPlace.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2.5).isActive = true
+        
+        noConnectionView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
+        noConnectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        noConnectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        noConnectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
     deinit {
-        print("DESTROYED SECOND GATE")
+        print("DESTROYED \(self)")
     }
     
     @objc private func dismissSelf() {
@@ -240,6 +287,21 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
 extension SecondGateViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
         secondGateViewModel.hasOnboardedFinishLine()
+    }
+}
+
+/// Related to internet connection
+extension SecondGateViewController {
+    @objc func showConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 0
+        })
+    }
+    
+    @objc func showNoConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 1
+        })
     }
 }
 

@@ -62,14 +62,12 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         breakTime = Date().currentTimeMillis()
         
         let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-
-        print(breakObserver.recentFramesArray)
         
         //Dont know what this does, but dont move
         CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: CVOptionFlags(0)))
 
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        print(Constants.isRunning)
+
         // Will only check for breaks after the run has begun. Is running is set to true after the database has received a start time.
         if Constants.isRunning == true {
             // Gives the camera time to stabilize before evaluating.
@@ -121,6 +119,14 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
 
             }
         })
+    }
+    
+    func removeEndOfRunListener() {
+        DatabaseManager.shared.removeEndOfRunListener()
+    }
+    
+    func removeCurrentRunOngoingListener() {
+        DatabaseManager.shared.removeCurrentRunOngoingListener()
     }
     
     // Converts data of run in database to run result object, taking into considertion users selected units and units applied when the run was saved

@@ -297,7 +297,6 @@ extension DatabaseManager {
             }
         }
 
-        
         // Create run ID
         let runID = createRunID()
         
@@ -467,7 +466,7 @@ extension DatabaseManager {
     
     /// Function that listens for if an end time has been uploaded to current race.
     func listenForEndOfCurrentRun(completion: @ escaping (Bool) -> Void) {
-        
+
         print("listening for end time")
         
         // Step 1: Get user
@@ -503,9 +502,26 @@ extension DatabaseManager {
             
             // Successfully observed an end time.
             print("Successfully observed an end time: ", endTime)
-            
             completion(true)
         })
+    }
+    
+    // Removes listener for end of run
+    func removeEndOfRunListener() {
+        print("Removed end of run listener")
+        // Step 1: Get user
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("No user email found when trying to register end time to database.")
+            return
+        }
+        
+        // Get safe email version of emails.
+        let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        // Step 2: Get the path where the end time appears
+        let reference = database.child("\(userSafeEmail)/current_run/end_time")
+        
+        reference.removeAllObservers()
     }
     
     /// Function saves current run to completed run and deletes current run from current run
@@ -616,6 +632,20 @@ extension DatabaseManager {
         })
     }
     
+    func removeCurrentRunOngoingListener() {
+        guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            print("Failed to get user email when attempting to listen for whether or not there is a current run")
+            return
+        }
+        
+        let safeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
+        
+        let reference = database.child("\(safeEmail)/current_run/start_time")
+        
+        print("Removed current run listener")
+        reference.removeAllObservers()
+    }
+    
     func getCurrentRunData(completion: @escaping (Result<[String: Any], Error>) -> Void) {
         
         // Step 1: Get user
@@ -672,7 +702,7 @@ extension DatabaseManager {
         // Step 2: Get partner email som that we can remove current run from partner user
         guard let partnerEmail = UserDefaults.standard.value(forKey: "partnerEmail") as? String else {
             print("No partner email found when trying to remove current run from database")
-            completion(false)
+            completion(true)
             return
         }
         

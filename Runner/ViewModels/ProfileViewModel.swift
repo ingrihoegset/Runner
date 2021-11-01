@@ -18,11 +18,11 @@ class ProfileViewModel {
     weak var profileViewModelDelegate: ProfileViewModelDelegate?
     
     init() {
-        
+        fetchProfilePic()
     }
     
     func fetchProfilePic() {
-        print("Fetching picture")
+        print("Fetching picture in Settings")
 
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No email saved to user defaults")
@@ -67,9 +67,20 @@ class ProfileViewModel {
             case .success(let url):
                 completion(true)
                 
+                guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+                    print("No user found")
+                    return
+                }
+                let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
+                let filename = safeEmail + "_profile_picture.png"
+                let path = "images/" + filename
+                // By removing this from user defaults fetching picture will fetch from database and not from cached image
+                UserDefaults.standard.removeObject(forKey: path)
+                
             case .failure(let error):
                 completion(false)
             }
         })
     }
+    
 }

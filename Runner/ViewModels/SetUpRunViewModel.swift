@@ -68,14 +68,12 @@ class SetUpRunViewModel {
     }
     
     func showReactionOnboarding() {
-        print("start")
         let selectedRunType = selectionModel.getUserSelectedType()
         let scrollOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedScroll)
         let reactionOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedReaction)
         print(selectedRunType, scrollOnboarded, reactionOnboarded)
         if selectedRunType == String(UserRunSelections.runTypes.Reaction.rawValue) {
             if scrollOnboarded == true && reactionOnboarded == false {
-                print("calling")
                 setUpRunViewModelDelegate?.showReactionOnboarding()
             }
         }

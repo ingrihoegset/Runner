@@ -14,7 +14,7 @@ class LargeImageButton: UIButton {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = Constants.mainFontLargeSB
         label.textColor = Constants.textColorWhite
         return label
@@ -50,15 +50,15 @@ class LargeImageButton: UIButton {
     }
     
     override func layoutSubviews() {
-        imageview.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        imageview.bottomAnchor.constraint(equalTo: title.topAnchor).isActive = true
-        imageview.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5).isActive = true
+        imageview.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        imageview.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        imageview.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.7).isActive = true
         imageview.widthAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         
-        title.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        title.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.2).isActive = true
-        title.topAnchor.constraint(equalTo: self.centerYAnchor, constant: Constants.sideMargin).isActive = true
-        title.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.9).isActive = true
+        title.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        title.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.9).isActive = true
+        title.leadingAnchor.constraint(equalTo: imageview.trailingAnchor).isActive = true
+        title.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.sideMargin).isActive = true
     }
     
     func startAnimation(completion: @ escaping (Bool) -> Void) {

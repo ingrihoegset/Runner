@@ -10,30 +10,59 @@ import UIKit
 
 protocol HomeViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
-    func didUpdatePartnerUI(partner: String, gateNumber: Int)
     func didGetRunResult(result: RunResults)
     func hasOnboardedConnect()
     func showOnboardConnect()
     func showOnboardedOpenEndGate()
     func hasOnboardedEndGate()
-    func launchFinished()
     func alertUserThatIsDisconnectedFromPartner()
+    
+    func updateUiUnconnected()
+    func updateUiConnectedStartGate()
+    func updateUiConnectedEndGate()
+    
+    func updatePartnerImage(image: UIImage)
+    func updateUserImage(image: UIImage)
+    
+    func animateUnlink()
+    func animateLinkedPartnerUI()
 }
 
 
 class HomeViewModel {
     
     weak var homeViewModelDelegate: HomeViewModelDelegate?
+    var firstLaunch = true
     
     init() {
         listenForNewLink()
-        // Used to determine when camera should be looking for a break time.
-        currentRunOngoing()
     }
     
     // Updates User Selected Run type when user selects a run type from home view
     func updateRunType(type: UserRunSelections.runTypes) {
         UserRunSelections.shared.setUserSelectedType(type: type.rawValue)
+    }
+    
+    // Returns image if succeeds, error if not
+    func fetchProfilePic(email: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        
+        // Get database path for image
+        let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
+        let filename = safeEmail + "_profile_picture.png"
+        let path = "images/" + filename
+
+        StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
+            switch result {
+            case .success(let url):
+                StorageManager.getImage(withURL: url, completion: { image in
+                    if let downloadedImage = image {
+                        completion(.success(downloadedImage))
+                    }
+                })
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        })
     }
     
     /// Call on storageManager to fetch profil pic for our user
@@ -58,9 +87,13 @@ class HomeViewModel {
                 })
             case .failure(let error):
                 print("Failed to download url: \(error), or no image is saved for user.")
-                self?.homeViewModelDelegate?.launchFinished()
+                // What should happen here????
             }
         })
+    }
+    
+    func removeCurrentRun() {
+        DatabaseManager.shared.removeCurrentRun(completion: { _ in })
     }
     
     /// Related to managing the progressive onboarding.
@@ -123,11 +156,33 @@ class HomeViewModel {
                 // If there is a link, update user selections
                 UserRunSelections.shared.setIsRunningWithOneGate(bool: false)
                 
-                // Send partner email to home view as test to update UI. Should really get and send name. Send gate number for UI update.
-                strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: partnerEmail, gateNumber: gateNumber)
+                // Tell link VC to close
+                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.linkOccured), object: nil)
+                
+                // Can only be 1 or 2 if case is success
+                if gateNumber == 1 {
+                    strongSelf.homeViewModelDelegate?.updateUiConnectedStartGate()
+                }
+                else if gateNumber == 2 {
+                    strongSelf.homeViewModelDelegate?.updateUiConnectedEndGate()
+                }
+                else {
+                    strongSelf.homeViewModelDelegate?.updateUiUnconnected()
+                }
                
                 // Start fetching partner profile pic
-                strongSelf.fetchProfilePic(email: partnerEmail)
+                strongSelf.fetchProfilePic(email: partnerEmail, completion: { result in
+                    switch result {
+                    case .success(let image):
+                        strongSelf.homeViewModelDelegate?.updatePartnerImage(image: image)
+                        strongSelf.homeViewModelDelegate?.animateLinkedPartnerUI()
+                    case .failure(let error):
+                        strongSelf.homeViewModelDelegate?.animateLinkedPartnerUI()
+                        print("error when retreiving partner image from database")
+                        print(error)
+                    }
+                })
+                
                 print ("Successfully detected update to link")
                 
             case .failure(_):
@@ -141,21 +196,40 @@ class HomeViewModel {
                 
                 // Tell home that there is no partner and that it is gate 1.
                 // Also, if fetch fails in general, show unlinked view on home VC.
-                strongSelf.homeViewModelDelegate?.didUpdatePartnerUI(partner: "No partner", gateNumber: 0)
-                strongSelf.homeViewModelDelegate?.alertUserThatIsDisconnectedFromPartner()
+                strongSelf.homeViewModelDelegate?.updateUiUnconnected()
+                
+                // Start fetching user profile pic
+                guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+                    print("No user email found")
+                    return
+                }
+                
+                strongSelf.fetchProfilePic(email: userEmail, completion: { result in
+                    switch result {
+                    case .success(let image):
+                        strongSelf.homeViewModelDelegate?.updateUserImage(image: image)
+                        strongSelf.homeViewModelDelegate?.animateUnlink()
+                        strongSelf.alertUserOfDisconnectionFromPartner()
+                    case .failure(let error):
+                        strongSelf.homeViewModelDelegate?.animateUnlink()
+                        strongSelf.alertUserOfDisconnectionFromPartner()
+                        print("Error when retreiving user profile pic from database")
+                        print(error)
+                    }
+                })
+
             }
         })
     }
     
-    private func currentRunOngoing() {
-        DatabaseManager.shared.currentRunOngoing(completion: { success in
-            if success {
-                print("Listening for ongoing race")
-            }
-            else {
-                print("no onging race")
-            }
-        })
+    // Will alert user of disconnection, except when disconnection is on maintainance clearing of links on opening of app
+    private func alertUserOfDisconnectionFromPartner() {
+        if self.firstLaunch == true {
+            self.firstLaunch = false
+        }
+        else {
+            self.homeViewModelDelegate?.alertUserThatIsDisconnectedFromPartner()
+        }
     }
 }
 

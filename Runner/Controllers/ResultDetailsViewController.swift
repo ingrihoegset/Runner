@@ -37,7 +37,7 @@ class ResultDetailsViewController: UIViewController {
     
     let detailRowDate: UIButton = {
         let button = UIButton()
-        button.titleLabel?.font = Constants.resultFontSmall
+        button.titleLabel?.font = Constants.resultFontXSmall
         button.titleLabel?.textColor = Constants.accentColorDark
         button.titleLabel?.textAlignment = .center
         button.backgroundColor = Constants.accentColor
@@ -219,7 +219,7 @@ class ResultDetailsViewController: UIViewController {
         distText.append(distResult)
         distText.append(distUnit)
         
-        let dateAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let dateAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
         let dated = NSMutableAttributedString(string: String(date), attributes: dateAttributes as [NSAttributedString.Key : Any])
         let dateText = NSMutableAttributedString()
         dateText.append(dated)
@@ -244,6 +244,10 @@ class ResultDetailsViewController: UIViewController {
         
         setConstraints()
         startAnimation()
+    }
+    
+    deinit {
+        print("DESTROYED \(self)")
     }
     
     func setConstraints() {

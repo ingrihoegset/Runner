@@ -7,19 +7,24 @@
 
 import UIKit
 import FirebaseAuth
-import JGProgressHUD
 
 class RegisterViewController: UIViewController {
     
-    private let spinner = JGProgressHUD(style: .dark)
-    
-    private var hud = Hud.create()
+    private let slantedView: SlantedViewBottom = {
+        let view = SlantedViewBottom()
+        view.backgroundColor = Constants.contrastColor
+        //view.image = UIImage(named: "3tracks")
+        view.contentMode = .scaleAspectFill
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private let helperView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.mainColor
         view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        view.alpha = 0
         return view
     }()
     
@@ -31,6 +36,7 @@ class RegisterViewController: UIViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = false
         imageView.backgroundColor = .clear
+        imageView.alpha = 0
         return imageView
     }()
     
@@ -42,6 +48,7 @@ class RegisterViewController: UIViewController {
         imageView.isUserInteractionEnabled = true
         imageView.backgroundColor = .clear
         imageView.clipsToBounds = true
+        imageView.alpha = 0
         return imageView
     }()
     
@@ -61,6 +68,7 @@ class RegisterViewController: UIViewController {
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
         field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.alpha = 0
         return field
     }()
     
@@ -80,6 +88,7 @@ class RegisterViewController: UIViewController {
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
         field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.alpha = 0
         return field
     }()
     
@@ -99,6 +108,7 @@ class RegisterViewController: UIViewController {
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
         field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.alpha = 0
         return field
     }()
     
@@ -119,6 +129,7 @@ class RegisterViewController: UIViewController {
         field.backgroundColor = Constants.accentColor
         field.isSecureTextEntry = true
         field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.alpha = 0
         return field
     }()
     
@@ -132,7 +143,23 @@ class RegisterViewController: UIViewController {
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+        button.alpha = 0
         return button
+    }()
+    
+    private let loadingBalls: LoadingBalls = {
+        let loadingBalls = LoadingBalls(frame: .zero, color: Constants.contrastColor!, duration: 0.8)
+        loadingBalls.translatesAutoresizingMaskIntoConstraints = false
+        return loadingBalls
+    }()
+    
+    // Related to internet connection. Show this to user when connection is lost
+    let noConnectionView: NoConnectionView = {
+        let view = NoConnectionView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0
+        view.setText(text: "You must be online to sign up for this app. \nCheck your connection and try again.")
+        return view
     }()
 
     override func viewDidLoad() {
@@ -146,6 +173,8 @@ class RegisterViewController: UIViewController {
         navBar?.isTranslucent = true
         navBar?.tintColor = Constants.accentColorDark
         
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(backTapped))
+        
         emailField.delegate = self
         passwordField.delegate = self
         
@@ -153,6 +182,7 @@ class RegisterViewController: UIViewController {
         imageView.addGestureRecognizer(gesture)
         
         /// Adding subviews
+        view.addSubview(slantedView)
         view.addSubview(helperView)
         helperView.addSubview(imageViewBackground)
         helperView.addSubview(imageView)
@@ -162,18 +192,54 @@ class RegisterViewController: UIViewController {
         view.addSubview(passwordField)
         view.addSubview(logginButton)
         
+        // Loading indicator
+        view.addSubview(loadingBalls)
+        
         // Makes keyboard disappear when tapped outside of keyboard
         self.dismissKeyboard()
+        
+        // Related to internett connection
+        view.addSubview(noConnectionView)
+        
+        NetworkManager.isUnreachable { _ in
+            self.showNoConnection()
+        }
+        NetworkManager.isReachable { _ in
+            self.showConnection()
+        }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showConnection),
+            name: NSNotification.Name(Constants.networkIsReachable),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showNoConnection),
+            name: NSNotification.Name(Constants.networkIsNotReachable),
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
         imageView.image = nil
+        animateRegister()
+    }
+    
+    @objc func backTapped(sender: UIBarButtonItem) {
+        animateReturn()
     }
     
     /// Lay out constraints
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        slantedView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8).isActive = true
+        slantedView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        slantedView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        slantedView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
         helperView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         helperView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -216,6 +282,17 @@ class RegisterViewController: UIViewController {
         logginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         logginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        loadingBalls.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        loadingBalls.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loadingBalls.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
+        loadingBalls.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        // View related to internet connection
+        noConnectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        noConnectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        noConnectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        noConnectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
     
     private func clearTextFields() {
@@ -223,69 +300,6 @@ class RegisterViewController: UIViewController {
         lastNameField.text?.removeAll()
         emailField.text?.removeAll()
         passwordField.text?.removeAll()
-    }
-    
-    /// Send verification email to user when registering for first time
-    /*Email is sendt, but it takes a long time, haven't checked if email app actually opens, because i have to download on first.
-     Pressing on the link provided in the email does not lead back to the app. We get an error...
-     "Invalid dynamic link. Ensure that your dynamic links domain is correctly configure and that the path component of this url is valid.
-     Also need to work on how this process coensides with the rest of the registration process...*/
-    
-    @objc private func sendVerificationEmail() {
-        
-        Hud.handle(hud, with: HudInfo(type: .show, text: "Working", detailText: "Sending verification email..."))
-        
-        let actionCodeSettings = ActionCodeSettings()
-        
-        let email = emailField.text ?? ""
-        let scheme = InfoPlistParser.getStringValue(forKey: Setup.kFirebaseOpenAppScheme)
-        let uriPrefix = InfoPlistParser.getStringValue(forKey: Setup.kFirebaseOpenAppURIPrefix)
-        let queryItemEmailName = InfoPlistParser.getStringValue(forKey: Setup.kFirebaseOpenAppQueryItemEmailName)
-        
-        var components = URLComponents()
-        components.scheme = scheme
-        components.host = uriPrefix
-        
-        let emailURLQueryItem = URLQueryItem(name: queryItemEmailName, value: email)
-        components.queryItems = [emailURLQueryItem]
-        
-        guard let linkParameter = components.url else { return }
-        print("The link parameter is: \(linkParameter)")
-        
-        actionCodeSettings.url = linkParameter
-        actionCodeSettings.handleCodeInApp = true
-        actionCodeSettings.setIOSBundleID(Bundle.main.bundleIdentifier!)
-        
-        Auth.auth().sendSignInLink(toEmail: email, actionCodeSettings: actionCodeSettings, completion: { (error) in
-            if let error = error {
-                print(error.localizedDescription)
-                Hud.handle(self.hud, with: HudInfo(type: .error, text: "Error", detailText: "Failed to send verification email"))
-            }
-        })
-        
-        print("Successfully sent verification email to user on registration.")
-        
-        UserDefaults.standard.set(email, forKey: "email")
-        
-        Hud.handle(self.hud, with: HudInfo(type: .success, text: "Success!", detailText: "Successfully sent email"))
-        
-        // Prompt user to open email app
-        let openEmailAppAlertAction = UIAlertAction(title: "Open Mail App", style: .default, handler: { (action) in
-            Setup.shouldOpenMailApp = true
-            self.navigationController?.popViewController(animated: true)
-        })
-        
-        let cancelAlertAction = UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-            self.navigationController?.popViewController(animated: true)
-        })
-        
-        let alert = UIAlertController(title: "Success!",
-                                      message: "Successfully sent verification link to \(email).",
-                                      preferredStyle: .alert)
-        alert.addAction(openEmailAppAlertAction)
-        alert.addAction(cancelAlertAction)
-        present(alert, animated: true)
-        
     }
     
     /// When user taps image view to set profile pic
@@ -317,7 +331,7 @@ class RegisterViewController: UIViewController {
             return
         }
         
-        spinner.show(in: view)
+        animateLogin()
         
         // Firebase Log In
         
@@ -332,7 +346,8 @@ class RegisterViewController: UIViewController {
             guard !exists else {
                 strongSelf.alertUserLoginError(message: "Looks like a user account for that email already exists.")
                 DispatchQueue.main.async {
-                    strongSelf.spinner.dismiss()
+                    strongSelf.loadingBalls.stop()
+                    strongSelf.animateLoginFailed()
                 }
                 return
             }
@@ -343,6 +358,9 @@ class RegisterViewController: UIViewController {
                 // checks if returns an error, if so return.
                 guard authResult != nil, error == nil else {
                     print("Error creating user")
+                    self?.alertUserError()
+                    self?.loadingBalls.stop()
+                    self?.animateLoginFailed()
                     return
                 }
                 
@@ -386,7 +404,7 @@ class RegisterViewController: UIViewController {
                                 strongSelf.prepareTabBar()
                                 strongSelf.clearTextFields()
                                 DispatchQueue.main.async {
-                                    strongSelf.spinner.dismiss()
+                                    strongSelf.loadingBalls.stop()
                                 }
                             case .failure(let error):
                                 print("Storage manager error: \(error)")
@@ -394,7 +412,7 @@ class RegisterViewController: UIViewController {
                                 strongSelf.prepareTabBar()
                                 strongSelf.clearTextFields()
                                 DispatchQueue.main.async {
-                                    strongSelf.spinner.dismiss()
+                                    strongSelf.loadingBalls.stop()
                                 }
                             }
                         })
@@ -407,7 +425,6 @@ class RegisterViewController: UIViewController {
     /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
     private func prepareTabBar() {
         let tabBarVC = UITabBarController()
-        let tabButtonImages = ["Home", "Stats" ,"Settings"]
         
         tabBarVC.tabBar.barTintColor = Constants.textColorDarkGray
         tabBarVC.tabBar.isTranslucent = false
@@ -417,19 +434,19 @@ class RegisterViewController: UIViewController {
         let home = HomeViewController()
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
-        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVC.navigationBar.tintColor = Constants.accentColorDark
         
         let stats = StatisticsViewController()
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
-        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCStats.navigationBar.tintColor = Constants.accentColorDark
         
         let profile = ProfileViewController()
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
-        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCProfile.navigationBar.tintColor = Constants.accentColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
@@ -438,9 +455,9 @@ class RegisterViewController: UIViewController {
             return
         }
         
-        for x in 0..<items.count {
-            items[x].image = UIImage(named: tabButtonImages[x])
-        }
+        items[0].image = UIImage(named: "Home")
+        items[1].image = UIImage(named: "Stats")
+        items[2].image = UIImage(systemName: "gearshape.fill")
         
         tabBarVC.modalPresentationStyle = .fullScreen
         self.present(tabBarVC, animated: false)
@@ -449,13 +466,127 @@ class RegisterViewController: UIViewController {
     
     /// Alerts user if something is wrong with login inputs
     private func alertUserLoginError(message: String = "Please enter all information to create a new account. Password must be at least 8 characters.") {
-        let alert = UIAlertController(title: "Whoops",
+        let alert = UIAlertController(title: "Whoops!",
                                       message: message,
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Dismiss",
+        alert.addAction(UIAlertAction(title: "OK",
                                       style: .cancel,
                                       handler: nil))
         present(alert, animated: true)
+    }
+    
+    /// Alerts user that there was an error creating user
+    private func alertUserError(message: String = "Error creating user. \nCheck that you entered a valid email.") {
+        let alert = UIAlertController(title: "Whoops!",
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK",
+                                      style: .cancel,
+                                      handler: nil))
+        present(alert, animated: true)
+    }
+    
+    private func animateSlantedView(completion: ((Bool) -> Void)?) {
+        UIView.animate(withDuration: 0.5,
+            animations: {
+                self.slantedView.transform = CGAffineTransform.identity
+            },
+            completion: completion)
+    }
+    
+    private func animateRegister() {
+        slantedView.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay)
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.firstNameField.alpha = 1
+                self.lastNameField.alpha = 1
+                self.emailField.alpha = 1
+                self.passwordField.alpha = 1
+                self.logginButton.alpha = 1
+                self.imageViewBackground.alpha = 1
+                self.imageView.alpha = 1
+                self.helperView.alpha = 1
+            },
+            completion: {_ in
+                self.animateSlantedView(completion: nil)
+            })
+    }
+    
+    private func animateReturn() {
+        slantedView.transform = CGAffineTransform.identity
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.firstNameField.alpha = 0
+                self.lastNameField.alpha = 0
+                self.emailField.alpha = 0
+                self.passwordField.alpha = 0
+                self.logginButton.alpha = 0
+                self.imageViewBackground.alpha = 0
+                self.imageView.alpha = 0
+                self.helperView.alpha = 0
+            },
+            completion: {_ in
+                UIView.animate(withDuration: 0.5,
+                    animations: {
+                        self.slantedView.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay)
+                    },
+                    completion: {_ in
+                        self.navigationController?.popViewController(animated: false)
+                    })
+            })
+    }
+    
+    private func hideViews(show: Bool) {
+        var alpha: CGFloat = 0
+        if show == true {
+            alpha = 1
+        }
+        else {
+            alpha = 0
+        }
+        self.helperView.alpha = alpha
+        self.imageView.alpha = alpha
+        self.imageViewBackground.alpha = alpha
+        self.emailField.alpha = alpha
+        self.passwordField.alpha = alpha
+        self.logginButton.alpha = alpha
+        self.firstNameField.alpha = alpha
+        self.lastNameField.alpha = alpha
+        self.logginButton.alpha = alpha
+    }
+    
+    private func removeSlantedView(completion: ((Bool) -> Void)?) {
+        slantedView.transform = CGAffineTransform.identity
+        UIView.animate(withDuration: 0.5,
+            animations: {
+                self.slantedView.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay)
+            },
+            completion: completion)
+    }
+    
+    private func animateLogin() {
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.hideViews(show: false)
+            },
+            completion: {_ in
+                self.removeSlantedView(completion: {_ in
+                    self.loadingBalls.animate()
+                })
+            })
+        
+    }
+    
+    private func animateLoginFailed() {
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.hideViews(show: true)
+            },
+            completion: {_ in
+                self.animateSlantedView(completion: { _ in
+                    self.loadingBalls.stop()
+                })
+            })
     }
 }
 
@@ -532,5 +663,18 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
         vc.delegate = self
         vc.allowsEditing = true
         present(vc, animated: true)
+    }
+}
+
+/// Related to internet connection
+extension RegisterViewController {
+    @objc func showConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 0
+        })
+    }
+    
+    @objc func showNoConnection() {
+        self.noConnectionView.alpha = 1
     }
 }

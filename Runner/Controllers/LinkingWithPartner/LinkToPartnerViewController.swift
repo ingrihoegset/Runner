@@ -134,6 +134,14 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         return qrImageView
     }()
     
+    // Is shown when there is no internet connection
+    let noConnectionView: NoConnectionView = {
+        let view = NoConnectionView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0
+        return view
+    }()
+    
     /// Views related to onboarding
     let onBoardConnect: OnBoardingBubble = {
         let bubble = OnBoardingBubble(frame: .zero, title: "Let partner scan your QR-code to add a second running gate.", pointerPlacement: "topMiddle")
@@ -186,12 +194,38 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         // Views related to onboarding use
         linkViewModel.showOnboardConnect()
         view.addSubview(onBoardConnect)
+        
+        // Views related to no connection
+        view.addSubview(noConnectionView)
+        NetworkManager.isUnreachable { _ in
+            self.showNoConnection()
+        }
+        NetworkManager.isReachable { _ in
+            self.showConnection()
+        }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showConnection),
+            name: NSNotification.Name(Constants.networkIsReachable),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showNoConnection),
+            name: NSNotification.Name(Constants.networkIsNotReachable),
+            object: nil
+        )
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
         session.stopRunning()
         onDoneBlock?(linked)
+    }
+    
+    deinit {
+        print("DESTROYING \(self)")
     }
     
     override func viewDidLayoutSubviews() {
@@ -253,6 +287,11 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         onBoardConnect.centerXAnchor.constraint(equalTo: qrImageView.centerXAnchor).isActive = true
         onBoardConnect.widthAnchor.constraint(equalTo: detailView.widthAnchor, multiplier: 0.85).isActive = true
         onBoardConnect.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.mainButtonSize).isActive = true
+        
+        noConnectionView.topAnchor.constraint(equalTo: segmentControlPanel.bottomAnchor).isActive = true
+        noConnectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        noConnectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        noConnectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
     
     @objc private func dismissSelf() {
@@ -397,5 +436,22 @@ extension LinkToPartnerViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
         sender.isHidden = true
         linkViewModel.scanOnboarded()
+    }
+}
+
+/// Related to internet connection
+extension LinkToPartnerViewController {
+    
+    /// Shows the "not connected to internet view" to user
+    @objc func showConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 0
+        })
+    }
+    
+    @objc func showNoConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 1
+        })
     }
 }

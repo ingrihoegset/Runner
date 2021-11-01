@@ -12,7 +12,7 @@ class HomeViewController: UIViewController {
     
     var homeViewModel = HomeViewModel()
     let launcherViewController = LauncherViewController()
-    var firstLaunch = true
+    
     
     // MARK: - Elements related to main view
     private let mainView: UIView = {
@@ -26,7 +26,8 @@ class HomeViewController: UIViewController {
     private let mainHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = .clear
+        view.alpha = 0
         
         let imageView = UIImageView()
         view.addSubview(imageView)
@@ -35,25 +36,32 @@ class HomeViewController: UIViewController {
         imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        imageView.contentMode = .scaleToFill
-        imageView.alpha = 0.7
-        let image = UIImage(named: "Track")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        let image = UIImage(named: "Sprinter")
         imageView.image = image
-
-
-        let imageViewColor = UIView()
-        view.addSubview(imageViewColor)
-        imageViewColor.translatesAutoresizingMaskIntoConstraints = false
-        imageViewColor.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        imageViewColor.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        imageViewColor.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        imageViewColor.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        imageViewColor.backgroundColor = Constants.textColorDarkGray
-        imageViewColor.alpha = 0.3
-        
-        view.bringSubviewToFront(imageViewColor)
-        
+        return view
+    }()
+    
+    // MARK: - Elements related to temporary views while loading
+    let gradientLayerProfile = CAGradientLayer()
+    let gradientLayerQrButton = CAGradientLayer()
+    
+    private let loadingProfileImageView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.clipsToBounds = true
+        view.alpha = 0
+        return view
+    }()
+    
+    private let loadingQrButton: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.superLightGrey
+        view.clipsToBounds = true
+        view.alpha = 0
         return view
     }()
     
@@ -73,18 +81,18 @@ class HomeViewController: UIViewController {
         imageView.image = UIImage(systemName: "person.circle")
         imageView.tintColor = Constants.textColorDarkGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.isHidden = true
+        imageView.alpha = 0
         return imageView
     }()
 
     private let qrButton: BounceButton = {
         let qrButton = BounceButton()
-        qrButton.backgroundColor = Constants.accentColor
+        qrButton.backgroundColor = Constants.accentColorDark
         qrButton.translatesAutoresizingMaskIntoConstraints = false
         qrButton.layer.masksToBounds = false
         qrButton.clipsToBounds = false
         qrButton.animationColor = Constants.accentColorDark
-        let image = UIImage(named: "QrCode")?.withTintColor(Constants.accentColorDark!, renderingMode: .alwaysOriginal)
+        let image = UIImage(named: "QrCode")?.withTintColor(Constants.mainColor!, renderingMode: .alwaysOriginal)
         let imageview = UIImageView()
         qrButton.addSubview(imageview)
         imageview.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +104,7 @@ class HomeViewController: UIViewController {
         imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20))
         qrButton.addTarget(self, action: #selector(didTapQRButton), for: .touchUpInside)
         qrButton.isUserInteractionEnabled = true
-        qrButton.isHidden = true
+        qrButton.alpha = 0
         qrButton.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5 / 1.5, spread: 0)
         return qrButton
     }()
@@ -122,16 +130,17 @@ class HomeViewController: UIViewController {
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Sprint"
-        button.title.textColor = Constants.textColorDarkGray
+        button.title.textColor = Constants.accentColorDark
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        button.alpha = 0
         return button
     }()
     
     let setUpReactionButton: LargeImageButton = {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.animationColor = Constants.accentColorDark
         button.tag = 1
         let image = UIImage(named: "Reaction")
@@ -139,9 +148,10 @@ class HomeViewController: UIViewController {
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Reaction run"
-        button.title.textColor = Constants.textColorDarkGray
+        button.title.textColor = Constants.accentColorDark
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        button.alpha = 0
         return button
     }()
 
@@ -151,7 +161,7 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
-        view.isHidden = true
+        view.alpha = 0
         return view
     }()
     
@@ -182,7 +192,7 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
-        view.isHidden = true
+        view.alpha = 0
         return view
     }()
     
@@ -214,7 +224,7 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
-        view.isHidden = true
+        view.alpha = 0
         return view
     }()
     
@@ -236,6 +246,7 @@ class HomeViewController: UIViewController {
         label.font = Constants.mainFont
         label.textColor = Constants.textColorDarkGray
         label.textAlignment = .left
+        label.alpha = 0
         return label
     }()
     
@@ -256,12 +267,13 @@ class HomeViewController: UIViewController {
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
         control.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        control.alpha = 0
         return control
     }()
     
     /// Views related to onboarding
     let onBoardConnect: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Connect to partner to add second timing gate and unlock more features!", pointerPlacement: "bottomRight")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Connect to partner to add second timing gate and unlock more features!", pointerPlacement: "topMiddle")
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.isHidden = true
         bubble.tag = 0
@@ -301,16 +313,21 @@ class HomeViewController: UIViewController {
         onBoardConnect.onBoardingBubbleDelegate = self
         onBoardEndGate.onBoardingBubbleDelegate = self
         
+        /*
         if let email = UserDefaults.standard.value(forKey: "email") as? String {
             homeViewModel.fetchProfilePic(email: email)
         }
         else {
             print("No user email found when trying to initiate profile pic download")
-        }
+        }*/
 
         // Related to main view
         view.addSubview(mainView)
         mainView.addSubview(mainHeaderView)
+        
+        // Set loading view
+        mainView.addSubview(loadingProfileImageView)
+        mainView.addSubview(loadingQrButton)
         
         // Set profile header, that is active when not linked
         mainView.addSubview(unconnectedHeaderView)
@@ -344,17 +361,24 @@ class HomeViewController: UIViewController {
         mainView.bringSubviewToFront(qrButton)
         mainView.bringSubviewToFront(onBoardConnect)
 
+        // Remove in case there are lingering links or "ongoing" runs
         homeViewModel.clearLinkFromDatabase()
+        homeViewModel.removeCurrentRun()
 
-        addChildController()
+        // addChildController()
         
         // Related to onboarding
         homeViewModel.showOnboardEndGate()
+        
+        // Animation on load
+        self.startAnimation()
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Skeleton loading setup
+        setup()
         
         // Open email app here on verification of email on registration
         if Setup.shouldOpenMailApp {
@@ -382,7 +406,13 @@ class HomeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        // For skeleton loading of header images
+        gradientLayerProfile.frame = loadingProfileImageView.bounds
+        gradientLayerQrButton.frame = loadingQrButton.bounds
+        loadingProfileImageView.layer.cornerRadius = Constants.imageSize / 2
+        loadingQrButton.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
+    
+
         if let email = UserDefaults.standard.value(forKey: "email") as? String {
             homeViewModel.fetchProfilePic(email: email)
         }
@@ -408,6 +438,17 @@ class HomeViewController: UIViewController {
         mainHeaderView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         mainHeaderView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
         mainHeaderView.heightAnchor.constraint(equalToConstant: Constants.headerSize).isActive = true
+        
+        // Loading views
+        loadingProfileImageView.centerYAnchor.constraint(equalTo: mainHeaderView.bottomAnchor).isActive = true
+        loadingProfileImageView.centerXAnchor.constraint(equalTo: mainHeaderView.centerXAnchor).isActive = true
+        loadingProfileImageView.widthAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+        loadingProfileImageView.heightAnchor.constraint(equalToConstant: Constants.imageSize).isActive = true
+    
+        loadingQrButton.leadingAnchor.constraint(equalTo: loadingProfileImageView.trailingAnchor, constant: -Constants.borderWidth).isActive = true
+        loadingQrButton.centerYAnchor.constraint(equalTo: loadingProfileImageView.centerYAnchor).isActive = true
+        loadingQrButton.widthAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
+        loadingQrButton.heightAnchor.constraint(equalToConstant: Constants.imageSize * 0.6).isActive = true
         
         // Unlinked header
         unconnectedHeaderView.topAnchor.constraint(equalTo: mainView.topAnchor).isActive = true
@@ -474,10 +515,10 @@ class HomeViewController: UIViewController {
         segmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         segmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        onBoardConnect.bottomAnchor.constraint(equalTo: segmentControl.topAnchor).isActive = true
-        onBoardConnect.trailingAnchor.constraint(equalTo: segmentControl.trailingAnchor).isActive = true
-        onBoardConnect.widthAnchor.constraint(equalTo: segmentControl.widthAnchor, multiplier: 0.75).isActive = true
-        onBoardConnect.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
+        onBoardConnect.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
+        onBoardConnect.centerXAnchor.constraint(equalTo: segmentControl.centerXAnchor).isActive = true
+        onBoardConnect.widthAnchor.constraint(equalTo: segmentControl.widthAnchor, multiplier: 0.85).isActive = true
+        onBoardConnect.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2.25).isActive = true
         
         // Selections shown when no link
         unconnectedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
@@ -486,13 +527,13 @@ class HomeViewController: UIViewController {
         unconnectedView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
         
         setUpSprintButton.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
-        setUpSprintButton.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
-        setUpSprintButton.heightAnchor.constraint(equalTo: setUpSprintButton.widthAnchor).isActive = true
+        setUpSprintButton.trailingAnchor.constraint(equalTo: unconnectedView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        setUpSprintButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
         setUpSprintButton.leadingAnchor.constraint(equalTo: unconnectedView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         
-        setUpReactionButton.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
-        setUpReactionButton.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay / 2 - Constants.sideMargin * 1.5).isActive = true
-        setUpReactionButton.heightAnchor.constraint(equalTo: setUpSprintButton.widthAnchor).isActive = true
+        setUpReactionButton.topAnchor.constraint(equalTo: setUpSprintButton.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        setUpReactionButton.leadingAnchor.constraint(equalTo: unconnectedView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        setUpReactionButton.heightAnchor.constraint(equalTo: setUpSprintButton.heightAnchor).isActive = true
         setUpReactionButton.trailingAnchor.constraint(equalTo: unconnectedView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         // Elements related to second gate view
@@ -544,146 +585,215 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.linkedProfileImageView.image = image
                 self.secondGateProfileImageView.image = image
             }
-            // Tells launch VC to disappear
-            self.launchFinished()
-
         }
     }
     
-    func launchFinished() {
+    private func setup() {
         
-        if self.firstLaunch == true {
-            
-            print("Launch finished called")
-            
-            UIView.animate(withDuration: 0.2,
-                animations: {
-                    self.launcherViewController.view.alpha = 0
-                },
-                completion: { _ in
-                    self.unconnectedprofileImageView.isHidden = false
-                    self.qrButton.isHidden = false
-                    self.animateUnlink()
-                })
-            // Set to false so that animation is only called on launch
-            self.firstLaunch = false
-        }
+        gradientLayerProfile.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayerProfile.endPoint = CGPoint(x: 1, y: 0.5)
+        loadingProfileImageView.layer.addSublayer(gradientLayerProfile)
+        
+        gradientLayerQrButton.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayerQrButton.endPoint = CGPoint(x: 1, y: 0.5)
+        loadingQrButton.layer.addSublayer(gradientLayerQrButton)
+        
+        let titleGroup = makeAnimationGroup()
+        titleGroup.beginTime = 0.0
+        gradientLayerProfile.add(titleGroup, forKey: "backgroundColor")
+        gradientLayerQrButton.add(titleGroup, forKey: "backgroundColor")
     }
+    
+    private func makeAnimationGroup(previousGroup: CAAnimationGroup? = nil) -> CAAnimationGroup {
+        let animDuration: CFTimeInterval = 1.0
+        let anim1 = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.backgroundColor))
+        anim1.fromValue = Constants.superLightGrey?.cgColor
+        anim1.toValue = UIColor(red: 250 / 255.0, green: 250 / 255.0, blue: 250 / 255.0, alpha: 1).cgColor
+        anim1.duration = animDuration
+        anim1.beginTime = 0.0
+        
+        let anim2 = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.backgroundColor))
+        anim2.fromValue = UIColor(red: 250 / 255.0, green: 250 / 255.0, blue: 250 / 255.0, alpha: 1).cgColor
+        anim2.toValue = Constants.superLightGrey?.cgColor
+        anim2.duration = animDuration
+        anim2.beginTime = anim1.beginTime + anim1.duration
+        
+        let group = CAAnimationGroup()
+        group.animations = [anim1, anim2]
+        group.repeatCount = .greatestFiniteMagnitude
+        group.duration = anim2.beginTime + anim2.duration
+        group.isRemovedOnCompletion = false
+        
+        return group
+    }
+    
+    func startAnimation() {
+        
+        segmentLabel.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
+        segmentControl.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
+        setUpSprintButton.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
+        setUpReactionButton.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
+        qrButton.transform = CGAffineTransform(scaleX: 0, y: 0)
+        qrButton.alpha = 1
+        
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.loadingProfileImageView.alpha = 1
+                self.mainHeaderView.alpha = 1
+            },
+            completion: { _ in
+                UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {
+                    self.segmentLabel.transform = CGAffineTransform.identity
+                    self.segmentControl.transform = CGAffineTransform.identity
+                    self.segmentLabel.alpha = 1
+                    self.segmentControl.alpha = 1
+                    UIView.animate(withDuration: 0.6, delay: 0.25, options: .curveEaseOut) {
+                        self.setUpSprintButton.transform = CGAffineTransform.identity
+                        self.setUpSprintButton.alpha = 1
+                    }
+                    UIView.animate(withDuration: 0.6, delay: 0.5, options: .curveEaseOut) {
+                        self.setUpReactionButton.transform = CGAffineTransform.identity
+                        self.setUpReactionButton.alpha = 1
+                    }
+                })
+            })
+        
+        UIView.animate(withDuration: 0.5, delay: 0, options: UIView.AnimationOptions.beginFromCurrentState,
+            animations: {
+                self.qrButton.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
+            },
+            completion: { _ in
+                UIView.animate(withDuration: 0.2,
+                    animations: {
+                        self.qrButton.transform = CGAffineTransform.identity
+                    })
+            })
+    }
+
     
     // Gets and updates UI elements in accordance with successful link with partner
     // Is triggered by home view model when a change to link occurs. If a link is found, else is activated, view shows linked view.
-    func didUpdatePartnerUI(partner: String, gateNumber: Int) {
-        DispatchQueue.main.async {
-            print("Updating UI")
-            print("gate number", gateNumber)
-            // Show connected view, but for first gate
-            if gateNumber == 1 {
-                // Show
-                self.linkedHeaderView.isHidden = false
-                self.unconnectedView.isHidden = false
-                
-                // Hide
-                self.unconnectedHeaderView.isHidden = true
-                self.secondGateHeaderView.isHidden = true
-                self.secondGateView.isHidden = true
-                self.qrButton.isHidden = true
-                
-                // Update segment Controller as well
-                self.segmentControl.selectedSegmentIndex = 1
+    func updateUiUnconnected() {
+        // Show
+        self.loadingProfileImageView.alpha = 1
+        self.loadingQrButton.alpha = 1
+        self.unconnectedHeaderView.alpha = 1
+        self.unconnectedView.alpha = 1
+        self.qrButton.alpha = 1
+        // Hide
+        self.linkedHeaderView.alpha = 0
+        self.secondGateHeaderView.alpha = 0
+        self.secondGateView.alpha = 0
+        // Update segment Controller as well
+        self.segmentControl.selectedSegmentIndex = 0
+    }
     
-                self.animateLinkedPartnerUI()
-            }
-            // Show connected view, but for second gate
-            else if gateNumber == 2 {
-                // Show
-                self.secondGateHeaderView.isHidden = false
-                self.secondGateView.isHidden = false
-                
-                // Hide
-                self.unconnectedHeaderView.isHidden = true
-                self.linkedHeaderView.isHidden = true
-                self.unconnectedView.isHidden = true
-                self.qrButton.isHidden = true
+    func updateUiConnectedStartGate() {
+        UIView.animate(withDuration: 0.3) {
+            // Show
+            self.linkedHeaderView.alpha = 1
+            self.unconnectedView.alpha = 1
+            
+            // Hide
+            self.loadingProfileImageView.alpha = 0
+            self.loadingQrButton.alpha = 0
+            self.unconnectedHeaderView.alpha = 0
+            self.secondGateHeaderView.alpha = 0
+            self.secondGateView.alpha = 0
+            self.qrButton.alpha = 0
+        }
+        
+        // Update segment Controller as well
+        self.segmentControl.selectedSegmentIndex = 1
+    }
+    
+    func updateUiConnectedEndGate() {
+        UIView.animate(withDuration: 0.3) {
+            // Show
+            self.secondGateHeaderView.alpha = 1
+            self.secondGateView.alpha = 1
+            
+            // Hide
+            self.loadingProfileImageView.alpha = 0
+            self.loadingQrButton.alpha = 0
+            self.unconnectedHeaderView.alpha = 0
+            self.linkedHeaderView.alpha = 0
+            self.unconnectedView.alpha = 0
+            self.qrButton.alpha = 0
+        }
 
-                // Update segment Controller as well
-                self.segmentControl.selectedSegmentIndex = 1
-                
-                self.animateLinkedPartnerUI()
-            }
-            // Show main view, no connection
-            else {
-                // Show
-                self.unconnectedHeaderView.isHidden = false
-                self.unconnectedView.isHidden = false
-                self.qrButton.isHidden = false
-                // Hide
-                self.linkedHeaderView.isHidden = true
-                self.secondGateHeaderView.isHidden = true
-                self.secondGateView.isHidden = true
-                // Update segment Controller as well
-                self.segmentControl.selectedSegmentIndex = 0
-                
-                self.animateUnlink()
-            }
+        // Update segment Controller as well
+        self.segmentControl.selectedSegmentIndex = 1
+    }
+    
+    func updatePartnerImage(image: UIImage) {
+        DispatchQueue.main.async {
+            self.partnerProfileImageView.image = image
+            self.secondGatePartnerProfileImageView.image = image
+        }
+    }
+    
+    func updateUserImage(image: UIImage) {
+        DispatchQueue.main.async {
+            self.unconnectedprofileImageView.image = image
+            self.linkedProfileImageView.image = image
+            self.secondGateProfileImageView.image = image
         }
     }
     
     func animateUnlink() {
-        unconnectedprofileImageView.transform = CGAffineTransform(translationX: -200, y: 0)
-        qrButton.transform = CGAffineTransform(translationX: 200, y: 0)
         
-        UIView.animate(withDuration: 0.25,
+        print("Animating unlink")
+        unconnectedprofileImageView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        unconnectedprofileImageView.alpha = 1
+        UIView.animate(withDuration: 0.5,
             animations: {
-                self.unconnectedprofileImageView.transform = CGAffineTransform.identity
-                self.qrButton.transform = CGAffineTransform.identity
+                self.unconnectedprofileImageView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
             },
             completion: { _ in
-                UIView.animate(withDuration: 0.10,
+                UIView.animate(withDuration: 0.2,
                     animations: {
-                        self.unconnectedprofileImageView.transform = CGAffineTransform(translationX: -10, y: 0)
-                        self.qrButton.transform = CGAffineTransform(translationX: 10, y: 0)
-                    },
-                    completion: { _ in
-                        UIView.animate(withDuration: 0.1) {
-                            self.unconnectedprofileImageView.transform = CGAffineTransform.identity
-                            self.qrButton.transform = CGAffineTransform.identity
-                        }
+                        self.unconnectedprofileImageView.transform = CGAffineTransform.identity
                     })
             })
     }
     
     func animateLinkedPartnerUI() {
-        linkedProfileImageView.transform = CGAffineTransform(translationX: Constants.imageSize/2, y: 0)
-        partnerProfileImageView.transform = CGAffineTransform(translationX: -Constants.imageSize/2, y: 0)
-        secondGateProfileImageView.transform = CGAffineTransform(translationX: Constants.imageSize/2, y: 0)
-        secondGatePartnerProfileImageView.transform = CGAffineTransform(translationX: -Constants.imageSize/2, y: 0)
+        print("animate linked")
+        
+        //linkedProfileImageView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        partnerProfileImageView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        //secondGateProfileImageView.transform = CGAffineTransform(scaleX: 0, y: 0)
+        secondGatePartnerProfileImageView.transform = CGAffineTransform(scaleX: 0, y: 0)
 
-        UIView.animate(withDuration: 0.25, animations: {
-            self.linkedProfileImageView.transform = CGAffineTransform.identity
-            self.partnerProfileImageView.transform = CGAffineTransform.identity
-            self.secondGateProfileImageView.transform = CGAffineTransform.identity
-            self.secondGatePartnerProfileImageView.transform = CGAffineTransform.identity
+        UIView.animate(withDuration: 0.4, animations: {
+           // self.linkedProfileImageView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            self.partnerProfileImageView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+           // self.secondGateProfileImageView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            self.secondGatePartnerProfileImageView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         }) { (_) in
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.2) {
+                //self.linkedProfileImageView.transform = CGAffineTransform.identity
+                self.partnerProfileImageView.transform = CGAffineTransform.identity
+                //self.secondGateProfileImageView.transform = CGAffineTransform.identity
+                self.secondGatePartnerProfileImageView.transform = CGAffineTransform.identity
 
             }
         }
     }
     
     func alertUserThatIsDisconnectedFromPartner() {
-        if firstLaunch == false {
-            let actionSheet = UIAlertController(title: "You've been disconnected from partner. Running with 1 gate.",
-                                                message: "",
-                                                preferredStyle: .alert)
-            
-            actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
-                guard let strongSelf = self else {
-                    return
-                }
-                strongSelf.navigationController?.popToRootViewController(animated: true)
-            }))
-            present(actionSheet, animated: true)
-        }
+        let actionSheet = UIAlertController(title: "You've been disconnected from partner. \nRunning with 1 gate.",
+                                            message: "",
+                                            preferredStyle: .alert)
+        
+        actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.popToRootViewController(animated: true)
+        }))
+        present(actionSheet, animated: true)
     }
     
     func didGetRunResult(result: RunResults) {
@@ -845,17 +955,6 @@ extension HomeViewController {
         
         // User has been onboarded to end gate
         homeViewModel.hasOnboardedEndGate()
-    }
-}
-
-extension HomeViewController {
-    
-    func addChildController() {
-        addChild(launcherViewController)
-        view.addSubview(launcherViewController.view)
-        launcherViewController.view.frame = view.bounds
-        launcherViewController.didMove(toParent: self)
-        launcherViewController.view.isHidden = false
     }
 }
 

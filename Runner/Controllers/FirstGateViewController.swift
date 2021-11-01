@@ -179,9 +179,15 @@ class FirstGateViewController: UIViewController {
         return bubble
     }()
     
+    let noConnectionView: NoConnectionView = {
+        let view = NoConnectionView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0
+        return view
+    }()
     
     deinit {
-        print("DESTROYED FIRST GATE")
+        print("DESTROYED \(self)")
     }
     
     override func viewDidLoad() {
@@ -228,11 +234,35 @@ class FirstGateViewController: UIViewController {
         
         // Set tekst in top labels
         setDisplayLabelText()
-        setConstraints()
         
-        //Related to onboarding
+        // Related to onboarding
         firstGateViewModel.showOnboardingFinishLineOneUser()
         firstGateViewModel.showOnboardingStartLineTwoUsers()
+        
+        // Related to internet connection
+        view.addSubview(noConnectionView)
+        
+        NetworkManager.isUnreachable { _ in
+            self.showNoConnection()
+        }
+        NetworkManager.isReachable { _ in
+            self.showConnection()
+        }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showConnection),
+            name: NSNotification.Name(Constants.networkIsReachable),
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showNoConnection),
+            name: NSNotification.Name(Constants.networkIsNotReachable),
+            object: nil
+        )
+        
+        setConstraints()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -246,6 +276,17 @@ class FirstGateViewController: UIViewController {
         pulsingView.addAnimations()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        if self.isMovingFromParent {
+            // Cancel current run if gate is exited
+            cancelRun()
+            // Removes listeners so that http calls arent duplicated
+            firstGateViewModel.removeEndOfRunListener()
+            firstGateViewModel.removeCurrentRunOngoingListener()
+        }
+    }
     
     // Using setConstraints because didlayoutsubview caused memory leak after i implemented the live counter.
     func setConstraints() {
@@ -329,6 +370,11 @@ class FirstGateViewController: UIViewController {
         cancelRaceButton.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.235/2).isActive = true
         cancelRaceButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         
+        noConnectionView.topAnchor.constraint(equalTo: displayView.bottomAnchor).isActive = true
+        noConnectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        noConnectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        noConnectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
         DispatchQueue.main.async {
             // Set up for camera view. Has to happen after constraints are set.
             let previewLayer = self.firstGateViewModel.previewLayer
@@ -373,7 +419,6 @@ class FirstGateViewController: UIViewController {
     }
     
     @objc private func cancelRun() {
-        firstGateViewModel.cancelRun()
         animateCancel()
     }
     
@@ -510,5 +555,20 @@ extension FirstGateViewController: OnBoardingBubbleDelegate {
         if sender.tag == 1 {
             firstGateViewModel.hasOnboardedStartLineTwoUsers()
         }
+    }
+}
+
+/// Related to internet connection
+extension FirstGateViewController {
+    @objc func showConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 0
+        })
+    }
+    
+    @objc func showNoConnection() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.noConnectionView.alpha = 1
+        })
     }
 }

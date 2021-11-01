@@ -11,12 +11,17 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
-import JGProgressHUD
 
 class LoginViewController: UIViewController {
     
-    private let noNetworkViewController = NoNetworkViewController()
-    private let spinner = JGProgressHUD(style: .dark)
+    private let slantedView: SlantedView = {
+        let view = SlantedView()
+        view.backgroundColor = Constants.contrastColor
+        //view.image = UIImage(named: "3tracks")
+        view.contentMode = .scaleAspectFill
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private let logoView: UIImageView = {
         let imageView = UIImageView()
@@ -29,9 +34,8 @@ class LoginViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Welcome!"
-        label.font = Constants.mainFontXLargeSB
-        label.textColor = Constants.textColorDarkGray
-        label.alpha = 0
+        label.font = Constants.mainFontXXLargeSB
+        label.textColor = Constants.mainColor
         label.textAlignment = .center
         return label
     }()
@@ -81,6 +85,21 @@ class LoginViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        return button
+    }()
+    
+    private let registerNewUserButton: BounceButton = {
+        let button = BounceButton()
+        button.animationColor = Constants.accentColorDark
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("New user", for: .normal)
+        button.backgroundColor = Constants.contrastColor
+        button.titleLabel?.font = Constants.mainFontLargeSB
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.addTarget(self, action: #selector(didTapRegister), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -90,7 +109,7 @@ class LoginViewController: UIViewController {
         button.setTitle("Forgot your password?", for: .normal)
         button.backgroundColor = .clear
         button.titleLabel?.font = Constants.mainFont
-        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.setTitleColor(Constants.contrastColor, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(didTapForgotPassword), for: .touchUpInside)
         return button
@@ -129,6 +148,12 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    private let loadingBalls: LoadingBalls = {
+        let loadingBalls = LoadingBalls(frame: .zero, color: Constants.contrastColor!, duration: 0.8)
+        loadingBalls.translatesAutoresizingMaskIntoConstraints = false
+        return loadingBalls
+    }()
+    
     private var googleLoginObserver: NSObjectProtocol?
 
     override func viewDidLoad() {
@@ -155,23 +180,20 @@ class LoginViewController: UIViewController {
         
         view.backgroundColor = Constants.mainColor
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign up",
-                                                            style: .done,
-                                                            target: self,
-                                                            action: #selector(didTapRegister))
-        
-        navigationItem.rightBarButtonItem?.tintColor = Constants.accentColorDark
+        navigationItem.rightBarButtonItem?.tintColor = Constants.mainColor
         
         emailField.delegate = self
         passwordField.delegate = self
         // fbLoginButton.delegate = self
         
         /// Adding subviews
+        view.addSubview(slantedView)
         view.addSubview(logoView)
         view.addSubview(welcomeLabel)
         view.addSubview(emailField)
         view.addSubview(passwordField)
         view.addSubview(logginButton)
+        view.addSubview(registerNewUserButton)
         view.addSubview(forgotPasswordButton)
         view.addSubview(orLogInLabel)
         
@@ -181,25 +203,21 @@ class LoginViewController: UIViewController {
         // Custom Facebook login button
         view.addSubview(customFBLoginButton)
         
+        // View for loading when login selected
+        view.addSubview(loadingBalls)
+        
         /*
         // Google login button
         view.addSubview(googleLoginButton)
         */
         
         // Present welcome animation
-        presentWelcome()
+        //presentWelcome()
         
         // Makes keyboard disappear when tapped outside of keyboard
         self.dismissKeyboard()
         
-        // Check for connection with internet, if not show user that they are not connected
-        addChildController()
-        NetworkManager.isUnreachable { _ in
-            self.showOfflinePage()
-        }
-        NetworkManager.isReachable { _ in
-            self.showMainPage()
-        }
+        animateSlantedView(completion: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -218,14 +236,19 @@ class LoginViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-
+        animateReturn()
     }
     
     /// Lay out constraints
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        logoView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin).isActive = true
+        slantedView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8).isActive = true
+        slantedView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        slantedView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        slantedView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        
+        logoView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.mainButtonSize).isActive = true
         logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         logoView.bottomAnchor.constraint(equalTo: welcomeLabel.topAnchor, constant: -Constants.sideMargin).isActive = true
         logoView.widthAnchor.constraint(equalTo: logoView.heightAnchor).isActive = true
@@ -240,17 +263,22 @@ class LoginViewController: UIViewController {
         emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         emailField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        passwordField.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        passwordField.bottomAnchor.constraint(equalTo: logginButton.topAnchor, constant: -Constants.verticalSpacing).isActive = true
         passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         passwordField.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        logginButton.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        logginButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: Constants.sideMargin).isActive = true
         logginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         logginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         logginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        forgotPasswordButton.topAnchor.constraint(equalTo: logginButton.bottomAnchor).isActive = true
+        registerNewUserButton.topAnchor.constraint(equalTo: logginButton.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        registerNewUserButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        registerNewUserButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        registerNewUserButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        forgotPasswordButton.topAnchor.constraint(equalTo: registerNewUserButton.bottomAnchor).isActive = true
         forgotPasswordButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         forgotPasswordButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         forgotPasswordButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
@@ -264,6 +292,11 @@ class LoginViewController: UIViewController {
         customFBLoginButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.15).isActive = true
         customFBLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         customFBLoginButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.15).isActive = true
+        
+        loadingBalls.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        loadingBalls.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loadingBalls.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
+        loadingBalls.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
     }
     
     /// Present Welcome text with animation
@@ -273,19 +306,87 @@ class LoginViewController: UIViewController {
         }
     }
     
-    /// Shows the not connected to internett view controller to user
-    private func showOfflinePage() -> Void {
-        noNetworkViewController.view.isHidden = false
-    }
-    
-    private func showMainPage() -> Void {
-        noNetworkViewController.view.isHidden = true
-    }
-    
     /// When user taps to register new user, send user to register view controller
     @objc private func didTapRegister() {
-        let vc = RegisterViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        animateRegister()
+    }
+    
+    private func hideViews(show: Bool) {
+        var alpha: CGFloat = 0
+        if show == true {
+            alpha = 1
+        }
+        else {
+            alpha = 0
+        }
+        self.logoView.alpha = alpha
+        self.welcomeLabel.alpha = alpha
+        self.emailField.alpha = alpha
+        self.passwordField.alpha = alpha
+        self.logginButton.alpha = alpha
+        self.registerNewUserButton.alpha = alpha
+        self.customFBLoginButton.alpha = alpha
+        self.forgotPasswordButton.alpha = alpha
+        self.orLogInLabel.alpha = alpha
+    }
+    
+    private func animateRegister() {
+        
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.hideViews(show: false)
+            },
+            completion: {_ in
+                UIView.animate(withDuration: 0.5,
+                    animations: {
+                        self.slantedView.transform = CGAffineTransform(translationX: 0, y: -Constants.heightOfDisplay)
+                    },
+                    completion: {_ in
+                        let vc = RegisterViewController()
+                        self.navigationController?.pushViewController(vc, animated: false)
+                    })
+            })
+    }
+    
+    private func animateReturn() {
+        
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.hideViews(show: true)
+            },
+            completion: {_ in
+                UIView.animate(withDuration: 0.5,
+                    animations: {
+                        self.slantedView.transform = CGAffineTransform.identity
+                    },
+                    completion: nil)
+            })
+    }
+    
+    private func animateLogin() {
+        
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.hideViews(show: false)
+            },
+            completion: {_ in
+                self.removeSlantedView(completion: {_ in
+                    self.loadingBalls.animate()
+                })
+            })
+    }
+    
+    private func animateLoginFailed() {
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.hideViews(show: true)
+            },
+            completion: {_ in
+                self.animateSlantedView(completion: {_ in
+                    self.loadingBalls.stop()
+                })
+            })
+        
     }
     
     /// When user taps log in button
@@ -301,7 +402,7 @@ class LoginViewController: UIViewController {
             return
         }
         
-        spinner.show(in: view)
+        animateLogin()
         
         // Firebase log in
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
@@ -323,7 +424,8 @@ class LoginViewController: UIViewController {
                                               handler: nil))
                 strongSelf.present(alert, animated: true)
                 DispatchQueue.main.async {
-                    strongSelf.spinner.dismiss()
+                    strongSelf.loadingBalls.stop()
+                    strongSelf.animateLoginFailed()
                 }
                 return
             }
@@ -345,7 +447,7 @@ class LoginViewController: UIViewController {
                     print("Logged in user: \(user)")
                     // Stopping spinner
                     DispatchQueue.main.async {
-                        strongSelf.spinner.dismiss()
+                        strongSelf.loadingBalls.stop()
                     }
                     self?.prepareTabBar()
                     self?.clearTextFields()
@@ -356,7 +458,7 @@ class LoginViewController: UIViewController {
                     print("Logged in user: \(user)")
                     // Stopping spinner
                     DispatchQueue.main.async {
-                        strongSelf.spinner.dismiss()
+                        strongSelf.loadingBalls.stop()
                     }
                     self?.prepareTabBar()
                     self?.clearTextFields()
@@ -398,7 +500,6 @@ class LoginViewController: UIViewController {
         print("Preparing Tab Bar")
         
         let tabBarVC = UITabBarController()
-        let tabButtonImages = ["Home", "Stats" ,"Settings"]
         
         tabBarVC.tabBar.barTintColor = Constants.textColorDarkGray
         tabBarVC.tabBar.isTranslucent = false
@@ -408,19 +509,19 @@ class LoginViewController: UIViewController {
         let home = HomeViewController()
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
-        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVC.navigationBar.tintColor = Constants.accentColorDark
         
         let stats = StatisticsViewController()
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
-        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCStats.navigationBar.tintColor = Constants.accentColorDark
         
         let profile = ProfileViewController()
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
-        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCProfile.navigationBar.tintColor = Constants.accentColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
@@ -429,11 +530,12 @@ class LoginViewController: UIViewController {
             return
         }
         
-        for x in 0..<items.count {
-            items[x].image = UIImage(named: tabButtonImages[x])
-        }
+        items[0].image = UIImage(named: "Home")
+        items[1].image = UIImage(named: "Stats")
+        items[2].image = UIImage(systemName: "gearshape.fill")
         
         tabBarVC.modalPresentationStyle = .fullScreen
+        
         self.present(tabBarVC, animated: false)
     }
     
@@ -462,7 +564,8 @@ class LoginViewController: UIViewController {
         else {
             // Access token is not available -- user already logged out
             // Perform log in
-            self.spinner.show(in: view)
+        
+            animateLogin()
             
             loginManager.logIn(permissions: ["public_profile", "email"], from: self) { [weak self] (result, error) in
                 
@@ -477,7 +580,8 @@ class LoginViewController: UIViewController {
                     print("User cancelled login.")
                     // Stopping spinner
                     DispatchQueue.main.async {
-                        self?.spinner.dismiss()
+                        self?.loadingBalls.stop()
+                        self?.animateLoginFailed()
                     }
                     return
                 }
@@ -574,8 +678,9 @@ class LoginViewController: UIViewController {
                             print("Facebook credential login failed, MFA may be required.")
                             // Stopping spinner
                             DispatchQueue.main.async {
-                                strongSelf.spinner.dismiss()
+                                strongSelf.loadingBalls.stop()
                             }
+                            self?.animateLoginFailed()
                             self?.alertFBLoginError()
                             return
                         }
@@ -584,7 +689,7 @@ class LoginViewController: UIViewController {
                         
                         // Stopping spinner
                         DispatchQueue.main.async {
-                            strongSelf.spinner.dismiss()
+                            strongSelf.loadingBalls.stop()
                         }
                         
                         // Create tab navigation and go to tab bar
@@ -600,6 +705,24 @@ class LoginViewController: UIViewController {
         emailField.text?.removeAll()
         passwordField.text?.removeAll()
     }
+    
+    private func animateSlantedView(completion: ((Bool) -> Void)?) {
+        slantedView.transform = CGAffineTransform(translationX: 0, y: -Constants.heightOfDisplay)
+        UIView.animate(withDuration: 0.5,
+            animations: {
+                self.slantedView.transform = CGAffineTransform.identity
+            },
+            completion: completion)
+    }
+    
+    private func removeSlantedView(completion: ((Bool) -> Void)?) {
+        slantedView.transform = CGAffineTransform.identity
+        UIView.animate(withDuration: 0.5,
+            animations: {
+                self.slantedView.transform = CGAffineTransform(translationX: 0, y: -Constants.heightOfDisplay)
+            },
+            completion: completion)
+    }
 }
 
 /// Controls what happens when "return" is pressed inside a text field. Send to password if in the email field, calls "loginbuttontapped" if in password field.
@@ -614,18 +737,6 @@ extension LoginViewController: UITextFieldDelegate {
             loginButtonTapped()
         }
         return true
-    }
-}
-
-/// Extension related to showing network warnign
-extension LoginViewController {
-    
-    func addChildController() {
-        addChild(noNetworkViewController)
-        view.addSubview(noNetworkViewController.view)
-        noNetworkViewController.view.frame = view.bounds
-        noNetworkViewController.didMove(toParent: self)
-        noNetworkViewController.view.isHidden = true
     }
 }
 

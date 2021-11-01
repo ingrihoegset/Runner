@@ -7,6 +7,7 @@ struct Constants {
     static let mainColor = UIColor(named: "MainColor")
     static let accentColor = UIColor(named: "AccentColor")
     static let accentColorDark = UIColor(named: "AccentColorDark")
+    static let accentColorDarkest = UIColor(named: "AccentColorDarkest")
     static let whiteColor = UIColor(named: "WhiteColor")
     static let contrastColor = UIColor(named: "ContrastColor")
     static let superLightGrey = UIColor(named: "SuperLightGrey")
@@ -19,7 +20,7 @@ struct Constants {
     static let textColorDarkGray = UIColor.darkGray
     
     //Design dimensions
-    static let smallCornerRadius: CGFloat = 8
+    static let smallCornerRadius: CGFloat = 6
     static let cornerRadius: CGFloat = 16
     static let borderWidth: CGFloat = 0
     static let sideSpacing: CGFloat = 10
@@ -36,7 +37,7 @@ struct Constants {
     // Dimension
     static let widthOfDisplay = UIScreen.main.bounds.size.width
     static let heightOfDisplay = UIScreen.main.bounds.size.height
-    static let sideMargin = widthOfDisplay * 0.05
+    static let sideMargin = widthOfDisplay * 0.045
     static let displayViewHeight: CGFloat = 100
     static let displayButtonHeight: CGFloat = 40
     
@@ -57,15 +58,17 @@ struct Constants {
     static let mainFontMedium = UIFont(name: "BarlowSemiCondensed-Light", size: 14)
     static let mainFontSmall = UIFont(name: "BarlowSemiCondensed-Light", size: 12)
         //Semi Bold
-    static let mainFontSmallSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 10)
-    static let mainFontMediumSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 14)
-    static let mainFontSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 18)
-    static let mainFontLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 22)
-    static let mainFontXLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 35)
-    static let mainFontXXLargeSB = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 40)
+    static let mainFontSmallSB = UIFont(name: "Overpass-SemiBold", size: 10)
+    static let mainFontMediumSB = UIFont(name: "Overpass-SemiBold", size: 14)
+    static let mainFontSB = UIFont(name: "Overpass-SemiBold", size: 18)
+    static let mainFontLargeSB = UIFont(name: "Overpass-SemiBold", size: 22)
+    static let mainFontXLargeSB = UIFont(name: "Overpass-SemiBold", size: 35)
+    static let mainFontXXLargeSB = UIFont(name: "Overpass-SemiBold", size: 40)
+    static let mainFontExtraBold = UIFont(name: "Overpass-ExtraBold", size: 35)
     static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 120)
     static let resultFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 70)
     static let resultFontSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 30)
+    static let resultFontXSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 22)
     static let pickerFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 45)
     
     // Set race VC texts
@@ -96,4 +99,7 @@ struct Constants {
     // Network status
     static let networkIsReachable = "networkIsReachable"
     static let networkIsNotReachable = "networkIsNotReachable"
+    
+    // Notification Strings
+    static let linkOccured = "linkOccured"
 }

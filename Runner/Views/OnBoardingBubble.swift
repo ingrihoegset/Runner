@@ -7,13 +7,13 @@
 
 import UIKit
 
-protocol OnBoardingBubbleDelegate {
+protocol OnBoardingBubbleDelegate: AnyObject {
     func handleDismissal(sender: UIView)
 }
 
 class OnBoardingBubble: UIView {
     
-    var onBoardingBubbleDelegate: OnBoardingBubbleDelegate?
+    weak var onBoardingBubbleDelegate: OnBoardingBubbleDelegate?
     
     var pointerDirection = "topLeft"
     
@@ -47,14 +47,14 @@ class OnBoardingBubble: UIView {
     let backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.textColorDarkGray
+        view.backgroundColor = Constants.contrastColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         return view
     }()
     
     let pointerView: UIView = {
         let view = UIView()
-        view.backgroundColor = Constants.textColorDarkGray
+        view.backgroundColor = Constants.contrastColor
         view.translatesAutoresizingMaskIntoConstraints = false
         view.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
         return view

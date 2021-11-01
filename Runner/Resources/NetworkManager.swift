@@ -37,7 +37,6 @@ class NetworkManager: NSObject {
     }
     
     @objc func networkStatusChanged(_ notification: Notification) {
-        print("status changed")
         
         // Do something globally here!
         if reachability.connection != .unavailable {
@@ -48,8 +47,6 @@ class NetworkManager: NSObject {
             print("We lost connection")
             NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.networkIsNotReachable), object: nil)
         }
-
-        
     }
     
     static func stopNotifier() -> Void {
