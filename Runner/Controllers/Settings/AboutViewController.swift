@@ -34,8 +34,8 @@ class AboutViewController: UIViewController {
     
     let label1: UITextView = {
         let label = UITextView()
-        let titleAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
-        let infoTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFont]
+        let titleAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let infoTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFont]
         let title = NSMutableAttributedString(string: "This is the title\n", attributes: titleAttributes as [NSAttributedString.Key : Any])
         let infoText = NSMutableAttributedString(string: "Sed ut erat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?", attributes: infoTextAttributes as [NSAttributedString.Key : Any])
         let text = NSMutableAttributedString()
@@ -56,8 +56,8 @@ class AboutViewController: UIViewController {
     
     let label2: UITextView = {
         let label = UITextView()
-        let titleAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
-        let infoTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFont]
+        let titleAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let infoTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFont]
         let title = NSMutableAttributedString(string: "This is the title\n", attributes: titleAttributes as [NSAttributedString.Key : Any])
         let infoText = NSMutableAttributedString(string: "Sed ut erat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?", attributes: infoTextAttributes as [NSAttributedString.Key : Any])
         let text = NSMutableAttributedString()
@@ -78,8 +78,8 @@ class AboutViewController: UIViewController {
     
     let label3: UITextView = {
         let label = UITextView()
-        let titleAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
-        let infoTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFont]
+        let titleAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let infoTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFont]
         let title = NSMutableAttributedString(string: "This is the title\n", attributes: titleAttributes as [NSAttributedString.Key : Any])
         let infoText = NSMutableAttributedString(string: "Sed ut erat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?", attributes: infoTextAttributes as [NSAttributedString.Key : Any])
         let text = NSMutableAttributedString()

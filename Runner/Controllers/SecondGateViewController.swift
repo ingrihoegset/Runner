@@ -47,7 +47,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         label.text = "Waiting for run to start"
         label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         return label
     }()
     
@@ -99,7 +99,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.text = "Sensor sensitivity"
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.font = Constants.mainFontSB
         label.textAlignment = .center
         view.addSubview(label)
@@ -127,7 +127,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         slider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75).isActive = true
         slider.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5).isActive = true
         
-        let plusImage = UIImage(systemName: "plus.circle.fill")?.withTintColor(Constants.textColorDarkGray, renderingMode: .alwaysOriginal)
+        let plusImage = UIImage(systemName: "plus.circle.fill")?.withTintColor(Constants.textColorAccent!, renderingMode: .alwaysOriginal)
         let plusImageView = UIImageView()
         plusImageView.translatesAutoresizingMaskIntoConstraints = false
         plusImageView.image = plusImage
@@ -138,7 +138,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         plusImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         plusImageView.centerYAnchor.constraint(equalTo: slider.centerYAnchor).isActive = true
         
-        let minusImage = UIImage(systemName: "minus.circle.fill")?.withTintColor(Constants.textColorDarkGray, renderingMode: .alwaysOriginal)
+        let minusImage = UIImage(systemName: "minus.circle.fill")?.withTintColor(Constants.textColorAccent!, renderingMode: .alwaysOriginal)
         let minusImageView = UIImageView()
         minusImageView.translatesAutoresizingMaskIntoConstraints = false
         minusImageView.image = minusImage

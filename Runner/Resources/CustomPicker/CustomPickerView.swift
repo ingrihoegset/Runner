@@ -69,14 +69,14 @@ class CustomPickerView: UIView {
         unitLabel.backgroundColor = .clear
         unitLabel.text = Constants.meters
         unitLabel.font = Constants.mainFontXXLargeSB
-        unitLabel.textColor = Constants.textColorDarkGray
+        unitLabel.textColor = Constants.textColorAccent
         return unitLabel
     }()
     
     let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear

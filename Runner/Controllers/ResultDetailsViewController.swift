@@ -111,7 +111,7 @@ class ResultDetailsViewController: UIViewController {
         label.clipsToBounds = true
         label.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         label.font = Constants.mainFontLargeSB
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         return label
     }()
     
@@ -132,7 +132,7 @@ class ResultDetailsViewController: UIViewController {
         leftAxis.axisLineColor = .clear
         leftAxis.axisMinimum = 0 // FIXME: HUH?? this replaces startAtZero = YES
         leftAxis.drawGridLinesEnabled = false
-        leftAxis.labelTextColor = Constants.textColorDarkGray
+        leftAxis.labelTextColor = Constants.textColorAccent!
         leftAxis.labelFont = Constants.mainFont!
         
         let rightAxis = chartView.rightAxis
@@ -143,7 +143,7 @@ class ResultDetailsViewController: UIViewController {
         rightAxis.axisLineColor = .clear
         rightAxis.axisMinimum = 0
         rightAxis.drawGridLinesEnabled = false
-        rightAxis.labelTextColor = Constants.textColorDarkGray
+        rightAxis.labelTextColor = Constants.textColorAccent!
         rightAxis.labelFont = Constants.mainFont!
         
         let l = chartView.legend
@@ -154,7 +154,7 @@ class ResultDetailsViewController: UIViewController {
         l.form = .circle
         l.formSize = 9
         l.font = Constants.mainFont!
-        l.textColor = Constants.textColorDarkGray
+        l.textColor = Constants.textColorAccent!
         l.xOffset = -Constants.widthOfDisplay * 0.08
         
         chartView.animate(yAxisDuration: 2.0)
@@ -172,7 +172,7 @@ class ResultDetailsViewController: UIViewController {
         chartView.xAxis.axisMinimum = 0.8
         chartView.xAxis.granularity = 1
         chartView.xAxis.labelFont = Constants.mainFont!
-        chartView.xAxis.labelTextColor = Constants.textColorDarkGray
+        chartView.xAxis.labelTextColor = Constants.textColorAccent!
 
         return chartView
     }()
@@ -193,7 +193,7 @@ class ResultDetailsViewController: UIViewController {
         summaryView.addSubview(detailRowSpeed)
         
         let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
-        let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
 
         let timeResult = NSMutableAttributedString(string: time, attributes: resultAttributes as [NSAttributedString.Key : Any])
         let timeUnit = NSMutableAttributedString(string: " s", attributes: unitAttributes as [NSAttributedString.Key : Any])

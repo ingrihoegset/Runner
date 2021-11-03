@@ -36,7 +36,7 @@ class FirstGateViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.clipsToBounds = true
-        button.setTitleColor(Constants.textColorDarkGray, for: .normal)
+        button.setTitleColor(Constants.textColorAccent, for: .normal)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         button.isUserInteractionEnabled = false
         return button
@@ -50,7 +50,7 @@ class FirstGateViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.clipsToBounds = true
-        button.setTitleColor(Constants.textColorDarkGray, for: .normal)
+        button.setTitleColor(Constants.textColorAccent, for: .normal)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         button.isUserInteractionEnabled = false
         return button
@@ -82,7 +82,7 @@ class FirstGateViewController: UIViewController {
         label.font = Constants.mainFontLargeSB
         label.clipsToBounds = true
         label.layer.cornerRadius = Constants.smallCornerRadius
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         return label
     }()
     
@@ -201,7 +201,7 @@ class FirstGateViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.text = "Sensor sensitivity"
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.font = Constants.mainFontSB
         label.textAlignment = .center
         view.addSubview(label)
@@ -229,7 +229,7 @@ class FirstGateViewController: UIViewController {
         slider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75).isActive = true
         slider.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5).isActive = true
         
-        let plusImage = UIImage(systemName: "plus.circle.fill")?.withTintColor(Constants.textColorDarkGray, renderingMode: .alwaysOriginal)
+        let plusImage = UIImage(systemName: "plus.circle.fill")?.withTintColor(Constants.textColorAccent!, renderingMode: .alwaysOriginal)
         let plusImageView = UIImageView()
         plusImageView.translatesAutoresizingMaskIntoConstraints = false
         plusImageView.image = plusImage
@@ -240,7 +240,7 @@ class FirstGateViewController: UIViewController {
         plusImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         plusImageView.centerYAnchor.constraint(equalTo: slider.centerYAnchor).isActive = true
         
-        let minusImage = UIImage(systemName: "minus.circle.fill")?.withTintColor(Constants.textColorDarkGray, renderingMode: .alwaysOriginal)
+        let minusImage = UIImage(systemName: "minus.circle.fill")?.withTintColor(Constants.textColorAccent!, renderingMode: .alwaysOriginal)
         let minusImageView = UIImageView()
         minusImageView.translatesAutoresizingMaskIntoConstraints = false
         minusImageView.image = minusImage
@@ -722,6 +722,7 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
             navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
+
 }
 
 /// Related to onboarding the user

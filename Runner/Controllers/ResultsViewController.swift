@@ -125,7 +125,7 @@ class ResultsViewController: UIViewController {
     let raceSpeedTitle: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
@@ -148,7 +148,7 @@ class ResultsViewController: UIViewController {
     let racelengthTitle: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear

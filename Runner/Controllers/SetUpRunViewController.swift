@@ -62,7 +62,7 @@ class SetUpRunViewController: UIViewController {
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.accentColor
         let normalTextAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
@@ -81,7 +81,7 @@ class SetUpRunViewController: UIViewController {
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.accentColor
         let normalTextAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
@@ -107,7 +107,7 @@ class SetUpRunViewController: UIViewController {
         label.trailingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         label.text = " Running"
         label.textAlignment = .left
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.font = Constants.mainFontLarge
         view.isHidden = true
         return view
@@ -121,7 +121,7 @@ class SetUpRunViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = " Who's running?"
         label.textAlignment = .left
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.font = Constants.mainFont
         return label
     }()
@@ -140,7 +140,7 @@ class SetUpRunViewController: UIViewController {
         label.trailingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         label.text = " False start"
         label.textAlignment = .left
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.font = Constants.mainFontLarge
         view.isHidden = true
         return view
@@ -154,7 +154,7 @@ class SetUpRunViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = " False start?"
         label.textAlignment = .left
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.font = Constants.mainFont
         return label
     }()

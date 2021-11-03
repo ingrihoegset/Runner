@@ -23,7 +23,7 @@ class RegisterViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.mainColor
-        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        view.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         view.alpha = 0
         return view
     }()
@@ -32,7 +32,7 @@ class RegisterViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "person.badge.plus")
-        imageView.tintColor = Constants.textColorDarkGray
+        imageView.tintColor = Constants.textColorAccent
         imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = false
         imageView.backgroundColor = .clear
@@ -43,7 +43,7 @@ class RegisterViewController: UIViewController {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = Constants.textColorDarkGray
+        imageView.tintColor = Constants.textColorAccent
         imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = true
         imageView.backgroundColor = .clear
@@ -67,7 +67,7 @@ class RegisterViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
-        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
         return field
     }()
@@ -87,7 +87,7 @@ class RegisterViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
-        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
         return field
     }()
@@ -107,7 +107,7 @@ class RegisterViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
-        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
         return field
     }()
@@ -128,7 +128,7 @@ class RegisterViewController: UIViewController {
         field.leftViewMode = .always
         field.backgroundColor = Constants.accentColor
         field.isSecureTextEntry = true
-        field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
         return field
     }()
@@ -426,7 +426,7 @@ class RegisterViewController: UIViewController {
     private func prepareTabBar() {
         let tabBarVC = UITabBarController()
         
-        tabBarVC.tabBar.barTintColor = Constants.textColorDarkGray
+        tabBarVC.tabBar.barTintColor = Constants.accentColorDarkest
         tabBarVC.tabBar.isTranslucent = false
         tabBarVC.tabBar.tintColor = Constants.contrastColor
         tabBarVC.tabBar.unselectedItemTintColor = Constants.accentColor
@@ -434,19 +434,19 @@ class RegisterViewController: UIViewController {
         let home = HomeViewController()
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
-        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVC.navigationBar.tintColor = Constants.accentColorDark
         
         let stats = StatisticsViewController()
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
-        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCStats.navigationBar.tintColor = Constants.accentColorDark
         
         let profile = ProfileViewController()
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
-        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCProfile.navigationBar.tintColor = Constants.accentColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)

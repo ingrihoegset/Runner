@@ -57,7 +57,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.mainColor
         let normalTextAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
@@ -116,7 +116,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         let name = UserDefaults.standard.value(forKey: "name") as? String
         label.text = name
         label.textAlignment = .center
-        label.textColor = Constants.textColorMain
+        label.textColor = Constants.textColorAccent
         label.font = Constants.mainFont
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -160,7 +160,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         title = "Add second gate"
         view.backgroundColor = Constants.accentColor
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorDarkGray]
+                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorAccent!]
         
         // Makes navigation like rest of panel
         self.navigationController?.navigationBar.shadowImage = UIImage()

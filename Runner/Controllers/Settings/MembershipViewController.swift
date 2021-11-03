@@ -20,7 +20,7 @@ class MembershipViewController: UIViewController {
         let label = UITextView()
         label.text = "Try the full edition of (...)"
         label.font = Constants.mainFontXLargeSB
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.textAlignment = .center
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +43,7 @@ class MembershipViewController: UIViewController {
     let row1: CheckView = {
         let view = CheckView(frame: .zero, title: "Feature 1", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
-        view.titleLabel.textColor = Constants.textColorDarkGray
+        view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -51,7 +51,7 @@ class MembershipViewController: UIViewController {
     let row2: CheckView = {
         let view = CheckView(frame: .zero, title: "Feature 2", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
-        view.titleLabel.textColor = Constants.textColorDarkGray
+        view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -59,7 +59,7 @@ class MembershipViewController: UIViewController {
     let row3: CheckView = {
         let view = CheckView(frame: .zero, title: "Feature 3", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
-        view.titleLabel.textColor = Constants.textColorDarkGray
+        view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()

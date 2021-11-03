@@ -82,7 +82,7 @@ class SortTypeViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = Constants.accentColorDark
         
-        navigationController?.navigationBar.tintColor = Constants.accentColor
+        navigationController?.navigationBar.tintColor = Constants.mainColor
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
                                                             target: self,
@@ -148,7 +148,7 @@ extension SortTypeViewController: UITableViewDataSource {
         cell.textLabel?.text = self.sortTableViewData[indexPath.row]
         cell.textLabel?.textAlignment = .center
         cell.textLabel?.font = Constants.mainFont
-        cell.textLabel?.textColor = Constants.textColorDarkGray
+        cell.textLabel?.textColor = Constants.textColorAccent
         return cell
     }
     

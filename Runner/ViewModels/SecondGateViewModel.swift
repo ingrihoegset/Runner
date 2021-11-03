@@ -359,7 +359,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                 strongSelf.secondGateViewModelDelegate?.dismissResultsVC()
             }
             else {
-                strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: Constants.textColorDarkGray.cgColor, label: "Waiting for run to start")
+                strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: Constants.textColorAccent!.cgColor, label: "Waiting for run to start")
             }
         })
     }

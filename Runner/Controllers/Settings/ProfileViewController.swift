@@ -314,7 +314,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         
         let label = UILabel()
         label.text = sectionTitles[section]
-        label.textColor = Constants.accentColorDarkest
+        label.textColor = Constants.accentColorDark
         label.font = Constants.mainFontSB
         label.textAlignment = .left
         label.frame = CGRect(x: Constants.sideMargin, y: 15, width: Constants.widthOfDisplay - Constants.sideMargin, height: Constants.mainButtonSize-15)
@@ -510,13 +510,13 @@ class SettingsTableViewCell: UITableViewCell {
     
     public func setUp(with viewModel: SettingSelectionViewModel) {
         
-        let iconColor = Constants.textColorDarkGray
+        let iconColor = Constants.textColorAccent!
 
         // Set cell label
         self.label.text = viewModel.title
         self.label.font = Constants.mainFont
         self.label.textAlignment = .left
-        self.label.textColor = Constants.textColorDarkGray
+        self.label.textColor = Constants.textColorAccent
         self.backgroundColor = Constants.mainColor
         
         self.chevron.image = UIImage(systemName: "chevron.right")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -20, left: -20, bottom: -20, right: -20))
@@ -524,34 +524,25 @@ class SettingsTableViewCell: UITableViewCell {
         // Set appearance for type of cell
         switch viewModel.viewModelType {
         case .faq:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "questionmark.circle")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .privacy:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "lock")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .units:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "gauge")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .restore:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "tag")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .logout:
             self.label.textColor = .systemRed
             self.icon.image = UIImage(systemName: "nosign")?.withTintColor(UIColor.red, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .profilePic:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "person")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .about:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "info")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .contact:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "quote.bubble")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .membership:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "star")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .shareApp:
-            self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "square.and.arrow.up")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         }
     }

@@ -18,6 +18,7 @@ struct Constants {
     static let textColorMain = UIColor.black
     static let textColorWhite = UIColor.white
     static let textColorDarkGray = UIColor.darkGray
+    static let textColorAccent = UIColor(named: "AccentColorDarkest")
     
     //Design dimensions
     static let smallCornerRadius: CGFloat = 6

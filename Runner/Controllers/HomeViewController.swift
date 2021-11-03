@@ -244,7 +244,7 @@ class HomeViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = " Number of timing gates"
         label.font = Constants.mainFont
-        label.textColor = Constants.textColorDarkGray
+        label.textColor = Constants.textColorAccent
         label.textAlignment = .left
         label.alpha = 0
         return label
@@ -257,7 +257,7 @@ class HomeViewController: UIViewController {
         control.selectedSegmentIndex = 0
         control.selectedSegmentTintColor = Constants.mainColor
         let normalTextAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorDarkGray,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)

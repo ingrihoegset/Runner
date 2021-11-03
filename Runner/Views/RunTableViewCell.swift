@@ -43,6 +43,7 @@ class RunTableViewCell: UITableViewCell {
         label.backgroundColor = .clear
         label.numberOfLines = 1
         label.font = Constants.mainFont
+        label.textColor = Constants.textColorAccent
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -53,6 +54,7 @@ class RunTableViewCell: UITableViewCell {
         label.backgroundColor = .clear
         label.numberOfLines = 1
         label.font = Constants.mainFontSmall
+        label.textColor = Constants.textColorAccent
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -63,6 +65,7 @@ class RunTableViewCell: UITableViewCell {
         label.backgroundColor = .clear
         label.numberOfLines = 1
         label.font = Constants.mainFont
+        label.textColor = Constants.textColorAccent
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -73,6 +76,7 @@ class RunTableViewCell: UITableViewCell {
         label.backgroundColor = .clear
         label.numberOfLines = 1
         label.font = Constants.mainFont
+        label.textColor = Constants.textColorAccent
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -83,6 +87,7 @@ class RunTableViewCell: UITableViewCell {
         label.backgroundColor = .clear
         label.numberOfLines = 1
         label.font = Constants.mainFont
+        label.textColor = Constants.textColorAccent
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -94,6 +99,7 @@ class RunTableViewCell: UITableViewCell {
         label.font = Constants.mainFontSmall
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
+        label.textColor = Constants.textColorAccent
         return label
     }()
     

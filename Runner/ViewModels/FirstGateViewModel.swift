@@ -519,7 +519,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             }
             else {
                 print("waiting")
-                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.textColorDarkGray.cgColor, label: "Waiting")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.textColorAccent!.cgColor, label: "Waiting")
             }
         })
     }
