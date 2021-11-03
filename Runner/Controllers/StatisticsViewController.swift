@@ -307,6 +307,12 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         navigationItem.title = "My runs"
         view.backgroundColor = Constants.accentColor
         
+        navigationController?.navigationBar.tintColor = Constants.contrastColor
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"),
+                                                            style: .done,
+                                                            target: self,
+                                                            action: #selector(resetTableView))
+        
         view.addSubview(headerView)
         headerView.addSubview(sortTypeButton)
         headerView.addSubview(sortDateButton)
@@ -536,6 +542,14 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     func reloadTableView(sortedTypeRunsArray: [RunResults]) {
         runs = sortedTypeRunsArray
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    @objc func resetTableView() {
+        unselectAllButtons()
+        runs = allRuns
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

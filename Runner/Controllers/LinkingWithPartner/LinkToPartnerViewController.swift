@@ -173,8 +173,9 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
                                                             target: self,
                                                             action: #selector(dismissSelf))
         
-        startCameraSession()
-
+        // Check if camera is accesible and starts camera session if accessible.
+        goToCamera()
+        
         view.addSubview(qrIndicatorImageView)
         view.addSubview(segmentControlPanel)
         segmentControlPanel.addSubview(segmentControl)
@@ -453,5 +454,70 @@ extension LinkToPartnerViewController {
         UIView.animate(withDuration: 0.3, animations: {
             self.noConnectionView.alpha = 1
         })
+    }
+}
+
+/// Related to checking access to camera
+extension LinkToPartnerViewController {
+    
+    //Makes sure that user has given access to camera before setting up a camerasession
+    func goToCamera() {
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch (status) {
+        case .authorized:
+            self.startCameraSession()
+
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { (granted) in
+                if (granted)
+                {
+                    self.startCameraSession()
+                }
+                else
+                {
+                    self.cameraDenied()
+                }
+            }
+
+        case .denied:
+            self.cameraDenied()
+
+        case .restricted:
+            self.cameraRestricted()
+        }
+    }
+    
+    // Related to checking camera access
+    func cameraRestricted() {
+        let alert = UIAlertController(title: "Restricted",
+                                      message: "You've been restricted from using the camera on this device. Without camera access this app won't work. Please contact the device owner so they can give you access.",
+                                      preferredStyle: .alert)
+
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func cameraDenied() {
+        DispatchQueue.main.async {
+                var alertText = "It looks like your privacy settings are preventing us from accessing your camera. This app needs to access your camera to track your run. You can fix this error by doing the following steps:\n\n1. Close this app.\n\n2. Open the Settings app.\n\n3. Scroll to the bottom and select this app in the list.\n\n4. Turn the camera on.\n\n5. Open this app and try again."
+
+                var alertButton = "OK"
+                var goAction = UIAlertAction(title: alertButton, style: .default, handler: nil)
+
+                if UIApplication.shared.canOpenURL(URL(string: UIApplication.openSettingsURLString)!)
+                {
+                    alertText = "It looks like your privacy settings are preventing us from accessing your camera. This app needs to access the camera to work. You can fix this error by doing the following steps:\n\n1. Touch the Go button below to open the Settings app.\n\n2. Turn the Camera on.\n\n3. Open this app and try again."
+
+                    alertButton = "Go"
+
+                    goAction = UIAlertAction(title: alertButton, style: .default, handler: {(alert: UIAlertAction!) -> Void in
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                    })
+                }
+                let alert = UIAlertController(title: "Error", message: alertText, preferredStyle: .alert)
+                alert.addAction(goAction)
+                self.present(alert, animated: true, completion: nil)
+        }
     }
 }

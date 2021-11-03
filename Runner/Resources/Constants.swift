@@ -54,6 +54,7 @@ struct Constants {
     // Fonts
         //Light
     static let mainFontLarge = UIFont(name: "BarlowSemiCondensed-Light", size: 22)
+    static let mainFontXLarge = UIFont(name: "BarlowSemiCondensed-Light", size: 30)
     static let mainFont = UIFont(name: "BarlowSemiCondensed-Light", size: 18)
     static let mainFontMedium = UIFont(name: "BarlowSemiCondensed-Light", size: 14)
     static let mainFontSmall = UIFont(name: "BarlowSemiCondensed-Light", size: 12)
@@ -67,6 +68,7 @@ struct Constants {
     static let mainFontExtraBold = UIFont(name: "Overpass-ExtraBold", size: 35)
     static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 120)
     static let resultFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 70)
+    static let resultFontMedium = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 40)
     static let resultFontSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 30)
     static let resultFontXSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 22)
     static let pickerFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 45)
@@ -80,6 +82,7 @@ struct Constants {
     // User Default Strings
     static let currentRunID = "currentRunID"
     static let profileImageURL = "profileImageURL"
+    static let cameraSensitivity = "cameraSensitivity"
     
     // User Default Onboarding strings
     static let hasOnBoardedScroll = "hasOnBoardedScroll"

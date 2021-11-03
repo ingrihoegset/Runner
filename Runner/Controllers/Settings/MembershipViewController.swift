@@ -21,6 +21,7 @@ class MembershipViewController: UIViewController {
         label.text = "Try the full edition of (...)"
         label.font = Constants.mainFontXLargeSB
         label.textColor = Constants.textColorDarkGray
+        label.textAlignment = .center
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = Constants.mainColor

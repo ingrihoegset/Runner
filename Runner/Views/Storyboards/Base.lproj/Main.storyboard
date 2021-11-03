@@ -38,7 +38,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="checkmark.seal.fill" catalog="system" highlightedImage="about" translatesAutoresizingMaskIntoConstraints="NO" id="atS-Qt-fWO">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="minus" catalog="system" highlightedImage="about" translatesAutoresizingMaskIntoConstraints="NO" id="atS-Qt-fWO">
                                 <rect key="frame" x="87" y="320.5" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -55,9 +55,9 @@
     </scenes>
     <resources>
         <image name="about" width="128" height="128"/>
-        <image name="checkmark.seal.fill" catalog="system" width="128" height="128"/>
+        <image name="minus" catalog="system" width="128" height="24"/>
         <namedColor name="AccentColorDark">
-            <color red="0.79600000381469727" green="0.24400000274181366" blue="0.12300000339746475" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.88707607980000003" green="0.022169526669999998" blue="0.071519695219999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

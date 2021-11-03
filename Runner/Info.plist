@@ -76,7 +76,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Please allow access to take a profile pic.</string>
+	<string>This app needs to access your camera to work properly.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Please allow access to select a photo for your profile.</string>
 	<key>UIApplicationSceneManifest</key>

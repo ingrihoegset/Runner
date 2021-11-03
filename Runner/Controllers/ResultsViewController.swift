@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Social
 
 class ResultsViewController: UIViewController {
     
@@ -14,6 +15,14 @@ class ResultsViewController: UIViewController {
     deinit {
         print("DESTROYED RESULT PAGE")
     }
+    
+    /*
+    let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "Tracks")
+        return imageView
+    }()*/
     
     let resultContainer: UIView = {
         let view = UIView()
@@ -121,7 +130,7 @@ class ResultsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
-        label.font = Constants.mainFont
+        label.font = Constants.mainFontLargeSB
         if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
             if metricSystem == true {
                 label.text = "km/h"
@@ -144,17 +153,17 @@ class ResultsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
-        label.font = Constants.mainFont
+        label.font = Constants.mainFontLargeSB
         if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
             if metricSystem == true {
-                label.text = "m"
+                label.text = "meters"
             }
             else {
-                label.text = "yd"
+                label.text = "yards"
             }
         }
         else {
-            label.text = "m"
+            label.text = "meters"
         }
         return label
     }()
@@ -167,7 +176,7 @@ class ResultsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
-        label.font = Constants.resultFontSmall
+        label.font = Constants.resultFontMedium
         return label
     }()
     
@@ -179,7 +188,7 @@ class ResultsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
         label.isUserInteractionEnabled = false
-        label.font = Constants.resultFontSmall
+        label.font = Constants.resultFontMedium
         return label
     }()
 
@@ -205,11 +214,30 @@ class ResultsViewController: UIViewController {
         return view
     }()
     
+    let shareButtonView: LargeImageButton = {
+        let button = LargeImageButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.contrastColor
+        button.layer.cornerRadius = Constants.mainButtonSize / 2
+        button.clipsToBounds = true
+        button.layer.masksToBounds = false
+        button.title.text = "Share my run"
+        button.title.textColor = Constants.textColorWhite
+        button.title.font = Constants.mainFontSB
+        let image = UIImage(systemName: "square.and.arrow.up")?.withTintColor(Constants.mainColor!)
+        button.imageview.isOpaque = true
+        button.imageview.alpha = 1
+        button.imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 5, left: 10, bottom: 9, right: 5))
+        button.addTarget(self, action: #selector(shareResultOnSoMe), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         // Navigation bar appearance
         title = "Run completed!"
+        
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.textColorWhite]
 
@@ -242,17 +270,18 @@ class ResultsViewController: UIViewController {
         detailComponent2.addSubview(raceSpeedTitle)
         detailComponent2.addSubview(raceSpeedResult)
         
+        view.addSubview(shareButtonView)
+        
         setConstraints()
         startAnimation()
+        
     }
     
     func startAnimation() {
-        /*resultContainer.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-        detailComponent1.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        detailComponent2.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)*/
         resultContainer.transform = CGAffineTransform(translationX: 0, y: 100)
         detailComponent1.transform = CGAffineTransform(translationX: 0, y: 150)
         detailComponent2.transform = CGAffineTransform(translationX: 0, y: 100)
+        shareButtonView.transform = CGAffineTransform(translationX: 0, y: 150)
         
         // Show cancel button and countdown label when start is clicked
         UIView.animate(withDuration: 0.5, animations: {
@@ -268,6 +297,9 @@ class ResultsViewController: UIViewController {
             }
             UIView.animate(withDuration: 0.5) {
                 self.detailComponent1.transform = CGAffineTransform(translationX: 0, y: 0)
+            }
+            UIView.animate(withDuration: 0.7) {
+                self.shareButtonView.transform = CGAffineTransform(translationX: 0, y: 0)
             }
         }
     }
@@ -344,6 +376,18 @@ class ResultsViewController: UIViewController {
         raceSpeedTitle.topAnchor.constraint(equalTo: raceSpeedResult.bottomAnchor).isActive = true
         raceSpeedTitle.bottomAnchor.constraint(equalTo: detailComponent2.bottomAnchor).isActive = true
         raceSpeedTitle.trailingAnchor.constraint(equalTo: detailComponent2.trailingAnchor).isActive = true
+        
+        /*
+        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 350).isActive = true*/
+        
+        shareButtonView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        shareButtonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.sideMargin).isActive = true
+        shareButtonView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        shareButtonView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.5).isActive = true
+    
     }
     
     private func setResults() {
@@ -363,8 +407,119 @@ class ResultsViewController: UIViewController {
         raceSpeedResult.text = String(result.averageSpeed)
     }
     
+    @objc private func shareResultOnSoMe() {
+        let image = drawImagesAndText()
+        let imageToShare = [image]
+        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        present(activityController, animated: true, completion: nil)
+    }
+    
     @objc private func dismissSelf() {
         dismiss(animated: true, completion: nil)
     }
+    
+    // Creates the SoME post
+    func drawImagesAndText() -> UIImage {
+        
+        let size = 512
+        
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
+
+        let img = renderer.image { ctx in
+
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .left
+
+            let mouse = UIImage(named: "SprintLady")
+            mouse?.draw(at: CGPoint(x: 0, y: 0))
+            
+            guard let result = result else {
+                raceTimeHundreths.text = "00"
+                raceTimeMinutes.text = "00"
+                raceTimeSeconds.text = "00"
+                racelengthResult.text = "00"
+                raceSpeedResult.text = "00"
+                return
+            }
+            
+            var speedUnit = ""
+            var distanceUnit = ""
+            if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+                if metricSystem == true {
+                    speedUnit = "km/h"
+                    distanceUnit = "m"
+                }
+                else {
+                    speedUnit = "mph"
+                    distanceUnit = "yd"
+                }
+            }
+            else {
+                speedUnit = "km/h"
+                distanceUnit = "m"
+            }
+            
+            let attrs: [NSAttributedString.Key: Any] = [
+                .font: Constants.mainFontXLargeSB,
+                .foregroundColor: Constants.mainColor,
+                .backgroundColor: Constants.contrastColor!.withAlphaComponent(0.5)
+            ]
+            
+            let largeAttrs: [NSAttributedString.Key: Any] = [
+                .font: Constants.resultFont,
+                .foregroundColor: Constants.mainColor,
+                .backgroundColor: Constants.contrastColor!.withAlphaComponent(0.5),
+            ]
+            
+            let largeTitleAttrs: [NSAttributedString.Key: Any] = [
+                .font: Constants.resultFont,
+                .foregroundColor: Constants.mainColor,
+            ]
+            
+            // 3
+            let titleAttrs: [NSAttributedString.Key: Any] = [
+                .font: Constants.mainFontXLarge,
+                .foregroundColor: Constants.mainColor,
+            ]
+            
+            let titleTime = "Time"
+            let titleAttributedString = NSAttributedString(string: titleTime, attributes: titleAttrs)
+            
+            let titleDistance = "Run"
+            let titleDistanceAttributedString = NSAttributedString(string: titleDistance, attributes: titleAttrs)
+            
+            let titleSpeed = "Speed"
+            let titleSpeedAttributedString = NSAttributedString(string: titleSpeed, attributes: titleAttrs)
+
+            let timeString = " \(result.minutes):\(result.seconds):\(result.hundreths) "
+            let attributedString = NSAttributedString(string: timeString, attributes: largeAttrs)
+            
+            let distanceString = " \(String(result.distance)) \(distanceUnit) "
+            let attributedDistanceString = NSAttributedString(string: distanceString, attributes: attrs)
+            
+            let speedString = " \(String(result.averageSpeed.round(to: 2))) \(speedUnit) "
+            let attributedSpeedString = NSAttributedString(string: speedString, attributes: attrs)
+
+            let title = "My run"
+            let attributedTitle = NSAttributedString(string: title, attributes: largeTitleAttrs)
+            
+            let middel = size / 2
+            let spacing = 36
+            
+            attributedTitle.draw(with: CGRect(x: middel - 90, y: 35, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
+            
+            titleAttributedString.draw(with: CGRect(x: 32, y: middel - spacing, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
+            attributedString.draw(with: CGRect(x: 32, y: middel, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
+            
+            titleDistanceAttributedString.draw(with: CGRect(x: 32 , y: middel - 90 - spacing, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
+            attributedDistanceString.draw(with: CGRect(x: 32, y: middel - 90, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
+            
+            titleSpeedAttributedString.draw(with: CGRect(x: 32, y: middel + 100, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
+            attributedSpeedString.draw(with: CGRect(x: 32, y: middel + 100 + spacing, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
+        }
+        return img
+    }
 }
+
+
 

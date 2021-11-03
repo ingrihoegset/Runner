@@ -14,6 +14,10 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     let secondGateViewModel = SecondGateViewModel()
     
+    /// Other
+    var showslider = true
+    
+    /// Views
     let displayView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +66,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
         view.image = UIImage(named: "Focus")
+        view.isUserInteractionEnabled = true
         return view
     }()
     
@@ -83,6 +88,84 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         return view
     }()
     
+    /// Lets user decide how sensitiv the sensor should be
+    let sensitivitySliderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .clear
+        label.text = "Sensor sensitivity"
+        label.textColor = Constants.textColorDarkGray
+        label.font = Constants.mainFontSB
+        label.textAlignment = .center
+        view.addSubview(label)
+        label.topAnchor.constraint(equalTo: view.topAnchor, constant: 5).isActive = true
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
+        label.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
+        
+        let slider = UISlider()
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.thumbTintColor = Constants.contrastColor
+        slider.minimumTrackTintColor = Constants.contrastColor
+        slider.maximumValue = 1
+        slider.minimumValue = 0
+        slider.isContinuous = false
+        // Must convert value to match 0 to 1 scale (from 0.6 to 0.075 scale for actual camera sensitivity)
+        let value = (UserDefaults.standard.value(forKey: Constants.cameraSensitivity) as? CGFloat)!
+        let visualValue = (0.6 - value) / 0.525
+        slider.setValue(Float(visualValue), animated: false)
+        slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+        
+        view.addSubview(slider)
+        slider.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        slider.topAnchor.constraint(equalTo: label.bottomAnchor).isActive = true
+        slider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.75).isActive = true
+        slider.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5).isActive = true
+        
+        let plusImage = UIImage(systemName: "plus.circle.fill")?.withTintColor(Constants.textColorDarkGray, renderingMode: .alwaysOriginal)
+        let plusImageView = UIImageView()
+        plusImageView.translatesAutoresizingMaskIntoConstraints = false
+        plusImageView.image = plusImage
+        
+        view.addSubview(plusImageView)
+        plusImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5).isActive = true
+        plusImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        plusImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        plusImageView.centerYAnchor.constraint(equalTo: slider.centerYAnchor).isActive = true
+        
+        let minusImage = UIImage(systemName: "minus.circle.fill")?.withTintColor(Constants.textColorDarkGray, renderingMode: .alwaysOriginal)
+        let minusImageView = UIImageView()
+        minusImageView.translatesAutoresizingMaskIntoConstraints = false
+        minusImageView.image = minusImage
+        
+        view.addSubview(minusImageView)
+        minusImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
+        minusImageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        minusImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        minusImageView.centerYAnchor.constraint(equalTo: slider.centerYAnchor).isActive = true
+        
+        let pointerView = UIView()
+        pointerView.backgroundColor = view.backgroundColor
+        pointerView.translatesAutoresizingMaskIntoConstraints = false
+        pointerView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
+        
+        view.addSubview(pointerView)
+        pointerView.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        pointerView.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        pointerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        pointerView.centerYAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        view.sendSubviewToBack(pointerView)
+        
+        view.isHidden = true
+        return view
+    }()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -101,6 +184,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
                                                               style: .done,
                                                               target: self,
                                                               action: #selector(switchCameraDirection))
+        activateSwitchCameraButton()
         
         // Delegates
         secondGateViewModel.secondGateViewModelDelegate = self
@@ -113,6 +197,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         self.view.addSubview(focusView)
         focusView.addSubview(focusImageView)
         view.addSubview(onBoardPlace)
+        view.addSubview(sensitivitySliderView)
 
         // Top View
         view.addSubview(displayView)
@@ -146,6 +231,10 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
             name: NSNotification.Name(Constants.networkIsNotReachable),
             object: nil
         )
+        
+        // Add tap for sensor slider
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(changeSliderVisibility))
+        focusImageView.addGestureRecognizer(gesture)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -160,7 +249,8 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.secondGateViewModel.captureSession.startRunning()
+        self.checkCamera()
+        //self.secondGateViewModel.goToCamera()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -210,7 +300,12 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         focusImageView.widthAnchor.constraint(equalTo: focusView.widthAnchor).isActive = true
         focusImageView.heightAnchor.constraint(equalTo: focusView.heightAnchor).isActive = true
         
-        onBoardPlace.topAnchor.constraint(equalTo: focusView.bottomAnchor).isActive = true
+        sensitivitySliderView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.75).isActive = true
+        sensitivitySliderView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        sensitivitySliderView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7).isActive = true
+        sensitivitySliderView.bottomAnchor.constraint(equalTo: focusView.topAnchor, constant: -15).isActive = true
+        
+        onBoardPlace.topAnchor.constraint(equalTo: focusView.bottomAnchor, constant: 10).isActive = true
         onBoardPlace.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
         onBoardPlace.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7).isActive = true
         onBoardPlace.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2.5).isActive = true
@@ -233,6 +328,41 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     @objc private func switchCameraDirection() {
         secondGateViewModel.switchCamera()
     }
+    
+    private func activateSwitchCameraButton() {
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch (status) {
+        case .authorized:
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        case .notDetermined:
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        case .restricted:
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        case .denied:
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        @unknown default:
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+    }
+    
+    @objc func changeSliderVisibility() {
+        if showslider == true {
+            sensitivitySliderView.isHidden = false
+            showslider = false
+        }
+        else {
+            showslider = true
+            sensitivitySliderView.isHidden = true
+        }
+    }
+    
+    @objc func sliderValueChanged(_ sender: UISlider) {
+        let currentValue = 0.6 - CGFloat(sender.value) * 0.525
+        UserDefaults.standard.setValue(CGFloat(currentValue), forKey: Constants.cameraSensitivity)
+        // Tell breakobserver to update camera sensitivity
+        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.cameraSensitivity), object: nil)
+    }
+    
 }
 
 
@@ -279,6 +409,68 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
     func showOnboardingFinishLine() {
         DispatchQueue.main.async {
             self.onBoardPlace.isHidden = false
+        }
+    }
+    
+    //Makes sure that user has given access to camera before setting up a camerasession
+    func checkCamera() {
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch (status) {
+        case .authorized:
+            print("Authorized")
+        case .notDetermined:
+            print("not determinded")
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { (granted) in
+                if (granted)
+                {
+                }
+                else
+                {
+                    self.cameraDenied()
+                }
+            }
+        case .denied:
+            print("Denied")
+            self.cameraDenied()
+        case .restricted:
+            print("Restricted")
+            self.cameraRestricted()
+        }
+    }
+    
+    
+    // Related to checking camera access
+    func cameraRestricted() {
+        let alert = UIAlertController(title: "Restricted",
+                                      message: "You've been restricted from using the camera on this device. Without camera access this app won't work. Please contact the device owner so they can give you access.",
+                                      preferredStyle: .alert)
+
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(okAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func cameraDenied() {
+        
+        DispatchQueue.main.async {
+                var alertText = "It looks like your privacy settings are preventing us from accessing your camera. This app needs to access your camera to track your run. You can fix this error by doing the following steps:\n\n1. Close this app.\n\n2. Open the Settings app.\n\n3. Scroll to the bottom and select this app in the list.\n\n4. Turn the camera on.\n\n5. Open this app and try again."
+
+                var alertButton = "OK"
+                var goAction = UIAlertAction(title: alertButton, style: .default, handler: nil)
+
+                if UIApplication.shared.canOpenURL(URL(string: UIApplication.openSettingsURLString)!)
+                {
+                    alertText = "It looks like your privacy settings are preventing us from accessing your camera. This app needs to access the camera to work. You can fix this error by doing the following steps:\n\n1. Touch the Go button below to open the Settings app.\n\n2. Turn the Camera on.\n\n3. Open this app and try again."
+
+                    alertButton = "Go"
+
+                    goAction = UIAlertAction(title: alertButton, style: .default, handler: {(alert: UIAlertAction!) -> Void in
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                    })
+                }
+                let alert = UIAlertController(title: "Error", message: alertText, preferredStyle: .alert)
+                alert.addAction(goAction)
+                self.present(alert, animated: true, completion: nil)
         }
     }
 }

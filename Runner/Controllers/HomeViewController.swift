@@ -301,7 +301,7 @@ class HomeViewController: UIViewController {
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedScanPartnerQR)
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedOpenEndGate)
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineTwoUsers)
-        
+
         view.backgroundColor = Constants.accentColor
         
         let navBar = navigationController?.navigationBar
@@ -312,14 +312,6 @@ class HomeViewController: UIViewController {
         homeViewModel.homeViewModelDelegate = self
         onBoardConnect.onBoardingBubbleDelegate = self
         onBoardEndGate.onBoardingBubbleDelegate = self
-        
-        /*
-        if let email = UserDefaults.standard.value(forKey: "email") as? String {
-            homeViewModel.fetchProfilePic(email: email)
-        }
-        else {
-            print("No user email found when trying to initiate profile pic download")
-        }*/
 
         // Related to main view
         view.addSubview(mainView)
@@ -372,6 +364,9 @@ class HomeViewController: UIViewController {
         
         // Animation on load
         self.startAnimation()
+        
+        // Set camera sensitivity
+        setCameraSensitivity()
     }
     
     
@@ -824,6 +819,11 @@ extension HomeViewController: HomeViewModelDelegate {
     func hasOnboardedEndGate() {
         DispatchQueue.main.async {
             self.onBoardEndGate.isHidden = true
+        }
+    }
+    func setCameraSensitivity() {
+        if UserDefaults.standard.value(forKey: Constants.cameraSensitivity) == nil {
+            UserDefaults.standard.setValue(CGFloat(0.3), forKey: Constants.cameraSensitivity)
         }
     }
 }

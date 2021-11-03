@@ -20,6 +20,8 @@ protocol FirstGateViewModelDelegate: AnyObject {
     func showOnboardStartLineTwoUsers()
     func hasOnboardedStartLineTwoUsers()
     func showRunResult(runresult: RunResults)
+    func cameraRestricted()
+    func cameraDenied()
 }
 
 class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -80,7 +82,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         // Starts Camera if User has selected to run with one gate only
         let isRunningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
         if isRunningWithOneGate == true {
-            cameraSetup()
+            // Sets up camera, after checking if camera is accessible
+            goToCamera()
         }
         
         userSelectedLength = userSelectionsModel.getUserSelectedLength()
@@ -210,6 +213,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     func cancelRun() {
+        print("Cancelling")
+        
         timer.invalidate()
         resetShowTimer()
         
@@ -743,6 +748,37 @@ extension FirstGateViewModel {
         return devices.filter {
             $0.position == position
             }.first
+    }
+}
+
+
+// Handles access to camera
+extension FirstGateViewModel {
+    //Makes sure that user has given access to camera before setting up a camerasession
+    func goToCamera() {
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch (status) {
+        case .authorized:
+            self.cameraSetup()
+
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { (granted) in
+                if (granted)
+                {
+                    self.cameraSetup()
+                }
+                else
+                {
+                    self.firstGateViewModelDelegate?.cameraDenied()
+                }
+            }
+
+        case .denied:
+            self.firstGateViewModelDelegate?.cameraDenied()
+
+        case .restricted:
+            self.firstGateViewModelDelegate?.cameraRestricted()
+        }
     }
 }
 

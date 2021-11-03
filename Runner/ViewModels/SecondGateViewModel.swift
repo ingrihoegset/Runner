@@ -16,6 +16,8 @@ protocol SecondGateViewModelDelegate: AnyObject {
     func showOnboardingFinishLine()
     func showRunResult(runresult: RunResults)
     func dismissResultsVC()
+    func cameraRestricted()
+    func cameraDenied()
 }
 
 class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate  {
@@ -34,7 +36,8 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     
     override init() {
         super.init()
-        cameraSetup()
+        // Check if camera access is given, set up camera if access OK, otherwise, prompt user for access.
+        goToCamera()
         currentRunOngoing()
         listenForEndOfCurrentRun()
     }
@@ -467,4 +470,41 @@ extension SecondGateViewModel {
             }.first
     }
 }
+
+
+/// Related to checking access to camera
+extension SecondGateViewModel {
+    
+    //Makes sure that user has given access to camera before setting up a camerasession
+    func goToCamera() {
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        switch (status) {
+        case .authorized:
+            print("Authorized")
+            self.cameraSetup()
+
+        case .notDetermined:
+            print("not determinded")
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { (granted) in
+                if (granted)
+                {
+                    self.cameraSetup()
+                }
+                else
+                {
+                    self.secondGateViewModelDelegate?.cameraDenied()
+                }
+            }
+
+        case .denied:
+            print("Denied")
+            self.secondGateViewModelDelegate?.cameraDenied()
+
+        case .restricted:
+            print("Restricted")
+            self.secondGateViewModelDelegate?.cameraRestricted()
+        }
+    }
+}
+
 

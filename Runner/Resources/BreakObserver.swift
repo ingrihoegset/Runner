@@ -15,11 +15,17 @@ class BreakObserver {
     
     var recentFramesArray = [CGFloat]()
     private let numberOfFramesForAnalysis = 12
-    private let sensitivity: CGFloat = 0.4
+    private var sensitivity: CGFloat = (UserDefaults.standard.value(forKey: Constants.cameraSensitivity) as? CGFloat)!
     var currentTime: String
 
     init() {
         currentTime = ""
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(setSensitivity),
+            name: NSNotification.Name(Constants.cameraSensitivity),
+            object: nil
+        )
     }
     
     /// Uses current frame to check for a break by comparing to average of last frames.
@@ -98,7 +104,11 @@ class BreakObserver {
         let y = inputImage.extent.height / 2 - height / 2
 
         return context.createCGImage(inputImage, from: CGRect(x: x, y: y, width: width, height: height))!
-
+    }
+    
+    @objc func setSensitivity() {
+        print("Changed sensitivity to \((UserDefaults.standard.value(forKey: Constants.cameraSensitivity) as? CGFloat)!)")
+        sensitivity = (UserDefaults.standard.value(forKey: Constants.cameraSensitivity) as? CGFloat)!
     }
 }
 

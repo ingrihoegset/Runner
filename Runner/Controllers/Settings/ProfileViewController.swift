@@ -11,7 +11,7 @@ import FBSDKLoginKit
 import GoogleSignIn
 
 enum SettingsSelectionViewModelType {
-    case restore, faq, privacy, units, logout, profilePic, about, contact, membership
+    case restore, faq, privacy, units, logout, profilePic, about, contact, membership, shareApp
 }
 
 struct SettingSelectionViewModel {
@@ -130,9 +130,28 @@ class ProfileViewController: UIViewController {
                                                 strongSelf.navigationController?.pushViewController(destinationController, animated: true)
                                               }))
         section3Data.append(SettingSelectionViewModel(viewModelType: .privacy,
-                                              title: "Privacy policy",
-                                              handler: nil))
-        // Obs, no unit functionality has been programmed yet
+                                                      title: "Privacy policy",
+                                                      handler: {
+                                                        if let url = URL(string: "https://ingrihoegset.wixsite.com/website/privacy-policy") {
+                                                            UIApplication.shared.open(url)
+                                                        }
+                                                      }))
+        section3Data.append(SettingSelectionViewModel(viewModelType: .contact,
+                                                      title: "Contact us",
+                                                      handler: {
+                                                        if let url = URL(string: "https://ingrihoegset.wixsite.com/website") {
+                                                            UIApplication.shared.open(url)
+                                                        }
+                                                      }))
+        section3Data.append(SettingSelectionViewModel(viewModelType: .shareApp,
+                                                      title: "Share XXXXX with a friend",
+                                                      handler: {
+                                                        if let url = URL(string: "https://apps.apple.com/no/app/headlight-flicker-detector/id1528745497?I=nb") {
+                                                            let urlToShare = [url]
+                                                            let activityController = UIActivityViewController(activityItems: urlToShare, applicationActivities: nil)
+                                                            self.present(activityController, animated: true, completion: nil)
+                                                        }
+                                                      }))
         section2Data.append(SettingSelectionViewModel(viewModelType: .units, title: unitTitle, handler: { [weak self] in
             guard let strongSelf = self else {
                 return
@@ -178,7 +197,7 @@ class ProfileViewController: UIViewController {
                                                 strongSelf.presentPhotoActionSheet()
                                               }))
         section1Data.append(SettingSelectionViewModel(viewModelType: .membership,
-                                              title: "Current membership",
+                                              title: "My membership",
                                               handler: { [weak self] in
                                                 guard let strongSelf = self else {
                                                     return
@@ -527,10 +546,13 @@ class SettingsTableViewCell: UITableViewCell {
             self.icon.image = UIImage(systemName: "info")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .contact:
             self.label.textColor = Constants.textColorDarkGray
-            self.icon.image = UIImage(systemName: "questionmark.circle")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
+            self.icon.image = UIImage(systemName: "quote.bubble")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         case .membership:
             self.label.textColor = Constants.textColorDarkGray
             self.icon.image = UIImage(systemName: "star")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
+        case .shareApp:
+            self.label.textColor = Constants.textColorDarkGray
+            self.icon.image = UIImage(systemName: "square.and.arrow.up")?.withTintColor(iconColor, renderingMode: .alwaysOriginal).withAlignmentRectInsets(UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15))
         }
     }
 }
