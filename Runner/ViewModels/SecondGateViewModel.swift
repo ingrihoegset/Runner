@@ -33,6 +33,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     let breakObserver = BreakObserver()
     var breakTime: Double = 0
     var counter = 0
+    var isRunning = false
     
     override init() {
         super.init()
@@ -72,7 +73,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
 
         // Will only check for breaks after the run has begun. Is running is set to true after the database has received a start time.
-        if Constants.isRunning == true {
+        if isRunning == true {
             // Gives the camera time to stabilize before evaluating.
             if counter >= 15 {
                 let broken = breakObserver.checkIfBreakHasOccured(cvPixelBuffer: pixelBuffer!)
@@ -361,11 +362,25 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
             if success {
                 strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColorDark!.cgColor, label: "Run ongoing")
                 strongSelf.secondGateViewModelDelegate?.dismissResultsVC()
+                
+                // Start camera analysis if appropriate
+                strongSelf.startBreakAnalysis()
             }
             else {
                 strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: Constants.textColorAccent!.cgColor, label: "Waiting for run to start")
+                
+                // Stop camera analysis
+                strongSelf.stopBreakAnalysis()
             }
         })
+    }
+    
+    func startBreakAnalysis() {
+        isRunning = true
+    }
+    
+    func stopBreakAnalysis() {
+        isRunning = false
     }
     
     /// Related to onboarding

@@ -600,7 +600,7 @@ extension DatabaseManager {
         })
     }
     
-    /// Function is intended to check if there is a current race under user node. If there is, the isRunning boolean should be true so that the camera knows it should look for breaks.
+    /// Function is intended to check if there is a current race under user node. If there is, first and second gate viewmodel must execute functions for observing a break when appropriate.
     // If the current run id is nil, the camera should stop looking for breaks.
     func currentRunOngoing(completion: @escaping (Bool) -> Void) {
         
@@ -619,14 +619,11 @@ extension DatabaseManager {
             print("current run id child changed")
             if !snapshot.exists() {
                 print("No current run. Stopped recording")
-                Constants.isRunning = false
                 completion(false)
                 return
-                
             }
             else {
                 print("Found current run. Started recording")
-                Constants.isRunning = true
                 completion(true)
             }
         })

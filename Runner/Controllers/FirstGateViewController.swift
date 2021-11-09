@@ -607,7 +607,9 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
     }
     
     func resetUIOnRunEnd() {
-        animateCancel()
+        DispatchQueue.main.async {
+            self.animateCancel()
+        }
     }
     
     func updateRunningAnimtion(color: CGColor, label: String) {

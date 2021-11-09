@@ -38,6 +38,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     let breakObserver = BreakObserver()
     var breakTime: Double = 0
     var videoCounter = 0
+    var isRunning = false
     
     public static let dateFormatterShort: DateFormatter = {
         let formatter = DateFormatter()
@@ -105,9 +106,18 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     
     // Creates timer object and tells the timer which function to preform for every time interval.
     @objc func startCountDown() {
-        
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
         counter = userSelectedDelay
+        
+        // Starts break analysis
+        if userSelectionsModel.userSelectedFalseStart == true {
+            startCountDownWithFalseStart()
+        }
+    }
+    
+    // During count down with false start, the break analysis starts when count down starts and finishes when count down is complete
+    func startCountDownWithFalseStart() {
+        startBreakAnalysis()
     }
     
     //Is trigger for every timer interval (1 second)
@@ -196,6 +206,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     private func runSprintStart() {
+        // Stop false start monitor
+        stopBreakAnalysis()
+        
         playSound(filename: "longBeep")
         
         // Create run and distrbute to database
@@ -211,6 +224,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     
     @objc func reactionCountDown() {
         if randomWait == 0 {
+            // Stop false start monitor
+            stopBreakAnalysis()
+            
             playSound(filename: "longBeep")
             reactionTimer.invalidate()
             
@@ -248,7 +264,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     func cancelRun() {
-        print("Cancelling")
         
         timer.invalidate()
         resetShowTimer()
@@ -553,14 +568,34 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                 return
             }
             if success {
+                
+                // Update UI to state
                 print("ongoing")
                 strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColorDark!.cgColor, label: "Running")
+                
+                // Start camera analysis if appropriate
+                let oneGate = strongSelf.userSelectionsModel.getIsRunningWithOneGate()
+                
+                if oneGate == true {
+                    strongSelf.startBreakAnalysis()
+                }
             }
             else {
                 print("waiting")
                 strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.textColorAccent!.cgColor, label: "Waiting")
+                
+                // Stop camera analysis
+                strongSelf.stopBreakAnalysis()
             }
         })
+    }
+    
+    func startBreakAnalysis() {
+        isRunning = true
+    }
+    
+    func stopBreakAnalysis() {
+        isRunning = false
     }
     
     // Creates timer object used to keep track of ongoing race time for user interface
@@ -647,14 +682,19 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         
         // Will only check for breaks after the run has begun. Is running is set to true after the database has received a start time.
-        if Constants.isRunning == true {
+        if isRunning == true {
             // Gives the camera time to stabilize before evaluating.
             if videoCounter >= 15 {
                 let broken = breakObserver.checkIfBreakHasOccured(cvPixelBuffer: pixelBuffer!)
                 if (broken == true) {
                     print("Break has been detected.")
+                    if userSelectionsModel.userSelectedFalseStart == true {
+                        falseStartDected()
+                    }
+                    else {
+                        sendTime(time: breakTime, endTime: true)
+                    }
                     resetShowTimer()
-                    sendTime(time: breakTime, endTime: true)
                     breakObserver.recentFramesArray = []
                     videoCounter = 0
                 }
@@ -662,10 +702,18 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         }
     }
     
+    func falseStartDected() {
+        playSound(filename: "error")
+        cancelRun()
+        stopBreakAnalysis()
+        firstGateViewModelDelegate?.resetUIOnRunEnd()
+    }
+    
     /// Related to onboarding
     func hasOnboardedFinishLineOneUser() {
         UserDefaults.standard.set(true, forKey: Constants.hasOnboardedFinishLineOneUser)
         firstGateViewModelDelegate?.hasOnboardedFinishLineOneUser()
+        
     }
     
     // If onboarding of connect hasnt already occured, show onboardconnect bubble
