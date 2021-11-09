@@ -22,6 +22,7 @@ final class UserRunSelections {
     var userSelectedDelay = 3
     var userSelectedReaction = 5
     var userIsRunning = true
+    var userSelectedFalseStart = false
     
     private init() {    }
     
@@ -71,5 +72,13 @@ final class UserRunSelections {
     
     func setUserIsRunning(running: Bool) {
         self.userIsRunning = running
+    }
+    
+    func getUserSelectedFalseStart() -> Bool {
+        return userSelectedFalseStart
+    }
+    
+    func setUserSelectedFalseStart(falseStart: Bool) {
+        self.userSelectedFalseStart = falseStart
     }
 }

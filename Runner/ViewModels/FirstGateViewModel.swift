@@ -85,6 +85,12 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             // Sets up camera, after checking if camera is accessible
             goToCamera()
         }
+        else {
+            // If running with 2 gates and user has selected false start - should show camera also at first gate
+            if userSelectionsModel.getUserSelectedFalseStart() == true {
+                goToCamera()
+            }
+        }
         
         userSelectedLength = userSelectionsModel.getUserSelectedLength()
         userSelectedType = userSelectionsModel.getUserSelectedType()

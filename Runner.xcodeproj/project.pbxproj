@@ -48,6 +48,7 @@
 		BF82518326FA59FD00792FCB /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF82518226FA59FD00792FCB /* StoreKit.framework */; };
 		BF82518626FA65CB00792FCB /* InfoPlistParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82518526FA65CB00792FCB /* InfoPlistParser.swift */; };
 		BF82518926FA68BE00792FCB /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82518826FA68BE00792FCB /* Hud.swift */; };
+		BF98A526273B0C32007AC798 /* error.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF98A525273B0C31007AC798 /* error.wav */; };
 		BF9BFCD92739716600D27110 /* 90.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCD82739716600D27110 /* 90.wav */; };
 		BF9BFCDC2739716F00D27110 /* 60.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCDB2739716F00D27110 /* 60.wav */; };
 		BF9BFCE02739717900D27110 /* 50.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCDE2739717800D27110 /* 50.wav */; };
@@ -133,6 +134,7 @@
 		BF82518226FA59FD00792FCB /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BF82518526FA65CB00792FCB /* InfoPlistParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistParser.swift; sourceTree = "<group>"; };
 		BF82518826FA68BE00792FCB /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
+		BF98A525273B0C31007AC798 /* error.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = error.wav; sourceTree = "<group>"; };
 		BF9BFCD82739716600D27110 /* 90.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 90.wav; sourceTree = "<group>"; };
 		BF9BFCDB2739716F00D27110 /* 60.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 60.wav; sourceTree = "<group>"; };
 		BF9BFCDE2739717800D27110 /* 50.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 50.wav; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 		BF512AD5269F629F001C6BF2 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				BF98A525273B0C31007AC798 /* error.wav */,
 				BF9BFCD82739716600D27110 /* 90.wav */,
 				BF9BFCE62739718B00D27110 /* 80.wav */,
 				BF9BFCDF2739717900D27110 /* 70.wav */,
@@ -497,6 +500,7 @@
 				BF9BFCDC2739716F00D27110 /* 60.wav in Resources */,
 				BF9BFCE12739717900D27110 /* 70.wav in Resources */,
 				BF9BFCE82739718B00D27110 /* 30.wav in Resources */,
+				BF98A526273B0C32007AC798 /* error.wav in Resources */,
 				BFFB69A7269A14E70080DA62 /* Assets.xcassets in Resources */,
 				BF9BFCE02739717900D27110 /* 50.wav in Resources */,
 				BF512AD9269F62AE001C6BF2 /* shortBeep.wav in Resources */,

@@ -92,7 +92,7 @@ class SetUpRunViewController: UIViewController {
             NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
-        //control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
+        control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
         return control
     }()
     
@@ -346,6 +346,21 @@ class SetUpRunViewController: UIViewController {
           break
           default:
             setUpRunViewModel.setUserSelectedRunner(userIsRunning: true)
+          break
+       }
+    }
+    
+    /// Determines if false start has been selected. True implies our user selected false start
+    @objc func segmentControl(_ segmentedControl: UISegmentedControl) {
+       switch (segmentedControl.selectedSegmentIndex) {
+          case 0:
+            setUpRunViewModel.setFalseStartSelection(falseStart: false)
+          break
+          case 1:
+            setUpRunViewModel.setFalseStartSelection(falseStart: true)
+          break
+          default:
+            setUpRunViewModel.setFalseStartSelection(falseStart: false)
           break
        }
     }

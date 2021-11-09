@@ -52,6 +52,12 @@ class SetUpRunViewModel {
         selectionModel.setUserIsRunning(running: userIsRunning)
     }
     
+    /// Sets User false start selections after segment control is altered
+    func setFalseStartSelection(falseStart: Bool) {
+        selectionModel.setUserSelectedFalseStart(falseStart: falseStart)
+        print("False selected ", selectionModel.getUserSelectedFalseStart())
+    }
+    
     /// Show onboarding elements
     func showScrollOnboarding() {
         let onboardScroll = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedScroll)
