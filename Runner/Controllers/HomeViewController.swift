@@ -11,7 +11,6 @@ import FirebaseAuth
 class HomeViewController: UIViewController {
     
     var homeViewModel = HomeViewModel()
-    let launcherViewController = LauncherViewController()
     
     
     // MARK: - Elements related to main view
@@ -372,6 +371,7 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         // Skeleton loading setup
         setup()
         
@@ -400,7 +400,7 @@ class HomeViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewDidAppear(true)
         // For skeleton loading of header images
         gradientLayerProfile.frame = loadingProfileImageView.bounds
         gradientLayerQrButton.frame = loadingQrButton.bounds
@@ -823,7 +823,7 @@ extension HomeViewController: HomeViewModelDelegate {
     }
     func setCameraSensitivity() {
         if UserDefaults.standard.value(forKey: Constants.cameraSensitivity) == nil {
-            UserDefaults.standard.setValue(CGFloat(0.3), forKey: Constants.cameraSensitivity)
+            UserDefaults.standard.setValue(CGFloat(0.2), forKey: Constants.cameraSensitivity)
         }
     }
 }

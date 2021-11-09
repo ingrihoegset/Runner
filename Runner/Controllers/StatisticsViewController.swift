@@ -684,6 +684,10 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         destinationController.distance = model.distance
         destinationController.time = String(model.time)
         
+        
+        destinationController.selectedRun = model
+        destinationController.allruns = allRuns
+        
         // Tells destination controller which units to display
         destinationController.metricSystemOnOpen = true
         if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {

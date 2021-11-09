@@ -180,6 +180,11 @@ class StatisticsViewModel {
         
         // If something goes wrong in getting data
         else {
+            // Important to hav an id - otherwise, run cannot be deleted if something goes wrong
+            var id = "00"
+            if let runID = run["run_id"] as? String {
+                id = runID
+            }
             return RunResults(time: 0.00,
                               minutes: "00",
                               seconds: "00",
@@ -188,7 +193,7 @@ class StatisticsViewModel {
                               averageSpeed: 0.00,
                               type: "Sprint",
                               date: Date(),
-                              runID: "00")
+                              runID: id)
         }
     }
     

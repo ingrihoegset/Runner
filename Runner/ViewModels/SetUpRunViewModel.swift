@@ -13,6 +13,8 @@ protocol SetUpRunViewModelDelegate: AnyObject {
     func showLinkedFeatures(isRunningWithOneGate: Bool)
     func showOnboardScroll()
     func showReactionOnboarding()
+    func hideOnboardScroll()
+    func hideOnboardReaction()
 }
 
 class SetUpRunViewModel {
@@ -56,14 +58,19 @@ class SetUpRunViewModel {
         if onboardScroll == false {
             setUpRunViewModelDelegate?.showOnboardScroll()
         }
+        else {
+            setUpRunViewModelDelegate?.hideOnboardScroll()
+        }
     }
     
     func scrollOnboarded() {
         UserDefaults.standard.set(true, forKey: Constants.hasOnBoardedScroll)
+        showScrollOnboarding()
         showReactionOnboarding()
     }
     
     func reactionOnboarded() {
+        setUpRunViewModelDelegate?.hideOnboardReaction()
         UserDefaults.standard.set(true, forKey: Constants.hasOnBoardedReaction)
     }
     
@@ -71,7 +78,6 @@ class SetUpRunViewModel {
         let selectedRunType = selectionModel.getUserSelectedType()
         let scrollOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedScroll)
         let reactionOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedReaction)
-        print(selectedRunType, scrollOnboarded, reactionOnboarded)
         if selectedRunType == String(UserRunSelections.runTypes.Reaction.rawValue) {
             if scrollOnboarded == true && reactionOnboarded == false {
                 setUpRunViewModelDelegate?.showReactionOnboarding()

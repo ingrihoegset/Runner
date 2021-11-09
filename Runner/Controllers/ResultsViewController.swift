@@ -274,7 +274,10 @@ class ResultsViewController: UIViewController {
         
         setConstraints()
         startAnimation()
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
     }
     
     func startAnimation() {

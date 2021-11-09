@@ -8,7 +8,13 @@
 import Foundation
 import UIKit
 
+protocol CustomPickerDelegate: AnyObject {
+    func pickerScrollOnboarded(sender: UIView)
+}
+
 class CustomPickerView: UIView {
+    
+    weak var customPickerDelegate: CustomPickerDelegate?
     
     let numbers = ["0","1","2","3","4","5","6","7","8","9"]
     var thousandthLengthValue = 0
@@ -260,7 +266,7 @@ extension CustomPickerView: UIPickerViewDelegate {
 }
 
 extension CustomPickerView: UIPickerViewDataSource {
-    
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         if numberOfComponents == 2 {
             return 2
@@ -286,6 +292,9 @@ extension CustomPickerView: UIPickerViewDataSource {
             singleLengthValue = Int(numbers[pickerView.selectedRow(inComponent: 2)]) ?? 0
             userSelectedNumber = hundredthLengthValue * 100 + tenthLengthValue * 10 + singleLengthValue
         }
+        
+        // Used to trigger function that tells the app that user has been onboarded to scroll
+        customPickerDelegate?.pickerScrollOnboarded(sender: self)
     }
     
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {

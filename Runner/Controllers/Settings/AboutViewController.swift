@@ -124,6 +124,9 @@ class AboutViewController: UIViewController {
         label3.topAnchor.constraint(equalTo: label2.bottomAnchor, constant: Constants.sideMargin).isActive = true
         label3.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         label3.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.sideMargin).isActive = true
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
     }
 }

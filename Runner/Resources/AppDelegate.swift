@@ -23,6 +23,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         FirebaseApp.configure()
           
+        // So screen can enter auto lock mode.
+        UIApplication.shared.isIdleTimerDisabled = false
+        
         ApplicationDelegate.shared.application(
             application,
             didFinishLaunchingWithOptions: launchOptions

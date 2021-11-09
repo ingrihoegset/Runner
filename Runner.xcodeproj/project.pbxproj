@@ -48,6 +48,15 @@
 		BF82518326FA59FD00792FCB /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF82518226FA59FD00792FCB /* StoreKit.framework */; };
 		BF82518626FA65CB00792FCB /* InfoPlistParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82518526FA65CB00792FCB /* InfoPlistParser.swift */; };
 		BF82518926FA68BE00792FCB /* Hud.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF82518826FA68BE00792FCB /* Hud.swift */; };
+		BF9BFCD92739716600D27110 /* 90.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCD82739716600D27110 /* 90.wav */; };
+		BF9BFCDC2739716F00D27110 /* 60.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCDB2739716F00D27110 /* 60.wav */; };
+		BF9BFCE02739717900D27110 /* 50.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCDE2739717800D27110 /* 50.wav */; };
+		BF9BFCE12739717900D27110 /* 70.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCDF2739717900D27110 /* 70.wav */; };
+		BF9BFCE72739718B00D27110 /* 10.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCE32739718B00D27110 /* 10.wav */; };
+		BF9BFCE82739718B00D27110 /* 30.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCE42739718B00D27110 /* 30.wav */; };
+		BF9BFCE92739718B00D27110 /* 40.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCE52739718B00D27110 /* 40.wav */; };
+		BF9BFCEA2739718B00D27110 /* 80.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCE62739718B00D27110 /* 80.wav */; };
+		BF9BFCED273971A300D27110 /* 20.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCEC273971A200D27110 /* 20.wav */; };
 		BFB95B222726CF2700DF51BA /* SlantedViewBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB95B212726CF2700DF51BA /* SlantedViewBottom.swift */; };
 		BFC4AE1626D02DD300912F79 /* ResultDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */; };
 		BFC4AE3226D02FA400912F79 /* DetailRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3126D02FA400912F79 /* DetailRow.swift */; };
@@ -56,7 +65,6 @@
 		BFD5488226E13EED009A2390 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488126E13EED009A2390 /* CounterView.swift */; };
 		BFD5488526F25D22009A2390 /* SetUpRunViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */; };
 		BFD5488B26F330D5009A2390 /* BounceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488A26F330D4009A2390 /* BounceButton.swift */; };
-		BFDBF0A226D94B19006BDDD6 /* LauncherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */; };
 		BFE0508E272B3D5D00C6441D /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE0508D272B3D5D00C6441D /* HelpViewController.swift */; };
 		BFEB3CB92727428F007FAB42 /* Overpass-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BFEB3CB82727428F007FAB42 /* Overpass-SemiBold.ttf */; };
 		BFEB3CBC2727CBD1007FAB42 /* Overpass-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BFEB3CBB2727CBD1007FAB42 /* Overpass-ExtraBold.ttf */; };
@@ -125,6 +133,15 @@
 		BF82518226FA59FD00792FCB /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BF82518526FA65CB00792FCB /* InfoPlistParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistParser.swift; sourceTree = "<group>"; };
 		BF82518826FA68BE00792FCB /* Hud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hud.swift; sourceTree = "<group>"; };
+		BF9BFCD82739716600D27110 /* 90.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 90.wav; sourceTree = "<group>"; };
+		BF9BFCDB2739716F00D27110 /* 60.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 60.wav; sourceTree = "<group>"; };
+		BF9BFCDE2739717800D27110 /* 50.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 50.wav; sourceTree = "<group>"; };
+		BF9BFCDF2739717900D27110 /* 70.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 70.wav; sourceTree = "<group>"; };
+		BF9BFCE32739718B00D27110 /* 10.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 10.wav; sourceTree = "<group>"; };
+		BF9BFCE42739718B00D27110 /* 30.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 30.wav; sourceTree = "<group>"; };
+		BF9BFCE52739718B00D27110 /* 40.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 40.wav; sourceTree = "<group>"; };
+		BF9BFCE62739718B00D27110 /* 80.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 80.wav; sourceTree = "<group>"; };
+		BF9BFCEC273971A200D27110 /* 20.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 20.wav; sourceTree = "<group>"; };
 		BFB95B212726CF2700DF51BA /* SlantedViewBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlantedViewBottom.swift; sourceTree = "<group>"; };
 		BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewController.swift; sourceTree = "<group>"; };
 		BFC4AE3126D02FA400912F79 /* DetailRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRow.swift; sourceTree = "<group>"; };
@@ -133,7 +150,6 @@
 		BFD5488126E13EED009A2390 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpRunViewModel.swift; sourceTree = "<group>"; };
 		BFD5488A26F330D4009A2390 /* BounceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BounceButton.swift; sourceTree = "<group>"; };
-		BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherViewController.swift; sourceTree = "<group>"; };
 		BFE0508D272B3D5D00C6441D /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		BFEB3CB82727428F007FAB42 /* Overpass-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Overpass-SemiBold.ttf"; sourceTree = "<group>"; };
 		BFEB3CBB2727CBD1007FAB42 /* Overpass-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Overpass-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -224,6 +240,15 @@
 		BF512AD5269F629F001C6BF2 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				BF9BFCD82739716600D27110 /* 90.wav */,
+				BF9BFCE62739718B00D27110 /* 80.wav */,
+				BF9BFCDF2739717900D27110 /* 70.wav */,
+				BF9BFCDB2739716F00D27110 /* 60.wav */,
+				BF9BFCDE2739717800D27110 /* 50.wav */,
+				BF9BFCE52739718B00D27110 /* 40.wav */,
+				BF9BFCE42739718B00D27110 /* 30.wav */,
+				BF9BFCEC273971A200D27110 /* 20.wav */,
+				BF9BFCE32739718B00D27110 /* 10.wav */,
 				BF512AD7269F62AD001C6BF2 /* longBeep.wav */,
 				BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */,
 				BF512AD6269F62AD001C6BF2 /* shortBeep.wav */,
@@ -374,7 +399,6 @@
 				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
 				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
-				BFDBF0A126D94B19006BDDD6 /* LauncherViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -459,17 +483,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF9BFCE92739718B00D27110 /* 40.wav in Resources */,
+				BF9BFCD92739716600D27110 /* 90.wav in Resources */,
 				BF512ADB269F62AE001C6BF2 /* longBeepDeep.wav in Resources */,
 				BFFB69AA269A14E70080DA62 /* LaunchScreen.storyboard in Resources */,
 				BF12FF21269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf in Resources */,
+				BF9BFCE72739718B00D27110 /* 10.wav in Resources */,
 				BFFB69DE269A4BE80080DA62 /* GoogleService-Info.plist in Resources */,
 				BFEB3CB92727428F007FAB42 /* Overpass-SemiBold.ttf in Resources */,
 				BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */,
 				BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */,
+				BF9BFCEA2739718B00D27110 /* 80.wav in Resources */,
+				BF9BFCDC2739716F00D27110 /* 60.wav in Resources */,
+				BF9BFCE12739717900D27110 /* 70.wav in Resources */,
+				BF9BFCE82739718B00D27110 /* 30.wav in Resources */,
 				BFFB69A7269A14E70080DA62 /* Assets.xcassets in Resources */,
+				BF9BFCE02739717900D27110 /* 50.wav in Resources */,
 				BF512AD9269F62AE001C6BF2 /* shortBeep.wav in Resources */,
 				BF12FF22269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf in Resources */,
 				BFFB69A5269A14E30080DA62 /* Main.storyboard in Resources */,
+				BF9BFCED273971A300D27110 /* 20.wav in Resources */,
 				BFEB3CBC2727CBD1007FAB42 /* Overpass-ExtraBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -577,7 +610,6 @@
 				BF512AE526A07976001C6BF2 /* SecondGateViewModel.swift in Sources */,
 				BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */,
 				BF483061269AFA8E00C8CC6C /* RaceAppUser.swift in Sources */,
-				BFDBF0A226D94B19006BDDD6 /* LauncherViewController.swift in Sources */,
 				BF3BF16E2722D9AD00B4D28B /* AnimatedPulsView.swift in Sources */,
 				BFF011AB2730286200CE020A /* AboutViewController.swift in Sources */,
 				BFFB69C7269A2E330080DA62 /* Constants.swift in Sources */,

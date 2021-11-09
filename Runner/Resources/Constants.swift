@@ -106,4 +106,8 @@ struct Constants {
     
     // Notification Strings
     static let linkOccured = "linkOccured"
+    
+    // Sensor sensitivity
+    static let maxSensitivity: CGFloat = 0.025
+    static let minSensitivity: CGFloat = 0.4
 }

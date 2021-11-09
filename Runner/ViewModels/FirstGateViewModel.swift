@@ -123,7 +123,36 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
         //Related to playing sounds on count down
         if (counter % 10 == 0 && counter > 0) {
-            playSound(filename: "shortBeep")
+            if counter == 90 {
+                playSound(filename: "90")
+            }
+            else if counter == 80 {
+                playSound(filename: "80")
+            }
+            else if counter == 70 {
+                playSound(filename: "70")
+            }
+            else if counter == 60 {
+                playSound(filename: "60")
+            }
+            else if counter == 50 {
+                playSound(filename: "50")
+            }
+            else if counter == 40 {
+                playSound(filename: "40")
+            }
+            else if counter == 30 {
+                playSound(filename: "30")
+            }
+            else if counter == 20 {
+                playSound(filename: "20")
+            }
+            else if counter == 10 {
+                playSound(filename: "10")
+            }
+            else {
+                playSound(filename: "shortBeep")
+            }
             counter = counter - 1
         }
         else if (counter > 3) {
@@ -350,6 +379,10 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         }
         
         else {
+            var id = "00"
+            if let runID = run["run_id"] as? String {
+                id = runID
+            }
             return RunResults(time: 0.00,
                               minutes: "00",
                               seconds: "00",
@@ -358,7 +391,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                               averageSpeed: 0.00,
                               type: "Sprint",
                               date: Date(),
-                              runID: "00")
+                              runID: id)
         }
     }
     

@@ -191,6 +191,10 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         }
         
         else {
+            var id = "00"
+            if let runID = run["run_id"] as? String {
+                id = runID
+            }
             return RunResults(time: 0.00,
                               minutes: "00",
                               seconds: "00",
@@ -199,7 +203,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                               averageSpeed: 0.00,
                               type: "Sprint",
                               date: Date(),
-                              runID: "00")
+                              runID: id)
         }
     }
     

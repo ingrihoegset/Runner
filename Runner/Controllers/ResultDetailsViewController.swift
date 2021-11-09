@@ -16,6 +16,18 @@ class ResultDetailsViewController: UIViewController {
     
     var icon = "Favourite"
     
+    var selectedRun = RunResults(time: 0.0,
+                                 minutes: "00",
+                                 seconds: "00",
+                                 hundreths: "00",
+                                 distance: 0,
+                                 averageSpeed: 0.0,
+                                 type: "Sprint",
+                                 date: Date(),
+                                 runID: "runid")
+    
+    var allruns = [RunResults]()
+    
     var type = "Type"
     var distance = 0
     var time = "00:00"
@@ -233,14 +245,8 @@ class ResultDetailsViewController: UIViewController {
         lapsView.addSubview(tabGraphLabel)
         lapsView.addSubview(lapsChartView)
         
-        resultDetailsViewModel.getAllIdenticalRuns(type: type, distance: distance, completion: { [weak self]  success in
-            if success {
-                self?.setDataForWaveChart()
-            }
-            else {
-                
-            }
-        })
+        // Sorts all runs so that page shows all identical runs, calls sortedRuns when complete
+        resultDetailsViewModel.getAllIdenticalRunsLocally(selectedRun: selectedRun, allruns: allruns)
         
         setConstraints()
         startAnimation()
@@ -297,9 +303,9 @@ class ResultDetailsViewController: UIViewController {
     
     @objc func setDataForWaveChart() {
         var entries = [ChartDataEntry]()
+
         for i in 0...lapTimes.count - 1 {
             let entry = ChartDataEntry(x: Double(i+1), y: Double(lapTimes[i]) )
-            print(entry)
             entries.append(entry)
         }
         let set = LineChartDataSet(entries: entries)

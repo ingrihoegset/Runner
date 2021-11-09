@@ -39,12 +39,14 @@ class SetUpRunViewController: UIViewController {
             }
         }
         picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.tag = 0
         return picker
     }()
     
     let delayPicker: CustomPickerView = {
         let picker = CustomPickerView(subTitle: Constants.delayTime, unit: "s", number: 2, initialValue: 3)
         picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.tag = 0
         return picker
     }()
 
@@ -52,6 +54,7 @@ class SetUpRunViewController: UIViewController {
         let picker = CustomPickerView(subTitle: Constants.reactionPeriod, unit: "s", number: 2, initialValue: 5)
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.isHidden = true
+        picker.tag = 1
         return picker
     }()
     
@@ -183,6 +186,9 @@ class SetUpRunViewController: UIViewController {
         setUpRunViewModel.setUpRunViewModelDelegate = self
         onBoardScroll.onBoardingBubbleDelegate = self
         onBoardReaction.onBoardingBubbleDelegate = self
+        delayPicker.customPickerDelegate = self
+        reactionPicker.customPickerDelegate = self
+        lengthPicker.customPickerDelegate = self
         
         view.backgroundColor = Constants.mainColor
 
@@ -216,6 +222,7 @@ class SetUpRunViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
+        
         // Adjusts metrics on opening of view if units change
         if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
             if metricSystem == true {
@@ -365,6 +372,18 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
             self.onBoardReaction.isHidden = false
         }
     }
+    
+    func hideOnboardScroll() {
+        DispatchQueue.main.async {
+            self.onBoardScroll.isHidden = true
+        }
+    }
+    
+    func hideOnboardReaction() {
+        DispatchQueue.main.async {
+            self.onBoardReaction.isHidden = true
+        }
+    }
 }
 
 extension SetUpRunViewController: OnBoardingBubbleDelegate {
@@ -381,4 +400,18 @@ extension SetUpRunViewController: OnBoardingBubbleDelegate {
             setUpRunViewModel.reactionOnboarded()
         }
     }
+}
+
+extension SetUpRunViewController: CustomPickerDelegate {
+    
+    func pickerScrollOnboarded(sender: UIView) {
+
+        if sender.tag == 0 {
+            setUpRunViewModel.scrollOnboarded()
+        }
+        if sender.tag == 1 {
+            setUpRunViewModel.reactionOnboarded()
+        }
+    }
+    
 }

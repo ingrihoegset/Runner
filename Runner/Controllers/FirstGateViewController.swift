@@ -217,9 +217,9 @@ class FirstGateViewController: UIViewController {
         slider.maximumValue = 1
         slider.minimumValue = 0
         slider.isContinuous = false
-        // Must convert value to match 0 to 1 scale (from 0.6 to 0.075 scale for actual camera sensitivity)
+        // Must convert value to match 0 to 1 scale (from 0.4 to 0.025 scale for actual camera sensitivity)
         let value = (UserDefaults.standard.value(forKey: Constants.cameraSensitivity) as? CGFloat)!
-        let visualValue = (0.6 - value) / 0.525
+        let visualValue = (Constants.minSensitivity - value) / (Constants.minSensitivity - Constants.maxSensitivity)
         slider.setValue(Float(visualValue), animated: false)
         slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         
@@ -273,6 +273,7 @@ class FirstGateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = Constants.mainColor
         
         // Tells Gate whether user is running with one or two gates
@@ -360,8 +361,18 @@ class FirstGateViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
         self.firstGateViewModel.captureSession.startRunning()
         pulsingView.addAnimations()
+        
+        // Make sure screen doesnt close when camera is on. This is necessary so that the camera is active and analyzing during thee whole run
+        if UserRunSelections.shared.getIsRunningWithOneGate() == true {
+            UIApplication.shared.isIdleTimerDisabled = true
+        }
+        else {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -374,6 +385,9 @@ class FirstGateViewController: UIViewController {
             firstGateViewModel.removeEndOfRunListener()
             firstGateViewModel.removeCurrentRunOngoingListener()
         }
+        
+        // Make sure screen locking goes back into action, in order to not use too much battery power
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     // Using setConstraints because didlayoutsubview caused memory leak after i implemented the live counter.
@@ -523,6 +537,9 @@ class FirstGateViewController: UIViewController {
         // Hide sensor if showing
         showslider = true
         sensitivitySliderView.isHidden = true
+        
+        // Onboard Finish line
+        firstGateViewModel.hasOnboardedFinishLineOneUser()
     }
     
     @objc private func cancelRun() {
@@ -665,10 +682,10 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
     }
     
     @objc func sliderValueChanged(_ sender: UISlider) {
-        let currentValue = 0.6 - CGFloat(sender.value) * 0.525
+        let currentValue = Constants.minSensitivity - CGFloat(sender.value) * (Constants.minSensitivity - Constants.maxSensitivity)
         UserDefaults.standard.setValue(CGFloat(currentValue), forKey: Constants.cameraSensitivity)
         // Tell breakobserver to update camera sensitivity
-        print("changed to \(UserDefaults.standard.value(forKey: Constants.cameraSensitivity))")
+        print("Changed to \(UserDefaults.standard.value(forKey: Constants.cameraSensitivity))")
         
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.cameraSensitivity), object: nil)
     }

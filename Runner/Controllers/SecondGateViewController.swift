@@ -115,9 +115,9 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         slider.maximumValue = 1
         slider.minimumValue = 0
         slider.isContinuous = false
-        // Must convert value to match 0 to 1 scale (from 0.6 to 0.075 scale for actual camera sensitivity)
+        // Must convert value to match 0 to 1 scale (from 0.4 to 0.025 scale for actual camera sensitivity)
         let value = (UserDefaults.standard.value(forKey: Constants.cameraSensitivity) as? CGFloat)!
-        let visualValue = (0.6 - value) / 0.525
+        let visualValue = (Constants.minSensitivity - value) / (Constants.minSensitivity - Constants.maxSensitivity)
         slider.setValue(Float(visualValue), animated: false)
         slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         
@@ -251,6 +251,9 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         super.viewDidAppear(true)
         self.checkCamera()
         //self.secondGateViewModel.goToCamera()
+        
+        // Make sure screen doesnt lock while run is ongoing. Camera needs to be available during complete run
+        UIApplication.shared.isIdleTimerDisabled = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -261,6 +264,9 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
             secondGateViewModel.removeEndOfRunListener()
             secondGateViewModel.removeCurrentRunOngoingListener()
         }
+        
+        // Allow screen to lock again - in order to limit battery impact
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -357,7 +363,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     @objc func sliderValueChanged(_ sender: UISlider) {
-        let currentValue = 0.6 - CGFloat(sender.value) * 0.525
+        let currentValue = Constants.minSensitivity - CGFloat(sender.value) * (Constants.minSensitivity - Constants.maxSensitivity)
         UserDefaults.standard.setValue(CGFloat(currentValue), forKey: Constants.cameraSensitivity)
         // Tell breakobserver to update camera sensitivity
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.cameraSensitivity), object: nil)

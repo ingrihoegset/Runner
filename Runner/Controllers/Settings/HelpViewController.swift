@@ -122,7 +122,6 @@ class HelpViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(false)
+        super.viewDidAppear(true)
     }
-
 }
