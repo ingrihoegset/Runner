@@ -14,7 +14,7 @@ protocol SecondGateViewModelDelegate: AnyObject {
     func updateRunningAnimtion(color: CGColor, label: String)
     func hasOnboardedFinsihLine()
     func showOnboardingFinishLine()
-    func showRunResult(runresult: RunResults)
+    func showRunResult(runresult: RunResults, photoFinishImage: UIImage)
     func dismissResultsVC()
     func cameraRestricted()
     func cameraDenied()
@@ -34,6 +34,9 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     var breakTime: Double = 0
     var counter = 0
     var isRunning = false
+    
+    //Photo finish image
+    var photoFinishImage = UIImage()
     
     override init() {
         super.init()
@@ -83,9 +86,21 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                     breakObserver.recentFramesArray = []
                     //self.secondGateViewModelDelegate?.runHasEnded()
                     counter = 0
+                    
+                    // Get photofinish image
+                    getPhotoFinish(pixelBuffer: pixelBuffer!)
                 }
             }
         }
+    }
+    
+    private func getPhotoFinish(pixelBuffer: CVImageBuffer) {
+        let ciimage = CIImage(cvPixelBuffer: pixelBuffer)
+        let context = CIContext(options: nil)
+        let cgImage = context.createCGImage(ciimage, from: ciimage.extent)!
+        
+        print(UIDevice.current.orientation.isPortrait)
+        photoFinishImage = UIImage(cgImage: cgImage, scale: 1, orientation: .right)
     }
     
     private func listenForEndOfCurrentRun() {
@@ -102,7 +117,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                             let runResult = strongSelf.getCurrentResult(run: runData)
                             
                             // Calls on home VC to open results VC
-                            strongSelf.secondGateViewModelDelegate?.showRunResult(runresult: runResult)
+                            strongSelf.secondGateViewModelDelegate?.showRunResult(runresult: runResult, photoFinishImage: strongSelf.photoFinishImage)
                             
                             // Clean up after completed run
                             DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { _ in

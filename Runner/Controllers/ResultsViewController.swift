@@ -11,6 +11,7 @@ import Social
 class ResultsViewController: UIViewController {
     
     var result: RunResults?
+    var photoFinishImage = UIImage()
     
     deinit {
         print("DESTROYED RESULT PAGE")
@@ -232,6 +233,28 @@ class ResultsViewController: UIViewController {
         return button
     }()
     
+    let photoFinishButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.borderWidth = 2
+        button.layer.borderColor = Constants.mainColor?.cgColor
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(showPhotoFinishImage), for: .touchUpInside)
+        return button
+    }()
+    
+    let photoFinishDisplayView: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = Constants.smallCornerRadius
+        button.clipsToBounds = true
+        button.contentMode = .scaleAspectFill
+        button.layer.masksToBounds = true
+        button.alpha = 0
+        button.addTarget(self, action: #selector(hidePhotoFinish), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -271,6 +294,12 @@ class ResultsViewController: UIViewController {
         detailComponent2.addSubview(raceSpeedResult)
         
         view.addSubview(shareButtonView)
+        
+        view.addSubview(photoFinishButton)
+        photoFinishButton.setImage(photoFinishImage, for: .normal)
+        
+        view.addSubview(photoFinishDisplayView)
+        photoFinishDisplayView.setImage(photoFinishImage, for: .normal)
         
         setConstraints()
         startAnimation()
@@ -390,6 +419,18 @@ class ResultsViewController: UIViewController {
         shareButtonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         shareButtonView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         shareButtonView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.5).isActive = true
+        
+        photoFinishButton.topAnchor.constraint(equalTo: resultContainer.topAnchor, constant: Constants.sideMargin).isActive = true
+        photoFinishButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        photoFinishButton.trailingAnchor.constraint(equalTo: resultContainer.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        photoFinishButton.widthAnchor.constraint(equalTo: photoFinishButton.heightAnchor).isActive = true
+        photoFinishButton.layer.cornerRadius = Constants.mainButtonSize / 2
+        
+        photoFinishDisplayView.topAnchor.constraint(equalTo: resultContainer.topAnchor).isActive = true
+        photoFinishDisplayView.bottomAnchor.constraint(equalTo: detailComponent2.bottomAnchor).isActive = true
+        photoFinishDisplayView.leadingAnchor.constraint(equalTo: resultContainer.leadingAnchor).isActive = true
+        photoFinishDisplayView.trailingAnchor.constraint(equalTo: resultContainer.trailingAnchor).isActive = true
+        photoFinishDisplayView.layer.cornerRadius = Constants.smallCornerRadius
     
     }
     
@@ -412,9 +453,24 @@ class ResultsViewController: UIViewController {
     
     @objc private func shareResultOnSoMe() {
         let image = drawImagesAndText()
-        let imageToShare = [image]
         let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityController, animated: true, completion: nil)
+    }
+    
+    @objc private func showPhotoFinishImage() {
+        UIView.animate(withDuration: 0.5, animations: {
+            DispatchQueue.main.async {
+                self.photoFinishDisplayView.alpha = 1
+            }
+        })
+    }
+    
+    @objc private func hidePhotoFinish() {
+        UIView.animate(withDuration: 0.5, animations: {
+            DispatchQueue.main.async {
+                self.photoFinishDisplayView.alpha = 0
+            }
+        })
     }
     
     @objc private func dismissSelf() {
@@ -433,8 +489,8 @@ class ResultsViewController: UIViewController {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.alignment = .left
 
-            let mouse = UIImage(named: "SprintLady")
-            mouse?.draw(at: CGPoint(x: 0, y: 0))
+            let mouse = photoFinishImage
+            mouse.draw(at: CGPoint(x: 0, y: 0))
             
             guard let result = result else {
                 raceTimeHundreths.text = "00"

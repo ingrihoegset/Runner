@@ -380,10 +380,11 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
         }
     }
     
-    func showRunResult(runresult: RunResults) {
+    func showRunResult(runresult: RunResults, photoFinishImage: UIImage) {
         DispatchQueue.main.async {
             let vc = ResultsViewController()
             vc.result = runresult
+            vc.photoFinishImage = photoFinishImage
             let navVC = UINavigationController(rootViewController: vc)
             self.present(navVC, animated: true, completion: {
                 self.secondGateViewModel.captureSession.startRunning()
