@@ -19,7 +19,7 @@ protocol FirstGateViewModelDelegate: AnyObject {
     func hasOnboardedFinishLineOneUser()
     func showOnboardStartLineTwoUsers()
     func hasOnboardedStartLineTwoUsers()
-    func showRunResult(runresult: RunResults)
+    func showRunResult(runresult: RunResults, photoFinishImage: UIImage)
     func cameraRestricted()
     func cameraDenied()
 }
@@ -39,6 +39,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     var breakTime: Double = 0
     var videoCounter = 0
     var isRunning = false
+    
+    //Photo finish image
+    var photoFinishImage = UIImage()
     
     public static let dateFormatterShort: DateFormatter = {
         let formatter = DateFormatter()
@@ -310,7 +313,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                             let runResult = strongSelf.getCurrentResult(run: runData)
                             
                             // Calls on home VC to open results VC
-                            strongSelf.firstGateViewModelDelegate?.showRunResult(runresult: runResult)
+                            strongSelf.firstGateViewModelDelegate?.showRunResult(runresult: runResult, photoFinishImage: strongSelf.photoFinishImage)
                             
                             // Clean up after completed run
                             DatabaseManager.shared.cleanUpAfterRunCompleted(completion: { _ in
@@ -697,9 +700,20 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                     resetShowTimer()
                     breakObserver.recentFramesArray = []
                     videoCounter = 0
+                    
+                    // Get photofinish image
+                    getPhotoFinish(pixelBuffer: pixelBuffer!)
                 }
             }
         }
+    }
+    
+    private func getPhotoFinish(pixelBuffer: CVImageBuffer) {
+        let ciimage = CIImage(cvPixelBuffer: pixelBuffer)
+        let context = CIContext(options: nil)
+        let cgImage = context.createCGImage(ciimage, from: ciimage.extent)!
+        
+        photoFinishImage = UIImage(cgImage: cgImage, scale: 1, orientation: .right)
     }
     
     func falseStartDected() {

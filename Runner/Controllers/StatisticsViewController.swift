@@ -203,7 +203,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     /// Views related to onboarding
     let onBoardClickMe: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Click me!", pointerPlacement: "topMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Click me!", pointerPlacement: "topMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.isHidden = true
         return bubble

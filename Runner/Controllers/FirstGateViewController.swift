@@ -169,7 +169,7 @@ class FirstGateViewController: UIViewController {
     
     /// Views related to onboarding
     let onBoardFinishLine: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at your finish line and start count down. Make sure you have enough time to get into position!", pointerPlacement: "topMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at your finish line and start count down. Make sure you have enough time to get into position!", pointerPlacement: "topMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 0
         bubble.isHidden = true
@@ -177,7 +177,7 @@ class FirstGateViewController: UIViewController {
     }()
     
     let onBoardConnectedStart: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Place your phone at starting line and listen for starting signal!", pointerPlacement: "bottomMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Place your phone at starting line and listen for starting signal!", pointerPlacement: "bottomMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 1
         bubble.isHidden = true
@@ -663,10 +663,11 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
         }
     }
     
-    func showRunResult(runresult: RunResults) {
+    func showRunResult(runresult: RunResults, photoFinishImage: UIImage) {
         DispatchQueue.main.async {
             let vc = ResultsViewController()
             vc.result = runresult
+            vc.photoFinishImage = photoFinishImage
             let navVC = UINavigationController(rootViewController: vc)
             self.present(navVC, animated: true)
         }

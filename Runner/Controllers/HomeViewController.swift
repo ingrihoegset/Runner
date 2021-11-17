@@ -272,7 +272,7 @@ class HomeViewController: UIViewController {
     
     /// Views related to onboarding
     let onBoardConnect: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Connect to partner to add second timing gate and unlock more features!", pointerPlacement: "topMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Connect to partner to add second timing gate and unlock more features!", pointerPlacement: "topMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.isHidden = true
         bubble.tag = 0
@@ -280,7 +280,7 @@ class HomeViewController: UIViewController {
     }()
     
     let onBoardEndGate: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Open end gate to create a finish line!", pointerPlacement: "bottomMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Open end gate to create a finish line!", pointerPlacement: "bottomMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.isHidden = true
         bubble.tag = 1

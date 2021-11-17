@@ -16,6 +16,7 @@ class OnBoardingBubble: UIView {
     weak var onBoardingBubbleDelegate: OnBoardingBubbleDelegate?
     
     var pointerDirection = "topLeft"
+    var dismisser = true
     
     let closeButton: UIButton = {
         let button = UIButton()
@@ -60,18 +61,21 @@ class OnBoardingBubble: UIView {
         return view
     }()
 
-    init(frame: CGRect, title: String, pointerPlacement: String) {
+    init(frame: CGRect, title: String, pointerPlacement: String, dismisser: Bool) {
         super.init(frame: frame)
+        self.dismisser = dismisser
         self.pointerDirection = pointerPlacement
         self.backgroundColor = .clear
         self.addSubview(backgroundView)
         self.addSubview(pointerView)
         backgroundView.addSubview(label)
-        backgroundView.addSubview(closeButton)
+        if dismisser == true {
+            backgroundView.addSubview(closeButton)
+        }
         self.sendSubviewToBack(pointerView)
         label.text = title
-        
     }
+    
     
     override func layoutSubviews() {
         
@@ -112,15 +116,23 @@ class OnBoardingBubble: UIView {
         backgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         backgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         
-        closeButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor).isActive = true
-        closeButton.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
-        closeButton.heightAnchor.constraint(equalTo: label.heightAnchor).isActive = true
-        closeButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        
-        label.topAnchor.constraint(equalTo: backgroundView.topAnchor).isActive = true
-        label.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10).isActive = true
-        label.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor).isActive = true
+        if dismisser == true {
+            closeButton.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor).isActive = true
+            closeButton.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
+            closeButton.heightAnchor.constraint(equalTo: label.heightAnchor).isActive = true
+            closeButton.widthAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+            
+            label.topAnchor.constraint(equalTo: backgroundView.topAnchor).isActive = true
+            label.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor).isActive = true
+            label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10).isActive = true
+            label.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor).isActive = true
+        }
+        else {
+            label.topAnchor.constraint(equalTo: backgroundView.topAnchor).isActive = true
+            label.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor).isActive = true
+            label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 10).isActive = true
+            label.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor).isActive = true
+        }
     }
     
     required init?(coder: NSCoder) {

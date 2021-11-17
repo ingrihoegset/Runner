@@ -242,19 +242,7 @@ class ResultsViewController: UIViewController {
         button.addTarget(self, action: #selector(showPhotoFinishImage), for: .touchUpInside)
         return button
     }()
-    
-    let photoFinishDisplayView: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = Constants.smallCornerRadius
-        button.clipsToBounds = true
-        button.contentMode = .scaleAspectFill
-        button.layer.masksToBounds = true
-        button.alpha = 0
-        button.addTarget(self, action: #selector(hidePhotoFinish), for: .touchUpInside)
-        return button
-    }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -262,7 +250,7 @@ class ResultsViewController: UIViewController {
         title = "Run completed!"
         
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorWhite]
+                                                                         NSAttributedString.Key.foregroundColor: Constants.mainColor]
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
@@ -275,6 +263,7 @@ class ResultsViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.tintColor = Constants.mainColor
         
         view.backgroundColor = Constants.accentColorDark
         
@@ -297,9 +286,6 @@ class ResultsViewController: UIViewController {
         
         view.addSubview(photoFinishButton)
         photoFinishButton.setImage(photoFinishImage, for: .normal)
-        
-        view.addSubview(photoFinishDisplayView)
-        photoFinishDisplayView.setImage(photoFinishImage, for: .normal)
         
         setConstraints()
         startAnimation()
@@ -425,13 +411,6 @@ class ResultsViewController: UIViewController {
         photoFinishButton.trailingAnchor.constraint(equalTo: resultContainer.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         photoFinishButton.widthAnchor.constraint(equalTo: photoFinishButton.heightAnchor).isActive = true
         photoFinishButton.layer.cornerRadius = Constants.mainButtonSize / 2
-        
-        photoFinishDisplayView.topAnchor.constraint(equalTo: resultContainer.topAnchor).isActive = true
-        photoFinishDisplayView.bottomAnchor.constraint(equalTo: detailComponent2.bottomAnchor).isActive = true
-        photoFinishDisplayView.leadingAnchor.constraint(equalTo: resultContainer.leadingAnchor).isActive = true
-        photoFinishDisplayView.trailingAnchor.constraint(equalTo: resultContainer.trailingAnchor).isActive = true
-        photoFinishDisplayView.layer.cornerRadius = Constants.smallCornerRadius
-    
     }
     
     private func setResults() {
@@ -452,25 +431,18 @@ class ResultsViewController: UIViewController {
     }
     
     @objc private func shareResultOnSoMe() {
-        let image = drawImagesAndText()
-        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-        present(activityController, animated: true, completion: nil)
+        let vc = EditPhotoViewController()
+        vc.photoFinishImage = photoFinishImage
+        vc.result = result
+        let backItem = UIBarButtonItem()
+        backItem.title = "Back"
+        navigationItem.backBarButtonItem = backItem
+        vc.navigationController?.navigationItem.backBarButtonItem = backItem
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func showPhotoFinishImage() {
-        UIView.animate(withDuration: 0.5, animations: {
-            DispatchQueue.main.async {
-                self.photoFinishDisplayView.alpha = 1
-            }
-        })
-    }
-    
-    @objc private func hidePhotoFinish() {
-        UIView.animate(withDuration: 0.5, animations: {
-            DispatchQueue.main.async {
-                self.photoFinishDisplayView.alpha = 0
-            }
-        })
+       shareResultOnSoMe()
     }
     
     @objc private func dismissSelf() {
@@ -480,7 +452,9 @@ class ResultsViewController: UIViewController {
     // Creates the SoME post
     func drawImagesAndText() -> UIImage {
         
-        let size = 512
+        let size = 1024
+        
+        let resizedImage = photoFinishImage.resized(to: CGSize(width: size, height: size))
         
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
 
@@ -489,7 +463,7 @@ class ResultsViewController: UIViewController {
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.alignment = .left
 
-            let mouse = photoFinishImage
+            let mouse = resizedImage
             mouse.draw(at: CGPoint(x: 0, y: 0))
             
             guard let result = result else {
@@ -577,6 +551,33 @@ class ResultsViewController: UIViewController {
             attributedSpeedString.draw(with: CGRect(x: 32, y: middel + 100 + spacing, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
         }
         return img
+    }
+}
+
+/// All code assosiated with cropping photo finish before sharing
+extension ResultsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    /// Called when user cancels the taking of a picture
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    /// Called when user takes a photo or selects a photo
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+        
+        guard let selectedImage = photoFinishImage as? UIImage else {
+            return
+        }
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func presentPhotoPicker() {
+        let vc = UIImagePickerController()
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
     }
 }
 

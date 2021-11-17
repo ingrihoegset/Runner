@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SetUpRunViewController: UIViewController {
+class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
     
     var setUpRunViewModel = SetUpRunViewModel()
     
@@ -164,18 +164,28 @@ class SetUpRunViewController: UIViewController {
     
     /// Views related to onboarding
     let onBoardScroll: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Scroll me!", pointerPlacement: "topLeft")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Scroll us!", pointerPlacement: "topMiddle", dismisser: false)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 0
-        bubble.isHidden = true
+        bubble.alpha = 0
         return bubble
     }()
+    
     let onBoardReaction: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Select interval for random starting signal!", pointerPlacement: "bottomLeft")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Select interval for random starting signal!", pointerPlacement: "bottomLeft", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 1
         bubble.isHidden = true
         return bubble
+    }()
+    
+    let onboardBackground: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.lightGray?.withAlphaComponent(0.6)
+        view.alpha = 0
+        view.isUserInteractionEnabled = true
+        return view
     }()
     
     override func viewDidLoad() {
@@ -192,12 +202,6 @@ class SetUpRunViewController: UIViewController {
         
         view.backgroundColor = Constants.mainColor
 
-        view.addSubview(topView)
-        
-        topView.addSubview(delayPicker)
-        topView.addSubview(lengthPicker)
-        topView.addSubview(reactionPicker)
-        
         view.addSubview(falseStartView)
         view.addSubview(falseViewLabel)
 
@@ -212,16 +216,31 @@ class SetUpRunViewController: UIViewController {
         // Adjusts view for selected type of run
         setUpRunViewModel.selectedRunType()
         setUpRunViewModel.isConnectedToParter()
-        setUpRunViewModel.showScrollOnboarding()
         setUpRunViewModel.showReactionOnboarding()
         
+        view.addSubview(topView)
+        
+        view.addSubview(lengthPicker)
+        view.addSubview(reactionPicker)
+        view.addSubview(onboardBackground)
+       // topView.addSubview(onboardBackground)
+        view.addSubview(delayPicker)
+        
+        onboardBackground.bringSubviewToFront(delayPicker)
+
         //Add onboarding view
         view.addSubview(onBoardScroll)
         view.addSubview(onBoardReaction)
+        
+        // Will show onboard scroll if not onboarded yet
+        setUpRunViewModel.showScrollOnboardingFirstTime()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
+        
+        print(lengthPicker.frame)
+        print(lengthPicker.detail1.frame)
         
         // Adjusts metrics on opening of view if units change
         if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
@@ -259,10 +278,15 @@ class SetUpRunViewController: UIViewController {
         lengthPicker.heightAnchor.constraint(equalTo: topView.safeAreaLayoutGuide.heightAnchor, multiplier: 0.3).isActive = true
         lengthPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        onBoardScroll.leadingAnchor.constraint(equalTo: lengthPicker.detail3.leadingAnchor).isActive = true
-        onBoardScroll.topAnchor.constraint(equalTo: lengthPicker.detail3.bottomAnchor).isActive = true
+        onboardBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        onboardBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        onboardBackground.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        onboardBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        onBoardScroll.centerXAnchor.constraint(equalTo: delayPicker.detail2.centerXAnchor).isActive = true
+        onBoardScroll.topAnchor.constraint(equalTo: delayPicker.detail2.bottomAnchor, constant: 5).isActive = true
         onBoardScroll.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        onBoardScroll.trailingAnchor.constraint(equalTo: lengthPicker.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        onBoardScroll.widthAnchor.constraint(equalTo: delayPicker.widthAnchor, multiplier: 0.5).isActive = true
         
         reactionPicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         reactionPicker.topAnchor.constraint(equalTo: lengthPicker.bottomAnchor, constant: Constants.sideMargin).isActive = true
@@ -270,7 +294,7 @@ class SetUpRunViewController: UIViewController {
         reactionPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
         onBoardReaction.leadingAnchor.constraint(equalTo: reactionPicker.detail2.leadingAnchor).isActive = true
-        onBoardReaction.bottomAnchor.constraint(equalTo: reactionPicker.detail2.topAnchor).isActive = true
+        onBoardReaction.bottomAnchor.constraint(equalTo: reactionPicker.detail2.topAnchor, constant: -5).isActive = true
         onBoardReaction.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
         onBoardReaction.trailingAnchor.constraint(equalTo: reactionPicker.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
@@ -367,6 +391,17 @@ class SetUpRunViewController: UIViewController {
 }
 
 extension SetUpRunViewController: SetUpRunViewModelDelegate {
+    
+    func showScrollOnboardingFirstTime() {
+        animateOnboardScrollFirstTime()
+        onBoardScroll.isHidden = false
+    }
+    
+    func hideScrollOnboarding() {
+        onBoardScroll.isHidden = true
+        animateHideOnboardScroll()
+    }
+    
     func showReactionRun() {
         reactionPicker.isHidden = false
     }
@@ -376,21 +411,9 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
         falseStartView.isHidden = false
     }
     
-    func showOnboardScroll() {
-        DispatchQueue.main.async {
-            self.onBoardScroll.isHidden = false
-        }
-    }
-    
     func showReactionOnboarding() {
         DispatchQueue.main.async {
             self.onBoardReaction.isHidden = false
-        }
-    }
-    
-    func hideOnboardScroll() {
-        DispatchQueue.main.async {
-            self.onBoardScroll.isHidden = true
         }
     }
     
@@ -398,6 +421,42 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
         DispatchQueue.main.async {
             self.onBoardReaction.isHidden = true
         }
+    }
+    
+    func animateOnboardScroll() {
+        UIView.animate(withDuration: 0.4,
+            animations: {
+                self.onBoardScroll.transform = CGAffineTransform(scaleX: 1.04, y: 1.04)
+                self.onBoardScroll.alpha = 1
+            },
+            completion: { _ in
+                UIView.animate(withDuration: 0.15,
+                    animations: {
+                        self.onBoardScroll.transform = CGAffineTransform.identity
+                    })
+            })
+    }
+    
+    func animateOnboardScrollFirstTime() {
+        UIView.animate(withDuration: 0.4,
+            animations: {
+                self.onboardBackground.alpha = 1
+                self.onBoardScroll.transform = CGAffineTransform(scaleX: 1.04, y: 1.04)
+                self.onBoardScroll.alpha = 1
+            },
+            completion: { _ in
+                UIView.animate(withDuration: 0.15,
+                    animations: {
+                        self.onBoardScroll.transform = CGAffineTransform.identity
+                    })
+            })
+    }
+    
+    func animateHideOnboardScroll() {
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.onboardBackground.alpha = 0
+            })
     }
 }
 
@@ -428,5 +487,4 @@ extension SetUpRunViewController: CustomPickerDelegate {
             setUpRunViewModel.reactionOnboarded()
         }
     }
-    
 }

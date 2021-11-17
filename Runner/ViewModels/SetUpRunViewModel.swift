@@ -11,10 +11,10 @@ import Foundation
 protocol SetUpRunViewModelDelegate: AnyObject {
     func showReactionRun()
     func showLinkedFeatures(isRunningWithOneGate: Bool)
-    func showOnboardScroll()
     func showReactionOnboarding()
-    func hideOnboardScroll()
     func hideOnboardReaction()
+    func showScrollOnboardingFirstTime()
+    func hideScrollOnboarding()
 }
 
 class SetUpRunViewModel {
@@ -58,25 +58,21 @@ class SetUpRunViewModel {
         print("False selected ", selectionModel.getUserSelectedFalseStart())
     }
     
-    /// Show onboarding elements
-    func showScrollOnboarding() {
-        let onboardScroll = UserDefaults.standard.bool(forKey: Constants.hasOnBoardedScroll)
-        if onboardScroll == false {
-            setUpRunViewModelDelegate?.showOnboardScroll()
-        }
-        else {
-            setUpRunViewModelDelegate?.hideOnboardScroll()
+    func showScrollOnboardingFirstTime() {
+        if UserDefaults.standard.bool(forKey: Constants.hasOnBoardedScroll) == false {
+            setUpRunViewModelDelegate?.showScrollOnboardingFirstTime()
         }
     }
     
     func scrollOnboarded() {
         UserDefaults.standard.set(true, forKey: Constants.hasOnBoardedScroll)
-        showScrollOnboarding()
+        setUpRunViewModelDelegate?.hideScrollOnboarding()
         showReactionOnboarding()
     }
     
     func reactionOnboarded() {
         setUpRunViewModelDelegate?.hideOnboardReaction()
+        setUpRunViewModelDelegate?.hideScrollOnboarding()
         UserDefaults.standard.set(true, forKey: Constants.hasOnBoardedReaction)
     }
     

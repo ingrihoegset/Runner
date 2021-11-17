@@ -72,7 +72,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     
     /// Views related to onboarding
     let onBoardPlace: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at finish line. Set pointer so the camera can see you run across the finish line!", pointerPlacement: "topMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at finish line. Set pointer so the camera can see you run across the finish line!", pointerPlacement: "topMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 0
         bubble.isHidden = true

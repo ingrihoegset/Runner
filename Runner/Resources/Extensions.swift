@@ -173,3 +173,47 @@ extension UIViewController {
     }
 }
 
+extension UIImage {
+    public func resized(to target: CGSize) -> UIImage {
+        let ratio = min(
+            target.height / size.height, target.width / size.width
+        )
+        let new = CGSize(
+            width: size.width * ratio, height: size.height * ratio
+        )
+        let renderer = UIGraphicsImageRenderer(size: new)
+        return renderer.image { _ in
+            self.draw(in: CGRect(origin: .zero, size: new))
+        }
+    }
+}
+
+extension UIImageView {
+    
+    // MARK: - Methods
+    func realImageRect() -> CGRect {
+        let imageViewSize = self.frame.size
+        let imgSize = self.image?.size
+        
+        guard let imageSize = imgSize else {
+            return CGRect.zero
+        }
+        
+        let scaleWidth = imageViewSize.width / imageSize.width
+        let scaleHeight = imageViewSize.height / imageSize.height
+        let aspect = fmin(scaleWidth, scaleHeight)
+        
+        var imageRect = CGRect(x: 0, y: 0, width: imageSize.width * aspect, height: imageSize.height * aspect)
+        
+        // Center image
+        imageRect.origin.x = (imageViewSize.width - imageRect.size.width) / 2
+        imageRect.origin.y = (imageViewSize.height - imageRect.size.height) / 2
+        
+        // Add imageView offset
+        imageRect.origin.x += self.frame.origin.x
+        imageRect.origin.y += self.frame.origin.y
+        
+        return imageRect
+    }
+}
+

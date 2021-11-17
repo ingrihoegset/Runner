@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import JGProgressHUD
 import AVFoundation
 
 class RoundedSegmentedControl: UISegmentedControl {
@@ -40,8 +39,6 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     
     //Create capture session
     let session = AVCaptureSession()
-    
-    private let spinner = JGProgressHUD()
     
     let segmentControlPanel: UIView = {
         let view = UIView()
@@ -144,7 +141,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     
     /// Views related to onboarding
     let onBoardConnect: OnBoardingBubble = {
-        let bubble = OnBoardingBubble(frame: .zero, title: "Let partner scan your QR-code to add a second running gate.", pointerPlacement: "topMiddle")
+        let bubble = OnBoardingBubble(frame: .zero, title: "Let partner scan your QR-code to add a second running gate.", pointerPlacement: "topMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.isHidden = true
         return bubble

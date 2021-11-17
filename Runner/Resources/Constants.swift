@@ -74,6 +74,8 @@ struct Constants {
     static let resultFontXSmall = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 22)
     static let pickerFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 45)
     
+    static let hugeFont = (UIFont(name: "BarlowSemiCondensed-Light", size: 400))
+    
     // Set race VC texts
     static let noOfLaps = "Number of laps"
     static let lengthOfLap = "Distance to gate"
