@@ -18,18 +18,18 @@ class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
     let viewWidth = Constants.widthOfDisplay
     let viewHeight = Constants.heightOfDisplay * 0.75
     
+    let shareImageLayer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.minimumZoomScale = 1
         scrollView.maximumZoomScale = 5
         return scrollView
-    }()
-    
-    let containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }()
     
     let imageView: UIImageView = {
@@ -45,6 +45,24 @@ class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .clear
         return imageView
+    }()
+    
+    // Represents part of view that is analyze in breakobserver
+    let focusView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor?.withAlphaComponent(0.3)
+        view.layer.borderWidth = Constants.borderWidth
+        view.layer.borderColor = Constants.contrastColor?.cgColor
+        return view
+    }()
+    
+    let focusImageView: UIImageView = {
+        let view = UIImageView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.image = UIImage(named: "Focus")?.withTintColor(Constants.contrastColor!)
+        return view
     }()
     
     let shareButtonView: LargeImageButton = {
@@ -76,11 +94,14 @@ class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.delegate = self
         
-        view.addSubview(scrollView)
+        view.addSubview(shareImageLayer)
+        shareImageLayer.addSubview(scrollView)
         scrollView.addSubview(imageView)
         imageView.image = photoFinishImage
         view.addSubview(shareButtonView)
-        view.addSubview(textResultImageView)
+        shareImageLayer.addSubview(textResultImageView)
+        shareImageLayer.addSubview(focusView)
+        focusView.addSubview(focusImageView)
         
         let resultImage = drawImagesAndText(image: textResultImage)
         textResultImageView.image = resultImage
@@ -92,6 +113,11 @@ class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
     }
     
     override func viewDidLayoutSubviews() {
+        shareImageLayer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        shareImageLayer.bottomAnchor.constraint(equalTo: shareButtonView.topAnchor, constant: -Constants.sideMargin).isActive = true
+        shareImageLayer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        shareImageLayer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
         scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: shareButtonView.topAnchor, constant: -Constants.sideMargin).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
@@ -113,12 +139,27 @@ class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
         shareButtonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         shareButtonView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         shareButtonView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.5).isActive = true
+        
+        // Must match size of focus frame in breakobserver
+        let width = Constants.widthOfDisplay / 6
+          
+        focusView.centerYAnchor.constraint(equalTo: shareImageLayer.centerYAnchor).isActive = true
+        focusView.centerXAnchor.constraint(equalTo: shareImageLayer.centerXAnchor).isActive = true
+        focusView.widthAnchor.constraint(equalToConstant: width).isActive = true
+        focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
+        focusView.layer.cornerRadius = width / 2
+        
+        focusImageView.centerYAnchor.constraint(equalTo: focusView.centerYAnchor).isActive = true
+        focusImageView.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
+        focusImageView.widthAnchor.constraint(equalTo: focusView.widthAnchor).isActive = true
+        focusImageView.heightAnchor.constraint(equalTo: focusView.heightAnchor).isActive = true
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
     
+    // Creates imageg out of what is in a view
     func image(with view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0.0)
         defer { UIGraphicsEndImageContext() }
@@ -145,9 +186,8 @@ class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
         imageView.image = croppedImage
         scrollView.zoomScale = 1
 
-        let viewimage = image(with: view)
+        let viewimage = image(with: shareImageLayer)
     
-        
         //let image = drawImagesAndText(image: croppedImage)
         let activityController = UIActivityViewController(activityItems: [viewimage], applicationActivities: nil)
         present(activityController, animated: true, completion: nil)
