@@ -13,6 +13,7 @@ protocol LinkViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage)
     func scanOnboarded()
     func showOnboardConnect()
+    func failedToConnectError()
 }
 
 class LinkToPartnerViewModel {
@@ -23,6 +24,47 @@ class LinkToPartnerViewModel {
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(newLinkOccured), name: NSNotification.Name(rawValue: Constants.linkOccured), object: nil)
+    }
+    
+    func checkIfQRRepresentsUser(partnerSafeEmail: String) {
+        DatabaseManager.shared.getAllUsers(completion: { [weak self ] result in
+            switch result {
+            case .success(let users):
+                // If we find  match in the database, make a link with user
+                if self?.filterUsers(with: partnerSafeEmail, users: users) == true {
+                    self?.createNewLink(safePartnerEmail: partnerSafeEmail)
+                }
+                else {
+                    // Show error that couldnt find user
+                    self?.linkViewModelDelegate?.failedToConnectError()
+                }
+                
+            case .failure(let error):
+                print("Failed to download url: \(error)")
+                // Show error that couldnt find user
+                self?.linkViewModelDelegate?.failedToConnectError()
+            }
+        })
+    }
+    
+    func filterUsers(with term: String, users: [[String: String]]) -> Bool {
+        
+        let result: [[String: String]] = users.filter({
+            guard let email = $0["email"] else {
+                return false
+            }
+            // Returns true if there is an email that matches the term that was passed in. Results will contain the match
+            return email.hasPrefix(term.lowercased())
+        
+        })
+        if result.isEmpty {
+            // No user found in database to  match QR
+            return false
+        }
+        else {
+            //Found match in database for user
+            return true
+        }
     }
     
     func createNewLink(safePartnerEmail: String) {

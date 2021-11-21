@@ -25,6 +25,10 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     
     let linkViewModel = LinkToPartnerViewModel()
     
+    // For all users of app to check if QR represents a user of the app or just random qr
+    private var users = [[String: String]]()
+    private var hasFetchedUsers = false
+    
     var startControlSegment = 0
     
     var video = AVCaptureVideoPreviewLayer()
@@ -297,6 +301,13 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         session.stopRunning()
     }
     
+    // To check that QR represents a user of the app
+    func searchUsers(query: String) {
+        // check if the array has firebase results
+        // if it does, filter
+        // if it doesnt, fetch then filter
+    }
+    
     @objc func segmentControl(_ segmentedControl: UISegmentedControl) {
        switch (segmentedControl.selectedSegmentIndex) {
           case 0:
@@ -384,19 +395,15 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
                     }
                     // Convert to safe email formate
                     let safePartnerEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
+                    
+                    // Should check if QR represents a user of the app
+                    //If so, proceed to creating a link. Call happens in view model
+                    self.linkViewModel.checkIfQRRepresentsUser(partnerSafeEmail: safePartnerEmail)
 
                     // We have the data we need, stop the camera from capturing more frames
                     session.stopRunning()
                     
                     print("Found QR-code of partner: ", safePartnerEmail)
-                    
-                    // Call on viewmodel to update database with new link
-                    self.linkViewModel.createNewLink(safePartnerEmail: safePartnerEmail)
-                    /*
-                    // Dismiss this view controller and pass on data to HomeViewController
-                    dismiss(animated: true, completion: { [weak self] in
-                        self?.completion?(safePartnerEmail)
-                    })*/
                 }
             }
         }
@@ -428,6 +435,23 @@ extension LinkToPartnerViewController: LinkViewModelDelegate {
             self.onBoardConnect.isHidden = false
         }
     }
+    
+    func failedToConnectError() {
+        let failedToConnectAlert = UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+            self.navigationController?.popViewController(animated: true)
+            // Restart camera so user can scan again
+            self.session.startRunning()
+        })
+        
+        let alert = UIAlertController(title: "Couldn't connect second gate",
+                                      message: "Something went wrong when trying to connect to a second gate. Check your internet connection and try again.",
+                                      preferredStyle: .alert)
+
+        alert.addAction(failedToConnectAlert)
+        present(alert, animated: true)
+    }
+    
+    
 }
 
 extension LinkToPartnerViewController: OnBoardingBubbleDelegate {

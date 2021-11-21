@@ -67,9 +67,56 @@ extension DatabaseManager {
                 completion(false)
                 return
             }
-            completion(true)
+            
+            self.database.child("users").observeSingleEvent(of: .value, with: { snapshot in
+                if var usersCollection = snapshot.value as? [[String: String]]  {
+                    // User array exists, so append new user to collection
+                    let newUser = [
+                        "first_name": user.firstName,
+                        "last_name": user.lastName,
+                        "email": user.safeEmail
+                    ]
+                    usersCollection.append(newUser)
+                    
+                    self.database.child("users").setValue(usersCollection, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            completion(false)
+                            return
+                        }
+                        completion(true)
+                    })
+                }
+                else {
+                    // Create user array
+                    let newCollection: [[String: String]] = [
+                        [
+                            "first_name": user.firstName,
+                            "last_name": user.lastName,
+                            "email": user.safeEmail
+                        ]
+                    ]
+                    self.database.child("users").setValue(newCollection, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            completion(false)
+                            return
+                        }
+                        completion(true)
+                    })
+                }
+            })
         })
     }
+    
+    public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
+        database.child("users").observeSingleEvent(of: .value, with: { snapshot in
+            guard let value = snapshot.value as? [[String: String]] else {
+                completion(.failure(DataBaseErrors.failedToFetch))
+                return
+            }
+            completion(.success(value))
+        })
+    }
+
     
     
     // MARK: - Linking with Partner
