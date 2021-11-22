@@ -349,7 +349,6 @@ extension DatabaseManager {
         
         // Get safe email version of emails.
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
-
         
         // Set run ID for our user
         // Create path reference for database
@@ -362,6 +361,8 @@ extension DatabaseManager {
                 return
             }
             
+            let times: [Double] = [time]
+            
             // Data for insertion for our use
             let currentRun: [String: Any] = [
                 "run_id": runID,
@@ -370,7 +371,8 @@ extension DatabaseManager {
                 "run_date": runDate,
                 "run_distance": runDistance,
                 "user_is_running": userIsRunning,
-                "metric_system": metricSystem
+                "metric_system": metricSystem,
+                "times": times
             ]
 
             userNode["current_run"] = currentRun
@@ -389,6 +391,8 @@ extension DatabaseManager {
                 
                 let partnerSafeEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
             
+                let times: [Double] = [time]
+                
                 // Data for insertion for partner user
                 let partnerCurrentRun: [String: Any] = [
                     "run_id": runID,
@@ -397,7 +401,8 @@ extension DatabaseManager {
                     "run_date": runDate,
                     "run_distance": runDistance,
                     "user_is_running": !userIsRunning,
-                    "metric_system": metricSystem
+                    "metric_system": metricSystem,
+                    "times": times
                 ]
                 
                 // Create partner link entry
@@ -460,9 +465,19 @@ extension DatabaseManager {
                 return
             }
             
-            // Append end time
-            currentRunNode["end_time"] = time
+            if endTime == true {
+                currentRunNode["ended"] = true
+            }
             
+            // Append new registered time to times array
+            guard var allRunTimes = currentRunNode["times"] as? [Double] else {
+                completion(false)
+                print("Times rray not as expected")
+                return
+            }
+            allRunTimes.append(time)
+            currentRunNode["times"] = allRunTimes
+
             // Save updated node to database
             reference.setValue(currentRunNode, withCompletionBlock: { error, _ in
                 guard error == nil else {
@@ -491,7 +506,18 @@ extension DatabaseManager {
                     }
                     
                     // Append end time
-                    partnerCurrentRunNode["end_time"] = time
+                    if endTime == true {
+                        partnerCurrentRunNode["ended"] = true
+                    }
+
+                    // Append new registered time to times array
+                    guard var allRunTimes = partnerCurrentRunNode["times"] as? [Double] else {
+                        completion(false)
+                        print("Times rray not as expected")
+                        return
+                    }
+                    allRunTimes.append(time)
+                    partnerCurrentRunNode["times"] = allRunTimes
                     
                     // Save updated node to database
                     partnerReference.setValue(partnerCurrentRunNode, withCompletionBlock: { error, _ in
@@ -510,11 +536,11 @@ extension DatabaseManager {
             }
         })
     }
-    
+
     /// Function that listens for if an end time has been uploaded to current race.
     func listenForEndOfCurrentRun(completion: @ escaping (Bool) -> Void) {
 
-        print("listening for end time")
+        print("Listening for end time")
         
         // Step 1: Get user
         guard let userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -527,29 +553,24 @@ extension DatabaseManager {
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
         
         // Step 2: Get the path where the end time appears
-        let reference = database.child("\(userSafeEmail)/current_run/end_time")
+        let reference = database.child("\(userSafeEmail)/current_run/ended")
         
-        // Step 3: Set listener for change in end time
-        reference.observe(.value, with: { [weak self] snapshot in
-            
-            guard snapshot.value as? Double != nil else {
-                print("No end time exists yet.")
-                // This is fine. Should happen every time a new listener is created.
-                completion(false)
-                return
-            }
+        // Step 3: Set listener end time
+        reference.observe(.value, with: { snapshot in
             
             // End time value is no-nil, so this mean run has completed
-            guard let endTime = snapshot.value as? Double else {
-                print("Could not unwrap snapshot value to double.")
+            guard let ended = snapshot.value as? Bool else {
+                print("Could not find end bool")
                 // Something went wrong unwrapping
                 completion(false)
                 return
             }
             
-            // Successfully observed an end time.
-            print("Successfully observed an end time: ", endTime)
-            completion(true)
+            if ended == true {
+                // Successfully observed an end time.
+                print("Successfully observed an end time")
+                completion(true)
+            }
         })
     }
     
@@ -566,7 +587,7 @@ extension DatabaseManager {
         let userSafeEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
         
         // Step 2: Get the path where the end time appears
-        let reference = database.child("\(userSafeEmail)/current_run/end_time")
+        let reference = database.child("\(userSafeEmail)/current_run/ended")
         
         reference.removeAllObservers()
     }
@@ -589,9 +610,6 @@ extension DatabaseManager {
         
         // Create path reference for database
         let reference = database.child(userSafeEmail)
-        
-        // Create Run ID
-        let runID = createRunID()
         
         reference.observeSingleEvent(of: .value, with: { [weak self] snapshot in
             

@@ -11,19 +11,12 @@ import Social
 class ResultsViewController: UIViewController {
     
     var result: RunResults?
-    var photoFinishImage = UIImage()
+    var photoFinishImage: UIImage?
+    var unwrappedPhotoFinishImage = UIImage()
     
     deinit {
         print("DESTROYED RESULT PAGE")
     }
-    
-    /*
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "Tracks")
-        return imageView
-    }()*/
     
     let resultContainer: UIView = {
         let view = UIView()
@@ -34,21 +27,7 @@ class ResultsViewController: UIViewController {
         view.layer.masksToBounds = false
         return view
     }()
-    
-    /*
-    let raceTimeLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = Constants.textColorWhite
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = .clear
-        label.isUserInteractionEnabled = false
-        label.text = "Run time"
-        label.font = Constants.mainFontLargeSB
-        return label
-    }()*/
-    
+
     let raceTimeHundreths: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -240,6 +219,7 @@ class ResultsViewController: UIViewController {
         button.layer.borderColor = Constants.mainColor?.cgColor
         button.clipsToBounds = true
         button.addTarget(self, action: #selector(showPhotoFinishImage), for: .touchUpInside)
+        button.isHidden = true
         return button
     }()
 
@@ -289,6 +269,11 @@ class ResultsViewController: UIViewController {
         
         setConstraints()
         startAnimation()
+        
+        if let image = photoFinishImage {
+            photoFinishButton.isHidden = false
+            unwrappedPhotoFinishImage = image
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -432,7 +417,7 @@ class ResultsViewController: UIViewController {
     
     @objc private func shareResultOnSoMe() {
         let vc = EditPhotoViewController()
-        vc.photoFinishImage = photoFinishImage
+        vc.photoFinishImage = unwrappedPhotoFinishImage
         vc.result = result
         let backItem = UIBarButtonItem()
         backItem.title = "Back"
@@ -448,138 +433,6 @@ class ResultsViewController: UIViewController {
     @objc private func dismissSelf() {
         dismiss(animated: true, completion: nil)
     }
-    
-    // Creates the SoME post
-    func drawImagesAndText() -> UIImage {
-        
-        let size = 1024
-        
-        let resizedImage = photoFinishImage.resized(to: CGSize(width: size, height: size))
-        
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
-
-        let img = renderer.image { ctx in
-
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.alignment = .left
-
-            let mouse = resizedImage
-            mouse.draw(at: CGPoint(x: 0, y: 0))
-            
-            guard let result = result else {
-                raceTimeHundreths.text = "00"
-                raceTimeMinutes.text = "00"
-                raceTimeSeconds.text = "00"
-                racelengthResult.text = "00"
-                raceSpeedResult.text = "00"
-                return
-            }
-            
-            var speedUnit = ""
-            var distanceUnit = ""
-            if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
-                if metricSystem == true {
-                    speedUnit = "km/h"
-                    distanceUnit = "m"
-                }
-                else {
-                    speedUnit = "mph"
-                    distanceUnit = "yd"
-                }
-            }
-            else {
-                speedUnit = "km/h"
-                distanceUnit = "m"
-            }
-            
-            let attrs: [NSAttributedString.Key: Any] = [
-                .font: Constants.mainFontXLargeSB,
-                .foregroundColor: Constants.mainColor,
-                .backgroundColor: Constants.contrastColor!.withAlphaComponent(0.5)
-            ]
-            
-            let largeAttrs: [NSAttributedString.Key: Any] = [
-                .font: Constants.resultFont,
-                .foregroundColor: Constants.mainColor,
-                .backgroundColor: Constants.contrastColor!.withAlphaComponent(0.5),
-            ]
-            
-            let largeTitleAttrs: [NSAttributedString.Key: Any] = [
-                .font: Constants.resultFont,
-                .foregroundColor: Constants.mainColor,
-            ]
-            
-            // 3
-            let titleAttrs: [NSAttributedString.Key: Any] = [
-                .font: Constants.mainFontXLarge,
-                .foregroundColor: Constants.mainColor,
-            ]
-            
-            let titleTime = "Time"
-            let titleAttributedString = NSAttributedString(string: titleTime, attributes: titleAttrs)
-            
-            let titleDistance = "Run"
-            let titleDistanceAttributedString = NSAttributedString(string: titleDistance, attributes: titleAttrs)
-            
-            let titleSpeed = "Speed"
-            let titleSpeedAttributedString = NSAttributedString(string: titleSpeed, attributes: titleAttrs)
-
-            let timeString = " \(result.minutes):\(result.seconds):\(result.hundreths) "
-            let attributedString = NSAttributedString(string: timeString, attributes: largeAttrs)
-            
-            let distanceString = " \(String(result.distance)) \(distanceUnit) "
-            let attributedDistanceString = NSAttributedString(string: distanceString, attributes: attrs)
-            
-            let speedString = " \(String(result.averageSpeed.round(to: 2))) \(speedUnit) "
-            let attributedSpeedString = NSAttributedString(string: speedString, attributes: attrs)
-
-            let title = "My run"
-            let attributedTitle = NSAttributedString(string: title, attributes: largeTitleAttrs)
-            
-            let middel = size / 2
-            let spacing = 36
-            
-            attributedTitle.draw(with: CGRect(x: middel - 90, y: 35, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
-            
-            titleAttributedString.draw(with: CGRect(x: 32, y: middel - spacing, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
-            attributedString.draw(with: CGRect(x: 32, y: middel, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
-            
-            titleDistanceAttributedString.draw(with: CGRect(x: 32 , y: middel - 90 - spacing, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
-            attributedDistanceString.draw(with: CGRect(x: 32, y: middel - 90, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
-            
-            titleSpeedAttributedString.draw(with: CGRect(x: 32, y: middel + 100, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
-            attributedSpeedString.draw(with: CGRect(x: 32, y: middel + 100 + spacing, width: 448, height: 448), options: .usesLineFragmentOrigin, context: nil)
-        }
-        return img
-    }
 }
-
-/// All code assosiated with cropping photo finish before sharing
-extension ResultsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    /// Called when user cancels the taking of a picture
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-    /// Called when user takes a photo or selects a photo
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-
-        
-        guard let selectedImage = photoFinishImage as? UIImage else {
-            return
-        }
-        
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-    func presentPhotoPicker() {
-        let vc = UIImagePickerController()
-        vc.delegate = self
-        vc.allowsEditing = true
-        present(vc, animated: true)
-    }
-}
-
 
 

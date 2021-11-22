@@ -69,6 +69,7 @@
 		BFD5488526F25D22009A2390 /* SetUpRunViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */; };
 		BFD5488B26F330D5009A2390 /* BounceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488A26F330D4009A2390 /* BounceButton.swift */; };
 		BFE0508E272B3D5D00C6441D /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE0508D272B3D5D00C6441D /* HelpViewController.swift */; };
+		BFEAB4BD274AB5170058311C /* RunHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEAB4BC274AB5170058311C /* RunHelper.swift */; };
 		BFEB3CB92727428F007FAB42 /* Overpass-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BFEB3CB82727428F007FAB42 /* Overpass-SemiBold.ttf */; };
 		BFEB3CBC2727CBD1007FAB42 /* Overpass-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BFEB3CBB2727CBD1007FAB42 /* Overpass-ExtraBold.ttf */; };
 		BFEB3CDD272AC791007FAB42 /* LoadingBalls.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEB3CDC272AC791007FAB42 /* LoadingBalls.swift */; };
@@ -157,6 +158,7 @@
 		BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpRunViewModel.swift; sourceTree = "<group>"; };
 		BFD5488A26F330D4009A2390 /* BounceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BounceButton.swift; sourceTree = "<group>"; };
 		BFE0508D272B3D5D00C6441D /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
+		BFEAB4BC274AB5170058311C /* RunHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunHelper.swift; sourceTree = "<group>"; };
 		BFEB3CB82727428F007FAB42 /* Overpass-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Overpass-SemiBold.ttf"; sourceTree = "<group>"; };
 		BFEB3CBB2727CBD1007FAB42 /* Overpass-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Overpass-ExtraBold.ttf"; sourceTree = "<group>"; };
 		BFEB3CDC272AC791007FAB42 /* LoadingBalls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBalls.swift; sourceTree = "<group>"; };
@@ -391,6 +393,7 @@
 				BF2F51B127247EF10066C5AD /* NetworkManager.swift */,
 				BFEB3CDC272AC791007FAB42 /* LoadingBalls.swift */,
 				BFA78B90273E77B3002C8E14 /* ImageCropHandler.swift */,
+				BFEAB4BC274AB5170058311C /* RunHelper.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -606,6 +609,7 @@
 				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
 				BFCF44D8273D30D4005608D2 /* EditPhotoViewController.swift in Sources */,
 				BF4FF85226D57294005D6920 /* DateSortViewController.swift in Sources */,
+				BFEAB4BD274AB5170058311C /* RunHelper.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */,
 				BF2F51B227247EF10066C5AD /* NetworkManager.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,

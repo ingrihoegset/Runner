@@ -13,7 +13,7 @@ protocol SortTypeDelegate: AnyObject {
 
 class SortTypeViewController: UIViewController {
     
-    var sortTableViewData = [UserRunSelections.runTypes.Sprint.rawValue, UserRunSelections.runTypes.Reaction.rawValue]
+    var sortTableViewData = [UserRunSelections.runTypes.Sprint.rawValue, UserRunSelections.runTypes.Reaction.rawValue, UserRunSelections.runTypes.FlyingStart.rawValue]
     let cellReuseIdentifier = "sortCell"
     var selectedTypes: [String] = []
     

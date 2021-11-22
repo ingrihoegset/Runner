@@ -288,7 +288,7 @@ class FirstGateViewController: UIViewController {
             activateSwitchCameraButton()
         }
         else {
-            title = "Start run"
+            title = "Start gate"
         }
         
         // Subscribe to delegates
@@ -465,7 +465,7 @@ class FirstGateViewController: UIViewController {
         onBoardConnectedStart.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2).isActive = true
         onBoardConnectedStart.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
         onBoardConnectedStart.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.7).isActive = true
-        onBoardConnectedStart.bottomAnchor.constraint(equalTo: startButton.topAnchor).isActive = true
+        onBoardConnectedStart.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -5).isActive = true
         
         countDownPickerView.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
         countDownPickerView.centerYAnchor.constraint(equalTo: cameraView.centerYAnchor, constant: -Constants.sideMargin).isActive = true
@@ -663,7 +663,7 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
         }
     }
     
-    func showRunResult(runresult: RunResults, photoFinishImage: UIImage) {
+    func showRunResult(runresult: RunResults, photoFinishImage: UIImage?) {
         DispatchQueue.main.async {
             let vc = ResultsViewController()
             vc.result = runresult

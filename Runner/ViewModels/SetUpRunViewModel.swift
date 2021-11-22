@@ -15,6 +15,7 @@ protocol SetUpRunViewModelDelegate: AnyObject {
     func hideOnboardReaction()
     func showScrollOnboardingFirstTime()
     func hideScrollOnboarding()
+    func setDistancePickerTitle(title: String)
 }
 
 class SetUpRunViewModel {
@@ -56,6 +57,15 @@ class SetUpRunViewModel {
     func setFalseStartSelection(falseStart: Bool) {
         selectionModel.setUserSelectedFalseStart(falseStart: falseStart)
         print("False selected ", selectionModel.getUserSelectedFalseStart())
+    }
+    
+    func setDistancePickerTitle() {
+        if UserRunSelections.shared.getUserSelectedType() == UserRunSelections.runTypes.FlyingStart.rawValue {
+            setUpRunViewModelDelegate?.setDistancePickerTitle(title: "Distance between gates")
+        }
+        else {
+            setUpRunViewModelDelegate?.setDistancePickerTitle(title: "Distance to end gate")
+        }
     }
     
     func showScrollOnboardingFirstTime() {

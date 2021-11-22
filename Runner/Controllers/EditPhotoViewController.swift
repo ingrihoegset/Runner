@@ -9,7 +9,7 @@ import UIKit
 
 class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
     
-    var photoFinishImage = UIImage()
+    var photoFinishImage = UIImage(named: "Sprinter")
     var textResultImage = UIImage()
     var redrawnImage = UIImage()
     var result: RunResults?
@@ -21,6 +21,7 @@ class EditPhotoViewController: UIViewController, UIScrollViewDelegate {
     let shareImageLayer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.accentColorDarkest
         return view
     }()
     

@@ -113,10 +113,15 @@ class HomeViewController: UIViewController {
         return qrImage
     }()
     
-    let unconnectedView: UIView = {
+    let scrollView: UIScrollView = {
+        let scrollview = UIScrollView()
+        scrollview.translatesAutoresizingMaskIntoConstraints = false
+        return scrollview
+    }()
+    
+    let contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
         return view
     }()
     
@@ -153,8 +158,24 @@ class HomeViewController: UIViewController {
         button.alpha = 0
         return button
     }()
-
     
+    let setUpFlyingStartButton: LargeImageButton = {
+        let button = LargeImageButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.mainColor
+        button.animationColor = Constants.accentColorDark
+        button.tag = 2
+        button.imageview.image = UIImage(systemName: "xmark")?.withTintColor(Constants.accentColorDark!)
+        button.imageview.isOpaque = true
+        button.imageview.alpha = 1
+        button.title.text = "Flying start"
+        button.title.textColor = Constants.accentColorDark
+        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
+        button.alpha = 0
+        return button
+    }()
+
     // MARK: - Elements related to linked view, first gate
     private let linkedHeaderView: UIView = {
         let view = UIView()
@@ -340,9 +361,11 @@ class HomeViewController: UIViewController {
         mainView.addSubview(segmentControl)
         mainView.addSubview(onBoardConnect)
         
-        mainView.addSubview(unconnectedView)
-        unconnectedView.addSubview(setUpSprintButton)
-        unconnectedView.addSubview(setUpReactionButton)
+        mainView.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(setUpSprintButton)
+        contentView.addSubview(setUpReactionButton)
+        contentView.addSubview(setUpFlyingStartButton)
         
         // Related to view show when user is second gate
         mainView.addSubview(secondGateView)
@@ -516,20 +539,31 @@ class HomeViewController: UIViewController {
         onBoardConnect.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2.25).isActive = true
         
         // Selections shown when no link
-        unconnectedView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
-        unconnectedView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
-        unconnectedView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor).isActive = true
-        unconnectedView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor).isActive = true
+        scrollView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: Constants.sideMargin / 2).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
+        scrollView.widthAnchor.constraint(equalTo: mainView.widthAnchor).isActive = true
+        scrollView.centerXAnchor.constraint(equalTo: mainView.centerXAnchor).isActive = true
         
-        setUpSprintButton.topAnchor.constraint(equalTo: unconnectedView.topAnchor, constant: Constants.sideMargin).isActive = true
-        setUpSprintButton.trailingAnchor.constraint(equalTo: unconnectedView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        contentView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        
+        setUpSprintButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        setUpSprintButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Constants.sideMargin / 2).isActive = true
+        setUpSprintButton.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         setUpSprintButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
-        setUpSprintButton.leadingAnchor.constraint(equalTo: unconnectedView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         
+        setUpReactionButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         setUpReactionButton.topAnchor.constraint(equalTo: setUpSprintButton.bottomAnchor, constant: Constants.sideMargin).isActive = true
-        setUpReactionButton.leadingAnchor.constraint(equalTo: unconnectedView.leadingAnchor, constant: Constants.sideMargin).isActive = true
+        setUpReactionButton.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         setUpReactionButton.heightAnchor.constraint(equalTo: setUpSprintButton.heightAnchor).isActive = true
-        setUpReactionButton.trailingAnchor.constraint(equalTo: unconnectedView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+
+        setUpFlyingStartButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        setUpFlyingStartButton.topAnchor.constraint(equalTo: setUpReactionButton.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        setUpFlyingStartButton.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
+        setUpFlyingStartButton.heightAnchor.constraint(equalTo: setUpSprintButton.heightAnchor).isActive = true
+        setUpFlyingStartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         
         // Elements related to second gate view
         secondGateView.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
@@ -628,6 +662,7 @@ extension HomeViewController: HomeViewModelDelegate {
         segmentControl.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
         setUpSprintButton.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
         setUpReactionButton.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
+        setUpFlyingStartButton.transform = CGAffineTransform(translationX: 0, y: Constants.heightOfDisplay / 2)
         qrButton.transform = CGAffineTransform(scaleX: 0, y: 0)
         qrButton.alpha = 1
         
@@ -642,13 +677,17 @@ extension HomeViewController: HomeViewModelDelegate {
                     self.segmentControl.transform = CGAffineTransform.identity
                     self.segmentLabel.alpha = 1
                     self.segmentControl.alpha = 1
-                    UIView.animate(withDuration: 0.6, delay: 0.25, options: .curveEaseOut) {
+                    UIView.animate(withDuration: 0.4, delay: 0.2, options: .curveEaseOut) {
                         self.setUpSprintButton.transform = CGAffineTransform.identity
                         self.setUpSprintButton.alpha = 1
                     }
-                    UIView.animate(withDuration: 0.6, delay: 0.5, options: .curveEaseOut) {
+                    UIView.animate(withDuration: 0.4, delay: 0.4, options: .curveEaseOut) {
                         self.setUpReactionButton.transform = CGAffineTransform.identity
                         self.setUpReactionButton.alpha = 1
+                    }
+                    UIView.animate(withDuration: 0.4, delay: 0.6, options: .curveEaseOut) {
+                        self.setUpFlyingStartButton.transform = CGAffineTransform.identity
+                        self.setUpFlyingStartButton.alpha = 1
                     }
                 })
             })
@@ -673,7 +712,7 @@ extension HomeViewController: HomeViewModelDelegate {
         self.loadingProfileImageView.alpha = 1
         self.loadingQrButton.alpha = 1
         self.unconnectedHeaderView.alpha = 1
-        self.unconnectedView.alpha = 1
+        self.scrollView.alpha = 1
         self.qrButton.alpha = 1
         // Hide
         self.linkedHeaderView.alpha = 0
@@ -687,7 +726,7 @@ extension HomeViewController: HomeViewModelDelegate {
         UIView.animate(withDuration: 0.3) {
             // Show
             self.linkedHeaderView.alpha = 1
-            self.unconnectedView.alpha = 1
+            self.scrollView.alpha = 1
             
             // Hide
             self.loadingProfileImageView.alpha = 0
@@ -713,7 +752,7 @@ extension HomeViewController: HomeViewModelDelegate {
             self.loadingQrButton.alpha = 0
             self.unconnectedHeaderView.alpha = 0
             self.linkedHeaderView.alpha = 0
-            self.unconnectedView.alpha = 0
+            self.scrollView.alpha = 0
             self.qrButton.alpha = 0
         }
 
@@ -882,6 +921,9 @@ extension HomeViewController {
         // Update user selected run type
         if sender.tag == 1 {
             homeViewModel.updateRunType(type: UserRunSelections.runTypes.Reaction)
+        }
+        else if sender.tag == 2 {
+            homeViewModel.updateRunType(type: UserRunSelections.runTypes.FlyingStart)
         }
         else {
             homeViewModel.updateRunType(type: UserRunSelections.runTypes.Sprint)

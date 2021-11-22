@@ -13,7 +13,7 @@ final class UserRunSelections {
     static let shared = UserRunSelections()
     
     enum runTypes: String {
-        case Sprint = "Sprint", Reaction = "Reaction"
+        case Sprint = "Sprint", Reaction = "Reaction", FlyingStart = "Flying Start"
     }
     
     var isRunningWithOneGate = true

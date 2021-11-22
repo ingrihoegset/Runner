@@ -101,17 +101,6 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.translatesAutoresizingMaskIntoConstraints = false
-        let label = UILabel()
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        label.trailingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        label.text = " Running"
-        label.textAlignment = .left
-        label.textColor = Constants.textColorAccent
-        label.font = Constants.mainFontLarge
         view.isHidden = true
         return view
     }()
@@ -126,6 +115,7 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         label.textAlignment = .left
         label.textColor = Constants.textColorAccent
         label.font = Constants.mainFont
+        label.isHidden = true
         return label
     }()
     
@@ -134,17 +124,6 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.translatesAutoresizingMaskIntoConstraints = false
-        let label = UILabel()
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        label.trailingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        label.text = " False start"
-        label.textAlignment = .left
-        label.textColor = Constants.textColorAccent
-        label.font = Constants.mainFontLarge
         view.isHidden = true
         return view
     }()
@@ -159,6 +138,7 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         label.textAlignment = .left
         label.textColor = Constants.textColorAccent
         label.font = Constants.mainFont
+        label.isHidden = true
         return label
     }()
     
@@ -234,6 +214,9 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         
         // Will show onboard scroll if not onboarded yet
         setUpRunViewModel.showScrollOnboardingFirstTime()
+        
+        // Set correct title for distance picker
+        setUpRunViewModel.setDistancePickerTitle()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -392,6 +375,12 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
 
 extension SetUpRunViewController: SetUpRunViewModelDelegate {
     
+    func setDistancePickerTitle(title: String) {
+        DispatchQueue.main.async {
+            self.lengthPicker.label.text = title
+        }
+    }
+    
     func showScrollOnboardingFirstTime() {
         animateOnboardScrollFirstTime()
         onBoardScroll.isHidden = false
@@ -407,8 +396,12 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
     }
     
     func showLinkedFeatures(isRunningWithOneGate: Bool) {
-        runnerView.isHidden = false
-        falseStartView.isHidden = false
+        if isRunningWithOneGate == false {
+            runnerView.isHidden = false
+            runnerViewLabel.isHidden = false
+            falseStartView.isHidden = false
+            falseViewLabel.isHidden = false
+        }
     }
     
     func showReactionOnboarding() {

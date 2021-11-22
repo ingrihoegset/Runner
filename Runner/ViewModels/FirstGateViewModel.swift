@@ -19,7 +19,7 @@ protocol FirstGateViewModelDelegate: AnyObject {
     func hasOnboardedFinishLineOneUser()
     func showOnboardStartLineTwoUsers()
     func hasOnboardedStartLineTwoUsers()
-    func showRunResult(runresult: RunResults, photoFinishImage: UIImage)
+    func showRunResult(runresult: RunResults, photoFinishImage: UIImage?)
     func cameraRestricted()
     func cameraDenied()
 }
@@ -28,6 +28,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     
     weak var firstGateViewModelDelegate: FirstGateViewModelDelegate?
     let userSelectionsModel = UserRunSelections.shared
+    let runHelper = RunHelper.sharedInstance
     
     // In order to set up camera
     let captureSession = AVCaptureSession()
@@ -39,9 +40,10 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     var breakTime: Double = 0
     var videoCounter = 0
     var isRunning = false
+    var countDownFinished = false
     
     //Photo finish image
-    var photoFinishImage = UIImage()
+    var photoFinishImage: UIImage?
     
     public static let dateFormatterShort: DateFormatter = {
         let formatter = DateFormatter()
@@ -83,17 +85,17 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         
         listenForEndOfCurrentRun()
         
+        // Don't start camera if common sprint with 2 gates, else start camera for all other occasions
         // Starts Camera if User has selected to run with one gate only
         let isRunningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
-        if isRunningWithOneGate == true {
-            // Sets up camera, after checking if camera is accessible
-            goToCamera()
+        let runType = UserRunSelections.shared.userSelectedType
+        if isRunningWithOneGate == false &&
+            runType == UserRunSelections.runTypes.Sprint.rawValue &&
+            userSelectionsModel.userSelectedFalseStart == false {
+            // Dont set up camera.
         }
         else {
-            // If running with 2 gates and user has selected false start - should show camera also at first gate
-            if userSelectionsModel.getUserSelectedFalseStart() == true {
-                goToCamera()
-            }
+            goToCamera()
         }
         
         userSelectedLength = userSelectionsModel.getUserSelectedLength()
@@ -112,15 +114,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
         counter = userSelectedDelay
         
-        // Starts break analysis
-        if userSelectionsModel.userSelectedFalseStart == true {
-            startCountDownWithFalseStart()
-        }
-    }
-    
-    // During count down with false start, the break analysis starts when count down starts and finishes when count down is complete
-    func startCountDownWithFalseStart() {
-        startBreakAnalysis()
+        // Set countdown to false
+        countDownFinished = false
     }
     
     //Is trigger for every timer interval (1 second)
@@ -178,6 +173,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             counter = counter - 1
         }
         else if (counter <= 3 && counter > 0) {
+            startBreakAnalysis()
             playSound(filename: "shortBeep")
             counter = counter - 1
         }
@@ -209,9 +205,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     private func runSprintStart() {
-        // Stop false start monitor
-        stopBreakAnalysis()
-        
         playSound(filename: "longBeep")
         
         // Create run and distrbute to database
@@ -219,6 +212,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
         // Start visual timer
         showTime()
+        
+        // Set countdown to finished
+        countDownFinished = true
     }
     
     private func runReactionStart() {
@@ -227,9 +223,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     
     @objc func reactionCountDown() {
         if randomWait == 0 {
-            // Stop false start monitor
-            stopBreakAnalysis()
-            
             playSound(filename: "longBeep")
             reactionTimer.invalidate()
             
@@ -238,6 +231,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
 
             // Start visual timer
             showTime()
+            
+            // Set countdown to finished
+            countDownFinished = true
         }
         else {
             randomWait -= 1
@@ -267,8 +263,11 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     func cancelRun() {
+        print("Run cancelled")
         
+        stopBreakAnalysis()
         timer.invalidate()
+        reactionTimer.invalidate()
         resetShowTimer()
         
         // Remove current run id from database
@@ -310,7 +309,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                                 return
                             }
                             // Convert times to total time
-                            let runResult = strongSelf.getCurrentResult(run: runData)
+                            let runResult = strongSelf.runHelper.getCurrentResult(run: runData)
                             
                             // Calls on home VC to open results VC
                             strongSelf.firstGateViewModelDelegate?.showRunResult(runresult: runResult, photoFinishImage: strongSelf.photoFinishImage)
@@ -344,215 +343,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         DatabaseManager.shared.removeCurrentRunOngoingListener()
     }
     
-    // Converts data of run in database to run result object, taking into considertion users selected units and units applied when the run was saved
-    private func getCurrentResult(run: [String: Any]) -> RunResults {
-        
-        // If unit used when this run was set is metric system, unit of run will be true. If nil, will also be true
-        var unitOfSavedRun = true
-        if let metric = run["metric_system"] as? Bool {
-            if metric == false {
-                unitOfSavedRun = false
-            }
-        }
-        
-        // Convert data in database to values needed to create a run result object
-        if let endTime = run["end_time"] as? Double,
-           let startTime = run["start_time"] as? Double,
-           let distance = run["run_distance"] as? Int,
-           let type = run["run_type"] as? String,
-           let date = run["run_date"] as? String,
-           let runID = run["run_id"] as? String {
-            
-            // Get total race time in seconds
-            let totalSeconds = endTime - startTime
-            let timeInDecimals = totalSeconds.round(to: 2)
-            let hours = totalSeconds / 3600
-            
-            // Find times in min, sec and hundreths
-            let milliseconds = totalSeconds * 100
-            let millisecondsInt = Int(milliseconds)
-            
-            // Convert to time components
-            let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisecondsInt)
-            
-            // Get strings for time components
-            let raceTimeHundreths = String(format: "%02d", hundreths)
-            let raceTimeSeconds = String(format: "%02d", seconds)
-            let raceTimeMinutes = String(format: "%02d", minutes)
-            
-            // Get speed in correct unit
-            let speed = calculateSpeed(timeInHours: hours, unitOfSavedRun: unitOfSavedRun, runDistance: distance)
-            
-            // Get distance in correct unit
-            let runDistance = calculateDistance(runDistance: distance, unitOfSavedRun: unitOfSavedRun)
-            
-            // Get date formatted as date
-            let dateAsDate = getDate(date: date)
-            
-            let runResult = RunResults(time: timeInDecimals,
-                                       minutes: raceTimeMinutes,
-                                       seconds: raceTimeSeconds,
-                                       hundreths: raceTimeHundreths,
-                                       distance: runDistance,
-                                       averageSpeed: speed,
-                                       type: type,
-                                       date: dateAsDate,
-                                       runID: runID)
-            
-            return runResult
-        }
-        
-        else {
-            var id = "00"
-            if let runID = run["run_id"] as? String {
-                id = runID
-            }
-            return RunResults(time: 0.00,
-                              minutes: "00",
-                              seconds: "00",
-                              hundreths: "00",
-                              distance: 00,
-                              averageSpeed: 0.00,
-                              type: "Sprint",
-                              date: Date(),
-                              runID: id)
-        }
-    }
-    
-    // Calculates the speed in the units that the user has selected, regardless of the units in which the run is saved in the database. I.e. converts saved run to correct units.
-    private func calculateSpeed(timeInHours: Double, unitOfSavedRun: Bool, runDistance: Int) -> Double {
-        
-        var speedInDecimals = 0.0
-        
-        // Units currently selecte by user
-        var metricSystem = true
-        if let selectedSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
-            if selectedSystem == false {
-                metricSystem = false
-            }
-        }
-        
-        // # 1 Users current selected system is Metric system
-        // #1.1 Saved run and selected units are the same, both in metric
-        if metricSystem == true && unitOfSavedRun == true {
-            
-            // Find distance in kilometers from distance in meters
-            let kilometers = Double(runDistance) / 1000
-            let speed = kilometers / timeInHours
-            speedInDecimals = speed.round(to: 2)
-            return speedInDecimals
-        }
-        // #1.1 Saved run is in imperial units and selected units are in metric
-        else if metricSystem == true && unitOfSavedRun == false {
-            
-            // Convert from distance in yards to distance in kilometers
-            let kilometers = Double(runDistance) * 0.0009144
-            let speed = kilometers / timeInHours
-            speedInDecimals = speed.round(to: 2)
-            return speedInDecimals
-        }
-        
-        // # 2 Users current selected system is Imperial system
-        // #2.1 Saved run and selected units are the same, both in imperial
-        else if metricSystem == false && unitOfSavedRun == false {
-            
-            // Find distance in miles from yards
-            let miles = Double(runDistance) * 0.000568181818
-            let speed = miles / timeInHours
-            speedInDecimals = speed.round(to: 2)
-            return speedInDecimals
-        }
-        // #2.1 Saved run is in metric, but selected units are in imperial
-        else if metricSystem == false && unitOfSavedRun == true {
-            
-            // Find distance in miles from meters
-            let miles = Double(runDistance) * 0.000621371192
-            let speed = miles / timeInHours
-            speedInDecimals = speed.round(to: 2)
-            return speedInDecimals
-        }
-        else {
-            return 0.0
-        }
-    }
-    
-    private func calculateDistance(runDistance: Int, unitOfSavedRun: Bool) -> Int {
-        
-        // Units currently selecte by user
-        var metricSystem = true
-        if let selectedSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
-            if selectedSystem == false {
-                metricSystem = false
-            }
-        }
-        
-        // # 1 Users current selected system is Metric system
-        // #1.1 Saved run and selected units are the same, both in metric
-        if metricSystem == true && unitOfSavedRun == true {
-            
-            // Find distance in meters
-            return runDistance
-        }
-        // #1.1 Saved run is in imperial units and selected units are in metric
-        else if metricSystem == true && unitOfSavedRun == false {
-            
-            // Convert from distance in yards to distance in meters
-            let meters = yardsToMeters(yards: runDistance)
-            return Int(meters)
-        }
-        
-        // # 2 Users current selected system is Imperial system
-        // #2.1 Saved run and selected units are the same, both in imperial
-        else if metricSystem == false && unitOfSavedRun == false {
-            
-            // Find distance in yards
-            return runDistance
-
-        }
-        // #2.1 Saved run is in metric, but selected units are in imperial
-        else if metricSystem == false && unitOfSavedRun == true {
-            
-            // Find distance in yards from meters
-            let yards = metersToYards(meters: runDistance)
-            return Int(yards)
-        }
-        else {
-            return 0
-        }
-    }
-    
-    private func getDate(date: String) -> Date {
-        if let dateAsDate = FirstGateViewModel.dateFormatterShort.date(from: date) {
-            return dateAsDate
-        }
-        else {
-            return Date()
-        }
-    }
-    
-    func milliSecondsToMinutesSecondsHundreths (milliseconds : Int) -> (Int, Int, Int) {
-      return (milliseconds / 6000, (milliseconds % 6000) / 100, (milliseconds % 60000) % 100)
-    }
-    
-    func metersToYards(meters: Int) -> Double {
-        return Double(meters) * 1.0936133
-    }
-    
-    func yardsToMeters(yards: Int) -> Double {
-        return Double(yards) * 0.9144
-    }
-    
-    func kmhToMph(kmh: Double) -> Double {
-        return kmh * 0.621371192
-    }
-    
-    func mphToKmh(mph: Double) -> Double {
-        return mph * 1.609344
-    }
-    
     private func sendTime(time: Double, endTime: Bool) {
         print("Attempting to send end time.")
-        
         
         DatabaseManager.shared.sendTime(time: time, endTime: endTime, completion: { success in
             if success {
@@ -571,7 +363,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                 return
             }
             if success {
-                
                 // Update UI to state
                 print("ongoing")
                 strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColorDark!.cgColor, label: "Running")
@@ -589,6 +380,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                 
                 // Stop camera analysis
                 strongSelf.stopBreakAnalysis()
+                
+                // Reset visual counter
+                strongSelf.resetShowTimer()
             }
         })
     }
@@ -690,21 +484,50 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             if videoCounter >= 15 {
                 let broken = breakObserver.checkIfBreakHasOccured(cvPixelBuffer: pixelBuffer!)
                 if (broken == true) {
-                    print("Break has been detected.")
-                    if userSelectionsModel.userSelectedFalseStart == true {
-                        falseStartDected()
-                    }
-                    else {
-                        sendTime(time: breakTime, endTime: true)
-                    }
-                    resetShowTimer()
-                    breakObserver.recentFramesArray = []
-                    videoCounter = 0
+                    // Handles what to do with the break time depending on if run has started and type of run
+                    breakDetected()
                     
                     // Get photofinish image
                     getPhotoFinish(pixelBuffer: pixelBuffer!)
+                    
+                    // Clean up, get ready for new run
+                    breakObserver.recentFramesArray = []
+                    videoCounter = 0
                 }
             }
+        }
+    }
+    
+    private func breakDetected() {
+        print("Break detected")
+        
+        // If count down is not completed -> Run is false start. Stop run and alert error tone
+        if userSelectionsModel.userSelectedFalseStart == true && countDownFinished == false {
+            falseStartDetected()
+        }
+        
+        // If count down is completed -> Run is ongoing, break analysis should listen for breaks
+        // Is end time if one gate
+        if userSelectionsModel.isRunningWithOneGate == true && countDownFinished == true {
+            sendTime(time: breakTime, endTime: true)
+            // Stop listening for new breaks
+            isRunning = false
+        }
+        
+        // Is reaction time if two gates and reaction run selected
+        if userSelectionsModel.userSelectedType == UserRunSelections.runTypes.Reaction.rawValue && countDownFinished == true {
+            sendTime(time: breakTime, endTime: false)
+            print("Reaction Time detected")
+            // Stop listening for new breaks
+            isRunning = false
+        }
+        
+        // Is break of first gate after run started if flying start
+        if userSelectionsModel.userSelectedType == UserRunSelections.runTypes.FlyingStart.rawValue && countDownFinished == true {
+            sendTime(time: breakTime, endTime: false)
+            print("Start of flying start detected")
+            // Stop listening for new breaks
+            isRunning = false
         }
     }
     
@@ -716,10 +539,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         photoFinishImage = UIImage(cgImage: cgImage, scale: 1, orientation: .right)
     }
     
-    func falseStartDected() {
+    func falseStartDetected() {
         playSound(filename: "error")
         cancelRun()
-        stopBreakAnalysis()
         firstGateViewModelDelegate?.resetUIOnRunEnd()
     }
     
@@ -851,7 +673,6 @@ extension FirstGateViewModel {
             }.first
     }
 }
-
 
 // Handles access to camera
 extension FirstGateViewModel {

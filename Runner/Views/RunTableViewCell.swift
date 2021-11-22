@@ -172,12 +172,16 @@ class RunTableViewCell: UITableViewCell {
         runSpeedLabel.text = String(model.averageSpeed)
         runDateLabel.text = FirstGateViewModel.dateFormatterShort.string(from: model.date)
         runTypeLabel.text = model.type
-        if model.type == "Sprint" {
-            runTypeImage.image = UIImage(named: "Sprint")?.withTintColor(Constants.contrastColor!)
-        }
-        else {
+        if model.type == UserRunSelections.runTypes.Reaction.rawValue {
             runTypeImage.image = UIImage(named: "Reaction")?.withTintColor(Constants.contrastColor!)
             runTypeLabel.text = "Reaction"
+        }
+        else if model.type == UserRunSelections.runTypes.FlyingStart.rawValue {
+            runTypeImage.image = UIImage(systemName: "xmark")?.withTintColor(Constants.contrastColor!)
+            runTypeLabel.text = "Flying start"
+        }
+        else {
+            runTypeImage.image = UIImage(named: "Sprint")?.withTintColor(Constants.contrastColor!)
         }
     }
 }
