@@ -165,12 +165,12 @@ class HomeViewController: UIViewController {
         button.backgroundColor = Constants.mainColor
         button.animationColor = Constants.accentColorDark
         button.tag = 2
-        button.imageview.image = UIImage(systemName: "xmark")?.withTintColor(Constants.accentColorDark!)
+        button.imageview.image = UIImage(named: "Flying")?.withTintColor(Constants.accentColorDark!)
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Flying start"
         button.title.textColor = Constants.accentColorDark
-        button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
+        button.addTarget(self, action: #selector(alertUserThatFlyingStartOnlyAvailableWhenConnected), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         button.alpha = 0
         return button
@@ -720,6 +720,11 @@ extension HomeViewController: HomeViewModelDelegate {
         self.secondGateView.alpha = 0
         // Update segment Controller as well
         self.segmentControl.selectedSegmentIndex = 0
+        
+        // Make sure user cannot select flying start when not connected
+        self.setUpFlyingStartButton.backgroundColor = Constants.superLightGrey
+        self.setUpFlyingStartButton.removeTarget(nil, action: #selector(didTapSetUpRun(sender:)), for: .touchUpInside)
+        self.setUpFlyingStartButton.addTarget(self, action: #selector(alertUserThatFlyingStartOnlyAvailableWhenConnected), for: .touchUpInside)
     }
     
     func updateUiConnectedStartGate() {
@@ -739,6 +744,11 @@ extension HomeViewController: HomeViewModelDelegate {
         
         // Update segment Controller as well
         self.segmentControl.selectedSegmentIndex = 1
+        
+        // Make sure user CAN select flying start when not connected
+        self.setUpFlyingStartButton.backgroundColor = Constants.mainColor
+        self.setUpFlyingStartButton.removeTarget(nil, action: #selector(alertUserThatFlyingStartOnlyAvailableWhenConnected), for: .touchUpInside)
+        self.setUpFlyingStartButton.addTarget(self, action: #selector(didTapSetUpRun(sender:)), for: .touchUpInside)
     }
     
     func updateUiConnectedEndGate() {
@@ -758,6 +768,11 @@ extension HomeViewController: HomeViewModelDelegate {
 
         // Update segment Controller as well
         self.segmentControl.selectedSegmentIndex = 1
+        
+        // Make sure user CAN select flying start when not connected
+        self.setUpFlyingStartButton.backgroundColor = Constants.mainColor
+        self.setUpFlyingStartButton.removeTarget(nil, action: #selector(alertUserThatFlyingStartOnlyAvailableWhenConnected), for: .touchUpInside)
+        self.setUpFlyingStartButton.addTarget(self, action: #selector(didTapSetUpRun(sender:)), for: .touchUpInside)
     }
     
     func updatePartnerImage(image: UIImage) {
@@ -819,6 +834,20 @@ extension HomeViewController: HomeViewModelDelegate {
     func alertUserThatIsDisconnectedFromPartner() {
         let actionSheet = UIAlertController(title: "You've been disconnected from partner. \nRunning with 1 gate.",
                                             message: "",
+                                            preferredStyle: .alert)
+        
+        actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.popToRootViewController(animated: true)
+        }))
+        present(actionSheet, animated: true)
+    }
+    
+    @objc func alertUserThatFlyingStartOnlyAvailableWhenConnected() {
+        let actionSheet = UIAlertController(title: "Add second gate",
+                                            message: "You must be connected to second gate set up flying start.",
                                             preferredStyle: .alert)
         
         actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in

@@ -20,7 +20,7 @@ class NoConnectionView: UIView {
         let imageview = UIImageView()
         imageview.translatesAutoresizingMaskIntoConstraints = false
         imageview.contentMode = .scaleAspectFit
-        let image = UIImage(systemName: "wifi.slash")?.withTintColor(Constants.lightGray!, renderingMode: .alwaysOriginal)
+        let image = UIImage(systemName: "wifi.slash")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
         imageview.image = image
         imageview.backgroundColor = .clear
         return imageview
@@ -35,7 +35,7 @@ class NoConnectionView: UIView {
         textView.textAlignment = .center
         textView.text = "You are offline.\nConnect to the internet in order to use this app!"
         textView.font = Constants.mainFontLarge
-        textView.textColor = Constants.lightGray
+        textView.textColor = .gray
         return textView
     }()
 

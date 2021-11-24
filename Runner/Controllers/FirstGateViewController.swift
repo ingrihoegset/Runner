@@ -377,8 +377,12 @@ class FirstGateViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        print("View is disappearing")
 
         if self.isMovingFromParent {
+            
+            print("is moving from parent")
             // Cancel current run if gate is exited
             cancelRun()
             // Removes listeners so that http calls arent duplicated
@@ -540,6 +544,11 @@ class FirstGateViewController: UIViewController {
         
         // Onboard Finish line
         firstGateViewModel.hasOnboardedFinishLineOneUser()
+        
+        // Onboard Start line if connected.
+        if onBoardConnectedStart.isHidden == false {
+            firstGateViewModel.hasOnboardedStartLineTwoUsers()
+        }
     }
     
     @objc private func cancelRun() {

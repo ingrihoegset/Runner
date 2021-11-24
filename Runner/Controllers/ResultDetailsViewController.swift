@@ -41,6 +41,8 @@ class ResultDetailsViewController: UIViewController {
     let summaryView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: Constants.heightOfDisplay * 0.325).isActive = true
+        view.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
         view.backgroundColor = .clear
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
@@ -106,11 +108,35 @@ class ResultDetailsViewController: UIViewController {
     let lapsView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: Constants.heightOfDisplay * 0.375).isActive = true
+        view.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
         view.backgroundColor = Constants.accentColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
         view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return view
+    }()
+    
+    let reactionTimeView: UIView = {
+        let view = UIView()
+        view.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
+        view.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
+        view.backgroundColor = Constants.mainColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
+        return view
+    }()
+    
+    let reactionTimeResultLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = Constants.accentColorDark
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = false
+        label.font = Constants.resultFontMedium
+        return label
     }()
     
     let tabGraphLabel: UILabel = {
@@ -125,6 +151,22 @@ class ResultDetailsViewController: UIViewController {
         label.font = Constants.mainFontLargeSB
         label.textColor = Constants.textColorAccent
         return label
+    }()
+    
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution  = .fill
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.spacing = Constants.sideMargin
+        return stackView
     }()
     
     lazy var lapsChartView: LineChartView = {
@@ -188,6 +230,13 @@ class ResultDetailsViewController: UIViewController {
 
         return chartView
     }()
+    
+    let dontCollapseLargeTitleWhenScrollView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = Constants.mainColor
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -197,12 +246,19 @@ class ResultDetailsViewController: UIViewController {
         resultDetailsViewModel.resultsViewModelDelegate = self
         
         view.backgroundColor = Constants.mainColor
-        view.addSubview(summaryView)
+        
+        view.addSubview(dontCollapseLargeTitleWhenScrollView)
+        view.addSubview(scrollView)
+        
+        scrollView.addSubview(stackView)
+        stackView.addArrangedSubview(summaryView)
 
         summaryView.addSubview(detailRowDate)
         summaryView.addSubview(detailRowTime)
         summaryView.addSubview(detailRowDistance)
         summaryView.addSubview(detailRowSpeed)
+        
+        reactionTimeView.addSubview(reactionTimeResultLabel)
         
         let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
         let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
@@ -235,13 +291,35 @@ class ResultDetailsViewController: UIViewController {
         let dated = NSMutableAttributedString(string: String(date), attributes: dateAttributes as [NSAttributedString.Key : Any])
         let dateText = NSMutableAttributedString()
         dateText.append(dated)
+        
+        if let reactionSeconds = selectedRun.reactionSeconds, let reactionHundreths = selectedRun.reactionHundreths {
+            stackView.addArrangedSubview(reactionTimeView)
+            let reactionText = NSMutableAttributedString()
+            if reactionSeconds == "00" && reactionHundreths == "00" {
+                let reactionTitle = NSMutableAttributedString(string: "Reaction time:  ", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                let reactionResult = NSMutableAttributedString(string: "N/A", attributes: resultAttributes as [NSAttributedString.Key : Any])
+                reactionText.append(reactionTitle)
+                reactionText.append(reactionResult)
+                reactionTimeResultLabel.attributedText = reactionText
+            }
+            else {
+                let reactionTitle = NSMutableAttributedString(string: "Reaction time:  ", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                let reactionResult = NSMutableAttributedString(string: "\(reactionSeconds).\(reactionHundreths)", attributes: resultAttributes as [NSAttributedString.Key : Any])
+                let reactionUnit = NSMutableAttributedString(string: " s", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                reactionText.append(reactionTitle)
+                reactionText.append(reactionResult)
+                reactionText.append(reactionUnit)
+                reactionTimeResultLabel.attributedText = reactionText
+            }
+        }
+        
+        stackView.addArrangedSubview(lapsView)
 
         detailRowDate.setAttributedTitle(dateText, for: .normal)
         detailRowTime.setAttributedTitle(timeText, for: .normal)
         detailRowDistance.setAttributedTitle(distText, for: .normal)
         detailRowSpeed.setAttributedTitle(speedText, for: .normal)
 
-        view.addSubview(lapsView)
         lapsView.addSubview(tabGraphLabel)
         lapsView.addSubview(lapsChartView)
         
@@ -257,20 +335,29 @@ class ResultDetailsViewController: UIViewController {
     }
     
     func setConstraints() {
+        dontCollapseLargeTitleWhenScrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        dontCollapseLargeTitleWhenScrollView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        dontCollapseLargeTitleWhenScrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        dontCollapseLargeTitleWhenScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         
-        summaryView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        summaryView.bottomAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        summaryView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        summaryView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        scrollView.topAnchor.constraint(equalTo: dontCollapseLargeTitleWhenScrollView.bottomAnchor).isActive = true
+        scrollView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        stackView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         
         let widthOfSummaryView = Constants.widthOfDisplay - 2 * Constants.sideMargin
         
-        detailRowTime.topAnchor.constraint(equalTo: summaryView.topAnchor).isActive = true
+        detailRowTime.topAnchor.constraint(equalTo: summaryView.topAnchor, constant: Constants.sideMargin).isActive = true
         detailRowTime.heightAnchor.constraint(equalTo: summaryView.heightAnchor, multiplier: 0.6).isActive = true
         detailRowTime.widthAnchor.constraint(equalToConstant: (widthOfSummaryView / 2) - (Constants.sideMargin / 2)).isActive = true
         detailRowTime.trailingAnchor.constraint(equalTo: summaryView.trailingAnchor).isActive = true
         
-        detailRowDistance.topAnchor.constraint(equalTo: summaryView.topAnchor).isActive = true
+        detailRowDistance.topAnchor.constraint(equalTo: summaryView.topAnchor, constant: Constants.sideMargin).isActive = true
         detailRowDistance.heightAnchor.constraint(equalTo: detailRowSpeed.heightAnchor).isActive = true
         detailRowDistance.widthAnchor.constraint(equalToConstant: (widthOfSummaryView / 2) - (Constants.sideMargin / 2)).isActive = true
         detailRowDistance.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor).isActive = true
@@ -285,12 +372,7 @@ class ResultDetailsViewController: UIViewController {
         detailRowSpeed.widthAnchor.constraint(equalToConstant: (widthOfSummaryView / 2) - (Constants.sideMargin / 2)).isActive = true
         detailRowSpeed.leadingAnchor.constraint(equalTo: summaryView.leadingAnchor).isActive = true
         
-        lapsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.sideMargin).isActive = true
-        lapsView.topAnchor.constraint(equalTo: summaryView.bottomAnchor, constant: Constants.sideMargin).isActive = true
-        lapsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        lapsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        
-        tabGraphLabel.topAnchor.constraint(equalTo: lapsView.topAnchor).isActive = true
+        tabGraphLabel.topAnchor.constraint(equalTo: lapsView.topAnchor, constant: Constants.sideMargin / 2).isActive = true
         tabGraphLabel.heightAnchor.constraint(equalTo: lapsView.heightAnchor, multiplier: 1/7).isActive = true
         tabGraphLabel.trailingAnchor.constraint(equalTo: lapsView.trailingAnchor).isActive = true
         tabGraphLabel.leadingAnchor.constraint(equalTo: lapsView.leadingAnchor).isActive = true
@@ -299,6 +381,11 @@ class ResultDetailsViewController: UIViewController {
         lapsChartView.bottomAnchor.constraint(equalTo: lapsView.bottomAnchor, constant: -Constants.sideMargin / 2).isActive = true
         lapsChartView.leadingAnchor.constraint(equalTo: lapsView.leadingAnchor, constant: Constants.sideMargin / 2).isActive = true
         lapsChartView.trailingAnchor.constraint(equalTo: lapsView.trailingAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        
+        reactionTimeResultLabel.trailingAnchor.constraint(equalTo: reactionTimeView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        reactionTimeResultLabel.centerYAnchor.constraint(equalTo: reactionTimeView.centerYAnchor).isActive = true
+        reactionTimeResultLabel.heightAnchor.constraint(equalTo: reactionTimeView.heightAnchor, multiplier: 0.8).isActive = true
+        reactionTimeResultLabel.leadingAnchor.constraint(equalTo: reactionTimeView.leadingAnchor, constant: Constants.sideMargin).isActive = true
     }
     
     @objc func setDataForWaveChart() {
@@ -361,6 +448,7 @@ class ResultDetailsViewController: UIViewController {
         detailRowTime.transform = CGAffineTransform(translationX: 0, y: 175)
         detailRowSpeed.transform = CGAffineTransform(translationX: 0, y: 150)
         detailRowDate.transform = CGAffineTransform(translationX: 0, y: 160)
+        reactionTimeView.transform = CGAffineTransform(translationX: 0, y: 160)
         lapsView.transform = CGAffineTransform(translationX: 0, y: 180)
         
         // Show cancel button and countdown label when start is clicked
@@ -382,6 +470,10 @@ class ResultDetailsViewController: UIViewController {
                 self.detailRowDate.transform = CGAffineTransform(translationX: 0, y: 0)
                 self.detailRowDate.alpha = 1
                 
+            }
+            UIView.animate(withDuration: 0.35, delay: 0.175, options: .curveEaseOut) {
+                self.reactionTimeView.transform = CGAffineTransform(translationX: 0, y: 0)
+                self.reactionTimeView.alpha = 1
             }
             UIView.animate(withDuration: 0.4, delay: 0.2, options: .curveEaseOut) {
                 self.lapsView.transform = CGAffineTransform(translationX: 0, y: 0)

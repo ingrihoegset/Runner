@@ -684,7 +684,6 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         destinationController.distance = model.distance
         destinationController.time = String(model.time)
         
-        
         destinationController.selectedRun = model
         destinationController.allruns = allRuns
         

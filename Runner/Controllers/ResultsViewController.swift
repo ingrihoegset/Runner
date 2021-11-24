@@ -21,10 +21,47 @@ class ResultsViewController: UIViewController {
     let resultContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: Constants.heightOfDisplay * 0.35).isActive = true
+        view.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
         view.backgroundColor = Constants.shadeColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
-        view.layer.masksToBounds = false
+        view.layer.masksToBounds = true
+        return view
+    }()
+    
+    let runIncompleteImageView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.mainColor
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        
+        let imageView = UIImageView()
+        view.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(systemName: "exclamationmark.circle")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
+        
+        let label = UILabel()
+        view.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.sideMargin * 2).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive  = true
+        
+        label.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        label.widthAnchor.constraint(equalTo: view.widthAnchor).isActive  = true
+        
+        label.text = "Ups, couldn't calculate run time!\nNo break registered at first gate."
+        label.font = Constants.mainFontLarge
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        
         return view
     }()
 
@@ -171,6 +208,35 @@ class ResultsViewController: UIViewController {
         label.font = Constants.resultFontMedium
         return label
     }()
+    
+    let reactionTimeView: UIView = {
+        let view = UIView()
+        view.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
+        view.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
+        view.backgroundColor = Constants.mainColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = Constants.smallCornerRadius
+        return view
+    }()
+    
+    let reactionTimeResultLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = Constants.accentColorDark
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = false
+        label.font = Constants.resultFontMedium
+        return label
+    }()
+    
+    let detailComponentView: UIView = {
+        let view = UIView()
+        view.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
+        view.heightAnchor.constraint(equalToConstant: (Constants.widthOfDisplay - Constants.sideMargin * 3) / 2).isActive = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     let detailComponent1: UIView = {
         let view = UIView()
@@ -222,6 +288,22 @@ class ResultsViewController: UIViewController {
         button.isHidden = true
         return button
     }()
+    
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution  = .fill
+        stackView.alignment = .center
+        stackView.axis = .vertical
+        stackView.spacing = Constants.sideMargin
+        return stackView
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -237,7 +319,7 @@ class ResultsViewController: UIViewController {
                                                             target: self,
                                                             action: #selector(dismissSelf))
 
-        setResults()
+
         
         // Makes navigation bar translucent
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -246,25 +328,36 @@ class ResultsViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = Constants.mainColor
         
         view.backgroundColor = Constants.accentColorDark
-        
-        view.addSubview(resultContainer)
+
+        stackView.addArrangedSubview(resultContainer)
+        // Reaction time view is addd to stack view if there is a reaction result (will only happen if the run is a reaction run).
+        setResults()
+        stackView.addArrangedSubview(detailComponentView)
+
+        view.addSubview(scrollView)
+        scrollView.addSubview(stackView)
+
         resultContainer.addSubview(raceTimeMinutes)
         resultContainer.addSubview(raceTimeSeconds)
         resultContainer.addSubview(raceTimeHundreths)
         resultContainer.addSubview(raceTimeMinutesTitle)
         resultContainer.addSubview(raceTimeSecondsTitle)
         resultContainer.addSubview(raceTimeHundrethsTitle)
+        
+        // View that is shown if no start time was registered during flying start
+        resultContainer.addSubview(runIncompleteImageView)
+        resultContainer.addSubview(photoFinishButton)
 
-        view.addSubview(detailComponent1)
+        detailComponentView.addSubview(detailComponent1)
         detailComponent1.addSubview(racelengthTitle)
         detailComponent1.addSubview(racelengthResult)
-        view.addSubview(detailComponent2)
+        detailComponentView.addSubview(detailComponent2)
         detailComponent2.addSubview(raceSpeedTitle)
         detailComponent2.addSubview(raceSpeedResult)
         
-        view.addSubview(shareButtonView)
+        reactionTimeView.addSubview(reactionTimeResultLabel)
         
-        view.addSubview(photoFinishButton)
+        view.addSubview(shareButtonView)
         photoFinishButton.setImage(photoFinishImage, for: .normal)
         
         setConstraints()
@@ -309,16 +402,20 @@ class ResultsViewController: UIViewController {
     
     private func setConstraints() {
         
-        resultContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        resultContainer.bottomAnchor.constraint(equalTo: view.centerYAnchor, constant: 25).isActive = true
-        resultContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.sideMargin).isActive = true
-        resultContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
+        scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        scrollView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: shareButtonView.topAnchor, constant: -Constants.sideMargin).isActive = true
         
-        /*
-        raceTimeLabel.centerXAnchor.constraint(equalTo: resultContainer.centerXAnchor).isActive = true
-        raceTimeLabel.topAnchor.constraint(equalTo: resultContainer.topAnchor, constant: Constants.sideMargin).isActive = true
-        raceTimeLabel.heightAnchor.constraint(equalTo: resultContainer.heightAnchor, multiplier: 0.1).isActive = true
-        raceTimeLabel.widthAnchor.constraint(equalTo: resultContainer.widthAnchor).isActive = true*/
+        runIncompleteImageView.topAnchor.constraint(equalTo: resultContainer.topAnchor).isActive = true
+        runIncompleteImageView.bottomAnchor.constraint(equalTo: resultContainer.bottomAnchor).isActive = true
+        runIncompleteImageView.leadingAnchor.constraint(equalTo: resultContainer.leadingAnchor).isActive = true
+        runIncompleteImageView.trailingAnchor.constraint(equalTo: resultContainer.trailingAnchor).isActive = true
+        
+        stackView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
         
         raceTimeSeconds.centerXAnchor.constraint(equalTo: resultContainer.centerXAnchor).isActive = true
         raceTimeSeconds.centerYAnchor.constraint(equalTo: resultContainer.centerYAnchor).isActive = true
@@ -350,10 +447,10 @@ class ResultsViewController: UIViewController {
         raceTimeMinutesTitle.heightAnchor.constraint(equalTo: resultContainer.heightAnchor, multiplier: 0.1).isActive = true
         raceTimeMinutesTitle.widthAnchor.constraint(equalTo: resultContainer.widthAnchor, multiplier: 1/3).isActive = true
         
-        detailComponent1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        detailComponent1.topAnchor.constraint(equalTo: resultContainer.bottomAnchor, constant: Constants.sideMargin).isActive = true
-        detailComponent1.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.5 - Constants.sideMargin * 3/2).isActive = true
-        detailComponent1.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
+        detailComponent1.leadingAnchor.constraint(equalTo: detailComponentView.leadingAnchor).isActive = true
+        detailComponent1.topAnchor.constraint(equalTo: detailComponentView.topAnchor).isActive = true
+        detailComponent1.heightAnchor.constraint(equalTo:  detailComponentView.heightAnchor).isActive = true
+        detailComponent1.trailingAnchor.constraint(equalTo: detailComponentView.centerXAnchor, constant: -Constants.sideMargin / 2).isActive = true
         
         racelengthResult.trailingAnchor.constraint(equalTo: detailComponent1.trailingAnchor).isActive = true
         racelengthResult.centerYAnchor.constraint(equalTo: detailComponent1.centerYAnchor).isActive = true
@@ -365,10 +462,10 @@ class ResultsViewController: UIViewController {
         racelengthTitle.topAnchor.constraint(equalTo: racelengthResult.bottomAnchor).isActive = true
         racelengthTitle.leadingAnchor.constraint(equalTo: detailComponent1.leadingAnchor).isActive = true
         
-        detailComponent2.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
-        detailComponent2.topAnchor.constraint(equalTo: resultContainer.bottomAnchor, constant: Constants.sideMargin).isActive = true
-        detailComponent2.heightAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.5 - Constants.sideMargin * 3/2).isActive = true
-        detailComponent2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        detailComponent2.leadingAnchor.constraint(equalTo: detailComponentView.centerXAnchor, constant: Constants.sideMargin / 2).isActive = true
+        detailComponent2.topAnchor.constraint(equalTo: detailComponentView.topAnchor).isActive = true
+        detailComponent2.heightAnchor.constraint(equalTo: detailComponentView.heightAnchor).isActive = true
+        detailComponent2.trailingAnchor.constraint(equalTo: detailComponentView.trailingAnchor).isActive = true
         
         raceSpeedResult.leadingAnchor.constraint(equalTo: detailComponent2.leadingAnchor).isActive = true
         raceSpeedResult.centerYAnchor.constraint(equalTo: detailComponent2.centerYAnchor).isActive = true
@@ -380,12 +477,6 @@ class ResultsViewController: UIViewController {
         raceSpeedTitle.bottomAnchor.constraint(equalTo: detailComponent2.bottomAnchor).isActive = true
         raceSpeedTitle.trailingAnchor.constraint(equalTo: detailComponent2.trailingAnchor).isActive = true
         
-        /*
-        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 350).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 350).isActive = true*/
-        
         shareButtonView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         shareButtonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         shareButtonView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
@@ -396,6 +487,11 @@ class ResultsViewController: UIViewController {
         photoFinishButton.trailingAnchor.constraint(equalTo: resultContainer.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         photoFinishButton.widthAnchor.constraint(equalTo: photoFinishButton.heightAnchor).isActive = true
         photoFinishButton.layer.cornerRadius = Constants.mainButtonSize / 2
+        
+        reactionTimeResultLabel.trailingAnchor.constraint(equalTo: reactionTimeView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
+        reactionTimeResultLabel.centerYAnchor.constraint(equalTo: reactionTimeView.centerYAnchor).isActive = true
+        reactionTimeResultLabel.heightAnchor.constraint(equalTo: reactionTimeView.heightAnchor, multiplier: 0.8).isActive = true
+        reactionTimeResultLabel.leadingAnchor.constraint(equalTo: reactionTimeView.leadingAnchor, constant: Constants.sideMargin).isActive = true
     }
     
     private func setResults() {
@@ -408,11 +504,39 @@ class ResultsViewController: UIViewController {
             return
         }
         
+        print(result.time)
+        if result.time == 0 && result.type == UserRunSelections.runTypes.FlyingStart.rawValue {
+            runIncompleteImageView.isHidden = false
+        }
+        
         raceTimeHundreths.text = result.hundreths
         raceTimeMinutes.text = result.minutes
         raceTimeSeconds.text = result.seconds
         racelengthResult.text = String(result.distance)
         raceSpeedResult.text = String(result.averageSpeed)
+        
+        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
+        let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        if let reactionSeconds = result.reactionSeconds, let reationHundreths = result.reactionHundreths {
+            stackView.addArrangedSubview(reactionTimeView)
+            let reactionText = NSMutableAttributedString()
+            if reactionSeconds == "00" && reationHundreths == "00" {
+                let reactionTitle = NSMutableAttributedString(string: "Reaction time:  ", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                let reactionResult = NSMutableAttributedString(string: "N/A", attributes: resultAttributes as [NSAttributedString.Key : Any])
+                reactionText.append(reactionTitle)
+                reactionText.append(reactionResult)
+                reactionTimeResultLabel.attributedText = reactionText
+            }
+            else {
+                let reactionTitle = NSMutableAttributedString(string: "Reaction time:  ", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                let reactionResult = NSMutableAttributedString(string: "\(reactionSeconds).\(reationHundreths)", attributes: resultAttributes as [NSAttributedString.Key : Any])
+                let reactionUnit = NSMutableAttributedString(string: " s", attributes: unitAttributes as [NSAttributedString.Key : Any])
+                reactionText.append(reactionTitle)
+                reactionText.append(reactionResult)
+                reactionText.append(reactionUnit)
+                reactionTimeResultLabel.attributedText = reactionText
+            }
+        }
     }
     
     @objc private func shareResultOnSoMe() {

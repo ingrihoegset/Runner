@@ -177,7 +177,7 @@ class RunTableViewCell: UITableViewCell {
             runTypeLabel.text = "Reaction"
         }
         else if model.type == UserRunSelections.runTypes.FlyingStart.rawValue {
-            runTypeImage.image = UIImage(systemName: "xmark")?.withTintColor(Constants.contrastColor!)
+            runTypeImage.image = UIImage(named: "Flying")?.withTintColor(Constants.contrastColor!)
             runTypeLabel.text = "Flying start"
         }
         else {

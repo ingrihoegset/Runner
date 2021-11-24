@@ -18,4 +18,7 @@ struct RunResults {
     var laps: Int?
     var date: Date
     var runID: String
+    var reactionTime: Double?
+    var reactionSeconds: String?
+    var reactionHundreths: String?
 }

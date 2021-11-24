@@ -34,62 +34,20 @@ struct RunHelper {
             // Order times from smallest to largest
             times.sort(by: <)
             
-            var totalRunTime = 0.0
             // Do calculations according to run type
             if type == UserRunSelections.runTypes.Reaction.rawValue {
-                let runTimes = getTimesForReaction(times: times)
-                totalRunTime = runTimes["totalTime"] ?? 0.0
-                
-                print("reaction Time", runTimes)
+                let reactionRun = createReactionRun(distance: distance, type: type, date: date, runID: runID, times: times, unitOfSavedRun: unitOfSavedRun)
+                return reactionRun
             }
             else if type == UserRunSelections.runTypes.FlyingStart.rawValue {
-                let runTimes = getTimesForFlyingStart(times: times)
-                totalRunTime = runTimes["totalTime"] ?? 0.0
+                let flyingStartRun = createFlyingStartRun(distance: distance, type: type, date: date, runID: runID, times: times, unitOfSavedRun: unitOfSavedRun)
+                return flyingStartRun
             }
             else {
-                let runTimes = getTimesForSprint(times: times)
-                totalRunTime = runTimes["totalTime"] ?? 0.0
+                let sprintRun = createSprintRun(distance: distance, type: type, date: date, runID: runID, times: times, unitOfSavedRun: unitOfSavedRun)
+                return sprintRun
             }
-            
-            // Get total race time in seconds
-            let totalSeconds = totalRunTime
-            let timeInDecimals = totalRunTime.round(to: 2)
-            let hours = totalSeconds / 3600
-            
-            // Find times in min, sec and hundreths
-            let milliseconds = totalSeconds * 100
-            let millisecondsInt = Int(milliseconds)
-            
-            // Convert to time components
-            let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisecondsInt)
-            
-            // Get strings for time components
-            let raceTimeHundreths = String(format: "%02d", hundreths)
-            let raceTimeSeconds = String(format: "%02d", seconds)
-            let raceTimeMinutes = String(format: "%02d", minutes)
-            
-            // Get speed in correct unit
-            let speed = calculateSpeed(timeInHours: hours, unitOfSavedRun: unitOfSavedRun, runDistance: distance)
-            
-            // Get distance in correct unit
-            let runDistance = calculateDistance(runDistance: distance, unitOfSavedRun: unitOfSavedRun)
-            
-            // Get date formatted as date
-            let dateAsDate = getDate(date: date)
-            
-            let runResult = RunResults(time: timeInDecimals,
-                                       minutes: raceTimeMinutes,
-                                       seconds: raceTimeSeconds,
-                                       hundreths: raceTimeHundreths,
-                                       distance: runDistance,
-                                       averageSpeed: speed,
-                                       type: type,
-                                       date: dateAsDate,
-                                       runID: runID)
-            
-            return runResult
         }
-        
         else {
             var id = "00"
             if let runID = run["run_id"] as? String {
@@ -105,6 +63,21 @@ struct RunHelper {
                               date: Date(),
                               runID: id)
         }
+    }
+    
+    private func getTimeInHours(totalRunTime: Double) -> Double {
+        // Get total race time in seconds
+        let totalSeconds = totalRunTime
+        let hours = totalSeconds / 3600
+        return hours
+    }
+    
+    private func convertToMilliseconds(totalRunTime: Double) -> Int {
+        // Find times in min, sec and hundreths
+        let totalSeconds = totalRunTime
+        let milliseconds = totalSeconds * 100
+        let millisecondsInt = Int(milliseconds)
+        return millisecondsInt
     }
     
     private func getTimesForSprint(times: [Double]) -> [String: Double] {
@@ -127,6 +100,132 @@ struct RunHelper {
         let totalTime = endTime - startTime
         return ["totalTime": totalTime, "reactionTime": reactionTime]
     }
+    
+    private func createReactionRun(distance: Int, type: String, date: String, runID: String, times: [Double], unitOfSavedRun: Bool) -> RunResults {
+        
+        let runTimes = getTimesForReaction(times: times)
+        let totalRunTime = runTimes["totalTime"] ?? 0.0
+        let reactionTime = runTimes["reactionTime"] ?? 0.0
+        
+        let timeInDecimals = totalRunTime.round(to: 2)
+        let hours = getTimeInHours(totalRunTime: totalRunTime)
+        let millisenconds = convertToMilliseconds(totalRunTime: totalRunTime)
+        
+        // Convert to time components
+        let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisenconds)
+        
+        // Get strings for time components
+        let raceTimeHundreths = String(format: "%02d", hundreths)
+        let raceTimeSeconds = String(format: "%02d", seconds)
+        let raceTimeMinutes = String(format: "%02d", minutes)
+        
+        // Get speed in correct unit
+        let speed = calculateSpeed(timeInHours: hours, unitOfSavedRun: unitOfSavedRun, runDistance: distance)
+        
+        // Get distance in correct unit
+        let runDistance = calculateDistance(runDistance: distance, unitOfSavedRun: unitOfSavedRun)
+        
+        // Get date formatted as date
+        let dateAsDate = getDate(date: date)
+        
+        let reactionTimeInDecimals = reactionTime.round(to: 2)
+        let milliseconds = convertToMilliseconds(totalRunTime: reactionTime)
+        let (reactionMinutes, reactionSeconds, reactionHundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: milliseconds)
+        let reactionTimeHundreths = String(format: "%02d", reactionHundreths)
+        let reactionTimeSeconds = String(format: "%02d", reactionSeconds)
+        let _ = String(format: "%02d", reactionMinutes)
+        
+        let runResult = RunResults(time: timeInDecimals,
+                                   minutes: raceTimeMinutes,
+                                   seconds: raceTimeSeconds,
+                                   hundreths: raceTimeHundreths,
+                                   distance: runDistance,
+                                   averageSpeed: speed,
+                                   type: type,
+                                   date: dateAsDate,
+                                   runID: runID,
+                                   reactionTime: reactionTimeInDecimals,
+                                   reactionSeconds: reactionTimeSeconds,
+                                   reactionHundreths: reactionTimeHundreths)
+        return runResult
+    }
+    
+    private func createSprintRun(distance: Int, type: String, date: String, runID: String, times: [Double], unitOfSavedRun: Bool) -> RunResults {
+        
+        let runTimes = getTimesForSprint(times: times)
+        let totalRunTime = runTimes["totalTime"] ?? 0.0
+        
+        let timeInDecimals = totalRunTime.round(to: 2)
+        let hours = getTimeInHours(totalRunTime: totalRunTime)
+        let millisenconds = convertToMilliseconds(totalRunTime: totalRunTime)
+        
+        // Convert to time components
+        let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisenconds)
+        
+        // Get strings for time components
+        let raceTimeHundreths = String(format: "%02d", hundreths)
+        let raceTimeSeconds = String(format: "%02d", seconds)
+        let raceTimeMinutes = String(format: "%02d", minutes)
+        
+        // Get speed in correct unit
+        let speed = calculateSpeed(timeInHours: hours, unitOfSavedRun: unitOfSavedRun, runDistance: distance)
+        
+        // Get distance in correct unit
+        let runDistance = calculateDistance(runDistance: distance, unitOfSavedRun: unitOfSavedRun)
+        
+        // Get date formatted as date
+        let dateAsDate = getDate(date: date)
+        
+        let runResult = RunResults(time: timeInDecimals,
+                                   minutes: raceTimeMinutes,
+                                   seconds: raceTimeSeconds,
+                                   hundreths: raceTimeHundreths,
+                                   distance: runDistance,
+                                   averageSpeed: speed,
+                                   type: type,
+                                   date: dateAsDate,
+                                   runID: runID)
+        return runResult
+    }
+    
+    private func createFlyingStartRun(distance: Int, type: String, date: String, runID: String, times: [Double], unitOfSavedRun: Bool) -> RunResults {
+        
+        let runTimes = getTimesForFlyingStart(times: times)
+        let totalRunTime = runTimes["totalTime"] ?? 0.0
+        
+        let timeInDecimals = totalRunTime.round(to: 2)
+        let hours = getTimeInHours(totalRunTime: totalRunTime)
+        let millisenconds = convertToMilliseconds(totalRunTime: totalRunTime)
+        
+        // Convert to time components
+        let (minutes, seconds, hundreths) = milliSecondsToMinutesSecondsHundreths(milliseconds: millisenconds)
+        
+        // Get strings for time components
+        let raceTimeHundreths = String(format: "%02d", hundreths)
+        let raceTimeSeconds = String(format: "%02d", seconds)
+        let raceTimeMinutes = String(format: "%02d", minutes)
+        
+        // Get speed in correct unit
+        let speed = calculateSpeed(timeInHours: hours, unitOfSavedRun: unitOfSavedRun, runDistance: distance)
+        
+        // Get distance in correct unit
+        let runDistance = calculateDistance(runDistance: distance, unitOfSavedRun: unitOfSavedRun)
+        
+        // Get date formatted as date
+        let dateAsDate = getDate(date: date)
+        
+        let runResult = RunResults(time: timeInDecimals,
+                                   minutes: raceTimeMinutes,
+                                   seconds: raceTimeSeconds,
+                                   hundreths: raceTimeHundreths,
+                                   distance: runDistance,
+                                   averageSpeed: speed,
+                                   type: type,
+                                   date: dateAsDate,
+                                   runID: runID)
+        return runResult
+    }
+    
     
     private func getTimesForFlyingStart(times: [Double]) -> [String: Double] {
         // Start time is not first element, this is just when run has started. times[1] is when runner crosses first gate

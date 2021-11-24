@@ -37,6 +37,12 @@
                     <view key="view" contentMode="scaleToFill" id="337-Nt-3bn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="exclamationmark.triangle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="3d5-lw-hyB">
+                                <rect key="frame" x="20" y="252" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="GvN-Ue-tBc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -48,6 +54,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="exclamationmark.triangle" catalog="system" width="128" height="112"/>
         <namedColor name="AccentColorDark">
             <color red="0.88700002431869507" green="0.02199999988079071" blue="0.071999996900558472" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
