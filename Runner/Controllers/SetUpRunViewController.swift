@@ -217,6 +217,10 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         
         // Set correct title for distance picker
         setUpRunViewModel.setDistancePickerTitle()
+        
+        // Make sure run selections are always reset when loaded
+        setUpRunViewModel.setFalseStartSelection(falseStart: false)
+        setUpRunViewModel.setUserSelectedRunner(userIsRunning: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -382,13 +386,14 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
     }
     
     func showScrollOnboardingFirstTime() {
-        animateOnboardScrollFirstTime()
+        onBoardScroll.animateOnboardingBubble()
         onBoardScroll.isHidden = false
+        animateOnboardingLockScreen()
     }
     
     func hideScrollOnboarding() {
         onBoardScroll.isHidden = true
-        animateHideOnboardScroll()
+        animateHideOnboardingLockScreen()
     }
     
     func showReactionRun() {
@@ -407,6 +412,7 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
     func showReactionOnboarding() {
         DispatchQueue.main.async {
             self.onBoardReaction.isHidden = false
+            self.onBoardReaction.animateOnboardingBubble()
         }
     }
     
@@ -416,36 +422,14 @@ extension SetUpRunViewController: SetUpRunViewModelDelegate {
         }
     }
     
-    func animateOnboardScroll() {
-        UIView.animate(withDuration: 0.4,
-            animations: {
-                self.onBoardScroll.transform = CGAffineTransform(scaleX: 1.04, y: 1.04)
-                self.onBoardScroll.alpha = 1
-            },
-            completion: { _ in
-                UIView.animate(withDuration: 0.15,
-                    animations: {
-                        self.onBoardScroll.transform = CGAffineTransform.identity
-                    })
-            })
-    }
-    
-    func animateOnboardScrollFirstTime() {
+    func animateOnboardingLockScreen() {
         UIView.animate(withDuration: 0.4,
             animations: {
                 self.onboardBackground.alpha = 1
-                self.onBoardScroll.transform = CGAffineTransform(scaleX: 1.04, y: 1.04)
-                self.onBoardScroll.alpha = 1
-            },
-            completion: { _ in
-                UIView.animate(withDuration: 0.15,
-                    animations: {
-                        self.onBoardScroll.transform = CGAffineTransform.identity
-                    })
             })
     }
     
-    func animateHideOnboardScroll() {
+    func animateHideOnboardingLockScreen() {
         UIView.animate(withDuration: 0.3,
             animations: {
                 self.onboardBackground.alpha = 0

@@ -50,6 +50,7 @@ class OnBoardingBubble: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = Constants.contrastColor
         view.layer.cornerRadius = Constants.smallCornerRadius
+        view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5 / 1.5, spread: 0)
         return view
     }()
     
@@ -72,7 +73,6 @@ class OnBoardingBubble: UIView {
         if dismisser == true {
             backgroundView.addSubview(closeButton)
         }
-        self.sendSubviewToBack(pointerView)
         label.text = title
     }
     
@@ -141,5 +141,19 @@ class OnBoardingBubble: UIView {
     
     @objc func handleDismissal() {
         onBoardingBubbleDelegate?.handleDismissal(sender: self)
+    }
+    
+    func animateOnboardingBubble() {
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.alpha = 1
+                self.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+            },
+            completion: { _ in
+                UIView.animate(withDuration: 0.15,
+                    animations: {
+                        self.transform = CGAffineTransform.identity
+                    })
+            })
     }
 }

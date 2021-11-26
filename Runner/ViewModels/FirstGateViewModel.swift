@@ -19,9 +19,12 @@ protocol FirstGateViewModelDelegate: AnyObject {
     func hasOnboardedFinishLineOneUser()
     func showOnboardStartLineTwoUsers()
     func hasOnboardedStartLineTwoUsers()
+    func showOnboardSensitivitySlider()
+    func hasOnboardedSensitivitySlider()
     func showRunResult(runresult: RunResults, photoFinishImage: UIImage?)
     func cameraRestricted()
     func cameraDenied()
+    func showFocusView()
 }
 
 class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -85,6 +88,12 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         
         listenForEndOfCurrentRun()
         
+        userSelectedLength = userSelectionsModel.getUserSelectedLength()
+        userSelectedType = userSelectionsModel.getUserSelectedType()
+        userSelectedDelay = userSelectionsModel.getUserSelectedDelay()
+    }
+    
+    func setUpCamera() {
         // Don't start camera if common sprint with 2 gates, else start camera for all other occasions
         // Starts Camera if User has selected to run with one gate only
         let isRunningWithOneGate = UserRunSelections.shared.getIsRunningWithOneGate()
@@ -96,11 +105,9 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         }
         else {
             goToCamera()
+            firstGateViewModelDelegate?.showFocusView()
+            showOnboardSensitivitySlider()
         }
-        
-        userSelectedLength = userSelectionsModel.getUserSelectedLength()
-        userSelectedType = userSelectionsModel.getUserSelectedType()
-        userSelectedDelay = userSelectionsModel.getUserSelectedDelay()
     }
     
     // Resets UI from cancel to start run when runs is completed
@@ -549,7 +556,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     func hasOnboardedFinishLineOneUser() {
         UserDefaults.standard.set(true, forKey: Constants.hasOnboardedFinishLineOneUser)
         firstGateViewModelDelegate?.hasOnboardedFinishLineOneUser()
-        
     }
     
     // If onboarding of connect hasnt already occured, show onboardconnect bubble
@@ -561,6 +567,30 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                 firstGateViewModelDelegate?.showOnboardFinishLineOneUser()
             }
         }
+    }
+    
+    // Counts up to 3. When user default counter is 3 sensitivty slider will be onboarded
+    func addCountToSenitivitySliderCount() {
+        let onboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedSensitivitySlider)
+        if onboarded == false {
+            let sensitivityOnboardingCounter = UserDefaults.standard.integer(forKey: Constants.sensitivityOnboardingSliderCounter)
+            UserDefaults.standard.set(sensitivityOnboardingCounter + 1, forKey: Constants.sensitivityOnboardingSliderCounter)
+        }
+    }
+    
+    func showOnboardSensitivitySlider() {
+        let onboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedSensitivitySlider)
+        if onboarded == false {
+            let sensitivityOnboardingCounter = UserDefaults.standard.integer(forKey: Constants.sensitivityOnboardingSliderCounter)
+            if sensitivityOnboardingCounter >= 3 {
+                firstGateViewModelDelegate?.showOnboardSensitivitySlider()
+            }
+        }
+    }
+    
+    func hasOnboardedSensitivitySlider() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedSensitivitySlider)
+        firstGateViewModelDelegate?.hasOnboardedSensitivitySlider()
     }
     
     func hasOnboardedStartLineTwoUsers() {

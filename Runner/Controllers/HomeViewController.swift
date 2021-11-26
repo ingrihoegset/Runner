@@ -321,6 +321,9 @@ class HomeViewController: UIViewController {
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedScanPartnerQR)
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedOpenEndGate)
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineTwoUsers)
+        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedSensitivitySlider)
+        UserDefaults.standard.set(1, forKey: Constants.sensitivityOnboardingSliderCounter)
+        UserDefaults.standard.set(false, forKey: Constants.readyToShowOnboardConnect)
 
         view.backgroundColor = Constants.accentColor
         
@@ -437,6 +440,9 @@ class HomeViewController: UIViewController {
         else {
             print("No user email found when trying to initiate profile pic download")
         }
+        
+        // Will show onboard connect if ready for it
+        homeViewModel.showOnboardConnect()
     }
     
     deinit {
@@ -533,7 +539,7 @@ class HomeViewController: UIViewController {
         segmentControl.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: Constants.sideMargin).isActive = true
         segmentControl.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         
-        onBoardConnect.topAnchor.constraint(equalTo: segmentControl.bottomAnchor).isActive = true
+        onBoardConnect.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 5).isActive = true
         onBoardConnect.centerXAnchor.constraint(equalTo: segmentControl.centerXAnchor).isActive = true
         onBoardConnect.widthAnchor.constraint(equalTo: segmentControl.widthAnchor, multiplier: 0.85).isActive = true
         onBoardConnect.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2.25).isActive = true
@@ -576,7 +582,7 @@ class HomeViewController: UIViewController {
         openSecondGatesButton.trailingAnchor.constraint(equalTo: secondGateView.trailingAnchor, constant: -Constants.sideMargin).isActive = true
         openSecondGatesButton.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
-        onBoardEndGate.bottomAnchor.constraint(equalTo: openSecondGatesButton.topAnchor).isActive = true
+        onBoardEndGate.bottomAnchor.constraint(equalTo: openSecondGatesButton.topAnchor, constant: -5).isActive = true
         onBoardEndGate.widthAnchor.constraint(equalTo: openSecondGatesButton.widthAnchor, multiplier: 0.6).isActive = true
         onBoardEndGate.centerXAnchor.constraint(equalTo: openSecondGatesButton.centerXAnchor).isActive = true
         onBoardEndGate.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
@@ -847,7 +853,7 @@ extension HomeViewController: HomeViewModelDelegate {
     
     @objc func alertUserThatFlyingStartOnlyAvailableWhenConnected() {
         let actionSheet = UIAlertController(title: "Add second gate",
-                                            message: "You must be connected to second gate set up flying start.",
+                                            message: "You must be connected to second gate to set up flying start.",
                                             preferredStyle: .alert)
         
         actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
@@ -875,12 +881,14 @@ extension HomeViewController: HomeViewModelDelegate {
     func showOnboardConnect() {
         DispatchQueue.main.async {
             self.onBoardConnect.isHidden = false
+            self.onBoardConnect.animateOnboardingBubble()
         }
     }
     
     func showOnboardedOpenEndGate() {
         DispatchQueue.main.async {
             self.onBoardEndGate.isHidden = false
+            self.onBoardEndGate.animateOnboardingBubble()
         }
     }
     
@@ -963,7 +971,7 @@ extension HomeViewController {
         navigationController?.pushViewController(vc, animated: true)
         
         // Tell Home view that it is ready to show connect to partner onboarding next time it appears
-        homeViewModel.showOnboardConnect()
+        homeViewModel.readyToOnboardConnect()
     }
     
     @objc func didNotFindPartnerToLinkTo() {

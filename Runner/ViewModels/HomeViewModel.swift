@@ -107,11 +107,19 @@ class HomeViewModel {
         homeViewModelDelegate?.hasOnboardedEndGate()
     }
     
-    // If onboarding of connect hasnt already occured, show onboardconnect bubble
+    func readyToOnboardConnect() {
+        UserDefaults.standard.set(true, forKey: Constants.readyToShowOnboardConnect)
+    }
+    
+    // If onboarding of connect hasnt already occured, show onboardconnect bubble.
+    // Should only show when ready, i.e. after selecting to set up a run.
     func showOnboardConnect() {
         let onboardConnect = UserDefaults.standard.bool(forKey: Constants.hasOnboardedConnectToPartner)
+        let readyToShowOnboardConnect = UserDefaults.standard.bool(forKey: Constants.readyToShowOnboardConnect)
         if onboardConnect == false {
-            homeViewModelDelegate?.showOnboardConnect()
+            if readyToShowOnboardConnect == true {
+                homeViewModelDelegate?.showOnboardConnect()
+            }
         }
     }
     

@@ -98,6 +98,9 @@ struct Constants {
     static let hasOnboardedLetPartnerScanYourQR = "hasOnboardedLetPartnerScanYourQR"
     static let hasOnboardedOpenEndGate = "hasOnboardedOpenEndGate"
     static let hasOnboardedFinishLineTwoUsers = "hasOnboardedFinishLineTwoUsers"
+    static let hasOnboardedSensitivitySlider = "hasOnboardedSensitivitySlider"
+    static let sensitivityOnboardingSliderCounter = "sensitivityOnboardingSliderCounter"
+    static let readyToShowOnboardConnect = "readyToShowOnboardConnect"
     
     // Camera uses to know if race has started and whether it should listen for breaks or not
     static var isRunning = false

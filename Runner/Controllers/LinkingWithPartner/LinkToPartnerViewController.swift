@@ -433,6 +433,7 @@ extension LinkToPartnerViewController: LinkViewModelDelegate {
     func showOnboardConnect() {
         DispatchQueue.main.async {
             self.onBoardConnect.isHidden = false
+            self.onBoardConnect.animateOnboardingBubble()
         }
     }
     

@@ -381,6 +381,9 @@ class RegisterViewController: UIViewController {
                 UserDefaults.standard.set(false, forKey: Constants.hasOnboardedScanPartnerQR)
                 UserDefaults.standard.set(false, forKey: Constants.hasOnboardedOpenEndGate)
                 UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineTwoUsers)
+                UserDefaults.standard.set(false, forKey: Constants.hasOnboardedSensitivitySlider)
+                UserDefaults.standard.set(1, forKey: Constants.sensitivityOnboardingSliderCounter)
+                UserDefaults.standard.set(false, forKey: Constants.readyToShowOnboardConnect)
                 
                 // Insert user into database with properties given in text fields
                 let raceAppUser = RaceAppUser(firstName: firstName,

@@ -50,13 +50,14 @@ class SetUpRunViewModel {
     
     /// Sets User selections after segment control is altered
     func setUserSelectedRunner(userIsRunning: Bool) {
+        print("User is running: \(userIsRunning)")
         selectionModel.setUserIsRunning(running: userIsRunning)
     }
     
     /// Sets User false start selections after segment control is altered
     func setFalseStartSelection(falseStart: Bool) {
+        print("User selected false start: \(falseStart)")
         selectionModel.setUserSelectedFalseStart(falseStart: falseStart)
-        print("False selected ", selectionModel.getUserSelectedFalseStart())
     }
     
     func setDistancePickerTitle() {

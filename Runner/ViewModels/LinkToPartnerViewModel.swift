@@ -22,7 +22,6 @@ class LinkToPartnerViewModel {
     
     init() {
         
-        
         NotificationCenter.default.addObserver(self, selector: #selector(newLinkOccured), name: NSNotification.Name(rawValue: Constants.linkOccured), object: nil)
     }
     
@@ -76,8 +75,8 @@ class LinkToPartnerViewModel {
             }
             else {
                 print("Failed update database with new Link")
-                
                 // -- Should show error to user -- //
+                self.linkViewModelDelegate?.failedToConnectError()
             }
         })
     }
@@ -85,6 +84,7 @@ class LinkToPartnerViewModel {
     // New Link occured. Notification posted. Should close LinkVC
     @objc func newLinkOccured() {
         self.linkViewModelDelegate?.didUpdateLink()
+        self.scanOnboarded()
     }
     
     func fetchProfilePic() {

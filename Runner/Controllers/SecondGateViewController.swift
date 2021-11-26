@@ -15,7 +15,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     let secondGateViewModel = SecondGateViewModel()
     
     /// Other
-    var showslider = true
+    var showslider = false
     
     /// Views
     let displayView: UIView = {
@@ -75,6 +75,14 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         let bubble = OnBoardingBubble(frame: .zero, title: "Place phone at finish line. Set pointer so the camera can see you run across the finish line!", pointerPlacement: "topMiddle", dismisser: true)
         bubble.translatesAutoresizingMaskIntoConstraints = false
         bubble.tag = 0
+        bubble.isHidden = true
+        return bubble
+    }()
+    
+    let onboardSensitivitySlider: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Click me to adjust sensitivity of sensor", pointerPlacement: "topMiddle", dismisser: false)
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.tag = 1
         bubble.isHidden = true
         return bubble
     }()
@@ -189,6 +197,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         // Delegates
         secondGateViewModel.secondGateViewModelDelegate = self
         onBoardPlace.onBoardingBubbleDelegate  = self
+        onboardSensitivitySlider.onBoardingBubbleDelegate = self
         
         // Set up for camera view
         let previewLayer = secondGateViewModel.previewLayer
@@ -198,6 +207,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         focusView.addSubview(focusImageView)
         view.addSubview(onBoardPlace)
         view.addSubview(sensitivitySliderView)
+        view.addSubview(onboardSensitivitySlider)
 
         // Top View
         view.addSubview(displayView)
@@ -254,6 +264,9 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         
         // Make sure screen doesnt lock while run is ongoing. Camera needs to be available during complete run
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        // Onboard sensitivity slider if hasent been onboarded yet
+        secondGateViewModel.showOnboardSensitivitySlider()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -311,6 +324,11 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         sensitivitySliderView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7).isActive = true
         sensitivitySliderView.bottomAnchor.constraint(equalTo: focusView.topAnchor, constant: -15).isActive = true
         
+        onboardSensitivitySlider.topAnchor.constraint(equalTo: focusView.bottomAnchor, constant: 10).isActive = true
+        onboardSensitivitySlider.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
+        onboardSensitivitySlider.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        onboardSensitivitySlider.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
+        
         onBoardPlace.topAnchor.constraint(equalTo: focusView.bottomAnchor, constant: 10).isActive = true
         onBoardPlace.centerXAnchor.constraint(equalTo: focusView.centerXAnchor).isActive = true
         onBoardPlace.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7).isActive = true
@@ -352,12 +370,12 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
     }
     
     @objc func changeSliderVisibility() {
-        if showslider == true {
+        if showslider == false {
             sensitivitySliderView.isHidden = false
-            showslider = false
+            showslider = true
         }
         else {
-            showslider = true
+            showslider = false
             sensitivitySliderView.isHidden = true
         }
     }
@@ -367,8 +385,14 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         UserDefaults.standard.setValue(CGFloat(currentValue), forKey: Constants.cameraSensitivity)
         // Tell breakobserver to update camera sensitivity
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.cameraSensitivity), object: nil)
+        
+        // Has onboarded sensitivity slider
+        secondGateViewModel.hasOnboardedSensitivitySlider()
+        
+        // Hide slider after value changed
+        sensitivitySliderView.isHidden = true
+        showslider = false
     }
-    
 }
 
 
@@ -416,6 +440,14 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
     func showOnboardingFinishLine() {
         DispatchQueue.main.async {
             self.onBoardPlace.isHidden = false
+            self.onBoardPlace.animateOnboardingBubble()
+        }
+    }
+    
+    func showOnboardingSensitivitySlider() {
+        DispatchQueue.main.async {
+            self.onboardSensitivitySlider.isHidden = false
+            self.onboardSensitivitySlider.animateOnboardingBubble()
         }
     }
     
@@ -485,7 +517,12 @@ extension SecondGateViewController: SecondGateViewModelDelegate {
 /// Related to onboarding the user
 extension SecondGateViewController: OnBoardingBubbleDelegate {
     func handleDismissal(sender: UIView) {
-        secondGateViewModel.hasOnboardedFinishLine()
+        if sender.tag == 0 {
+            secondGateViewModel.hasOnboardedFinishLine()
+        }
+        if sender.tag == 1 {
+            secondGateViewModel.hasOnboardedSensitivitySlider()
+        }
     }
 }
 

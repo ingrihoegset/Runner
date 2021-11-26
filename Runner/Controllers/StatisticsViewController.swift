@@ -373,6 +373,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
         
+        statisticsViewModel.showOnboardClickMe()
+        
         if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
             if metricSystem == true {
                 runSpeedButton.setTitle("km/h", for: .normal)
@@ -500,7 +502,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         fakeRow8.trailingAnchor.constraint(equalTo: skeletonLoadingView.trailingAnchor).isActive = true
         
         // Views related to onboarding
-        onBoardClickMe.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor, constant: Constants.mainButtonSize).isActive = true
+        onBoardClickMe.topAnchor.constraint(equalTo: statsHeaderView.bottomAnchor, constant: Constants.mainButtonSize + 5).isActive = true
         onBoardClickMe.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
         onBoardClickMe.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         onBoardClickMe.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
@@ -579,6 +581,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     func showOnboardClickMe() {
         DispatchQueue.main.async {
             self.onBoardClickMe.isHidden = false
+            self.onBoardClickMe.animateOnboardingBubble()
         }
     }
     

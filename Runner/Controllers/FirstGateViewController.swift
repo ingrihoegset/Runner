@@ -18,7 +18,7 @@ class FirstGateViewController: UIViewController {
     var counter = 3
     
     /// Other
-    var showslider = true
+    var showslider = false
     
     /// Top display elements
     let displayView: UIView = {
@@ -100,13 +100,7 @@ class FirstGateViewController: UIViewController {
         view.backgroundColor = Constants.mainColor?.withAlphaComponent(0.3)
         view.layer.borderWidth = Constants.borderWidth
         view.layer.borderColor = Constants.contrastColor?.cgColor
-        if UserRunSelections.shared.getIsRunningWithOneGate() == true {
-            view.isHidden = false
-        }
-        else {
-            view.isHidden = true
-        }
-
+        view.isHidden = true
         return view
     }()
     
@@ -116,12 +110,6 @@ class FirstGateViewController: UIViewController {
         view.backgroundColor = .clear
         view.image = UIImage(named: "Focus")?.withTintColor(Constants.contrastColor!)
         view.isUserInteractionEnabled = true
-        if UserRunSelections.shared.getIsRunningWithOneGate() == true {
-            view.isHidden = false
-        }
-        else {
-            view.isHidden = true
-        }
         return view
     }()
     
@@ -155,6 +143,8 @@ class FirstGateViewController: UIViewController {
     let countDownPickerView: CountDownPicker = {
         let picker = CountDownPicker()
         picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.detail1.textColor = Constants.accentColorDarkest
+        picker.detail2.textColor = Constants.accentColorDarkest
         picker.alpha = 0
         picker.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return picker
@@ -189,6 +179,14 @@ class FirstGateViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.alpha = 0
         return view
+    }()
+    
+    let onboardSensitivitySlider: OnBoardingBubble = {
+        let bubble = OnBoardingBubble(frame: .zero, title: "Click me to adjust sensitivity of sensor", pointerPlacement: "topMiddle", dismisser: false)
+        bubble.translatesAutoresizingMaskIntoConstraints = false
+        bubble.tag = 2
+        bubble.isHidden = true
+        return bubble
     }()
     
     let sensitivitySliderView: UIView = {
@@ -295,6 +293,7 @@ class FirstGateViewController: UIViewController {
         firstGateViewModel.firstGateViewModelDelegate = self
         onBoardFinishLine.onBoardingBubbleDelegate = self
         onBoardConnectedStart.onBoardingBubbleDelegate = self
+        onboardSensitivitySlider.onBoardingBubbleDelegate = self
         
         // Add top displays
         view.addSubview(displayView)
@@ -312,6 +311,7 @@ class FirstGateViewController: UIViewController {
         pulsingLabelView.addSubview(pulsingLabel)
         pulsingLabelView.addSubview(pulsingView)
         view.addSubview(startButton)
+        view.addSubview(onboardSensitivitySlider)
         view.addSubview(onBoardConnectedStart)
         view.addSubview(cancelRaceButton)
         view.addSubview(countDownPickerView)
@@ -323,6 +323,9 @@ class FirstGateViewController: UIViewController {
         // Related to onboarding
         firstGateViewModel.showOnboardingFinishLineOneUser()
         firstGateViewModel.showOnboardingStartLineTwoUsers()
+        
+        // Set up camera
+        firstGateViewModel.setUpCamera()
         
         // Related to internet connection
         view.addSubview(noConnectionView)
@@ -372,7 +375,6 @@ class FirstGateViewController: UIViewController {
         else {
             UIApplication.shared.isIdleTimerDisabled = false
         }
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -446,6 +448,11 @@ class FirstGateViewController: UIViewController {
         focusView.heightAnchor.constraint(equalToConstant: width).isActive = true
         focusView.layer.cornerRadius = width / 2
         
+        onboardSensitivitySlider.topAnchor.constraint(equalTo: focusView.bottomAnchor, constant: 10).isActive = true
+        onboardSensitivitySlider.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
+        onboardSensitivitySlider.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.5).isActive = true
+        onboardSensitivitySlider.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 1.5).isActive = true
+        
         onBoardFinishLine.topAnchor.constraint(equalTo: focusView.bottomAnchor, constant: 10).isActive = true
         onBoardFinishLine.centerXAnchor.constraint(equalTo: cameraView.centerXAnchor).isActive = true
         onBoardFinishLine.widthAnchor.constraint(equalTo: cameraView.widthAnchor, multiplier: 0.8).isActive = true
@@ -493,6 +500,7 @@ class FirstGateViewController: UIViewController {
             self.cameraView.layer.addSublayer(previewLayer)
             self.cameraView.bringSubviewToFront(self.focusView)
             self.cameraView.bringSubviewToFront(self.onBoardFinishLine)
+            self.cameraView.bringSubviewToFront(self.onboardSensitivitySlider)
             self.cameraView.bringSubviewToFront(self.sensitivitySliderView)
         }
     }
@@ -539,7 +547,7 @@ class FirstGateViewController: UIViewController {
         }
         
         // Hide sensor if showing
-        showslider = true
+        showslider = false
         sensitivitySliderView.isHidden = true
         
         // Onboard Finish line
@@ -549,6 +557,12 @@ class FirstGateViewController: UIViewController {
         if onBoardConnectedStart.isHidden == false {
             firstGateViewModel.hasOnboardedStartLineTwoUsers()
         }
+        
+        // Increase counter to onboard sensitivity slider. Will show after 3 time user has started a run
+        firstGateViewModel.addCountToSenitivitySliderCount()
+        
+        // Hide sensitivity onboarding if showing
+        onboardSensitivitySlider.isHidden = true
     }
     
     @objc private func cancelRun() {
@@ -628,6 +642,10 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
         }
     }
     
+    func showFocusView() {
+        focusView.isHidden = false
+    }
+    
     func removeCountDownLabel() {
         
         // Hide count down label when count down complete
@@ -651,6 +669,19 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
     func showOnboardFinishLineOneUser() {
         DispatchQueue.main.async {
             self.onBoardFinishLine.isHidden = false
+            self.onBoardFinishLine.animateOnboardingBubble()
+        }
+    }
+    
+    func showOnboardSensitivitySlider() {
+        DispatchQueue.main.async {
+            self.onboardSensitivitySlider.isHidden = false
+        }
+    }
+    
+    func hasOnboardedSensitivitySlider() {
+        DispatchQueue.main.async {
+            self.onboardSensitivitySlider.isHidden = true
         }
     }
     
@@ -663,6 +694,7 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
     func showOnboardStartLineTwoUsers() {
         DispatchQueue.main.async {
             self.onBoardConnectedStart.isHidden = false
+            self.onBoardConnectedStart.animateOnboardingBubble()
         }
     }
     
@@ -683,12 +715,13 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
     }
     
     @objc func changeSliderVisibility() {
-        if showslider == true {
+        if showslider == false {
+            firstGateViewModel.hasOnboardedSensitivitySlider()
             sensitivitySliderView.isHidden = false
-            showslider = false
+            showslider = true
         }
         else {
-            showslider = true
+            showslider = false
             sensitivitySliderView.isHidden = true
         }
     }
@@ -700,6 +733,8 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
         print("Changed to \(UserDefaults.standard.value(forKey: Constants.cameraSensitivity))")
         
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.cameraSensitivity), object: nil)
+        sensitivitySliderView.isHidden = true
+        showslider = false
     }
     
     // Related to checking camera access
@@ -762,6 +797,9 @@ extension FirstGateViewController: OnBoardingBubbleDelegate {
         }
         if sender.tag == 1 {
             firstGateViewModel.hasOnboardedStartLineTwoUsers()
+        }
+        if sender.tag == 2 {
+            firstGateViewModel.hasOnboardedSensitivitySlider()
         }
     }
 }

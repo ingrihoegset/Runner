@@ -14,6 +14,7 @@ protocol SecondGateViewModelDelegate: AnyObject {
     func updateRunningAnimtion(color: CGColor, label: String)
     func hasOnboardedFinsihLine()
     func showOnboardingFinishLine()
+    func showOnboardingSensitivitySlider()
     func showRunResult(runresult: RunResults, photoFinishImage: UIImage)
     func dismissResultsVC()
     func cameraRestricted()
@@ -203,6 +204,19 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         let onboardConnect = UserDefaults.standard.bool(forKey: Constants.hasOnboardedFinishLineTwoUsers)
         if onboardConnect == false {
             secondGateViewModelDelegate?.showOnboardingFinishLine()
+        }
+    }
+    
+    func hasOnboardedSensitivitySlider() {
+        UserDefaults.standard.set(true, forKey: Constants.hasOnboardedSensitivitySlider)
+    }
+    
+    func showOnboardSensitivitySlider() {
+        let sliderOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedSensitivitySlider)
+        let finishLineOnboarded = UserDefaults.standard.bool(forKey: Constants.hasOnboardedFinishLineTwoUsers)
+        print(sliderOnboarded, finishLineOnboarded)
+        if sliderOnboarded == false && finishLineOnboarded == true {
+            secondGateViewModelDelegate?.showOnboardingSensitivitySlider()
         }
     }
 }
