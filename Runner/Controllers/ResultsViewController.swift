@@ -540,7 +540,7 @@ class ResultsViewController: UIViewController {
     }
     
     @objc private func shareResultOnSoMe() {
-        let vc = EditPhotoViewController()
+        let vc = ShareRunViewController()
         vc.photoFinishImage = unwrappedPhotoFinishImage
         vc.result = result
         let backItem = UIBarButtonItem()

@@ -153,6 +153,26 @@ class ResultDetailsViewController: UIViewController {
         return label
     }()
     
+    let shareButtonView: LargeImageButton = {
+        let button = LargeImageButton()
+        button.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        button.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.5).isActive = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = Constants.contrastColor
+        button.layer.cornerRadius = Constants.mainButtonSize / 2
+        button.clipsToBounds = true
+        button.layer.masksToBounds = false
+        button.title.text = "Share my run"
+        button.title.textColor = Constants.textColorWhite
+        button.title.font = Constants.mainFontSB
+        let image = UIImage(systemName: "square.and.arrow.up")?.withTintColor(Constants.mainColor!)
+        button.imageview.isOpaque = true
+        button.imageview.alpha = 1
+        button.imageview.image = image?.imageWithInsets(insets: UIEdgeInsets(top: 5, left: 10, bottom: 9, right: 5))
+        button.addTarget(self, action: #selector(shareResultOnSoMe), for: .touchUpInside)
+        return button
+    }()
+    
     let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -244,6 +264,8 @@ class ResultDetailsViewController: UIViewController {
         title =  type + " stats"
         
         resultDetailsViewModel.resultsViewModelDelegate = self
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.tintColor = Constants.accentColorDark
         
         view.backgroundColor = Constants.mainColor
         
@@ -314,6 +336,7 @@ class ResultDetailsViewController: UIViewController {
         }
         
         stackView.addArrangedSubview(lapsView)
+        stackView.addArrangedSubview(shareButtonView)
 
         detailRowDate.setAttributedTitle(dateText, for: .normal)
         detailRowTime.setAttributedTitle(timeText, for: .normal)
@@ -329,6 +352,11 @@ class ResultDetailsViewController: UIViewController {
         setConstraints()
         startAnimation()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     
     deinit {
         print("DESTROYED \(self)")
@@ -420,6 +448,25 @@ class ResultDetailsViewController: UIViewController {
             lapsChartView.xAxis.axisMaximum = lapsChartView.xAxis.axisMinimum
         }
     }
+    
+    @objc func shareResultOnSoMe() {
+        let vc = ShareRunViewController()
+        vc.result = self.selectedRun
+        
+        // Tells destination controller which units to display
+        vc.metricSystemOnOpen = true
+        if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
+            if metricSystem == false {
+                vc.metricSystemOnOpen = false
+            }
+        }
+        
+        let backItem = UIBarButtonItem()
+        backItem.title = "Back"
+        self.navigationItem.backBarButtonItem = backItem
+        vc.navigationController?.navigationItem.backBarButtonItem = backItem
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 
     func secondsToHoursMinutesSeconds (seconds : Double) -> (Int, Int, Int, Int) {
         let int = Int(seconds)
@@ -493,3 +540,5 @@ extension ResultDetailsViewController: ResultDetailsViewModelDelegate {
         }
     }
 }
+
+

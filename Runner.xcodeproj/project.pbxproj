@@ -60,14 +60,15 @@
 		BF9BFCED273971A300D27110 /* 20.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCEC273971A200D27110 /* 20.wav */; };
 		BFA78B91273E77B3002C8E14 /* ImageCropHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA78B90273E77B3002C8E14 /* ImageCropHandler.swift */; };
 		BFB95B222726CF2700DF51BA /* SlantedViewBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB95B212726CF2700DF51BA /* SlantedViewBottom.swift */; };
+		BFC2882C2755317400DE4CE7 /* ShareRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC2882B2755317400DE4CE7 /* ShareRunViewController.swift */; };
 		BFC4AE1626D02DD300912F79 /* ResultDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */; };
 		BFC4AE3226D02FA400912F79 /* DetailRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3126D02FA400912F79 /* DetailRow.swift */; };
 		BFC4AE3526D0410400912F79 /* ResultDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */; };
 		BFC86A9F26BDED84006E320F /* SortTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */; };
-		BFCF44D8273D30D4005608D2 /* EditPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCF44D7273D30D4005608D2 /* EditPhotoViewController.swift */; };
 		BFD5488226E13EED009A2390 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488126E13EED009A2390 /* CounterView.swift */; };
 		BFD5488526F25D22009A2390 /* SetUpRunViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */; };
 		BFD5488B26F330D5009A2390 /* BounceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD5488A26F330D4009A2390 /* BounceButton.swift */; };
+		BFD78C0A27556FD900749D95 /* MyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD78C0927556FD900749D95 /* MyCollectionViewCell.swift */; };
 		BFE0508E272B3D5D00C6441D /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE0508D272B3D5D00C6441D /* HelpViewController.swift */; };
 		BFEAB4BD274AB5170058311C /* RunHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEAB4BC274AB5170058311C /* RunHelper.swift */; };
 		BFEB3CB92727428F007FAB42 /* Overpass-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BFEB3CB82727428F007FAB42 /* Overpass-SemiBold.ttf */; };
@@ -149,14 +150,15 @@
 		BF9BFCEC273971A200D27110 /* 20.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 20.wav; sourceTree = "<group>"; };
 		BFA78B90273E77B3002C8E14 /* ImageCropHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropHandler.swift; sourceTree = "<group>"; };
 		BFB95B212726CF2700DF51BA /* SlantedViewBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlantedViewBottom.swift; sourceTree = "<group>"; };
+		BFC2882B2755317400DE4CE7 /* ShareRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRunViewController.swift; sourceTree = "<group>"; };
 		BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewController.swift; sourceTree = "<group>"; };
 		BFC4AE3126D02FA400912F79 /* DetailRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRow.swift; sourceTree = "<group>"; };
 		BFC4AE3426D0410400912F79 /* ResultDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewModel.swift; sourceTree = "<group>"; };
 		BFC86A9E26BDED84006E320F /* SortTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortTypeViewController.swift; sourceTree = "<group>"; };
-		BFCF44D7273D30D4005608D2 /* EditPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPhotoViewController.swift; sourceTree = "<group>"; };
 		BFD5488126E13EED009A2390 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		BFD5488426F25D21009A2390 /* SetUpRunViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUpRunViewModel.swift; sourceTree = "<group>"; };
 		BFD5488A26F330D4009A2390 /* BounceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BounceButton.swift; sourceTree = "<group>"; };
+		BFD78C0927556FD900749D95 /* MyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCollectionViewCell.swift; sourceTree = "<group>"; };
 		BFE0508D272B3D5D00C6441D /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		BFEAB4BC274AB5170058311C /* RunHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunHelper.swift; sourceTree = "<group>"; };
 		BFEB3CB82727428F007FAB42 /* Overpass-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Overpass-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 				BF2F51C02725D63A0066C5AD /* SlantedView.swift */,
 				BFB95B212726CF2700DF51BA /* SlantedViewBottom.swift */,
 				BFF011B02730362800CE020A /* CheckView.swift */,
+				BFD78C0927556FD900749D95 /* MyCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -404,12 +407,12 @@
 				BFE0508C272B3D4000C6441D /* Settings */,
 				BFC86A9D26BDEC96006E320F /* Statistics */,
 				BF12FF28269F5BB700B51370 /* LinkingWithPartner */,
+				BFC2882B2755317400DE4CE7 /* ShareRunViewController.swift */,
 				BFFB69A1269A14E30080DA62 /* HomeViewController.swift */,
 				BF12FF09269F568400B51370 /* SetUpRunViewController.swift */,
 				BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */,
 				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
 				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
-				BFCF44D7273D30D4005608D2 /* EditPhotoViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
 			);
 			path = Controllers;
@@ -607,13 +610,13 @@
 				BFC86A9F26BDED84006E320F /* SortTypeViewController.swift in Sources */,
 				BFFB69CA269A30000080DA62 /* Extensions.swift in Sources */,
 				BF512AE126A06E44001C6BF2 /* SecondGateViewController.swift in Sources */,
-				BFCF44D8273D30D4005608D2 /* EditPhotoViewController.swift in Sources */,
 				BF4FF85226D57294005D6920 /* DateSortViewController.swift in Sources */,
 				BFEAB4BD274AB5170058311C /* RunHelper.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */,
 				BF2F51B227247EF10066C5AD /* NetworkManager.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
+				BFD78C0A27556FD900749D95 /* MyCollectionViewCell.swift in Sources */,
 				BF4830C4269CBB0500C8CC6C /* ProfileViewModel.swift in Sources */,
 				BFF011B12730362800CE020A /* CheckView.swift in Sources */,
 				BF82518626FA65CB00792FCB /* InfoPlistParser.swift in Sources */,
@@ -642,6 +645,7 @@
 				BFD5488526F25D22009A2390 /* SetUpRunViewModel.swift in Sources */,
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
 				BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */,
+				BFC2882C2755317400DE4CE7 /* ShareRunViewController.swift in Sources */,
 				BF2F51BE2724A02C0066C5AD /* NoConnectionView.swift in Sources */,
 				BFB95B222726CF2700DF51BA /* SlantedViewBottom.swift in Sources */,
 				BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */,

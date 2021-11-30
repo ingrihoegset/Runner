@@ -899,7 +899,7 @@ extension HomeViewController: HomeViewModelDelegate {
     }
     func setCameraSensitivity() {
         if UserDefaults.standard.value(forKey: Constants.cameraSensitivity) == nil {
-            UserDefaults.standard.setValue(CGFloat(0.2), forKey: Constants.cameraSensitivity)
+            UserDefaults.standard.setValue(CGFloat(0.175), forKey: Constants.cameraSensitivity)
         }
     }
 }

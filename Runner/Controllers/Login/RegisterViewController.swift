@@ -634,11 +634,11 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
                                             preferredStyle: .actionSheet)
         
         actionSheet.addAction(UIAlertAction(title: "Cancel",
-                                            style: .default,
+                                            style: .cancel,
                                             handler: nil))
         
         actionSheet.addAction(UIAlertAction(title: "Take Photo",
-                                            style: .cancel,
+                                            style: .default,
                                             handler: { [weak self] _ in
                                                 self?.presentCamera()
         }))
