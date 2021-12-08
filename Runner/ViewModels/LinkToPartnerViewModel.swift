@@ -88,7 +88,7 @@ class LinkToPartnerViewModel {
     }
     
     func fetchProfilePic() {
-        print("Fetching picture")
+        print("Fetching picture in Linking")
 
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             print("No email saved to user defaults")
@@ -102,10 +102,13 @@ class LinkToPartnerViewModel {
         StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
             switch result {
             case .success(let url):
-                print("Succeed in downloading url")
-                StorageManager.getImage(withURL: url, completion: { image in
-                    if let downloadedImage = image {
+                print("Succeed in downloading url in linking")
+                StorageManager.getImage(withURL: url, completion: { resultImage in
+                    switch resultImage {
+                    case .success(let downloadedImage):
                         self?.linkViewModelDelegate?.didFetchProfileImage(image: downloadedImage)
+                    case .failure(_):
+                        self?.linkViewModelDelegate?.failedToConnectError()
                     }
                 })
                 

@@ -312,7 +312,7 @@ class ResultsViewController: UIViewController {
         title = "Run completed!"
         
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.mainColor]
+                                                                         NSAttributedString.Key.foregroundColor: Constants.mainColor!]
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,

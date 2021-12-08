@@ -31,20 +31,22 @@ class ProfileViewModel {
         let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
         let filename = safeEmail + "_profile_picture.png"
         let path = "images/" + filename
-        print("image path", path)
         
         StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
             switch result {
             case .success(let url):
-                print("Succeed in downloading url")
-                StorageManager.getImage(withURL: url, completion: { image in
-                    if let downloadedImage = image {
+                print("Returned image url for settings")
+                StorageManager.getImage(withURL: url, completion: { imageResult in
+                    switch imageResult {
+                    // Succeeded in getting user name. Proceed to generate views
+                    case .success(let downloadedImage):
                         self?.profileViewModelDelegate?.didFetchProfileImage(image: downloadedImage)
+                    case .failure(let imageError):
+                        print(imageError)
                     }
                 })
-                
             case .failure(let error):
-                print("Failed to download url: \(error)")
+                print("Failed to download url for settings: \(error)")
             }
         })
     }

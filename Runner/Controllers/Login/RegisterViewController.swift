@@ -437,19 +437,19 @@ class RegisterViewController: UIViewController {
         let home = HomeViewController()
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
-        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVC.navigationBar.tintColor = Constants.accentColorDark
         
         let stats = StatisticsViewController()
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
-        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCStats.navigationBar.tintColor = Constants.accentColorDark
         
         let profile = ProfileViewController()
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
-        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCProfile.navigationBar.tintColor = Constants.accentColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
@@ -460,7 +460,7 @@ class RegisterViewController: UIViewController {
         
         items[0].image = UIImage(named: "Home")
         items[1].image = UIImage(named: "Stats")
-        items[2].image = UIImage(systemName: "gearshape.fill")
+        items[2].image = UIImage(named: "Settings")
         
         tabBarVC.modalPresentationStyle = .fullScreen
         self.present(tabBarVC, animated: false)

@@ -730,7 +730,6 @@ extension FirstGateViewController: FirstGateViewModelDelegate {
         let currentValue = Constants.minSensitivity - CGFloat(sender.value) * (Constants.minSensitivity - Constants.maxSensitivity)
         UserDefaults.standard.setValue(CGFloat(currentValue), forKey: Constants.cameraSensitivity)
         // Tell breakobserver to update camera sensitivity
-        print("Changed to \(UserDefaults.standard.value(forKey: Constants.cameraSensitivity))")
         
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: Constants.cameraSensitivity), object: nil)
         sensitivitySliderView.isHidden = true

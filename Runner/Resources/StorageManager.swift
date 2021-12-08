@@ -77,6 +77,7 @@ final class StorageManager {
         // Firebase function
         reference.downloadURL(completion: { url, error in
             guard let url = url, error == nil else {
+                print("Failed to get URL")
                 completion(.failure(StorageErrors.failedToGetDownloadURL))
                 return
             }
@@ -88,35 +89,37 @@ final class StorageManager {
     }
 
     // Checks if image is already cached
-    static func getImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
+    static func getImage(withURL url: URL, completion: @escaping (Result<UIImage, Error>) -> Void) {
         // If there is a cached image
         if let image = cache.object(forKey: url.absoluteString as NSString) {
-            print("URL", url.absoluteString)
-            completion(image)
-            print("Getting cached image")
+            print("Getting cached image for \(url.absoluteString)")
+            completion(.success(image))
         }
         // If no image is cached
         else {
+            print("No image cached, downloading image with url \(url.absoluteString)")
             downloadImage(withURL: url, completion: completion)
-            print("downloading image")
         }
     }
     
-    static func downloadImage(withURL url: URL, completion: @escaping (_ image: UIImage?) -> Void) {
+    static func downloadImage(withURL url: URL, completion: @escaping (Result<UIImage, Error>) -> Void) {
         let dataTask = URLSession.shared.dataTask(with: url) { data, responsURL, error in
             
             var downloadedImage: UIImage?
             
             if let data = data  {
                 downloadedImage = UIImage(data: data)
+                
+                if downloadedImage != nil {
+                    cache.setObject(downloadedImage!, forKey: url.absoluteString as NSString)
+                    DispatchQueue.main.async {
+                        completion(.success(downloadedImage!))
+                    }
+                }
             }
             
-            if downloadedImage != nil {
-                cache.setObject(downloadedImage!, forKey: url.absoluteString as NSString)
-            }
-            
-            DispatchQueue.main.async {
-                completion(downloadedImage)
+            if let error = error {
+                completion(.failure(error))
             }
         }
         dataTask.resume()

@@ -122,7 +122,6 @@ class RunTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let widthSides = (Constants.widthOfDisplay - 5 * Constants.sideMargin) * 0.25 + Constants.sideMargin * 1.5
         let widthMid = (Constants.widthOfDisplay - 5 * Constants.sideMargin) * 0.25 + Constants.sideMargin
         
         cellView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.5).isActive = true

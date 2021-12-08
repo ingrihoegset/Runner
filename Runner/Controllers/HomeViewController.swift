@@ -37,7 +37,7 @@ class HomeViewController: UIViewController {
         imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        let image = UIImage(named: "Sprinter")
+        let image = UIImage(named: "Image")
         imageView.image = image
         return view
     }()
@@ -602,6 +602,8 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: HomeViewModelDelegate {
     func didFetchProfileImage(image: UIImage, safeEmail: String) {
+        print("Fetched home profile image")
+        
         guard var userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
             return
         }
@@ -621,6 +623,10 @@ extension HomeViewController: HomeViewModelDelegate {
                 self.secondGateProfileImageView.image = image
             }
         }
+    }
+    
+    func failedToFetchProfileImage() {
+        animateUnlink()
     }
     
     private func setup() {
@@ -797,20 +803,20 @@ extension HomeViewController: HomeViewModelDelegate {
     }
     
     func animateUnlink() {
-        
-        print("Animating unlink")
-        unconnectedprofileImageView.transform = CGAffineTransform(scaleX: 0, y: 0)
-        unconnectedprofileImageView.alpha = 1
-        UIView.animate(withDuration: 0.5,
-            animations: {
-                self.unconnectedprofileImageView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-            },
-            completion: { _ in
-                UIView.animate(withDuration: 0.2,
-                    animations: {
-                        self.unconnectedprofileImageView.transform = CGAffineTransform.identity
-                    })
-            })
+        DispatchQueue.main.async {
+            self.unconnectedprofileImageView.transform = CGAffineTransform(scaleX: 0, y: 0)
+            self.unconnectedprofileImageView.alpha = 1
+            UIView.animate(withDuration: 0.4,
+                animations: {
+                    self.unconnectedprofileImageView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                },
+                completion: { _ in
+                    UIView.animate(withDuration: 0.15,
+                        animations: {
+                            self.unconnectedprofileImageView.transform = CGAffineTransform.identity
+                        })
+                })
+        }
     }
     
     func animateLinkedPartnerUI() {

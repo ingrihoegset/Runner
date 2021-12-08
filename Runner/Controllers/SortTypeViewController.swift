@@ -75,7 +75,7 @@ class SortTypeViewController: UIViewController {
         
         title = "Select run type"
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.accentColor]
+                                                                         NSAttributedString.Key.foregroundColor: Constants.accentColor!]
         
         // Makes navigation like rest of panel
         self.navigationController?.navigationBar.shadowImage = UIImage()

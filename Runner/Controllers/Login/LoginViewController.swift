@@ -497,7 +497,6 @@ class LoginViewController: UIViewController {
     
     /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
     private func prepareTabBar() {
-        print("Preparing Tab Bar")
         
         let tabBarVC = UITabBarController()
         
@@ -509,19 +508,19 @@ class LoginViewController: UIViewController {
         let home = HomeViewController()
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
-        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVC.navigationBar.tintColor = Constants.accentColorDark
         
         let stats = StatisticsViewController()
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
-        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCStats.navigationBar.tintColor = Constants.accentColorDark
         
         let profile = ProfileViewController()
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
-        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
+        navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
         navVCProfile.navigationBar.tintColor = Constants.accentColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
@@ -532,7 +531,7 @@ class LoginViewController: UIViewController {
         
         items[0].image = UIImage(named: "Home")
         items[1].image = UIImage(named: "Stats")
-        items[2].image = UIImage(systemName: "gearshape.fill")
+        items[2].image = UIImage(named: "Settings")
         
         tabBarVC.modalPresentationStyle = .fullScreen
         
@@ -571,7 +570,7 @@ class LoginViewController: UIViewController {
                 
                 // Checking for error
                 guard error == nil else {
-                    print(error?.localizedDescription)
+                    print(error?.localizedDescription as Any)
                     return
                 }
                 

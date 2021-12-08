@@ -22,7 +22,7 @@ class OnBoardingBubble: UIView {
         let button = UIButton()
         button.backgroundColor = .clear
         button.translatesAutoresizingMaskIntoConstraints = false
-        let image = UIImage(systemName: "xmark")?.withTintColor(Constants.mainColor!)
+        let image = UIImage(systemName: "xmark")?.withTintColor(Constants.mainColor!, renderingMode: .alwaysOriginal)
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(handleDismissal), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius

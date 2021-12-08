@@ -15,7 +15,7 @@ protocol StatisticsViewModelDelegate: AnyObject {
     func reloadTableView()
     func loadYears(years: [String])
     func showOnboardClickMe()
-    func hasOnboardedClickMe()
+    func hideOnboardClickMe()
     func showNoRunDataView()
     func hideNoRunDataView()
     func hideSkeletonLoadView()
@@ -68,6 +68,9 @@ class StatisticsViewModel {
                     strongSelf.statisticsViewModelDelegate?.hideSkeletonLoadView()
                     strongSelf.statisticsViewModelDelegate?.hideNoRunDataView()
                 }
+                else {
+                    strongSelf.statisticsViewModelDelegate?.hideOnboardClickMe()
+                }
 
             case .failure(let error):
                 guard let strongSelf = self else {
@@ -76,6 +79,7 @@ class StatisticsViewModel {
                 // When no data is retrieved, hide loading view and show no data view
                 strongSelf.statisticsViewModelDelegate?.hideSkeletonLoadView()
                 strongSelf.statisticsViewModelDelegate?.showNoRunDataView()
+                strongSelf.statisticsViewModelDelegate?.hideOnboardClickMe()
                 print(error)
             }
         })
@@ -124,7 +128,7 @@ class StatisticsViewModel {
     /// Related to onboarding
     func hasOnboardedClickMe() {
         UserDefaults.standard.set(true, forKey: Constants.hasOnboardedTableViewClickMe)
-        statisticsViewModelDelegate?.hasOnboardedClickMe()
+        statisticsViewModelDelegate?.hideOnboardClickMe()
     }
     
     // If onboarding of connect hasnt already occured, show onboardconnect bubble

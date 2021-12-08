@@ -317,9 +317,10 @@ class ShareRunViewController: UIViewController, UIScrollViewDelegate {
     
     @objc private func shareResultOnSoMe() {
         //crop()
-        let viewimage = image(with: shareImageLayer)
-        let activityController = UIActivityViewController(activityItems: [viewimage], applicationActivities: nil)
-        present(activityController, animated: true, completion: nil)
+        if let viewimage = image(with: shareImageLayer) {
+            let activityController = UIActivityViewController(activityItems: [viewimage], applicationActivities: nil)
+            present(activityController, animated: true, completion: nil)
+        }
     }
 }
 
@@ -328,59 +329,133 @@ extension ShareRunViewController {
     
     func grabPhotos() {
         
-        let imageManager = PHImageManager.default()
-        
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .opportunistic
-        
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.fetchLimit = 100
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        
-        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        
-        if fetchResult.count > 0 {
-            for i in 0..<fetchResult.count {
-                
-                imageManager.requestImage(for: fetchResult.object(at: i) as! PHAsset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: requestOptions, resultHandler:
-                    {
-                        image, error in
-                        
-                        if let unwrappedimage = image {
-                            self.imageArray.append(unwrappedimage)
+        let authorization = PHPhotoLibrary.authorizationStatus()
+        if authorization == .notDetermined {
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized {
+                    let imageManager = PHImageManager.default()
+                    
+                    let requestOptions = PHImageRequestOptions()
+                    requestOptions.isSynchronous = true
+                    requestOptions.deliveryMode = .opportunistic
+                    
+                    let fetchOptions = PHFetchOptions()
+                    fetchOptions.fetchLimit = 100
+                    fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                    
+                    let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+                    
+                    if fetchResult.count > 0 {
+                        for i in 0..<fetchResult.count {
+                            
+                            imageManager.requestImage(for: fetchResult.object(at: i) , targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: requestOptions, resultHandler:
+                                {
+                                    image, error in
+                                    
+                                    if let unwrappedimage = image {
+                                        self.imageArray.append(unwrappedimage)
+                                    }
+                                })
                         }
-                    })
+                    }
+                    else {
+                        print("User has no photos.")
+                        self.collectionView.reloadData()
+                    }
+                } else {}
+            })
+        }
+        else if authorization == .authorized {
+            let imageManager = PHImageManager.default()
+            
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.isSynchronous = true
+            requestOptions.deliveryMode = .opportunistic
+            
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.fetchLimit = 100
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            
+            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+            
+            if fetchResult.count > 0 {
+                for i in 0..<fetchResult.count {
+                    
+                    imageManager.requestImage(for: fetchResult.object(at: i) , targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: requestOptions, resultHandler:
+                        {
+                            image, error in
+                            
+                            if let unwrappedimage = image {
+                                self.imageArray.append(unwrappedimage)
+                            }
+                        })
+                }
+            }
+            else {
+                print("User has no photos.")
+                self.collectionView.reloadData()
             }
         }
-        else {
-            print("User has no photos.")
-            self.collectionView.reloadData()
-        }
+        
+        
+
     }
     
     func grabPhoto(index: Int) -> UIImage {
         
-        let imageManager = PHImageManager.default()
-        
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        requestOptions.deliveryMode = .highQualityFormat
-        
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        
-        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        
         var returnImage = UIImage()
-        imageManager.requestImage(for: fetchResult.object(at: index), targetSize: CGSize(width: 512, height: 512), contentMode: .aspectFill, options: requestOptions, resultHandler:
-            {
-                image, error in
-                if let unwrappedimage = image {
-                    returnImage = unwrappedimage
+        
+        let authorization = PHPhotoLibrary.authorizationStatus()
+        if authorization == .notDetermined {
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized {
+                    print("Authorized")
+                    let imageManager = PHImageManager.default()
+                    
+                    let requestOptions = PHImageRequestOptions()
+                    requestOptions.isSynchronous = true
+                    requestOptions.deliveryMode = .highQualityFormat
+                    
+                    let fetchOptions = PHFetchOptions()
+                    fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                    
+                    let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+                    
+                    imageManager.requestImage(for: fetchResult.object(at: index), targetSize: CGSize(width: 512, height: 512), contentMode: .aspectFill, options: requestOptions, resultHandler:
+                        {
+                            image, error in
+                            if let unwrappedimage = image {
+                                returnImage = unwrappedimage
+                            }
+                        })
+
                 }
             })
+        }
+        else if authorization == .authorized {
+            print("Authorized")
+            let imageManager = PHImageManager.default()
+            
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.isSynchronous = true
+            requestOptions.deliveryMode = .highQualityFormat
+            
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            
+            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+            
+            imageManager.requestImage(for: fetchResult.object(at: index), targetSize: CGSize(width: 512, height: 512), contentMode: .aspectFill, options: requestOptions, resultHandler:
+                {
+                    image, error in
+                    if let unwrappedimage = image {
+                        returnImage = unwrappedimage
+                    }
+                })
+        }
         return returnImage
+        
+        
     }
 }
 

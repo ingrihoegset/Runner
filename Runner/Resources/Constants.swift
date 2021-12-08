@@ -60,8 +60,6 @@ struct Constants {
     static let mainFontMedium = UIFont(name: "BarlowSemiCondensed-Light", size: 14)
     static let mainFontSmall = UIFont(name: "BarlowSemiCondensed-Light", size: 12)
         //Semi Bold
-    static let mainFontSmallSB = UIFont(name: "Overpass-SemiBold", size: 10)
-    static let mainFontMediumSB = UIFont(name: "Overpass-SemiBold", size: 14)
     static let mainFontSB = UIFont(name: "Overpass-SemiBold", size: 18)
     static let mainFontLargeSB = UIFont(name: "Overpass-SemiBold", size: 22)
     static let mainFontXLargeSB = UIFont(name: "Overpass-SemiBold", size: 35)

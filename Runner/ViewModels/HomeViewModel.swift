@@ -10,6 +10,7 @@ import UIKit
 
 protocol HomeViewModelDelegate: AnyObject {
     func didFetchProfileImage(image: UIImage, safeEmail: String)
+    func failedToFetchProfileImage()
     func didGetRunResult(result: RunResults)
     func hasOnboardedConnect()
     func showOnboardConnect()
@@ -51,12 +52,15 @@ class HomeViewModel {
         let filename = safeEmail + "_profile_picture.png"
         let path = "images/" + filename
 
-        StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
+        StorageManager.shared.downloadURL(for: path, completion: { result in
             switch result {
             case .success(let url):
-                StorageManager.getImage(withURL: url, completion: { image in
-                    if let downloadedImage = image {
+                StorageManager.getImage(withURL: url, completion: { imageResult in
+                    switch imageResult {
+                    case .success(let downloadedImage):
                         completion(.success(downloadedImage))
+                    case .failure(let error):
+                        completion(.failure(error))
                     }
                 })
             case .failure(let error):
@@ -68,8 +72,6 @@ class HomeViewModel {
     /// Call on storageManager to fetch profil pic for our user
     func fetchProfilePic(email: String) {
         
-        print("Fetching picture")
-        
         let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
         let filename = safeEmail + "_profile_picture.png"
         let path = "images/" + filename
@@ -78,16 +80,18 @@ class HomeViewModel {
         StorageManager.shared.downloadURL(for: path, completion: { [weak self ] result in
             switch result {
             case .success(let url):
-                print("Succeed in downloading url")
-
-                StorageManager.getImage(withURL: url, completion: { image in
-                    if let downloadedImage = image {
+                print("Returned url")
+                StorageManager.getImage(withURL: url, completion: { imageResult in
+                    switch imageResult {
+                    case .success(let downloadedImage):
                         self?.homeViewModelDelegate?.didFetchProfileImage(image: downloadedImage, safeEmail: safeEmail)
+                    case .failure(_):
+                        self?.homeViewModelDelegate?.failedToFetchProfileImage()
                     }
                 })
             case .failure(let error):
                 print("Failed to download url: \(error), or no image is saved for user.")
-                // What should happen here????
+                self?.homeViewModelDelegate?.failedToFetchProfileImage()
             }
         })
     }
@@ -182,6 +186,7 @@ class HomeViewModel {
                 strongSelf.fetchProfilePic(email: partnerEmail, completion: { result in
                     switch result {
                     case .success(let image):
+                        print("Started fetching picture")
                         strongSelf.homeViewModelDelegate?.updatePartnerImage(image: image)
                         strongSelf.homeViewModelDelegate?.animateLinkedPartnerUI()
                     case .failure(let error):
@@ -225,7 +230,6 @@ class HomeViewModel {
                         print(error)
                     }
                 })
-
             }
         })
     }

@@ -76,7 +76,7 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = "Settings"
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         
         profileViewModel.profileViewModelDelegate = self
         
@@ -120,7 +120,7 @@ class ProfileViewController: UIViewController {
                                                 let destinationController = HelpViewController()
                                                 strongSelf.navigationController?.pushViewController(destinationController, animated: true)
                                               }))
-        section3Data.append(SettingSelectionViewModel(viewModelType: .about,
+        /*section3Data.append(SettingSelectionViewModel(viewModelType: .about,
                                               title: "About",
                                               handler: { [weak self] in
                                                 guard let strongSelf = self else {
@@ -128,11 +128,11 @@ class ProfileViewController: UIViewController {
                                                 }
                                                 let destinationController = AboutViewController()
                                                 strongSelf.navigationController?.pushViewController(destinationController, animated: true)
-                                              }))
+                                              }))*/
         section3Data.append(SettingSelectionViewModel(viewModelType: .privacy,
                                                       title: "Privacy policy",
                                                       handler: {
-                                                        if let url = URL(string: "https://ingrihoegset.wixsite.com/website/privacy-policy") {
+                                                        if let url = URL(string: "https://ingrihoegset.wixsite.com/website/services-3-1") {
                                                             UIApplication.shared.open(url)
                                                         }
                                                       }))

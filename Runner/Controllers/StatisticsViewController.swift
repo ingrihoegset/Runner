@@ -48,6 +48,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.addTarget(self, action: #selector(presentSortType), for: .touchUpInside)
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -62,6 +63,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.addTarget(self, action: #selector(presentDateType), for: .touchUpInside)
         button.titleLabel?.font = Constants.mainFontLargeSB
+        button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return button
     }()
     
@@ -307,7 +309,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         navigationItem.title = "My runs"
         view.backgroundColor = Constants.accentColor
         
-        navigationController?.navigationBar.tintColor = Constants.contrastColor
+        navigationController?.navigationBar.tintColor = Constants.accentColorDark
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"),
                                                             style: .done,
                                                             target: self,
@@ -372,8 +374,6 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
-        
-        statisticsViewModel.showOnboardClickMe()
         
         if let metricSystem = UserDefaults.standard.value(forKey: "unit") as? Bool {
             if metricSystem == true {
@@ -585,7 +585,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         }
     }
     
-    func hasOnboardedClickMe() {
+    func hideOnboardClickMe() {
         DispatchQueue.main.async {
             self.onBoardClickMe.isHidden = true
         }
