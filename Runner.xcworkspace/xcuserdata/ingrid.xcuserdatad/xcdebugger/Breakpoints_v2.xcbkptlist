@@ -30,10 +30,10 @@
             filePath = "Runner/Resources/Constants.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "Constants"
-            landmarkType = "14">
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "mainFontXLarge"
+            landmarkType = "24">
             <Locations>
                <Location
                   uuid = "BF195A56-47FF-41CA-A98C-99F13E452A8B - 310c669413226535"

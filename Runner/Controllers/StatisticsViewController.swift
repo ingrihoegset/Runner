@@ -178,7 +178,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = .clear
-        let image = UIImage(systemName: "exclamationmark.circle")?.withTintColor(Constants.lightGray!, renderingMode: .alwaysOriginal)
+        let image = UIImage(named: "RunnerStats")
         imageView.image = image
         imageView.contentMode = .scaleAspectFit
         let label = UITextView()
@@ -188,16 +188,16 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         label.textAlignment = .center
         label.text = "No runs to show yet. Complete your first run!"
         label.font = Constants.mainFont
-        label.textColor = Constants.lightGray
+        label.textColor = Constants.accentColorDarkest
         label.isUserInteractionEnabled = false
         view.addSubview(imageView)
         view.addSubview(label)
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50).isActive = true
-        imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.3).isActive = true
+        imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         label.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
-        label.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: -Constants.sideMargin).isActive = true
         label.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         return view

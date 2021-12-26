@@ -20,8 +20,8 @@ class NoConnectionView: UIView {
         let imageview = UIImageView()
         imageview.translatesAutoresizingMaskIntoConstraints = false
         imageview.contentMode = .scaleAspectFit
-        let image = UIImage(systemName: "wifi.slash")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
-        imageview.image = image
+        imageview.image = UIImage(named: "RunnerError")
+        //let image = UIImage(systemName: "wifi.slash")?.withTintColor(.gray, renderingMode: .alwaysOriginal)
         imageview.backgroundColor = .clear
         return imageview
     }()
@@ -33,9 +33,9 @@ class NoConnectionView: UIView {
         textView.isScrollEnabled = false
         textView.backgroundColor = .clear
         textView.textAlignment = .center
-        textView.text = "You are offline.\nConnect to the internet in order to use this app!"
+        textView.text = "You are offline.\nConnect to the internet to use this app!"
         textView.font = Constants.mainFontLarge
-        textView.textColor = .gray
+        textView.textColor = Constants.accentColorDarkest
         return textView
     }()
 

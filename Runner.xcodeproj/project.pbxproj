@@ -38,6 +38,7 @@
 		BF512AFA26A0D170001C6BF2 /* BreakObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF512AF926A0D170001C6BF2 /* BreakObserver.swift */; };
 		BF58E92E26FA16A400F8A182 /* CustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF58E92D26FA16A400F8A182 /* CustomSwitch.swift */; };
 		BF58E93126FA17B200F8A182 /* CustomThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF58E93026FA17B200F8A182 /* CustomThumbView.swift */; };
+		BF6B380E2777855100243AD1 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B380D2777855100243AD1 /* OnboardingViewController.swift */; };
 		BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E058F26A999670028C0AF /* StatisticsViewController.swift */; };
 		BF6E059426A9A7600028C0AF /* RunResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059326A9A7600028C0AF /* RunResults.swift */; };
 		BF6E059726AAC0F50028C0AF /* RunTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */; };
@@ -131,6 +132,7 @@
 		BF512AF926A0D170001C6BF2 /* BreakObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakObserver.swift; sourceTree = "<group>"; };
 		BF58E92D26FA16A400F8A182 /* CustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitch.swift; sourceTree = "<group>"; };
 		BF58E93026FA17B200F8A182 /* CustomThumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomThumbView.swift; sourceTree = "<group>"; };
+		BF6B380D2777855100243AD1 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		BF6E058F26A999670028C0AF /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		BF6E059326A9A7600028C0AF /* RunResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunResults.swift; sourceTree = "<group>"; };
 		BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunTableViewCell.swift; sourceTree = "<group>"; };
@@ -422,6 +424,7 @@
 				BF12FF25269F5BAA00B51370 /* FirstGateViewController.swift */,
 				BF512AE026A06E44001C6BF2 /* SecondGateViewController.swift */,
 				BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */,
+				BF6B380D2777855100243AD1 /* OnboardingViewController.swift */,
 				BFFB69C4269A195A0080DA62 /* Login */,
 			);
 			path = Controllers;
@@ -658,6 +661,7 @@
 				BF4830C1269C6BD000C8CC6C /* StorageManager.swift in Sources */,
 				BF12FF15269F57A500B51370 /* CustomPickerView.swift in Sources */,
 				BFC2882C2755317400DE4CE7 /* ShareRunViewController.swift in Sources */,
+				BF6B380E2777855100243AD1 /* OnboardingViewController.swift in Sources */,
 				BF2F51BE2724A02C0066C5AD /* NoConnectionView.swift in Sources */,
 				BFB95B222726CF2700DF51BA /* SlantedViewBottom.swift in Sources */,
 				BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */,

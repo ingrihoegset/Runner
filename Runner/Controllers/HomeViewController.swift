@@ -11,8 +11,8 @@ import FirebaseAuth
 class HomeViewController: UIViewController {
     
     var homeViewModel = HomeViewModel()
-    
-    
+    let onboardingViewController = OnboardingViewController()
+        
     // MARK: - Elements related to main view
     private let mainView: UIView = {
         let view = UIView()
@@ -26,7 +26,6 @@ class HomeViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
-        view.alpha = 0
         
         let imageView = UIImageView()
         view.addSubview(imageView)
@@ -324,6 +323,7 @@ class HomeViewController: UIViewController {
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedSensitivitySlider)
         UserDefaults.standard.set(1, forKey: Constants.sensitivityOnboardingSliderCounter)
         UserDefaults.standard.set(false, forKey: Constants.readyToShowOnboardConnect)
+        UserDefaults.standard.set(true, forKey: Constants.firstLaunch)
 
         view.backgroundColor = Constants.accentColor
         
@@ -335,6 +335,7 @@ class HomeViewController: UIViewController {
         homeViewModel.homeViewModelDelegate = self
         onBoardConnect.onBoardingBubbleDelegate = self
         onBoardEndGate.onBoardingBubbleDelegate = self
+        onboardingViewController.onboardingViewControllerDelegate = self
 
         // Related to main view
         view.addSubview(mainView)
@@ -388,12 +389,26 @@ class HomeViewController: UIViewController {
         homeViewModel.showOnboardEndGate()
         
         // Animation on load
-        self.startAnimation()
+        //self.startAnimation()
         
         // Set camera sensitivity
         setCameraSensitivity()
+        
+        // Show onboarding images
+        showOnboardingImages()
     }
     
+    func showOnboardingImages() {
+        if UserDefaults.standard.bool(forKey: Constants.firstLaunch) == true {
+            let popupController = onboardingViewController
+            popupController.view.alpha = 1
+            popupController.modalPresentationStyle = .overFullScreen
+            self.present(popupController, animated: false, completion: nil)
+        }
+        else {
+            startAnimation()
+        }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -681,7 +696,6 @@ extension HomeViewController: HomeViewModelDelegate {
         UIView.animate(withDuration: 0.3,
             animations: {
                 self.loadingProfileImageView.alpha = 1
-                self.mainHeaderView.alpha = 1
             },
             completion: { _ in
                 UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseOut, animations: {
@@ -1054,5 +1068,18 @@ extension HomeViewController: OnBoardingBubbleDelegate {
         if sender.tag == 1 {
             homeViewModel.hasOnboardedEndGate()
         }
+    }
+}
+
+extension HomeViewController: OnboardingViewControllerDelegate {
+    func onboardingComplete() {
+        UIView.animate(withDuration: 0.3,
+            animations: {
+                self.onboardingViewController.view.alpha = 0
+            },
+            completion: { _ in
+                self.onboardingViewController.dismiss(animated: false, completion: nil)
+                self.startAnimation()
+            })
     }
 }

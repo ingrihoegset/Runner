@@ -13,6 +13,7 @@ struct Constants {
     static let superLightGrey = UIColor(named: "SuperLightGrey")
     static let shadeColor = UIColor(named: "WhiteShade")
     static let lightGray = UIColor(named: "LightGray")
+    static let accentGreen = UIColor(named: "AccentGreen")
     
     //Text Colors
     static let textColorMain = UIColor.black
@@ -99,6 +100,7 @@ struct Constants {
     static let hasOnboardedSensitivitySlider = "hasOnboardedSensitivitySlider"
     static let sensitivityOnboardingSliderCounter = "sensitivityOnboardingSliderCounter"
     static let readyToShowOnboardConnect = "readyToShowOnboardConnect"
+    static let firstLaunch = "firstLaunch"
     
     // Camera uses to know if race has started and whether it should listen for breaks or not
     static var isRunning = false
