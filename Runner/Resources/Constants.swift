@@ -2,6 +2,9 @@ import Foundation
 import UIKit
 
 struct Constants {
+    
+    //App Title
+    static let title = "SNAPDASH"
  
     //Colors
     static let mainColor = UIColor(named: "MainColor")
@@ -61,11 +64,12 @@ struct Constants {
     static let mainFontMedium = UIFont(name: "BarlowSemiCondensed-Light", size: 14)
     static let mainFontSmall = UIFont(name: "BarlowSemiCondensed-Light", size: 12)
         //Semi Bold
-    static let mainFontSB = UIFont(name: "Overpass-SemiBold", size: 18)
-    static let mainFontLargeSB = UIFont(name: "Overpass-SemiBold", size: 22)
-    static let mainFontXLargeSB = UIFont(name: "Overpass-SemiBold", size: 35)
-    static let mainFontXXLargeSB = UIFont(name: "Overpass-SemiBold", size: 40)
-    static let mainFontExtraBold = UIFont(name: "Overpass-ExtraBold", size: 35)
+    static let mainFontSB = UIFont(name: "Lato-Bold", size: 18)
+    static let mainFontLargeSB = UIFont(name: "Lato-Bold", size: 22)
+    static let mainFontXLargeSB = UIFont(name: "Lato-Bold", size: 35)
+    static let mainFontXXLargeSB = UIFont(name: "Lato-Bold", size: 40)
+    static let mainFontExtraBold = UIFont(name: "Lato-Bold", size: 35)
+    static let titleFont = UIFont(name: "Lato-BlackItalic", size: 35)
     static let countDownFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 120)
     static let resultFont = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 70)
     static let resultFontMedium = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 40)

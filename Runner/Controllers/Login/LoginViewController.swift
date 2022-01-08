@@ -620,60 +620,16 @@ class LoginViewController: UIViewController {
                     UserDefaults.standard.set(email, forKey: "email")
                     UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
                     
-                    // Check if the user exists already. If not, we want to register a new user.
-                    DatabaseManager.shared.userExists(with: email, completion: { exists in
-                        if !exists {
-                            // Insert user into database
-                            let raceAppUser = RaceAppUser(firstName: firstName,
-                                                          lastName: lastName,
-                                                          emailAddress: email)
-                            DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
-                                if success {
-                                    
-                                    // Must do this because url is optional
-                                    guard let url = URL(string: pictureUrl) else {
-                                        return
-                                    }
-                                    
-                                    print("Downloading data from Facebook image.")
-                                    
-                                    URLSession.shared.dataTask(with: url, completionHandler: { data, _, _ in
-                                        guard let data = data else {
-                                            print("Failed to get data from Facebook.")
-                                            return
-                                        }
-                                        
-                                        print("Got data from Facebook, uploading image to Firebase")
-                                        
-                                        // upload image
-                                        let filename = raceAppUser.profilePictureFileName
-                                        
-                                        // Upload profile picture to Firebase
-                                        StorageManager.shared.uploadProfilPicture(with: data, fileName: filename, completion: { result in
-                                            switch result {
-                                            case .success(let downloadUrl):
-                                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                                print(downloadUrl)
-                                            case .failure(let error):
-                                                print("Storage manager error: \(error)")
-                                            }
-                                        })
-                                    }).resume() // Tells the URL data task to begin...
-                                }
-                            })
-                        }
-                    })
-                    
                     // Trading token to get a Firebase credential
                     let credential = FacebookAuthProvider.credential(withAccessToken: token)
                     
                     // Signs user in with third party credentials
-                    FirebaseAuth.Auth.auth().signIn(with: credential, completion: { [weak self] authresult, error in
+                    FirebaseAuth.Auth.auth().signIn(with: credential, completion: { [weak self] authResult, error in
                         guard let strongSelf = self else {
                             return
                         }
                         
-                        guard authresult != nil, error == nil else {
+                        guard let result = authResult, error == nil else {
                             print("Facebook credential login failed, MFA may be required.")
                             // Stopping spinner
                             DispatchQueue.main.async {
@@ -683,6 +639,52 @@ class LoginViewController: UIViewController {
                             self?.alertFBLoginError()
                             return
                         }
+                        
+                        // Check if the user exists already. If not, we want to register a new user.
+                        DatabaseManager.shared.userExists(with: email, completion: { exists in
+                            if !exists {
+                                // Insert user into database
+                                let raceAppUser = RaceAppUser(firstName: firstName,
+                                                              lastName: lastName,
+                                                              emailAddress: email,
+                                                              userID: result.user.uid)
+                                DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
+                                    if success {
+                                        
+                                        // Must do this because url is optional
+                                        guard let url = URL(string: pictureUrl) else {
+                                            return
+                                        }
+                                        
+                                        print("Downloading data from Facebook image.")
+                                        
+                                        URLSession.shared.dataTask(with: url, completionHandler: { data, _, _ in
+                                            guard let data = data else {
+                                                print("Failed to get data from Facebook.")
+                                                return
+                                            }
+                                            
+                                            print("Got data from Facebook, uploading image to Firebase")
+                                            
+                                            // upload image
+                                            let filename = raceAppUser.profilePictureFileName
+                                            
+                                            // Upload profile picture to Firebase
+                                            StorageManager.shared.uploadProfilPicture(with: data, fileName: filename, completion: { result in
+                                                switch result {
+                                                case .success(let downloadUrl):
+                                                    UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                                    print(downloadUrl)
+                                                case .failure(let error):
+                                                    print("Storage manager error: \(error)")
+                                                }
+                                            })
+                                        }).resume() // Tells the URL data task to begin...
+                                    }
+                                })
+                            }
+                        })
+                        
                         
                         print("Successfully logged user in.")
                         

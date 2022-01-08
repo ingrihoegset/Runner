@@ -11,6 +11,7 @@ struct RaceAppUser {
     let firstName: String
     let lastName: String
     let emailAddress: String
+    let userID: String
     
     var safeEmail: String {
         var safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")

@@ -39,6 +39,8 @@
 		BF58E92E26FA16A400F8A182 /* CustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF58E92D26FA16A400F8A182 /* CustomSwitch.swift */; };
 		BF58E93126FA17B200F8A182 /* CustomThumbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF58E93026FA17B200F8A182 /* CustomThumbView.swift */; };
 		BF6B380E2777855100243AD1 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6B380D2777855100243AD1 /* OnboardingViewController.swift */; };
+		BF6B3812277BB5FC00243AD1 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF6B3811277BB5FC00243AD1 /* Lato-Bold.ttf */; };
+		BF6B382F277BB7A600243AD1 /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BF6B382E277BB7A600243AD1 /* Lato-BlackItalic.ttf */; };
 		BF6E059026A999670028C0AF /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E058F26A999670028C0AF /* StatisticsViewController.swift */; };
 		BF6E059426A9A7600028C0AF /* RunResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059326A9A7600028C0AF /* RunResults.swift */; };
 		BF6E059726AAC0F50028C0AF /* RunTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */; };
@@ -133,6 +135,8 @@
 		BF58E92D26FA16A400F8A182 /* CustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitch.swift; sourceTree = "<group>"; };
 		BF58E93026FA17B200F8A182 /* CustomThumbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomThumbView.swift; sourceTree = "<group>"; };
 		BF6B380D2777855100243AD1 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		BF6B3811277BB5FC00243AD1 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
+		BF6B382E277BB7A600243AD1 /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-BlackItalic.ttf"; sourceTree = "<group>"; };
 		BF6E058F26A999670028C0AF /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		BF6E059326A9A7600028C0AF /* RunResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunResults.swift; sourceTree = "<group>"; };
 		BF6E059626AAC0F50028C0AF /* RunTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunTableViewCell.swift; sourceTree = "<group>"; };
@@ -239,6 +243,8 @@
 			isa = PBXGroup;
 			children = (
 				BFCBF9C4275E7D8E0079127B /* ariblk.ttf */,
+				BF6B382E277BB7A600243AD1 /* Lato-BlackItalic.ttf */,
+				BF6B3811277BB5FC00243AD1 /* Lato-Bold.ttf */,
 				BFEB3CBB2727CBD1007FAB42 /* Overpass-ExtraBold.ttf */,
 				BFEB3CB82727428F007FAB42 /* Overpass-SemiBold.ttf */,
 				BF12FF1E269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf */,
@@ -517,10 +523,12 @@
 				BFFB69AA269A14E70080DA62 /* LaunchScreen.storyboard in Resources */,
 				BF12FF21269F59BD00B51370 /* BarlowSemiCondensed-Light.ttf in Resources */,
 				BF9BFCE72739718B00D27110 /* 10.wav in Resources */,
+				BF6B3812277BB5FC00243AD1 /* Lato-Bold.ttf in Resources */,
 				BFFB69DE269A4BE80080DA62 /* GoogleService-Info.plist in Resources */,
 				BFEB3CB92727428F007FAB42 /* Overpass-SemiBold.ttf in Resources */,
 				BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */,
 				BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */,
+				BF6B382F277BB7A600243AD1 /* Lato-BlackItalic.ttf in Resources */,
 				BF9BFCEA2739718B00D27110 /* 80.wav in Resources */,
 				BF9BFCDC2739716F00D27110 /* 60.wav in Resources */,
 				BF9BFCE12739717900D27110 /* 70.wav in Resources */,

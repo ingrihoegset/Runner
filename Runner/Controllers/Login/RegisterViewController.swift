@@ -356,7 +356,7 @@ class RegisterViewController: UIViewController {
             /// Firebase log in. Creating a new user in Firebase
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { authResult, error in
                 // checks if returns an error, if so return.
-                guard authResult != nil, error == nil else {
+                guard let authResult = authResult, error == nil else {
                     print("Error creating user")
                     self?.alertUserError()
                     self?.loadingBalls.stop()
@@ -389,7 +389,8 @@ class RegisterViewController: UIViewController {
                 // Insert user into database with properties given in text fields
                 let raceAppUser = RaceAppUser(firstName: firstName,
                                               lastName: lastName,
-                                              emailAddress: email)
+                                              emailAddress: email,
+                                              userID: authResult.user.uid)
                 DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
                     if success {
                         // upload image

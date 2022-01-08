@@ -144,7 +144,7 @@ class ProfileViewController: UIViewController {
                                                         }
                                                       }))
         section3Data.append(SettingSelectionViewModel(viewModelType: .shareApp,
-                                                      title: "Share XXXXX with a friend",
+                                                      title: "Share \(Constants.title) with a friend",
                                                       handler: {
                                                         if let url = URL(string: "https://apps.apple.com/no/app/headlight-flicker-detector/id1528745497?I=nb") {
                                                             let urlToShare = [url]
@@ -207,7 +207,12 @@ class ProfileViewController: UIViewController {
                                               }))
         section1Data.append(SettingSelectionViewModel(viewModelType: .restore,
                                               title: "Restore purchase",
-                                              handler: nil))
+                                              handler: {[weak self] in
+                                                guard let strongSelf = self else {
+                                                    return
+                                                }
+                                                strongSelf.alertNoPurchaseToRestore()
+                                              }))
         section3Data.append(SettingSelectionViewModel(viewModelType: .logout, title: "Log out", handler: { [weak self] in
             
             guard let strongSelf = self else {
@@ -396,6 +401,21 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
                 self?.alertThatProfilePictureUpdateFailed()
             }
         })
+    }
+    
+    /// Alert that profile picture fail to update.
+    private func alertNoPurchaseToRestore() {
+        let actionSheet = UIAlertController(title: "No purchase to restore",
+                                            message: "",
+                                            preferredStyle: .alert)
+        
+        actionSheet.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.popToRootViewController(animated: true)
+        }))
+        present(actionSheet, animated: true)
     }
     
     /// Alert that profile picture fail to update.

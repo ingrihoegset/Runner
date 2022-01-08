@@ -16,13 +16,7 @@ class OnboardingViewController: UIViewController {
     
     weak var onboardingViewControllerDelegate: OnboardingViewControllerDelegate?
     var counter = 0
- 
-    let connectedImage = UIImage(named: "RunnerTwoColor")
-    let statsImage = UIImage(named: "RunnerStats")
-    
-    let connectedText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    let statsText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    
+
     let readyButton: BounceButton = {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -41,7 +35,7 @@ class OnboardingViewController: UIViewController {
         let headerlabel: UILabel = {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.text = "Sprint"
+            label.text = "Precision timing"
             label.font = Constants.mainFontXXLargeSB
             label.textColor = Constants.contrastColor
             label.textAlignment = .center
@@ -60,17 +54,17 @@ class OnboardingViewController: UIViewController {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.backgroundColor = .clear
-            label.text = "Intro Text"
+            label.text = "Transform your device into a timing gate for precise measurement of speed and run time."
             label.textAlignment = .center
-            label.font = Constants.mainFont
+            label.font = Constants.mainFontLarge
             label.numberOfLines = 0
             return label
         }()
         
         view.addSubview(headerlabel)
-        view.addSubview(infoLabel)
         view.addSubview(image)
-        
+        view.addSubview(infoLabel)
+
         headerlabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         headerlabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         headerlabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
@@ -116,17 +110,17 @@ class OnboardingViewController: UIViewController {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.backgroundColor = .clear
-            label.text = "Connected Text"
+            label.text = "Connect with friends to add more timing gates and more features."
             label.textAlignment = .center
-            label.font = Constants.mainFont
+            label.font = Constants.mainFontLarge
             label.numberOfLines = 0
             return label
         }()
         
         view.addSubview(headerlabel)
-        view.addSubview(infoLabel)
         view.addSubview(image)
-        
+        view.addSubview(infoLabel)
+
         headerlabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         headerlabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         headerlabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
@@ -172,17 +166,17 @@ class OnboardingViewController: UIViewController {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.backgroundColor = .clear
-            label.text = "Statistics Text"
+            label.text = "Track and analyze your performance to see how you improve!"
             label.textAlignment = .center
-            label.font = Constants.mainFont
+            label.font = Constants.mainFontLarge
             label.numberOfLines = 0
             return label
         }()
         
         view.addSubview(headerlabel)
-        view.addSubview(infoLabel)
         view.addSubview(image)
-        
+        view.addSubview(infoLabel)
+
         headerlabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70).isActive = true
         headerlabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
         headerlabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
@@ -238,7 +232,7 @@ class OnboardingViewController: UIViewController {
         if counter == 0 {
             DispatchQueue.main.async {
                 self.readyButton.backgroundColor = Constants.contrastColor
-                self.readyButton.setTitle("Set...?", for: .normal)
+                self.readyButton.setTitle("Set...", for: .normal)
                 self.connectView.transform = CGAffineTransform(translationX: 250, y: 0)
                 UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut,
                                animations: {

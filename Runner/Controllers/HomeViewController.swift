@@ -12,6 +12,16 @@ class HomeViewController: UIViewController {
     
     var homeViewModel = HomeViewModel()
     let onboardingViewController = OnboardingViewController()
+    
+    private let logo: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = Constants.title
+        label.textColor = Constants.mainColor
+        label.font = Constants.titleFont
+        label.textAlignment = .center
+        return label
+    }()
         
     // MARK: - Elements related to main view
     private let mainView: UIView = {
@@ -376,20 +386,17 @@ class HomeViewController: UIViewController {
         secondGateView.addSubview(openSecondGatesButton)
         secondGateView.addSubview(onBoardEndGate)
         
+        view.addSubview(logo)
+        
         mainView.bringSubviewToFront(qrButton)
         mainView.bringSubviewToFront(onBoardConnect)
 
         // Remove in case there are lingering links or "ongoing" runs
         homeViewModel.clearLinkFromDatabase()
         homeViewModel.removeCurrentRun()
-
-        // addChildController()
         
         // Related to onboarding
         homeViewModel.showOnboardEndGate()
-        
-        // Animation on load
-        //self.startAnimation()
         
         // Set camera sensitivity
         setCameraSensitivity()
@@ -466,6 +473,11 @@ class HomeViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        logo.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.sideMargin).isActive = true
+        logo.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        logo.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        logo.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
         // Elements related to main view
         mainView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true

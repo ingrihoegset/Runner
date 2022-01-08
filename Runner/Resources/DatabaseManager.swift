@@ -104,6 +104,40 @@ extension DatabaseManager {
                     })
                 }
             })
+            
+            
+            
+            // Create matching data for security purposes for firebase rules
+            
+            self.database.child("matches").observeSingleEvent(of: .value, with: { snapshot in
+                if var matches = snapshot.value as? [String: String]  {
+                    // User array exists, so append new user to collection
+                    matches[user.safeEmail] =  user.userID
+                    
+                    self.database.child("matches").setValue(matches, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Error: Setting match value failed.")
+                            completion(false)
+                            return
+                        }
+                        completion(true)
+                    })
+                }
+                // No match array exists
+                else {
+                    // Create match array
+                    var matches = [String: String]()
+                    matches[user.safeEmail] = user.userID
+                    self.database.child("matches").setValue(matches, withCompletionBlock: { error, _ in
+                        guard error == nil else {
+                            print("Error: Setting up matches array failed.")
+                            completion(false)
+                            return
+                        }
+                        completion(true)
+                    })
+                }
+            })
         })
     }
     

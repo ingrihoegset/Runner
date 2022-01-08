@@ -18,9 +18,17 @@ class MembershipViewController: UIViewController {
     
     let titleLabel: UITextView = {
         let label = UITextView()
-        label.text = "Try the full edition of (...)"
-        label.font = Constants.mainFontXLargeSB
-        label.textColor = Constants.textColorAccent
+        let firstLineAttributes = [NSAttributedString.Key.foregroundColor: Constants.contrastColor, NSAttributedString.Key.font: Constants.mainFontXLargeSB]
+        let secondLineAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
+        let firstLine = NSMutableAttributedString(string: "Free eddition\n", attributes: firstLineAttributes as [NSAttributedString.Key : Any])
+        let secondLine = NSMutableAttributedString(string: "Available for a limited test periode", attributes: secondLineAttributes as [NSAttributedString.Key : Any])
+        let text = NSMutableAttributedString()
+        text.append(firstLine)
+        text.append(secondLine)
+        label.attributedText = text
+        label.isScrollEnabled = false
+        label.isEditable = false
+        label.isSelectable = false
         label.textAlignment = .center
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -37,11 +45,12 @@ class MembershipViewController: UIViewController {
         button.clipsToBounds = true
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.animationColor = button.backgroundColor
+        button.isHidden = true
         return button
     }()
     
     let row1: CheckView = {
-        let view = CheckView(frame: .zero, title: "Feature 1", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        let view = CheckView(frame: .zero, title: "A selection of running modes", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
         view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -49,7 +58,7 @@ class MembershipViewController: UIViewController {
     }()
     
     let row2: CheckView = {
-        let view = CheckView(frame: .zero, title: "Feature 2", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        let view = CheckView(frame: .zero, title: "False start", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
         view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +66,15 @@ class MembershipViewController: UIViewController {
     }()
     
     let row3: CheckView = {
-        let view = CheckView(frame: .zero, title: "Feature 3", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        let view = CheckView(frame: .zero, title: "Photo finish", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        view.titleLabel.font = Constants.mainFontLarge
+        view.titleLabel.textColor = Constants.textColorAccent
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let row4: CheckView = {
+        let view = CheckView(frame: .zero, title: "Access to all run data", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
         view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -73,6 +90,7 @@ class MembershipViewController: UIViewController {
         view.addSubview(row1)
         view.addSubview(row2)
         view.addSubview(row3)
+        view.addSubview(row4)
         view.addSubview(purchaseButton)
     }
     
@@ -82,12 +100,12 @@ class MembershipViewController: UIViewController {
         titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         titleLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.7).isActive = true
-        titleLabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2).isActive = true
+        //titleLabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize * 2).isActive = true
 
         contentView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         contentView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true
         contentView.bottomAnchor.constraint(equalTo: purchaseButton.topAnchor, constant: -Constants.sideMargin).isActive = true
-        contentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        contentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
         
         row1.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         row1.widthAnchor.constraint(equalTo: contentView.widthAnchor).isActive = true
@@ -103,6 +121,11 @@ class MembershipViewController: UIViewController {
         row3.widthAnchor.constraint(equalTo: contentView.widthAnchor).isActive = true
         row3.topAnchor.constraint(equalTo: row2.bottomAnchor, constant: Constants.sideMargin).isActive = true
         row3.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        
+        row4.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        row4.widthAnchor.constraint(equalTo: contentView.widthAnchor).isActive = true
+        row4.topAnchor.constraint(equalTo: row3.bottomAnchor, constant: Constants.sideMargin).isActive = true
+        row4.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         purchaseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         purchaseButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -Constants.sideMargin * 2).isActive = true

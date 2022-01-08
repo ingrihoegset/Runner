@@ -84,7 +84,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 // Insert in to database
                 let raceAppUser = RaceAppUser(firstName: firstName,
                                               lastName: lastName,
-                                              emailAddress: email)
+                                              emailAddress: email,
+                                              userID: user.userID)
                 DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
                     if success {
                         // upload image

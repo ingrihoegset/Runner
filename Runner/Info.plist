@@ -10,6 +10,8 @@
 	<string>https</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Lato-BlackItalic.ttf</string>
+		<string>Lato-Bold.ttf</string>
 		<string>BarlowSemiCondensed-Light.ttf</string>
 		<string>ariblk.ttf</string>
 		<string>Overpass-ExtraBold.ttf</string>
