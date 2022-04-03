@@ -23,7 +23,7 @@ class BounceButton: UIButton {
     func startAnimation(completion: @ escaping (Bool) -> Void) {
 
         let originalColor = self.backgroundColor
-        let transitionColor = animationColor ?? Constants.accentColor
+        let transitionColor = animationColor ?? Constants.mainColor
         self.backgroundColor = transitionColor
 
         UIView.animate(withDuration: 0.15,

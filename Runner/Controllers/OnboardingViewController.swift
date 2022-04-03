@@ -20,7 +20,7 @@ class OnboardingViewController: UIViewController {
     let readyButton: BounceButton = {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.setTitle("Ready...?", for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -56,7 +56,7 @@ class OnboardingViewController: UIViewController {
             label.backgroundColor = .clear
             label.text = "Transform your device into a timing gate for precise measurement of speed and run time."
             label.textAlignment = .center
-            label.font = Constants.mainFontLarge
+            label.font = Constants.mainFontSB
             label.numberOfLines = 0
             return label
         }()
@@ -112,7 +112,7 @@ class OnboardingViewController: UIViewController {
             label.backgroundColor = .clear
             label.text = "Connect with friends to add more timing gates and more features."
             label.textAlignment = .center
-            label.font = Constants.mainFontLarge
+            label.font = Constants.mainFontSB
             label.numberOfLines = 0
             return label
         }()
@@ -168,7 +168,7 @@ class OnboardingViewController: UIViewController {
             label.backgroundColor = .clear
             label.text = "Track and analyze your performance to see how you improve!"
             label.textAlignment = .center
-            label.font = Constants.mainFontLarge
+            label.font = Constants.mainFontSB
             label.numberOfLines = 0
             return label
         }()

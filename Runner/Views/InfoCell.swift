@@ -20,7 +20,7 @@ class InfoCell: UITableViewCell {
         label.isUserInteractionEnabled = false
         label.backgroundColor = Constants.mainColor
         label.font = Constants.mainFont
-        label.textColor = Constants.accentColorDarkest
+        label.textColor = Constants.mainColorDarkest
         return label
     }()
     

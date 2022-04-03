@@ -63,7 +63,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
@@ -76,7 +76,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
-        imageView.tintColor = Constants.accentColor
+        imageView.tintColor = Constants.mainColor
         let image = UIImage(named: "QrScanner")
         imageView.image = image
         imageView.alpha = 0.7
@@ -94,7 +94,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     private let detailView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return view
@@ -102,7 +102,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     
     private let userImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = Constants.accentColor
+        imageView.backgroundColor = Constants.mainColor
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
@@ -125,7 +125,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     
     private let qrImageView: UIImageView = {
         let qrImageView = UIImageView()
-        qrImageView.backgroundColor = Constants.accentColor
+        qrImageView.backgroundColor = Constants.mainColor
         qrImageView.translatesAutoresizingMaskIntoConstraints = false
         qrImageView.contentMode = .scaleAspectFill
         qrImageView.layer.masksToBounds = true
@@ -158,17 +158,21 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         linkViewModel.fetchProfilePic()
         onBoardConnect.onBoardingBubbleDelegate = self
         
-        title = "Add second gate"
-        view.backgroundColor = Constants.accentColor
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorAccent!]
+        view.backgroundColor = Constants.mainColor
         
         // Makes navigation like rest of panel
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Constants.mainColor
-        
-        navigationController?.navigationBar.tintColor = Constants.accentColorDark
+        title = "Add second gate"
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = Constants.mainColor
+        appearance.shadowColor = Constants.mainColor
+        appearance.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
+                                           NSAttributedString.Key.foregroundColor: Constants.textColorAccent!]
+        self.navigationController?.navigationBar.standardAppearance = appearance
+        self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
+                                                                         NSAttributedString.Key.foregroundColor: Constants.textColorAccent!]
+        navigationController?.navigationBar.tintColor = Constants.mainColorDark
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
                                                             target: self,

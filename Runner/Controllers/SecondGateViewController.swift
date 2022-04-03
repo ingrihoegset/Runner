@@ -186,7 +186,7 @@ class SecondGateViewController: UIViewController, AVCaptureMetadataOutputObjects
         navBar?.isTranslucent = true
         view.backgroundColor = Constants.mainColor
 
-        self.navigationController?.navigationBar.tintColor = Constants.accentColorDark
+        self.navigationController?.navigationBar.tintColor = Constants.mainColorDark
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "camera.rotate"),
                                                               style: .done,

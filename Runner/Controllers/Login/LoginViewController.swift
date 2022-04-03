@@ -11,13 +11,20 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
+import Alamofire
 
 class LoginViewController: UIViewController {
+    
+    private let launchView: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.mainColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private let slantedView: SlantedView = {
         let view = SlantedView()
         view.backgroundColor = Constants.contrastColor
-        //view.image = UIImage(named: "3tracks")
         view.contentMode = .scaleAspectFill
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -26,7 +33,7 @@ class LoginViewController: UIViewController {
     private let logoView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = Constants.accentColorDark
+        imageView.backgroundColor = Constants.mainColorDark
         return imageView
     }()
     
@@ -52,7 +59,7 @@ class LoginViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.accentColor
+        field.backgroundColor = Constants.mainColor
         field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
@@ -69,7 +76,7 @@ class LoginViewController: UIViewController {
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.accentColor
+        field.backgroundColor = Constants.mainColor
         field.isSecureTextEntry = true
         field.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
@@ -77,10 +84,10 @@ class LoginViewController: UIViewController {
     
     private let logginButton: BounceButton = {
         let button = BounceButton()
-        button.animationColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Log in", for: .normal)
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -91,7 +98,7 @@ class LoginViewController: UIViewController {
     
     private let registerNewUserButton: BounceButton = {
         let button = BounceButton()
-        button.animationColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("New user", for: .normal)
         button.backgroundColor = Constants.contrastColor
@@ -218,6 +225,8 @@ class LoginViewController: UIViewController {
         self.dismissKeyboard()
         
         animateSlantedView(completion: nil)
+        
+        view.addSubview(launchView)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -234,6 +243,7 @@ class LoginViewController: UIViewController {
         }
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         animateReturn()
@@ -242,6 +252,12 @@ class LoginViewController: UIViewController {
     /// Lay out constraints
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        // Launch view that covers everything until launch is completed
+        launchView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        launchView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        launchView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        launchView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         
         slantedView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.8).isActive = true
         slantedView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -404,11 +420,15 @@ class LoginViewController: UIViewController {
         
         animateLogin()
         
+        print("Logging in")
         // Firebase log in
+        
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
             guard let strongSelf = self else {
                 return
             }
+            
+            print("signing in")
             
             // Saving this users email locally
             UserDefaults.standard.set(email, forKey: "email")
@@ -434,8 +454,12 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.setValue(result.user.uid, forKey: Constants.userID)
             
             // Getting user first name and last name and saving it to user defaults
-            let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
-            DatabaseManager.shared.getDataForPath(path: safeEmail, completion: { [weak self] result in
+            guard let userId = UserDefaults.standard.value(forKey: Constants.userID) as? String else {
+                print("Failed to get user id when signing in")
+                return
+            }
+            
+            DatabaseManager.shared.getDataForPath(path: userId, completion: { [weak self] result in
                 switch result {
                 // Succeeded in getting user name. Proceed to generate views
                 case .success(let data):
@@ -501,28 +525,40 @@ class LoginViewController: UIViewController {
         
         let tabBarVC = UITabBarController()
         
-        tabBarVC.tabBar.barTintColor = Constants.accentColorDarkest
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = Constants.mainColorDarkest
+            appearance.shadowColor = Constants.mainColorDarkest
+            appearance.stackedLayoutAppearance.normal.iconColor = Constants.mainColor
+            appearance.stackedLayoutAppearance.selected.iconColor = Constants.contrastColor
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+        
+        // If not ios 15 and above
+        tabBarVC.tabBar.barTintColor = Constants.mainColorDarkest
         tabBarVC.tabBar.isTranslucent = false
         tabBarVC.tabBar.tintColor = Constants.contrastColor
-        tabBarVC.tabBar.unselectedItemTintColor = Constants.accentColor
+        tabBarVC.tabBar.unselectedItemTintColor = Constants.mainColor
         
         let home = HomeViewController()
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
         navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
-        navVC.navigationBar.tintColor = Constants.accentColorDark
+        navVC.navigationBar.tintColor = Constants.mainColorDark
         
         let stats = StatisticsViewController()
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
         navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
-        navVCStats.navigationBar.tintColor = Constants.accentColorDark
+        navVCStats.navigationBar.tintColor = Constants.mainColorDark
         
         let profile = ProfileViewController()
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
         navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
-        navVCProfile.navigationBar.tintColor = Constants.accentColorDark
+        navVCProfile.navigationBar.tintColor = Constants.mainColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
         
@@ -535,8 +571,9 @@ class LoginViewController: UIViewController {
         items[2].image = UIImage(named: "Settings")
         
         tabBarVC.modalPresentationStyle = .fullScreen
-        
-        self.present(tabBarVC, animated: false)
+        self.present(tabBarVC, animated: false, completion: {
+            self.launchView.alpha = 0
+        })
     }
     
     /// Function checks if user is logged in or not
@@ -547,6 +584,9 @@ class LoginViewController: UIViewController {
             self.prepareTabBar()
             // Make sure there is no lingering partner email
             UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
+        }
+        else {
+            launchView.alpha = 0
         }
     }
     

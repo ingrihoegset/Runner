@@ -12,9 +12,8 @@ struct Constants {
  
     //Colors
     static let mainColor = UIColor(named: "MainColor")
-    static let accentColor = UIColor(named: "AccentColor")
-    static let accentColorDark = UIColor(named: "AccentColorDark")
-    static let accentColorDarkest = UIColor(named: "AccentColorDarkest")
+    static let mainColorDark = UIColor(named: "mainColorDark")
+    static let mainColorDarkest = UIColor(named: "mainColorDarkest")
     static let whiteColor = UIColor(named: "WhiteColor")
     static let contrastColor = UIColor(named: "ContrastColor")
     static let superLightGrey = UIColor(named: "SuperLightGrey")
@@ -26,7 +25,7 @@ struct Constants {
     static let textColorMain = UIColor.black
     static let textColorWhite = UIColor.white
     static let textColorDarkGray = UIColor.darkGray
-    static let textColorAccent = UIColor(named: "AccentColorDarkest")
+    static let textColorAccent = UIColor(named: "mainColorDarkest")
     
     //Design dimensions
     static let smallCornerRadius: CGFloat = 6
@@ -69,6 +68,7 @@ struct Constants {
     static let mainFontSmall = UIFont(name: "BarlowSemiCondensed-Light", size: 12)
         //Semi Bold
     static let mainFontSB = UIFont(name: "Lato-Bold", size: 18)
+    static let mainFontLSB = UIFont(name: "Lato-Bold", size: 20)
     static let mainFontLargeSB = UIFont(name: "Lato-Bold", size: 22)
     static let mainFontXLargeSB = UIFont(name: "Lato-Bold", size: 35)
     static let mainFontXXLargeSB = UIFont(name: "Lato-Bold", size: 40)

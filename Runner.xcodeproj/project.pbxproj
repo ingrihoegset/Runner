@@ -84,6 +84,7 @@
 		BFF011AE27302ECA00CE020A /* MembershipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF011AD27302ECA00CE020A /* MembershipViewController.swift */; };
 		BFF011B12730362800CE020A /* CheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF011B02730362800CE020A /* CheckView.swift */; };
 		BFF5EB9C26A39DB800C80CBB /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */; };
+		BFF70B9E27FA2DD6007E24A9 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF70B9D27FA2DD6007E24A9 /* LaunchViewController.swift */; };
 		BFF7A93126B4212D0037F4AF /* UserRunSelections.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */; };
 		BFF7A93426B9995B0037F4AF /* PulsingAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */; };
 		BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFFB699D269A14E30080DA62 /* AppDelegate.swift */; };
@@ -180,6 +181,7 @@
 		BFF011AD27302ECA00CE020A /* MembershipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipViewController.swift; sourceTree = "<group>"; };
 		BFF011B02730362800CE020A /* CheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckView.swift; sourceTree = "<group>"; };
 		BFF5EB9B26A39DB800C80CBB /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
+		BFF70B9D27FA2DD6007E24A9 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		BFF7A93026B4212D0037F4AF /* UserRunSelections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRunSelections.swift; sourceTree = "<group>"; };
 		BFF7A93326B9995A0037F4AF /* PulsingAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulsingAnimationView.swift; sourceTree = "<group>"; };
 		BFFB699A269A14E30080DA62 /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -452,6 +454,7 @@
 				BFFB69BD269A17DA0080DA62 /* RegisterViewController.swift */,
 				BF82518526FA65CB00792FCB /* InfoPlistParser.swift */,
 				BF2F5192272406AE0066C5AD /* ForgotPasswordViewController.swift */,
+				BFF70B9D27FA2DD6007E24A9 /* LaunchViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -636,6 +639,7 @@
 				BFEAB4BD274AB5170058311C /* RunHelper.swift in Sources */,
 				BF12FF26269F5BAA00B51370 /* FirstGateViewController.swift in Sources */,
 				BF2F51B227247EF10066C5AD /* NetworkManager.swift in Sources */,
+				BFF70B9E27FA2DD6007E24A9 /* LaunchViewController.swift in Sources */,
 				BF6E059E26AB0DA60028C0AF /* StatisticsViewModel.swift in Sources */,
 				BFFB699E269A14E30080DA62 /* AppDelegate.swift in Sources */,
 				BFD78C0A27556FD900749D95 /* MyCollectionViewCell.swift in Sources */,

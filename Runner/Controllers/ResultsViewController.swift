@@ -188,7 +188,7 @@ class ResultsViewController: UIViewController {
     let raceSpeedResult: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.accentColorDark
+        label.textColor = Constants.mainColorDark
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
@@ -200,7 +200,7 @@ class ResultsViewController: UIViewController {
     let racelengthResult: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.accentColorDark
+        label.textColor = Constants.mainColorDark
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
@@ -222,7 +222,7 @@ class ResultsViewController: UIViewController {
     let reactionTimeResultLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.accentColorDark
+        label.textColor = Constants.mainColorDark
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isUserInteractionEnabled = false
@@ -241,7 +241,7 @@ class ResultsViewController: UIViewController {
     let detailComponent1: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.isUserInteractionEnabled = false
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
@@ -252,7 +252,7 @@ class ResultsViewController: UIViewController {
     let detailComponent2: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.isUserInteractionEnabled = false
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.clipsToBounds = true
@@ -327,7 +327,7 @@ class ResultsViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.tintColor = Constants.mainColor
         
-        view.backgroundColor = Constants.accentColorDark
+        view.backgroundColor = Constants.mainColorDark
 
         stackView.addArrangedSubview(resultContainer)
         // Reaction time view is addd to stack view if there is a reaction result (will only happen if the run is a reaction run).
@@ -515,7 +515,7 @@ class ResultsViewController: UIViewController {
         racelengthResult.text = String(result.distance)
         raceSpeedResult.text = String(result.averageSpeed)
         
-        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
+        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.mainColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
         let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
         if let reactionSeconds = result.reactionSeconds, let reationHundreths = result.reactionHundreths {
             stackView.addArrangedSubview(reactionTimeView)

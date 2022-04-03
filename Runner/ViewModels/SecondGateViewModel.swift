@@ -170,7 +170,7 @@ class SecondGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
                 return
             }
             if success {
-                strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColorDark!.cgColor, label: "Run ongoing")
+                strongSelf.secondGateViewModelDelegate?.updateRunningAnimtion(color: Constants.mainColorDark!.cgColor, label: "Run ongoing")
                 strongSelf.secondGateViewModelDelegate?.dismissResultsVC()
                 
                 // Start camera analysis if appropriate

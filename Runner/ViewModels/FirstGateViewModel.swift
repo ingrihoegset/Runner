@@ -372,7 +372,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             if success {
                 // Update UI to state
                 print("ongoing")
-                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.accentColorDark!.cgColor, label: "Running")
+                strongSelf.firstGateViewModelDelegate?.updateRunningAnimtion(color: Constants.mainColorDark!.cgColor, label: "Running")
                 
                 // Start camera analysis if appropriate
                 let oneGate = strongSelf.userSelectionsModel.getIsRunningWithOneGate()

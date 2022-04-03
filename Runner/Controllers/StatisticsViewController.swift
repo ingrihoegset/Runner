@@ -40,8 +40,8 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let sortTypeButton: BounceButton = {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.animationColor = Constants.accentColorDark
-        button.backgroundColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.setTitle("Run type", for: .normal)
@@ -54,9 +54,9 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     
     let sortDateButton: BounceButton = {
         let button = BounceButton()
-        button.animationColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.clipsToBounds = true
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.setTitle("Date", for: .normal)
@@ -70,7 +70,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     let statsHeaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         return view
     }()
     
@@ -79,7 +79,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(editTable), for: .touchUpInside)
         button.layer.cornerRadius = Constants.smallCornerRadius
-        let image = UIImage(systemName: "trash.fill")?.withTintColor(Constants.accentColorDark!)
+        let image = UIImage(systemName: "trash.fill")?.withTintColor(Constants.mainColorDark!)
         let imageview = UIImageView()
         button.addSubview(imageview)
         imageview.translatesAutoresizingMaskIntoConstraints = false
@@ -115,7 +115,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.backgroundColor = Constants.mainColor
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.setTitleColor(Constants.mainColorDark, for: .normal)
         button.setTitleColor(Constants.mainColor, for: .selected)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(sortByTime), for: .touchUpInside)
@@ -136,7 +136,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.backgroundColor = Constants.mainColor
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.setTitleColor(Constants.mainColorDark, for: .normal)
         button.setTitleColor(Constants.mainColor, for: .selected)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(sortByDistance), for: .touchUpInside)
@@ -156,7 +156,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         button.backgroundColor = Constants.mainColor
         button.titleLabel?.font = Constants.mainFontSB
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(Constants.accentColorDark, for: .normal)
+        button.setTitleColor(Constants.mainColorDark, for: .normal)
         button.setTitleColor(Constants.mainColor, for: .selected)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.addTarget(self, action: #selector(sortBySpeed), for: .touchUpInside)
@@ -167,7 +167,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
     var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = Constants.accentColor
+        tableView.backgroundColor = Constants.mainColor
         return tableView
     }()
     
@@ -188,7 +188,7 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         label.textAlignment = .center
         label.text = "No runs to show yet. Complete your first run!"
         label.font = Constants.mainFont
-        label.textColor = Constants.accentColorDarkest
+        label.textColor = Constants.mainColorDarkest
         label.isUserInteractionEnabled = false
         view.addSubview(imageView)
         view.addSubview(label)
@@ -307,9 +307,9 @@ class StatisticsViewController: UIViewController, StatisticsViewModelDelegate {
         onBoardClickMe.onBoardingBubbleDelegate = self
         
         navigationItem.title = "My runs"
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         
-        navigationController?.navigationBar.tintColor = Constants.accentColorDark
+        navigationController?.navigationBar.tintColor = Constants.mainColorDark
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"),
                                                             style: .done,
                                                             target: self,
@@ -799,8 +799,8 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         runTimeButton.backgroundColor = Constants.mainColor
         runDistanceButton.backgroundColor = Constants.mainColor
         runSpeedButton.backgroundColor = Constants.mainColor
-        sortTypeButton.backgroundColor = Constants.accentColorDark
-        sortDateButton.backgroundColor = Constants.accentColorDark
+        sortTypeButton.backgroundColor = Constants.mainColorDark
+        sortDateButton.backgroundColor = Constants.mainColorDark
         runTimeButton.animationColor = Constants.mainColor
         runSpeedButton.animationColor = Constants.mainColor
         runDistanceButton.animationColor = Constants.mainColor

@@ -36,7 +36,7 @@ class SortDateViewController: UIViewController {
     let selectSortingButton: BounceButton = {
          let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
-         button.backgroundColor = Constants.accentColorDark
+         button.backgroundColor = Constants.mainColorDark
          button.setTitle("Select", for: .normal)
          button.setTitleColor(.white, for: .normal)
          button.addTarget(self, action: #selector(selectDate), for: .touchUpInside)
@@ -50,7 +50,7 @@ class SortDateViewController: UIViewController {
     let closeSortingButton: BounceButton = {
          let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
-         button.backgroundColor = Constants.accentColorDark
+         button.backgroundColor = Constants.mainColorDark
          button.setTitle("Close", for: .normal)
          button.setTitleColor(.white, for: .normal)
          button.addTarget(self, action: #selector(close), for: .touchUpInside)
@@ -65,15 +65,14 @@ class SortDateViewController: UIViewController {
         self.view.backgroundColor = Constants.mainColor
         
         title = "Select dates"
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.accentColor!]
-        
-        // Makes navigation like rest of panel
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Constants.accentColorDark
-        
-        navigationController?.navigationBar.tintColor = Constants.accentColor
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = Constants.mainColorDark
+        appearance.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
+                                           NSAttributedString.Key.foregroundColor: Constants.mainColor!]
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+        navigationController?.navigationBar.tintColor = Constants.mainColor
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
                                                             target: self,
@@ -142,8 +141,8 @@ extension SortDateViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionHeader = UIButton(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 60))
         sectionHeader.titleLabel?.font = Constants.mainFontLargeSB
-        sectionHeader.setTitleColor(Constants.accentColorDark, for: .normal)
-        sectionHeader.backgroundColor = Constants.accentColor
+        sectionHeader.setTitleColor(Constants.mainColorDark, for: .normal)
+        sectionHeader.backgroundColor = Constants.mainColor
         sectionHeader.tag = section
         sectionHeader.addTarget(self,
                                 action: #selector(self.hideSection(sender:)),

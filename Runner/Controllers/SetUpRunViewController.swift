@@ -21,7 +21,7 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
     let newRaceButton: BounceButton = {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.setTitle("New run", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
@@ -63,14 +63,14 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColor
+        control.selectedSegmentTintColor = Constants.mainColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(runnerSegmentControl(_:)), for: .valueChanged)
@@ -82,14 +82,14 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.accentColor
+        control.selectedSegmentTintColor = Constants.mainColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
@@ -98,7 +98,7 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let runnerView: UIView = {
         let view = UIView()
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
@@ -121,7 +121,7 @@ class SetUpRunViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let falseStartView: UIView = {
         let view = UIView()
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true

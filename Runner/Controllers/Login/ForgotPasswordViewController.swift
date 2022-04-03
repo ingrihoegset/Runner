@@ -29,22 +29,22 @@ class ForgotPasswordViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
-        field.layer.borderColor = Constants.accentColorDark?.cgColor
+        field.layer.borderColor = Constants.mainColorDark?.cgColor
         field.placeholder = "Email address..."
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.accentColor
+        field.backgroundColor = Constants.mainColor
         field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         return field
     }()
 
     private let sendPasswordButton: BounceButton = {
         let button = BounceButton()
-        button.animationColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Send", for: .normal)
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -61,7 +61,7 @@ class ForgotPasswordViewController: UIViewController {
         navBar?.setBackgroundImage(UIImage(), for: .default)
         navBar?.shadowImage = UIImage()
         navBar?.isTranslucent = true
-        navBar?.tintColor = Constants.accentColorDark
+        navBar?.tintColor = Constants.mainColorDark
         
         view.addSubview(resetLabel)
         view.addSubview(emailField)

@@ -35,7 +35,7 @@ class NoConnectionView: UIView {
         textView.textAlignment = .center
         textView.text = "You are offline.\nConnect to the internet to use this app!"
         textView.font = Constants.mainFontLarge
-        textView.textColor = Constants.accentColorDarkest
+        textView.textColor = Constants.mainColorDarkest
         return textView
     }()
 

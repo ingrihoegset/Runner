@@ -61,12 +61,12 @@ class RegisterViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
-        field.layer.borderColor = Constants.accentColorDark?.cgColor
+        field.layer.borderColor = Constants.mainColorDark?.cgColor
         field.placeholder = "Email address..."
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.accentColor
+        field.backgroundColor = Constants.mainColor
         field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
         return field
@@ -81,12 +81,12 @@ class RegisterViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
-        field.layer.borderColor = Constants.accentColorDark?.cgColor
+        field.layer.borderColor = Constants.mainColorDark?.cgColor
         field.placeholder = "First name..."
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.accentColor
+        field.backgroundColor = Constants.mainColor
         field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
         return field
@@ -101,12 +101,12 @@ class RegisterViewController: UIViewController {
         field.returnKeyType = .continue
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
-        field.layer.borderColor = Constants.accentColorDark?.cgColor
+        field.layer.borderColor = Constants.mainColorDark?.cgColor
         field.placeholder = "Last name..."
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.accentColor
+        field.backgroundColor = Constants.mainColor
         field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
         return field
@@ -121,12 +121,12 @@ class RegisterViewController: UIViewController {
         field.font = Constants.mainFontLarge
         field.layer.cornerRadius = Constants.smallCornerRadius
         field.layer.borderWidth = Constants.borderWidth
-        field.layer.borderColor = Constants.accentColorDark?.cgColor
+        field.layer.borderColor = Constants.mainColorDark?.cgColor
         field.placeholder = "Password..."
         // Creates buffer to make space between edge and text in textfield
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = Constants.accentColor
+        field.backgroundColor = Constants.mainColor
         field.isSecureTextEntry = true
         field.layer.applySketchShadow(color: Constants.lightGray!, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         field.alpha = 0
@@ -135,10 +135,10 @@ class RegisterViewController: UIViewController {
     
     private let logginButton: BounceButton = {
         let button = BounceButton()
-        button.animationColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Sign up", for: .normal)
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.font = Constants.mainFontLargeSB
@@ -171,7 +171,7 @@ class RegisterViewController: UIViewController {
         navBar?.setBackgroundImage(UIImage(), for: .default)
         navBar?.shadowImage = UIImage()
         navBar?.isTranslucent = true
-        navBar?.tintColor = Constants.accentColorDark
+        navBar?.tintColor = Constants.mainColorDark
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(backTapped))
         
@@ -471,30 +471,43 @@ class RegisterViewController: UIViewController {
     
     /// Creates the Tab bar that will be presented on log in -- Make sure function is identical in RegisterVC
     private func prepareTabBar() {
+        
         let tabBarVC = UITabBarController()
         
-        tabBarVC.tabBar.barTintColor = Constants.accentColorDarkest
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = Constants.mainColorDarkest
+            appearance.shadowColor = Constants.mainColorDarkest
+            appearance.stackedLayoutAppearance.normal.iconColor = Constants.mainColor
+            appearance.stackedLayoutAppearance.selected.iconColor = Constants.contrastColor
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+        
+        // If not ios 15 and above
+        tabBarVC.tabBar.barTintColor = Constants.mainColorDarkest
         tabBarVC.tabBar.isTranslucent = false
         tabBarVC.tabBar.tintColor = Constants.contrastColor
-        tabBarVC.tabBar.unselectedItemTintColor = Constants.accentColor
+        tabBarVC.tabBar.unselectedItemTintColor = Constants.mainColor
         
         let home = HomeViewController()
         let navVC = UINavigationController(rootViewController: home)
         navVC.navigationBar.prefersLargeTitles = true
         navVC.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
-        navVC.navigationBar.tintColor = Constants.accentColorDark
+        navVC.navigationBar.tintColor = Constants.mainColorDark
         
         let stats = StatisticsViewController()
         let navVCStats = UINavigationController(rootViewController: stats)
         navVCStats.navigationBar.prefersLargeTitles = true
         navVCStats.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
-        navVCStats.navigationBar.tintColor = Constants.accentColorDark
+        navVCStats.navigationBar.tintColor = Constants.mainColorDark
         
         let profile = ProfileViewController()
         let navVCProfile = UINavigationController(rootViewController: profile)
         navVCProfile.navigationBar.prefersLargeTitles = true
         navVCProfile.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent!, NSAttributedString.Key.font: Constants.mainFontExtraBold!]
-        navVCProfile.navigationBar.tintColor = Constants.accentColorDark
+        navVCProfile.navigationBar.tintColor = Constants.mainColorDark
         
         tabBarVC.setViewControllers([navVC, navVCStats, navVCProfile], animated: false)
         

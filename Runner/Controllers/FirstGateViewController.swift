@@ -31,7 +31,7 @@ class FirstGateViewController: UIViewController {
     let displayLabel1: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = Constants.mainFontLargeSB
@@ -45,7 +45,7 @@ class FirstGateViewController: UIViewController {
     let displayLabel2: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.titleLabel?.textAlignment = .center
         button.titleLabel?.font = Constants.mainFontLargeSB
@@ -69,7 +69,7 @@ class FirstGateViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = false
         view.layer.cornerRadius = Constants.smallCornerRadius
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return view
     }()
@@ -116,7 +116,7 @@ class FirstGateViewController: UIViewController {
     let startButton: BounceButton = {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.setTitle("Start count down", for: .normal)
         button.setTitleColor(Constants.textColorWhite, for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
@@ -143,8 +143,8 @@ class FirstGateViewController: UIViewController {
     let countDownPickerView: CountDownPicker = {
         let picker = CountDownPicker()
         picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.detail1.textColor = Constants.accentColorDarkest
-        picker.detail2.textColor = Constants.accentColorDarkest
+        picker.detail1.textColor = Constants.mainColorDarkest
+        picker.detail2.textColor = Constants.mainColorDarkest
         picker.alpha = 0
         picker.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
         return picker

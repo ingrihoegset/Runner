@@ -50,7 +50,7 @@ class MembershipViewController: UIViewController {
     }()
     
     let row1: CheckView = {
-        let view = CheckView(frame: .zero, title: "A selection of running modes", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        let view = CheckView(frame: .zero, title: "A selection of running modes", imageName: "checkmark.seal.fill", imageColor: Constants.mainColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
         view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -58,7 +58,7 @@ class MembershipViewController: UIViewController {
     }()
     
     let row2: CheckView = {
-        let view = CheckView(frame: .zero, title: "False start", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        let view = CheckView(frame: .zero, title: "False start", imageName: "checkmark.seal.fill", imageColor: Constants.mainColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
         view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -66,7 +66,7 @@ class MembershipViewController: UIViewController {
     }()
     
     let row3: CheckView = {
-        let view = CheckView(frame: .zero, title: "Photo finish", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        let view = CheckView(frame: .zero, title: "Photo finish", imageName: "checkmark.seal.fill", imageColor: Constants.mainColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
         view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +74,7 @@ class MembershipViewController: UIViewController {
     }()
     
     let row4: CheckView = {
-        let view = CheckView(frame: .zero, title: "Access to all run data", imageName: "checkmark.seal.fill", imageColor: Constants.accentColorDark!)
+        let view = CheckView(frame: .zero, title: "Access to all run data", imageName: "checkmark.seal.fill", imageColor: Constants.mainColorDark!)
         view.titleLabel.font = Constants.mainFontLarge
         view.titleLabel.textColor = Constants.textColorAccent
         view.translatesAutoresizingMaskIntoConstraints = false

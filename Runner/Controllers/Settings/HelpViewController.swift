@@ -128,7 +128,7 @@ extension HelpViewController: UITableViewDelegate, UITableViewDataSource {
         sectionButton.topAnchor.constraint(equalTo: sectionView.topAnchor).isActive = true
         sectionButton.bottomAnchor.constraint(equalTo: sectionView.bottomAnchor).isActive = true
         sectionButton.text = sectionTitles[section]
-        sectionButton.textColor = Constants.accentColorDarkest
+        sectionButton.textColor = Constants.mainColorDarkest
         sectionButton.numberOfLines = 0
         sectionButton.textAlignment = .left
         sectionButton.backgroundColor = Constants.mainColor

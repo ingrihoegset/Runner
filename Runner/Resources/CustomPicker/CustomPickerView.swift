@@ -35,7 +35,7 @@ class CustomPickerView: UIView {
     let pickerLengthBackgroundDetail: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
         view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
@@ -45,7 +45,7 @@ class CustomPickerView: UIView {
     let detail1: UIView = {
         let detail1 = UIView()
         detail1.translatesAutoresizingMaskIntoConstraints = false
-        detail1.backgroundColor = Constants.accentColorDark
+        detail1.backgroundColor = Constants.mainColorDark
         detail1.alpha = 1
         detail1.layer.cornerRadius = Constants.smallCornerRadius
         return detail1
@@ -54,7 +54,7 @@ class CustomPickerView: UIView {
     let detail2: UIView = {
         let detail2 = UIView()
         detail2.translatesAutoresizingMaskIntoConstraints = false
-        detail2.backgroundColor = Constants.accentColorDark
+        detail2.backgroundColor = Constants.mainColorDark
         detail2.alpha = 1
         detail2.layer.cornerRadius = Constants.smallCornerRadius
         return detail2
@@ -63,7 +63,7 @@ class CustomPickerView: UIView {
     let detail3: UIView = {
         let detail3 = UIView()
         detail3.translatesAutoresizingMaskIntoConstraints = false
-        detail3.backgroundColor = Constants.accentColorDark
+        detail3.backgroundColor = Constants.mainColorDark
         detail3.alpha = 1
         detail3.layer.cornerRadius = Constants.smallCornerRadius
         return detail3

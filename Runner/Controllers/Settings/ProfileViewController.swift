@@ -43,12 +43,12 @@ class ProfileViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "person.circle")
-        imageView.tintColor = Constants.accentColorDark
+        imageView.tintColor = Constants.mainColorDark
         imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = true
         imageView.layer.masksToBounds = true
         imageView.backgroundColor = Constants.mainColor
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderColor = Constants.mainColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         return imageView
     }()
@@ -58,7 +58,7 @@ class ProfileViewController: UIViewController {
         let name = UserDefaults.standard.value(forKey: "name") as? String
         label.text = name
         label.textAlignment = .left
-        label.textColor = Constants.accentColorDark
+        label.textColor = Constants.mainColorDark
         label.backgroundColor = .clear
         label.font = Constants.mainFontLargeSB
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -319,7 +319,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         
         let label = UILabel()
         label.text = sectionTitles[section]
-        label.textColor = Constants.accentColorDark
+        label.textColor = Constants.mainColorDark
         label.font = Constants.mainFontSB
         label.textAlignment = .left
         label.frame = CGRect(x: Constants.sideMargin, y: 15, width: Constants.widthOfDisplay - Constants.sideMargin, height: Constants.mainButtonSize-15)

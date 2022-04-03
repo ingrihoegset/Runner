@@ -22,7 +22,7 @@ class SortTypeViewController: UIViewController {
     let sortHeader: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = Constants.mainColor
         label.text = "Select Run Type"
         label.textColor = Constants.textColorWhite
         label.layer.masksToBounds = true
@@ -45,7 +45,7 @@ class SortTypeViewController: UIViewController {
     let selectSortingButton: BounceButton = {
          let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
-         button.backgroundColor = Constants.accentColorDark
+         button.backgroundColor = Constants.mainColorDark
          button.setTitle("Select", for: .normal)
          button.setTitleColor(.white, for: .normal)
          button.addTarget(self, action: #selector(selectSort), for: .touchUpInside)
@@ -59,7 +59,7 @@ class SortTypeViewController: UIViewController {
     let closeSortingButton: BounceButton = {
          let button = BounceButton()
          button.translatesAutoresizingMaskIntoConstraints = false
-         button.backgroundColor = Constants.accentColorDark
+         button.backgroundColor = Constants.mainColorDark
          button.setTitle("Close", for: .normal)
          button.setTitleColor(.white, for: .normal)
          button.addTarget(self, action: #selector(close), for: .touchUpInside)
@@ -74,14 +74,13 @@ class SortTypeViewController: UIViewController {
         self.view.backgroundColor = Constants.mainColor
         
         title = "Select run type"
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
-                                                                         NSAttributedString.Key.foregroundColor: Constants.accentColor!]
-        
-        // Makes navigation like rest of panel
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = Constants.accentColorDark
-        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = Constants.mainColorDark
+        appearance.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
+                                           NSAttributedString.Key.foregroundColor: Constants.mainColor!]
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         navigationController?.navigationBar.tintColor = Constants.mainColor
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,

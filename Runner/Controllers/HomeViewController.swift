@@ -95,11 +95,11 @@ class HomeViewController: UIViewController {
 
     private let qrButton: BounceButton = {
         let qrButton = BounceButton()
-        qrButton.backgroundColor = Constants.accentColorDark
+        qrButton.backgroundColor = Constants.mainColorDark
         qrButton.translatesAutoresizingMaskIntoConstraints = false
         qrButton.layer.masksToBounds = false
         qrButton.clipsToBounds = false
-        qrButton.animationColor = Constants.accentColorDark
+        qrButton.animationColor = Constants.mainColorDark
         let image = UIImage(named: "QrCode")?.withTintColor(Constants.mainColor!, renderingMode: .alwaysOriginal)
         let imageview = UIImageView()
         qrButton.addSubview(imageview)
@@ -138,12 +138,12 @@ class HomeViewController: UIViewController {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
-        button.animationColor = Constants.accentColorDark
-        button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.accentColorDark!)
+        button.animationColor = Constants.mainColorDark
+        button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.mainColorDark!)
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Sprint"
-        button.title.textColor = Constants.accentColorDark
+        button.title.textColor = Constants.mainColorDark
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         button.alpha = 0
@@ -154,14 +154,14 @@ class HomeViewController: UIViewController {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
-        button.animationColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
         button.tag = 1
         let image = UIImage(named: "Reaction")
-        button.imageview.image = UIImage(named: "Reaction")?.withTintColor(Constants.accentColorDark!)
+        button.imageview.image = UIImage(named: "Reaction")?.withTintColor(Constants.mainColorDark!)
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Reaction run"
-        button.title.textColor = Constants.accentColorDark
+        button.title.textColor = Constants.mainColorDark
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         button.alpha = 0
@@ -172,13 +172,13 @@ class HomeViewController: UIViewController {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
-        button.animationColor = Constants.accentColorDark
+        button.animationColor = Constants.mainColorDark
         button.tag = 2
-        button.imageview.image = UIImage(named: "Flying")?.withTintColor(Constants.accentColorDark!)
+        button.imageview.image = UIImage(named: "Flying")?.withTintColor(Constants.mainColorDark!)
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Flying start"
-        button.title.textColor = Constants.accentColorDark
+        button.title.textColor = Constants.mainColorDark
         button.addTarget(self, action: #selector(alertUserThatFlyingStartOnlyAvailableWhenConnected), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         button.alpha = 0
@@ -239,7 +239,7 @@ class HomeViewController: UIViewController {
     private let secondGatePartnerProfileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.borderColor = Constants.accentColorDark?.cgColor
+        imageView.layer.borderColor = Constants.mainColorDark?.cgColor
         imageView.layer.borderWidth = Constants.borderWidth
         imageView.backgroundColor = Constants.mainColor
         imageView.layer.masksToBounds = true
@@ -260,7 +260,7 @@ class HomeViewController: UIViewController {
     private let openSecondGatesButton: BounceButton = {
         let button = BounceButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = Constants.accentColorDark
+        button.backgroundColor = Constants.mainColorDark
         button.setTitle("Open end gate", for: .normal)
         button.titleLabel?.font = Constants.mainFontLargeSB
         button.layer.cornerRadius = Constants.smallCornerRadius
@@ -291,7 +291,7 @@ class HomeViewController: UIViewController {
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.accentColorDark!,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColorDark!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
@@ -333,9 +333,8 @@ class HomeViewController: UIViewController {
         UserDefaults.standard.set(false, forKey: Constants.hasOnboardedSensitivitySlider)
         UserDefaults.standard.set(1, forKey: Constants.sensitivityOnboardingSliderCounter)
         UserDefaults.standard.set(false, forKey: Constants.readyToShowOnboardConnect)
-        UserDefaults.standard.set(true, forKey: Constants.firstLaunch)
 
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         
         let navBar = navigationController?.navigationBar
         navBar?.setBackgroundImage(UIImage(), for: .default)
@@ -1063,6 +1062,7 @@ extension HomeViewController {
     // MARK: - Functions related to second gate
     @objc private func didSelectOpenSecondGate(sender: UIButton) {
         let vc = SecondGateViewController()
+        
         navigationController?.pushViewController(vc, animated: true)
         
         // User has been onboarded to end gate
@@ -1086,6 +1086,7 @@ extension HomeViewController: OnBoardingBubbleDelegate {
 
 extension HomeViewController: OnboardingViewControllerDelegate {
     func onboardingComplete() {
+        UserDefaults.standard.set(false, forKey: Constants.firstLaunch)
         UIView.animate(withDuration: 0.3,
             animations: {
                 self.onboardingViewController.view.alpha = 0

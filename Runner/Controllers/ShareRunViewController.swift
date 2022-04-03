@@ -132,7 +132,7 @@ class ShareRunViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.mainColor!]
         
-        self.navigationController?.navigationBar.tintColor = Constants.accentColorDark
+        self.navigationController?.navigationBar.tintColor = Constants.mainColorDark
         
         navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(systemName: "camera"),
                                                               style: .done,

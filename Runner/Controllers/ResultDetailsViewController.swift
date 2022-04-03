@@ -52,9 +52,9 @@ class ResultDetailsViewController: UIViewController {
     let detailRowDate: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.resultFontXSmall
-        button.titleLabel?.textColor = Constants.accentColorDark
+        button.titleLabel?.textColor = Constants.mainColorDark
         button.titleLabel?.textAlignment = .center
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.layer.masksToBounds = false
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -66,9 +66,9 @@ class ResultDetailsViewController: UIViewController {
     let detailRowTime: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.resultFontSmall
-        button.titleLabel?.textColor = Constants.accentColorDark
+        button.titleLabel?.textColor = Constants.mainColorDark
         button.titleLabel?.textAlignment = .center
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.layer.masksToBounds = false
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -80,9 +80,9 @@ class ResultDetailsViewController: UIViewController {
     let detailRowDistance: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.resultFontSmall
-        button.titleLabel?.textColor = Constants.accentColorDark
+        button.titleLabel?.textColor = Constants.mainColorDark
         button.titleLabel?.textAlignment = .center
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.layer.masksToBounds = false
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -94,9 +94,9 @@ class ResultDetailsViewController: UIViewController {
     let detailRowSpeed: UIButton = {
         let button = UIButton()
         button.titleLabel?.font = Constants.resultFontSmall
-        button.titleLabel?.textColor = Constants.accentColorDark
+        button.titleLabel?.textColor = Constants.mainColorDark
         button.titleLabel?.textAlignment = .center
-        button.backgroundColor = Constants.accentColor
+        button.backgroundColor = Constants.mainColor
         button.layer.cornerRadius = Constants.smallCornerRadius
         button.layer.masksToBounds = false
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -110,7 +110,7 @@ class ResultDetailsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: Constants.heightOfDisplay * 0.375).isActive = true
         view.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay - 2 * Constants.sideMargin).isActive = true
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.layer.cornerRadius = Constants.smallCornerRadius
         view.layer.masksToBounds = false
         view.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin, spread: 0)
@@ -131,7 +131,7 @@ class ResultDetailsViewController: UIViewController {
     let reactionTimeResultLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = Constants.accentColorDark
+        label.textColor = Constants.mainColorDark
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isUserInteractionEnabled = false
@@ -142,7 +142,7 @@ class ResultDetailsViewController: UIViewController {
     let tabGraphLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = Constants.accentColor
+        label.backgroundColor = Constants.mainColor
         label.text = "Identical runs"
         label.textAlignment = .center
         label.layer.cornerRadius = Constants.smallCornerRadius
@@ -265,7 +265,7 @@ class ResultDetailsViewController: UIViewController {
         
         resultDetailsViewModel.resultsViewModelDelegate = self
         self.navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = Constants.accentColorDark
+        navigationController?.navigationBar.tintColor = Constants.mainColorDark
         
         view.backgroundColor = Constants.mainColor
         
@@ -282,7 +282,7 @@ class ResultDetailsViewController: UIViewController {
         
         reactionTimeView.addSubview(reactionTimeResultLabel)
         
-        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
+        let resultAttributes = [NSAttributedString.Key.foregroundColor: Constants.mainColorDark, NSAttributedString.Key.font: Constants.resultFontSmall]
         let unitAttributes = [NSAttributedString.Key.foregroundColor: Constants.textColorAccent, NSAttributedString.Key.font: Constants.mainFontLargeSB]
 
         let timeResult = NSMutableAttributedString(string: time, attributes: resultAttributes as [NSAttributedString.Key : Any])
@@ -309,7 +309,7 @@ class ResultDetailsViewController: UIViewController {
         distText.append(distResult)
         distText.append(distUnit)
         
-        let dateAttributes = [NSAttributedString.Key.foregroundColor: Constants.accentColorDark]
+        let dateAttributes = [NSAttributedString.Key.foregroundColor: Constants.mainColorDark]
         let dated = NSMutableAttributedString(string: String(date), attributes: dateAttributes as [NSAttributedString.Key : Any])
         let dateText = NSMutableAttributedString()
         dateText.append(dated)

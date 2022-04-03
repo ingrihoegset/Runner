@@ -14,7 +14,7 @@ class RunTableViewCell: UITableViewCell {
     
     let cellView: UIView = {
         let view = UIView()
-        view.backgroundColor = Constants.accentColor
+        view.backgroundColor = Constants.mainColor
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
