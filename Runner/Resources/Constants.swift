@@ -5,6 +5,10 @@ struct Constants {
     
     //App Title
     static let title = "SNAPDASH"
+    
+    // User
+    static let userID = "userID"
+    static let partnerUserID = "partnerUserID"
  
     //Colors
     static let mainColor = UIColor(named: "MainColor")
@@ -87,7 +91,7 @@ struct Constants {
     
     // User Default Strings
     static let currentRunID = "currentRunID"
-    static let profileImageURL = "profileImageURL"
+    static let profileImageString = "profileImageString"
     static let cameraSensitivity = "cameraSensitivity"
     
     // User Default Onboarding strings

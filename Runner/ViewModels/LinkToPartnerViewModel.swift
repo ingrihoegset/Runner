@@ -25,13 +25,14 @@ class LinkToPartnerViewModel {
         NotificationCenter.default.addObserver(self, selector: #selector(newLinkOccured), name: NSNotification.Name(rawValue: Constants.linkOccured), object: nil)
     }
     
-    func checkIfQRRepresentsUser(partnerSafeEmail: String) {
+    func checkIfQRRepresentsUser(partnerUserID: String) {
         DatabaseManager.shared.getAllUsers(completion: { [weak self ] result in
             switch result {
             case .success(let users):
-                // If we find  match in the database, make a link with user
-                if self?.filterUsers(with: partnerSafeEmail, users: users) == true {
-                    self?.createNewLink(safePartnerEmail: partnerSafeEmail)
+                // check if userkey exists in dictionart of users
+                // If so, QR code represents a registered user, go ahead and connect to user
+                if users[partnerUserID] != nil {
+                    self?.createNewLink(partnerUserID: partnerUserID)
                 }
                 else {
                     // Show error that couldnt find user
@@ -46,6 +47,7 @@ class LinkToPartnerViewModel {
         })
     }
     
+    /*
     func filterUsers(with term: String, users: [[String: String]]) -> Bool {
         
         let result: [[String: String]] = users.filter({
@@ -64,14 +66,30 @@ class LinkToPartnerViewModel {
             //Found match in database for user
             return true
         }
-    }
+    }*/
     
+    /*
     func createNewLink(safePartnerEmail: String) {
         
         DatabaseManager.shared.registerLink(with: safePartnerEmail, completion: { success in
             if success {
                 print ("New Link created. And database updated for users")
                 UserDefaults.standard.setValue(safePartnerEmail, forKey: "partnerEmail")
+            }
+            else {
+                print("Failed update database with new Link")
+                // -- Should show error to user -- //
+                self.linkViewModelDelegate?.failedToConnectError()
+            }
+        })
+    }*/
+    
+    func createNewLink(partnerUserID: String) {
+        
+        DatabaseManager.shared.registerLinkWithPartnerID(with: partnerUserID, completion: { success in
+            if success {
+                print ("New Link created. And database updated for users")
+                UserDefaults.standard.setValue(partnerUserID, forKey: Constants.partnerUserID)
             }
             else {
                 print("Failed update database with new Link")
@@ -88,12 +106,26 @@ class LinkToPartnerViewModel {
     }
     
     func fetchProfilePic() {
-        print("Fetching picture in Linking")
+        print("Fetching picture for linking page")
 
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-            print("No email saved to user defaults")
+        guard let userID = UserDefaults.standard.value(forKey: Constants.userID) as? String else {
+            print("No userid found when creating linking page")
             return
         }
+        
+        StorageManager.shared.getProfileImage(userID: userID, completion: { [weak self] result in
+            switch result {
+            case .success(let image):
+                print("Found profile image for linking page")
+                self?.linkViewModelDelegate?.didFetchProfileImage(image: image)
+            case .failure(_):
+                print("Failed to retrieve profil image for linking page")
+                self?.linkViewModelDelegate?.failedToConnectError()
+            }
+        })
+        
+        
+        /*
         let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
         let filename = safeEmail + "_profile_picture.png"
         let path = "images/" + filename
@@ -115,7 +147,7 @@ class LinkToPartnerViewModel {
             case .failure(let error):
                 print("Failed to download url: \(error)")
             }
-        })
+        })*/
     }
     
     /// Related to onboarding of scanning functions

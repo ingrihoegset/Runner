@@ -236,7 +236,7 @@ class ProfileViewController: UIViewController {
                 UserDefaults.standard.setValue(nil, forKey: "email")
                 UserDefaults.standard.setValue(nil, forKey: "name")
                 UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
-                UserDefaults.standard.setValue(nil, forKey: Constants.profileImageURL)
+                UserDefaults.standard.setValue(nil, forKey: Constants.profileImageString)
                 
                 // Log Out From Facebook
                 FBSDKLoginKit.LoginManager().logOut()
@@ -385,13 +385,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         guard let data = selectedImage.pngData() else {
             return
         }
-        
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+        guard let userID = UserDefaults.standard.value(forKey: Constants.userID) else {
             return
         }
         
-        let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
-        let filename = "\(safeEmail)_profile_picture.png"
+        let filename = "\(userID)_profile_picture.png"
         
         profileViewModel.updateProfilePicture(data: data, fileName: filename, completion: { [weak self] success in
             if success {

@@ -21,7 +21,7 @@ struct RaceAppUser {
     
     var profilePictureFileName: String {
         //ingrihoegset-gmail-com_profile_picture.png
-        return "\(safeEmail)_profile_picture.png"
+        return "\(userID)_profile_picture.png"
     }
     
     static func safeEmail(emailAddress: String) -> String {

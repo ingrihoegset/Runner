@@ -450,17 +450,17 @@ class HomeViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         // For skeleton loading of header images
+        
         gradientLayerProfile.frame = loadingProfileImageView.bounds
         gradientLayerQrButton.frame = loadingQrButton.bounds
         loadingProfileImageView.layer.cornerRadius = Constants.imageSize / 2
         loadingQrButton.layer.cornerRadius = (Constants.imageSize * 0.6) / 2
-    
 
-        if let email = UserDefaults.standard.value(forKey: "email") as? String {
-            homeViewModel.fetchProfilePic(email: email)
+        if let userID = UserDefaults.standard.value(forKey: Constants.userID) as? String {
+            homeViewModel.fetchProfilePicture(userID: userID)
         }
         else {
-            print("No user email found when trying to initiate profile pic download")
+            print("No userID found when trying to initiate profile pic download")
         }
         
         // Will show onboard connect if ready for it
@@ -628,17 +628,17 @@ class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: HomeViewModelDelegate {
-    func didFetchProfileImage(image: UIImage, safeEmail: String) {
+    func didFetchProfileImage(image: UIImage, fetchedUserID: String) {
         print("Fetched home profile image")
         
-        guard var userEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+        guard let userID = UserDefaults.standard.value(forKey: Constants.userID) as? String else {
             return
         }
-        userEmail = RaceAppUser.safeEmail(emailAddress: userEmail)
-        // If email used in call doesnt match our users email, then we update partner image.
+
+        // If userID used in call doesnt match our users email, then we update partner image.
         // Otherwise, update our users image.
         DispatchQueue.main.async {
-            if safeEmail != userEmail {
+            if fetchedUserID != userID {
                 print("not a match")
                 self.partnerProfileImageView.image = image
                 self.secondGatePartnerProfileImageView.image = image
@@ -746,6 +746,7 @@ extension HomeViewController: HomeViewModelDelegate {
     // Gets and updates UI elements in accordance with successful link with partner
     // Is triggered by home view model when a change to link occurs. If a link is found, else is activated, view shows linked view.
     func updateUiUnconnected() {
+        print("Show UI as not connected")
         // Show
         self.loadingProfileImageView.alpha = 1
         self.loadingQrButton.alpha = 1

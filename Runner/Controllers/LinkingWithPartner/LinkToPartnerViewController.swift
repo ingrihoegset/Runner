@@ -329,19 +329,20 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
     
     /// Creates a QR-code for the User, based on the user email.
     func createUserSpecificQRCodeIImage() {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String
+        
+        guard let userID = UserDefaults.standard.value(forKey: Constants.userID) as? String
         else {
             print("No email found")
             return
         }
-        print("Email for QR-code", email)
+        print("Generated QR-code for: ", userID)
         DispatchQueue.main.async {
-            self.qrImageView.image = self.generateQRCodeImage(userIdentifier: email)
+            self.qrImageView.image = self.generateQRCodeImage(userIdentifier: userID)
             self.qrImageView.layer.magnificationFilter = CALayerContentsFilter.nearest
         }
     }
     
-    /// Generates a QR-image based on the passed in string. This should be user email.
+    /// Generates a QR-image based on the passed in string. This should be userID.
     private func generateQRCodeImage(userIdentifier: String) -> UIImage {
         let data = userIdentifier.data(using: .ascii, allowLossyConversion: false)
         let filter = CIFilter(name: "CIQRCodeGenerator")
@@ -390,20 +391,18 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         if metadataObjects != nil && metadataObjects.count != 0 {
             if let object = metadataObjects[0] as? AVMetadataMachineReadableCodeObject {
                 if object.type == AVMetadataObject.ObjectType.qr {
-                    guard let partnerEmail = object.stringValue else {
+                    guard let partnerUserID = object.stringValue else {
                         return
                     }
-                    // Convert to safe email formate
-                    let safePartnerEmail = RaceAppUser.safeEmail(emailAddress: partnerEmail)
                     
                     // Should check if QR represents a user of the app
                     //If so, proceed to creating a link. Call happens in view model
-                    self.linkViewModel.checkIfQRRepresentsUser(partnerSafeEmail: safePartnerEmail)
+                    self.linkViewModel.checkIfQRRepresentsUser(partnerUserID: partnerUserID)
 
                     // We have the data we need, stop the camera from capturing more frames
                     session.stopRunning()
                     
-                    print("Found QR-code of partner: ", safePartnerEmail)
+                    print("Found QR-code of partner: ", partnerUserID)
                 }
             }
         }

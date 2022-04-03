@@ -18,7 +18,7 @@ final class StorageManager {
     static let cache = NSCache<NSString, UIImage>()
     
     /*
-     Filename: /images/ingrihoegset-gmail-com_profile_picture.png
+     Filename: /images/userID_profile_picture.png
      */
     
     /// Uploads picture to firebase storage and returns completion with URL string to download. On successful completion returns url as string.
@@ -40,9 +40,30 @@ final class StorageManager {
                         return
                     }
                     
-                    let urlString = url.absoluteString
+                    // Update user profile url every time image is uploaded
+                    // This is done so we can easily fetch cached image when one exists
+                    // When it doesnt exist, we need to download image from database
+                    // We use the path way to the user image to make cahcing flexible "images/\(userID)_profile_picture.png"
+                    
+                    // Caching key
+                    guard let userID = UserDefaults.standard.value(forKey: Constants.userID) as? String else {
+                        print("No user id found when attempting to cache image during upload")
+                        return
+                    }
+                    let cacheKey = "images/\(userID)_profile_picture.png"
+                    
+                    // Save url string with cache key
+                    UserDefaults.standard.set(url.absoluteString, forKey: cacheKey)
+                    
+                    // Get same url string
+                    guard let urlString = UserDefaults.standard.value(forKey: cacheKey) as? String else {
+                        print("No profile image url found in user defaults")
+                        completion(.failure(StorageErrors.failedToGetDownloadURL))
+                        return
+                    }
                     print("Downloading url returned: \(urlString)")
                     
+                    // Caching image
                     let uploadedImage = UIImage(data: data)
                     StorageManager.cache.setObject(uploadedImage!, forKey: urlString as NSString)
 
@@ -54,13 +75,135 @@ final class StorageManager {
         else {
             completion(.failure(StorageErrors.failedToUpload))
         }
-
     }
     
     public enum StorageErrors: Error {
         case failedToUpload
         case failedToGetDownloadURL
     }
+    
+    /// Get users profile image using cached image or downloading with user pathway
+    public func getProfileImage(userID: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        
+        // profile image path and image cache key
+        let profileImagePath = "images/\(userID)_profile_picture.png"
+     
+        // Check for cached image string
+        guard let profileImageString = UserDefaults.standard.value(forKey: profileImagePath) as? NSString else {
+            // No cached image string found, download image from database with user pathway
+            print("No cached image string found")
+            downloadImage(for: profileImagePath, completion: { [weak self] result in
+                switch result {
+                case .success(let image):
+                    completion(.success(image))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            })
+            return
+        }
+        
+        // If there is a cached image
+        if let image = StorageManager.cache.object(forKey: profileImageString) {
+            print("Using cached image")
+            completion(.success(image))
+        }
+        else {
+            // No cached image found even though there was an image string, download from database
+            print("No cached image found")
+            downloadImage(for: profileImagePath, completion: { [weak self] result in
+                switch result {
+                case .success(let image):
+                    completion(.success(image))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            })
+        }
+    }
+    
+    /// Downloads image from given pathway and caches image on same pathway
+    public func downloadImage(for path: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        
+        print("Downloading image")
+        let reference = storage.child(path)
+        
+        // Firebase function to download image URL
+        reference.downloadURL(completion: { url, error in
+            guard let url = url, error == nil else {
+                print("Failed to get URL")
+                completion(.failure(StorageErrors.failedToGetDownloadURL))
+                return
+            }
+            
+            // Got URL, download image from URL
+            let dataTask = URLSession.shared.dataTask(with: url) { data, responsURL, error in
+                
+                var downloadedImage: UIImage?
+                
+                if let data = data  {
+                    print("Download image succeeded")
+                    downloadedImage = UIImage(data: data)
+                    
+                    // Cache image on cache key provided by user image path
+                    // Save url string with cache key
+                    UserDefaults.standard.set(url.absoluteString, forKey: path)
+                    
+                    // Get same url string
+                    guard let urlString = UserDefaults.standard.value(forKey: path) as? String else {
+                        print("No profile image url found in user defaults")
+                        completion(.failure(StorageErrors.failedToGetDownloadURL))
+                        return
+                    }
+                    
+                    // Caching image
+                    let uploadedImage = UIImage(data: data)
+                    StorageManager.cache.setObject(uploadedImage!, forKey: urlString as NSString)
+                    print("Image cached")
+                    
+                    if downloadedImage != nil {
+                        DispatchQueue.main.async {
+                            completion(.success(downloadedImage!))
+                        }
+                    }
+                }
+                
+                // Something went wrong when downloading image
+                if let error = error {
+                    print("Failed to download image")
+                    completion(.failure(error))
+                }
+            }
+            dataTask.resume()
+        })
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*
+    
+    
+    
+    
+    
     
     public func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void) {
         
@@ -123,5 +266,5 @@ final class StorageManager {
             }
         }
         dataTask.resume()
-    }
+    }*/
 }

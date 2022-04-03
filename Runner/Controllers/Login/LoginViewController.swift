@@ -431,6 +431,7 @@ class LoginViewController: UIViewController {
             }
             
             let user = result.user
+            UserDefaults.standard.setValue(result.user.uid, forKey: Constants.userID)
             
             // Getting user first name and last name and saving it to user defaults
             let safeEmail = RaceAppUser.safeEmail(emailAddress: email)
@@ -620,6 +621,7 @@ class LoginViewController: UIViewController {
                     UserDefaults.standard.set(email, forKey: "email")
                     UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
                     
+                    
                     // Trading token to get a Firebase credential
                     let credential = FacebookAuthProvider.credential(withAccessToken: token)
                     
@@ -640,6 +642,9 @@ class LoginViewController: UIViewController {
                             return
                         }
                         
+                        // Save user id locally
+                        UserDefaults.standard.setValue(result.user.uid, forKey: Constants.userID)
+                        
                         // Check if the user exists already. If not, we want to register a new user.
                         DatabaseManager.shared.userExists(with: email, completion: { exists in
                             if !exists {
@@ -648,7 +653,7 @@ class LoginViewController: UIViewController {
                                                               lastName: lastName,
                                                               emailAddress: email,
                                                               userID: result.user.uid)
-                                DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
+                                DatabaseManager.shared.insertUserID(with: raceAppUser, completion: { success in
                                     if success {
                                         
                                         // Must do this because url is optional
@@ -668,7 +673,7 @@ class LoginViewController: UIViewController {
                                             
                                             // upload image
                                             let filename = raceAppUser.profilePictureFileName
-                                            
+                                            print(filename)
                                             // Upload profile picture to Firebase
                                             StorageManager.shared.uploadProfilPicture(with: data, fileName: filename, completion: { result in
                                                 switch result {

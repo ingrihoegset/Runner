@@ -21,7 +21,26 @@ class ProfileViewModel {
         fetchProfilePic()
     }
     
+    
     func fetchProfilePic() {
+        
+        guard let userID = UserDefaults.standard.value(forKey: Constants.userID) as? String else {
+            print("Could not find user id")
+            return
+        }
+        
+        StorageManager.shared.getProfileImage(userID: userID ,completion: { [weak self ] result in
+            switch result {
+            case .success(let image):
+                self?.profileViewModelDelegate?.didFetchProfileImage(image: image)
+            case .failure(let error):
+                print("Failed to retrieve profile image \(error)")
+            }
+        })
+    }
+    
+    
+    /*func fetchProfilePic() {
         print("Fetching picture in Settings")
 
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -49,7 +68,7 @@ class ProfileViewModel {
                 print("Failed to download url for settings: \(error)")
             }
         })
-    }
+    }*/
     
     // Clears link with partner from database upon user log out
     func clearPartnerLinkFromDatabase() {

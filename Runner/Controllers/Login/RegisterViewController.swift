@@ -352,10 +352,13 @@ class RegisterViewController: UIViewController {
                 return
             }
             
+            print("Ready to create user")
             // CASE: User does not already exist
             /// Firebase log in. Creating a new user in Firebase
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { authResult, error in
                 // checks if returns an error, if so return.
+                print("Creating user")
+                
                 guard let authResult = authResult, error == nil else {
                     print("Error creating user")
                     self?.alertUserError()
@@ -367,6 +370,7 @@ class RegisterViewController: UIViewController {
                 // cache values related to user
                 UserDefaults.standard.setValue(email, forKey: "email")
                 UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
+                UserDefaults.standard.setValue(authResult.user.uid, forKey: Constants.userID)
                 
                 // Make sure there is no lingering partner email
                 UserDefaults.standard.setValue(nil, forKey: "partnerEmail")
@@ -391,6 +395,7 @@ class RegisterViewController: UIViewController {
                                               lastName: lastName,
                                               emailAddress: email,
                                               userID: authResult.user.uid)
+                /*
                 DatabaseManager.shared.insertUser(with: raceAppUser, completion: { success in
                     if success {
                         // upload image
@@ -422,7 +427,44 @@ class RegisterViewController: UIViewController {
                             }
                         })
                     }
+                })*/
+                
+                ///-----Save on User ID-------//
+                DatabaseManager.shared.insertUserID(with: raceAppUser, completion: { success in
+                    if success {
+                        // upload image
+                        // Might be image or might be nil
+                        let image = strongSelf.imageView.image
+                        
+                        let filename = raceAppUser.profilePictureFileName
+                        
+                        // Upload profile picture to Firebase
+                        // with image png data or nil, if nil, user has not selected image and no image is uploaded to database
+                        StorageManager.shared.uploadProfilPicture(with: image?.pngData(), fileName: filename, completion: { result in
+                            switch result {
+                            case .success(let downloadUrl):
+                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                // Open tabbar if all succeeds.
+                                strongSelf.prepareTabBar()
+                                strongSelf.clearTextFields()
+                                DispatchQueue.main.async {
+                                    strongSelf.loadingBalls.stop()
+                                }
+                            case .failure(let error):
+                                print("Storage manager error: \(error)")
+                                // Open tabbar even if image upload fails
+                                strongSelf.prepareTabBar()
+                                strongSelf.clearTextFields()
+                                DispatchQueue.main.async {
+                                    strongSelf.loadingBalls.stop()
+                                }
+                            }
+                        })
+                    }
                 })
+                
+                
+                
             })
         })
     }
@@ -626,7 +668,9 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
             return
         }
         
-        self.imageView.image = selectedImage
+        DispatchQueue.main.async {
+            self.imageView.image = selectedImage
+        }
     }
     
     /// Creates an action sheet that allows the user to pick whether to take a photo or select a photo from library
