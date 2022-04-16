@@ -2,23 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>FirebaseOpenAppQueryItemEmailName</key>
-	<string>email</string>
-	<key>FirebaseOpenAppURIPrefix</key>
-	<string>ingrihoegsetrunner.page.link</string>
-	<key>FirebaseOpenAppScheme</key>
-	<string>https</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Lato-BlackItalic.ttf</string>
-		<string>Lato-Bold.ttf</string>
-		<string>BarlowSemiCondensed-Light.ttf</string>
-		<string>ariblk.ttf</string>
-		<string>Overpass-ExtraBold.ttf</string>
-		<string>BarlowSemiCondensed-Medium.ttf</string>
-		<string>BarlowSemiCondensed-SemiBold.ttf</string>
-		<string>Overpass-SemiBold.ttf</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -58,6 +41,14 @@
 	<string>CLIENT-TOKEN</string>
 	<key>FacebookDisplayName</key>
 	<string>APP-NAME</string>
+	<key>FirebaseOpenAppQueryItemEmailName</key>
+	<string>email</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
+	<key>FirebaseOpenAppScheme</key>
+	<string>https</string>
+	<key>FirebaseOpenAppURIPrefix</key>
+	<string>ingrihoegsetrunner.page.link</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -82,6 +73,17 @@
 	<string>This app needs to access your camera to work properly.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Please allow access to select a photo for your profile.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Lato-BlackItalic.ttf</string>
+		<string>Lato-Bold.ttf</string>
+		<string>BarlowSemiCondensed-Light.ttf</string>
+		<string>ariblk.ttf</string>
+		<string>Overpass-ExtraBold.ttf</string>
+		<string>BarlowSemiCondensed-Medium.ttf</string>
+		<string>BarlowSemiCondensed-SemiBold.ttf</string>
+		<string>Overpass-SemiBold.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -111,6 +113,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

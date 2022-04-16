@@ -63,18 +63,18 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     var userSelectedRunner = UserRunSelections.shared.getUserIsRunning()
     
     // Objects related to countdown
-    var timer = Timer()
+    weak var timer: Timer?
     var audioPlayer: AVAudioPlayer?
     var counter = UserRunSelections.shared.getUserSelectedDelay()
     
     // Objects related to Reaction Count Down
-    var reactionTimer = Timer()
+    weak var reactionTimer: Timer?
     var reactionTime = UserRunSelections.shared.getUserSelectedReaction()
     var randomWait = 0
     
     // Objects related to showing time elapsed since run started
     var timeElapsed = 0
-    var showTimer = Timer()
+    weak var showTimer: Timer?
         
     override init() {
         super.init()
@@ -118,6 +118,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     
     // Creates timer object and tells the timer which function to preform for every time interval.
     @objc func startCountDown() {
+        timer?.invalidate() //This will do nothing if timer is nil. //it will also cause the timer to be nil since it's weak.
+        
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDown), userInfo: nil, repeats: true)
         counter = userSelectedDelay
         
@@ -143,6 +145,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         firstGateViewModelDelegate?.updateCountDownLabelText(firstCount: first, secondCount: second)
 
         //Related to playing sounds on count down
+        // Play sound when at 10s
         if (counter % 10 == 0 && counter > 0) {
             if counter == 90 {
                 playSound(filename: "90")
@@ -174,20 +177,23 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
             else {
                 playSound(filename: "shortBeep")
             }
-            counter = counter - 1
         }
-        else if (counter > 3) {
-            counter = counter - 1
+        // Do nothing when not at 10s and not in final countdown
+        else if (counter > 10) {
+            
         }
-        else if (counter <= 3 && counter > 0) {
-            startBreakAnalysis()
-            playSound(filename: "shortBeep")
-            counter = counter - 1
+        // Play sound in count down until 1
+        else if (counter < 10 && counter > 0) {
+            playSound(filename: "\(counter)")
+            if counter < 3 {
+                startBreakAnalysis()
+            }
         }
         // Start the race with signal and create run in database
+        // This happens at 0
         else {
             // Stop timer
-            timer.invalidate()
+            timer?.invalidate()
             firstGateViewModelDelegate?.updateCountDownLabelText(firstCount: "0", secondCount: "0")
             firstGateViewModelDelegate?.removeCountDownLabel()
             counter = 3
@@ -209,6 +215,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
                 runSprintStart()
             }
         }
+        counter = counter - 1
     }
     
     private func runSprintStart() {
@@ -225,13 +232,15 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     private func runReactionStart() {
+        reactionTimer?.invalidate()
+        
         reactionTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(reactionCountDown), userInfo: nil, repeats: true)
     }
     
     @objc func reactionCountDown() {
         if randomWait == 0 {
             playSound(filename: "longBeep")
-            reactionTimer.invalidate()
+            reactionTimer?.invalidate()
             
             // Create run and distrbute to database
             createRun()
@@ -273,8 +282,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         print("Run cancelled")
         
         stopBreakAnalysis()
-        timer.invalidate()
-        reactionTimer.invalidate()
+        timer?.invalidate()
+        reactionTimer?.invalidate()
         resetShowTimer()
         
         // Remove current run id from database
@@ -404,6 +413,8 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     
     // Creates timer object used to keep track of ongoing race time for user interface
     @objc func showTime() {
+        showTimer?.invalidate()
+        
         showTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateShownTime), userInfo: nil, repeats: true)
     }
     
@@ -418,7 +429,6 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
         // Discard counter and reset timer
         if numbers.count > 6 {
             resetShowTimer()
-
         }
         else {
             var min10 = "0"
@@ -452,7 +462,7 @@ class FirstGateViewModel: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate
     }
     
     private func resetShowTimer() {
-        showTimer.invalidate()
+        showTimer?.invalidate()
         timeElapsed = 0
         firstGateViewModelDelegate?.updateTimeElapsed(firstMin: "0", secondMin: "0", firstSec: "0", secondSec: "0", firstHun: "0", secondHun: "0")
     }

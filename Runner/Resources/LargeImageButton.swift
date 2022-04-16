@@ -52,7 +52,7 @@ class LargeImageButton: UIButton {
     override func layoutSubviews() {
         imageview.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         imageview.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        imageview.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.7).isActive = true
+        imageview.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.6).isActive = true
         imageview.widthAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         
         title.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true

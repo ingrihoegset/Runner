@@ -69,6 +69,10 @@ class ProfileViewController: UIViewController {
         let tableView = UITableView()
         tableView.backgroundColor = Constants.mainColor
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        //tableView.separatorStyle = .none
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         return tableView
     }()
 
@@ -323,7 +327,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         label.font = Constants.mainFontSB
         label.textAlignment = .left
         label.frame = CGRect(x: Constants.sideMargin, y: 15, width: Constants.widthOfDisplay - Constants.sideMargin, height: Constants.mainButtonSize-15)
-        view.layer.borderColor = Constants.superLightGrey?.cgColor
+        view.layer.borderColor = Constants.mainColor?.cgColor
         view.layer.borderWidth = 1
         view.addSubview(label)
         

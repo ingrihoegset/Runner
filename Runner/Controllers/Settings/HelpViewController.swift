@@ -39,6 +39,10 @@ class HelpViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.clipsToBounds = true
         tableView.layer.masksToBounds = true
+        tableView.separatorStyle = .none
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         return tableView
     }()
 
@@ -93,9 +97,14 @@ extension HelpViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         cell.textLabel?.text = tableViewData[indexPath.section][indexPath.row]
+        cell.backgroundColor = Constants.mainColor
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.font = Constants.mainFont
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 1
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -117,8 +126,8 @@ extension HelpViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionView = UIView()
         sectionView.backgroundColor = Constants.mainColor
-        sectionView.layer.borderWidth = 1
-        sectionView.layer.borderColor = Constants.superLightGrey?.cgColor
+       // sectionView.layer.borderWidth = 1
+       // sectionView.layer.borderColor = Constants.superLightGrey?.cgColor
         
         let sectionButton = UILabel()
         sectionButton.translatesAutoresizingMaskIntoConstraints = false
@@ -132,7 +141,7 @@ extension HelpViewController: UITableViewDelegate, UITableViewDataSource {
         sectionButton.numberOfLines = 0
         sectionButton.textAlignment = .left
         sectionButton.backgroundColor = Constants.mainColor
-        sectionButton.font = Constants.mainFontSB
+        sectionButton.font = Constants.mainFontSemiBold
         sectionButton.sizeToFit()
 
         sectionButton.tag = section
@@ -142,7 +151,11 @@ extension HelpViewController: UITableViewDelegate, UITableViewDataSource {
 
         return sectionView
     }
-    
+
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+
     
     @objc private func hideSection(sender: UITapGestureRecognizer) {
         if let section = sender.view?.tag {
@@ -167,9 +180,5 @@ extension HelpViewController: UITableViewDelegate, UITableViewDataSource {
                                           with: .fade)
             }
         }
-        
-
     }
-    
-    
 }

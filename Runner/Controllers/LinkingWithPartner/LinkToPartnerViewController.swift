@@ -56,14 +56,14 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.mainColor
+        control.selectedSegmentTintColor = Constants.contrastColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColorDark!,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColor!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
@@ -106,7 +106,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
-        let image = UIImage(systemName: "person.circle")
+        let image = UIImage(systemName: "person.circle")?.withTintColor(Constants.lightGray!, renderingMode: .alwaysOriginal)
         imageView.image = image
         imageView.layer.cornerRadius = Constants.widthOfDisplay * 0.2 / 2
         return imageView
@@ -172,7 +172,7 @@ class LinkToPartnerViewController: UIViewController, AVCaptureMetadataOutputObje
         self.navigationController?.navigationBar.scrollEdgeAppearance = self.navigationController?.navigationBar.standardAppearance
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: Constants.mainFontLargeSB!,
                                                                          NSAttributedString.Key.foregroundColor: Constants.textColorAccent!]
-        navigationController?.navigationBar.tintColor = Constants.mainColorDark
+        navigationController?.navigationBar.tintColor = Constants.mainColorDarkest
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                                             style: .done,
                                                             target: self,

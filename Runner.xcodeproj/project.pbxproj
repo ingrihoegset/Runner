@@ -64,6 +64,15 @@
 		BF9BFCEA2739718B00D27110 /* 80.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCE62739718B00D27110 /* 80.wav */; };
 		BF9BFCED273971A300D27110 /* 20.wav in Resources */ = {isa = PBXBuildFile; fileRef = BF9BFCEC273971A200D27110 /* 20.wav */; };
 		BFA78B91273E77B3002C8E14 /* ImageCropHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA78B90273E77B3002C8E14 /* ImageCropHandler.swift */; };
+		BFB1878A2809E4BD0052FDBB /* 2.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187812809E4BC0052FDBB /* 2.wav */; };
+		BFB1878B2809E4BD0052FDBB /* 7.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187822809E4BC0052FDBB /* 7.wav */; };
+		BFB1878C2809E4BD0052FDBB /* 3.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187832809E4BC0052FDBB /* 3.wav */; };
+		BFB1878D2809E4BD0052FDBB /* 4.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187842809E4BC0052FDBB /* 4.wav */; };
+		BFB1878E2809E4BD0052FDBB /* 5.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187852809E4BC0052FDBB /* 5.wav */; };
+		BFB1878F2809E4BD0052FDBB /* 1.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187862809E4BD0052FDBB /* 1.wav */; };
+		BFB187902809E4BD0052FDBB /* 6.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187872809E4BD0052FDBB /* 6.wav */; };
+		BFB187912809E4BD0052FDBB /* 8.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187882809E4BD0052FDBB /* 8.wav */; };
+		BFB187922809E4BD0052FDBB /* 9.wav in Resources */ = {isa = PBXBuildFile; fileRef = BFB187892809E4BD0052FDBB /* 9.wav */; };
 		BFB95B222726CF2700DF51BA /* SlantedViewBottom.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB95B212726CF2700DF51BA /* SlantedViewBottom.swift */; };
 		BFC2882C2755317400DE4CE7 /* ShareRunViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC2882B2755317400DE4CE7 /* ShareRunViewController.swift */; };
 		BFC4AE1626D02DD300912F79 /* ResultDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */; };
@@ -161,6 +170,15 @@
 		BF9BFCE62739718B00D27110 /* 80.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 80.wav; sourceTree = "<group>"; };
 		BF9BFCEC273971A200D27110 /* 20.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 20.wav; sourceTree = "<group>"; };
 		BFA78B90273E77B3002C8E14 /* ImageCropHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCropHandler.swift; sourceTree = "<group>"; };
+		BFB187812809E4BC0052FDBB /* 2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 2.wav; sourceTree = "<group>"; };
+		BFB187822809E4BC0052FDBB /* 7.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 7.wav; sourceTree = "<group>"; };
+		BFB187832809E4BC0052FDBB /* 3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 3.wav; sourceTree = "<group>"; };
+		BFB187842809E4BC0052FDBB /* 4.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 4.wav; sourceTree = "<group>"; };
+		BFB187852809E4BC0052FDBB /* 5.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 5.wav; sourceTree = "<group>"; };
+		BFB187862809E4BD0052FDBB /* 1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 1.wav; sourceTree = "<group>"; };
+		BFB187872809E4BD0052FDBB /* 6.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 6.wav; sourceTree = "<group>"; };
+		BFB187882809E4BD0052FDBB /* 8.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 8.wav; sourceTree = "<group>"; };
+		BFB187892809E4BD0052FDBB /* 9.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 9.wav; sourceTree = "<group>"; };
 		BFB95B212726CF2700DF51BA /* SlantedViewBottom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlantedViewBottom.swift; sourceTree = "<group>"; };
 		BFC2882B2755317400DE4CE7 /* ShareRunViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareRunViewController.swift; sourceTree = "<group>"; };
 		BFC4AE1526D02DD300912F79 /* ResultDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultDetailsViewController.swift; sourceTree = "<group>"; };
@@ -276,6 +294,15 @@
 				BF9BFCE52739718B00D27110 /* 40.wav */,
 				BF9BFCE42739718B00D27110 /* 30.wav */,
 				BF9BFCEC273971A200D27110 /* 20.wav */,
+				BFB187862809E4BD0052FDBB /* 1.wav */,
+				BFB187812809E4BC0052FDBB /* 2.wav */,
+				BFB187832809E4BC0052FDBB /* 3.wav */,
+				BFB187842809E4BC0052FDBB /* 4.wav */,
+				BFB187852809E4BC0052FDBB /* 5.wav */,
+				BFB187872809E4BD0052FDBB /* 6.wav */,
+				BFB187822809E4BC0052FDBB /* 7.wav */,
+				BFB187882809E4BD0052FDBB /* 8.wav */,
+				BFB187892809E4BD0052FDBB /* 9.wav */,
 				BF9BFCE32739718B00D27110 /* 10.wav */,
 				BF512AD7269F62AD001C6BF2 /* longBeep.wav */,
 				BF512AD8269F62AD001C6BF2 /* longBeepDeep.wav */,
@@ -519,6 +546,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFB187912809E4BD0052FDBB /* 8.wav in Resources */,
+				BFB1878C2809E4BD0052FDBB /* 3.wav in Resources */,
 				BF9BFCE92739718B00D27110 /* 40.wav in Resources */,
 				BF9BFCD92739716600D27110 /* 90.wav in Resources */,
 				BFCBF9C5275E7D8E0079127B /* ariblk.ttf in Resources */,
@@ -529,21 +558,28 @@
 				BF6B3812277BB5FC00243AD1 /* Lato-Bold.ttf in Resources */,
 				BFFB69DE269A4BE80080DA62 /* GoogleService-Info.plist in Resources */,
 				BFEB3CB92727428F007FAB42 /* Overpass-SemiBold.ttf in Resources */,
+				BFB1878D2809E4BD0052FDBB /* 4.wav in Resources */,
+				BFB1878E2809E4BD0052FDBB /* 5.wav in Resources */,
 				BF12FF23269F59BD00B51370 /* BarlowSemiCondensed-Medium.ttf in Resources */,
 				BF512ADA269F62AE001C6BF2 /* longBeep.wav in Resources */,
 				BF6B382F277BB7A600243AD1 /* Lato-BlackItalic.ttf in Resources */,
+				BFB1878A2809E4BD0052FDBB /* 2.wav in Resources */,
 				BF9BFCEA2739718B00D27110 /* 80.wav in Resources */,
 				BF9BFCDC2739716F00D27110 /* 60.wav in Resources */,
 				BF9BFCE12739717900D27110 /* 70.wav in Resources */,
 				BF9BFCE82739718B00D27110 /* 30.wav in Resources */,
 				BF98A526273B0C32007AC798 /* error.wav in Resources */,
 				BFFB69A7269A14E70080DA62 /* Assets.xcassets in Resources */,
+				BFB187902809E4BD0052FDBB /* 6.wav in Resources */,
 				BF9BFCE02739717900D27110 /* 50.wav in Resources */,
+				BFB187922809E4BD0052FDBB /* 9.wav in Resources */,
+				BFB1878B2809E4BD0052FDBB /* 7.wav in Resources */,
 				BF512AD9269F62AE001C6BF2 /* shortBeep.wav in Resources */,
 				BF12FF22269F59BD00B51370 /* BarlowSemiCondensed-SemiBold.ttf in Resources */,
 				BFFB69A5269A14E30080DA62 /* Main.storyboard in Resources */,
 				BF9BFCED273971A300D27110 /* 20.wav in Resources */,
 				BFEB3CBC2727CBD1007FAB42 /* Overpass-ExtraBold.ttf in Resources */,
+				BFB1878F2809E4BD0052FDBB /* 1.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -828,7 +864,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TDRH7B9W9S;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -849,7 +885,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TDRH7B9W9S;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

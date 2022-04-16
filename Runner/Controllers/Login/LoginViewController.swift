@@ -33,15 +33,17 @@ class LoginViewController: UIViewController {
     private let logoView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = Constants.mainColorDark
+        imageView.backgroundColor = .clear
+        imageView.image = UIImage(named: "RUNSNAPPER")
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
     private let welcomeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Welcome!"
-        label.font = Constants.mainFontXXLargeSB
+        label.text = "welcome to"
+        label.font = Constants.mainFontLargeSB
         label.textColor = Constants.mainColor
         label.textAlignment = .center
         return label
@@ -196,7 +198,6 @@ class LoginViewController: UIViewController {
         /// Adding subviews
         view.addSubview(slantedView)
         view.addSubview(logoView)
-        view.addSubview(welcomeLabel)
         view.addSubview(emailField)
         view.addSubview(passwordField)
         view.addSubview(logginButton)
@@ -264,15 +265,10 @@ class LoginViewController: UIViewController {
         slantedView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         slantedView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
-        logoView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.mainButtonSize).isActive = true
+        logoView.bottomAnchor.constraint(equalTo: emailField.topAnchor, constant: -Constants.verticalSpacing).isActive = true
         logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        logoView.bottomAnchor.constraint(equalTo: welcomeLabel.topAnchor, constant: -Constants.sideMargin).isActive = true
-        logoView.widthAnchor.constraint(equalTo: logoView.heightAnchor).isActive = true
-        
-        welcomeLabel.bottomAnchor.constraint(equalTo: emailField.topAnchor, constant: -Constants.verticalSpacing).isActive = true
-        welcomeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
-        welcomeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.sideMargin).isActive = true
-        welcomeLabel.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
+        logoView.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
+        logoView.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
         
         emailField.bottomAnchor.constraint(equalTo: passwordField.topAnchor, constant: -Constants.verticalSpacing).isActive = true
         emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.sideMargin).isActive = true
@@ -318,7 +314,7 @@ class LoginViewController: UIViewController {
     /// Present Welcome text with animation
     func presentWelcome() {
         UIView.animate(withDuration: 1.35) {
-            self.welcomeLabel.alpha = 1
+            self.logoView.alpha = 1
         }
     }
     
@@ -336,7 +332,6 @@ class LoginViewController: UIViewController {
             alpha = 0
         }
         self.logoView.alpha = alpha
-        self.welcomeLabel.alpha = alpha
         self.emailField.alpha = alpha
         self.passwordField.alpha = alpha
         self.logginButton.alpha = alpha

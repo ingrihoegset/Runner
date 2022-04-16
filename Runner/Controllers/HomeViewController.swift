@@ -13,13 +13,11 @@ class HomeViewController: UIViewController {
     var homeViewModel = HomeViewModel()
     let onboardingViewController = OnboardingViewController()
     
-    private let logo: UILabel = {
-        let label = UILabel()
+    private let logo: UIImageView = {
+        let label = UIImageView()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Constants.title
-        label.textColor = Constants.mainColor
-        label.font = Constants.titleFont
-        label.textAlignment = .center
+        label.image = UIImage(named: "RUNSNAPPER")
+        label.contentMode = .scaleAspectFit
         return label
     }()
         
@@ -95,11 +93,11 @@ class HomeViewController: UIViewController {
 
     private let qrButton: BounceButton = {
         let qrButton = BounceButton()
-        qrButton.backgroundColor = Constants.mainColorDark
+        qrButton.backgroundColor = Constants.contrastColor
         qrButton.translatesAutoresizingMaskIntoConstraints = false
         qrButton.layer.masksToBounds = false
         qrButton.clipsToBounds = false
-        qrButton.animationColor = Constants.mainColorDark
+        qrButton.animationColor = Constants.contrastColor
         let image = UIImage(named: "QrCode")?.withTintColor(Constants.mainColor!, renderingMode: .alwaysOriginal)
         let imageview = UIImageView()
         qrButton.addSubview(imageview)
@@ -113,7 +111,7 @@ class HomeViewController: UIViewController {
         qrButton.addTarget(self, action: #selector(didTapQRButton), for: .touchUpInside)
         qrButton.isUserInteractionEnabled = true
         qrButton.alpha = 0
-        qrButton.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5 / 1.5, spread: 0)
+        qrButton.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.4, x: 0, y: 0, blur: Constants.sideMargin / 1.5 , spread: 0)
         return qrButton
     }()
     
@@ -138,12 +136,12 @@ class HomeViewController: UIViewController {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
-        button.animationColor = Constants.mainColorDark
-        button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.mainColorDark!)
+        button.animationColor = Constants.mainColor
+        button.imageview.image = UIImage(named: "Sprint")?.withTintColor(Constants.mainColorDarkest!)
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Sprint"
-        button.title.textColor = Constants.mainColorDark
+        button.title.textColor = Constants.mainColorDarkest
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         button.alpha = 0
@@ -154,14 +152,14 @@ class HomeViewController: UIViewController {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
-        button.animationColor = Constants.mainColorDark
+        button.animationColor = Constants.mainColor
         button.tag = 1
         let image = UIImage(named: "Reaction")
-        button.imageview.image = UIImage(named: "Reaction")?.withTintColor(Constants.mainColorDark!)
+        button.imageview.image = UIImage(named: "Reaction")?.withTintColor(Constants.mainColorDarkest!)
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Reaction run"
-        button.title.textColor = Constants.mainColorDark
+        button.title.textColor = Constants.mainColorDarkest
         button.addTarget(self, action: #selector(didTapSetUpRun), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         button.alpha = 0
@@ -172,13 +170,13 @@ class HomeViewController: UIViewController {
         let button = LargeImageButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = Constants.mainColor
-        button.animationColor = Constants.mainColorDark
+        button.animationColor = Constants.mainColor
         button.tag = 2
-        button.imageview.image = UIImage(named: "Flying")?.withTintColor(Constants.mainColorDark!)
+        button.imageview.image = UIImage(named: "Flying")?.withTintColor(Constants.mainColorDarkest!)
         button.imageview.isOpaque = true
         button.imageview.alpha = 1
         button.title.text = "Flying start"
-        button.title.textColor = Constants.mainColorDark
+        button.title.textColor = Constants.mainColorDarkest
         button.addTarget(self, action: #selector(alertUserThatFlyingStartOnlyAvailableWhenConnected), for: .touchUpInside)
         button.layer.applySketchShadow(color: Constants.textColorDarkGray, alpha: 0.2, x: 0, y: 0, blur: Constants.sideMargin / 1.5, spread: 0)
         button.alpha = 0
@@ -284,14 +282,14 @@ class HomeViewController: UIViewController {
         control.translatesAutoresizingMaskIntoConstraints = false
         control.backgroundColor = Constants.superLightGrey
         control.selectedSegmentIndex = 0
-        control.selectedSegmentTintColor = Constants.mainColor
+        control.selectedSegmentTintColor = Constants.contrastColor
         let normalTextAttributes: [NSObject : AnyObject] = [
             NSAttributedString.Key.foregroundColor as NSObject: Constants.textColorAccent!,
             NSAttributedString.Key.font as NSObject : Constants.mainFontLargeSB!
         ]
         control.setTitleTextAttributes(normalTextAttributes as? [NSAttributedString.Key : Any], for: .normal)
         let selectedAttributes: [NSObject : AnyObject] = [
-            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColorDark!,
+            NSAttributedString.Key.foregroundColor as NSObject: Constants.mainColor!,
         ]
         control.setTitleTextAttributes(selectedAttributes as? [NSAttributedString.Key : Any], for: .selected)
         control.addTarget(self, action: #selector(segmentControl(_:)), for: .valueChanged)
@@ -319,20 +317,6 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //-- OBS! Must be removed when onboarding functionality complete--//
-        UserDefaults.standard.set(false, forKey: Constants.hasOnBoardedScroll)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnBoardedReaction)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedStartLineTwoUsers)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineOneUser)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedConnectToPartner)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedTableViewClickMe)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedScanPartnerQR)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedOpenEndGate)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedFinishLineTwoUsers)
-        UserDefaults.standard.set(false, forKey: Constants.hasOnboardedSensitivitySlider)
-        UserDefaults.standard.set(1, forKey: Constants.sensitivityOnboardingSliderCounter)
-        UserDefaults.standard.set(false, forKey: Constants.readyToShowOnboardConnect)
 
         view.backgroundColor = Constants.mainColor
         
@@ -473,10 +457,10 @@ class HomeViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        logo.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.sideMargin).isActive = true
+        logo.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.sideMargin * 1.5).isActive = true
         logo.heightAnchor.constraint(equalToConstant: Constants.mainButtonSize).isActive = true
-        logo.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        logo.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        logo.widthAnchor.constraint(equalToConstant: Constants.widthOfDisplay * 0.6).isActive = true
+        logo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         // Elements related to main view
         mainView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -931,7 +915,7 @@ extension HomeViewController: HomeViewModelDelegate {
     }
     func setCameraSensitivity() {
         if UserDefaults.standard.value(forKey: Constants.cameraSensitivity) == nil {
-            UserDefaults.standard.setValue(CGFloat(0.175), forKey: Constants.cameraSensitivity)
+            UserDefaults.standard.setValue(CGFloat(0.1), forKey: Constants.cameraSensitivity)
         }
     }
 }

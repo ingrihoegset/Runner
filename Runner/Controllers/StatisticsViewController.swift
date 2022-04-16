@@ -733,15 +733,7 @@ extension StatisticsViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 
-        let rotationTransform = CATransform3DTranslate(CATransform3DIdentity, 0, 15, 0)
-        cell.layer.transform = rotationTransform
-        UIView.animate(withDuration: 0.25) {
-            cell.alpha = 1
-            cell.layer.transform = CATransform3DIdentity
-        }
-    }
     
     @objc func editTable(_ sender: UIButton) {
         self.tableView.isEditing = !self.tableView.isEditing

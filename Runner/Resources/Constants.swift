@@ -4,7 +4,7 @@ import UIKit
 struct Constants {
     
     //App Title
-    static let title = "SNAPDASH"
+    static let title = "RUNSNAPPER"
     
     // User
     static let userID = "userID"
@@ -66,6 +66,7 @@ struct Constants {
     static let mainFont = UIFont(name: "BarlowSemiCondensed-Light", size: 18)
     static let mainFontMedium = UIFont(name: "BarlowSemiCondensed-Light", size: 14)
     static let mainFontSmall = UIFont(name: "BarlowSemiCondensed-Light", size: 12)
+    static let mainFontSemiBold = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 18)
         //Semi Bold
     static let mainFontSB = UIFont(name: "Lato-Bold", size: 18)
     static let mainFontLSB = UIFont(name: "Lato-Bold", size: 20)
@@ -122,5 +123,5 @@ struct Constants {
     
     // Sensor sensitivity
     static let maxSensitivity: CGFloat = 0.025
-    static let minSensitivity: CGFloat = 0.4
+    static let minSensitivity: CGFloat = 0.3
 }
